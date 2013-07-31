@@ -1,0 +1,67 @@
+<configuration>
+  <configSections>
+    <section name="Federation" type="SAML2.Config.ConfigurationReader, SAML2" />
+    <section name="SAML20Federation" type="SAML2.Config.ConfigurationReader, SAML2" />
+  </configSections>
+  <system.webServer>
+    <handlers>
+      <remove name="SAML2.Protocol.Saml20SignonHandler" />
+      <remove name="SAML2.Protocol.Saml20LogoutHandler" />
+      <remove name="SAML2.Protocol.Saml20MetadataHandler" />
+      <add name="SAML2.Protocol.Saml20SignonHandler" verb="*" path="Login.ashx" type="SAML2.Protocol.Saml20SignonHandler, SAML2" />
+      <add name="SAML2.Protocol.Saml20LogoutHandler" verb="*" path="Logout.ashx" type="SAML2.Protocol.Saml20LogoutHandler, SAML2" />
+      <add name="SAML2.Protocol.Saml20MetadataHandler" verb="*" path="Metadata.ashx" type="SAML2.Protocol.Saml20MetadataHandler, SAML2" />
+    </handlers>
+  </system.webServer>
+  <Federation>
+    <SigningCertificate findValue="CN=CERTIFICATENAME" storeLocation="LocalMachine" storeName="My" x509FindType="FindBySubjectDistinguishedName" />
+    <!-- The list of allowed audiences must at least contain the id of the service provider. -->
+    <AllowedAudienceUris>
+      <Audience>urn:SPName</Audience>
+    </AllowedAudienceUris>
+    <Actions>
+      <clear/>
+      <add name="SetSamlPrincipal" type="SAML2.Actions.SamlPrincipalAction, SAML2" />
+      <!-- Insert custom Action implementation here for local authentication -->
+      <add name="Redirect" type="SAML2.Actions.RedirectAction, SAML2" />
+    </Actions>
+  </Federation>
+  <SAML20Federation>
+    <ServiceProvider id="urn:SPName" server="https://www.example.com">
+      <ServiceEndpoint localpath="Login.ashx" type="signon" redirectUrl="~/AuthenticatedHomePage" index="0" />
+      <ServiceEndpoint localpath="Logout.ashx" type="logout" redirectUrl="~/HomePage" index="1" />
+      <ServiceEndpoint localpath="Metadata.ashx" type="metadata" />
+      <!-- NameIDFormats
+      <NameIdFormats all="false" allowCreate="true">
+        <add nameIdFormat="urn:oasis:names:tc:SAML:2.0:nameid-format:transient"/>
+      </NameIdFormats> -->
+      <!-- AuthenContexts
+      <AuthenticationContexts comparison="Exact">
+        <add context="urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport" referenceType="AuthnContextClassRef"/>
+      </AuthenticationContexts> -->
+      <md:ContactPerson contactType="administrative" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata">
+        <md:Company></md:Company>
+        <md:GivenName></md:GivenName>
+        <md:SurName></md:SurName>
+        <md:EmailAddress></md:EmailAddress>
+        <md:TelephoneNumber></md:TelephoneNumber>
+      </md:ContactPerson>
+    </ServiceProvider>
+    <RequestedAttributes>
+      <!-- The attributes that the demonstration identity provider issues. 
+      <att name="urn:cn" />-->
+    </RequestedAttributes>
+    <IDPEndPoints metadata="METADATALOCATION">
+      <add id="IdProvider" default="true">
+        <CertificateValidation>
+          <add type="SAML2.Specification.SelfIssuedCertificateSpecification, SAML2" />
+        </CertificateValidation>
+      </add>
+    </IDPEndPoints>
+    <CommonDomain enabled="false" />
+    <!-- AssertionProfile if different than base SAML 2 specification
+    <AssertionProfile assertionValidator="SAML2.Profiles.DKSAML20.Validation.DKSaml20AssertionValidator, SAML2.Profiles.DKSAML20" /> -->
+    <!-- Logging implementation if different than NoLogging
+    <Logging loggingFactory="SAML2.Logging.CommonLogging.CommonLoggingLoggerFactory, SAML2.Logging.CommonLoggingLoggerFactory" /> -->
+  </SAML20Federation>
+</configuration>

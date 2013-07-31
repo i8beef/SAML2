@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>SAML2</id>
+    <version>1.0.0.0</version>
+    <title>SAML2</title>
+    <authors>Michael Hallock</authors>
+    <owners>Michael Hallock</owners>
+    <licenseUrl>https://saml2.codeplex.com/license</licenseUrl>
+    <projectUrl>https://saml2.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A .NET implementation of the SAML 2.0 specification for SP integrations.</description>
+    <releaseNotes>Initial release.</releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <tags>SAML SSO</tags>
+  </metadata>
+  <files>
+    <file src="content\web.config.transform" target="content" />
+    <file src="..\src\SAML2\bin\Release\SAML2.dll" target="lib\net40" />
+  </files>
+</package>
