@@ -7,7 +7,7 @@ namespace SAML2.Utils
     /// Helpers for converting between string and DateTime representations of UTC date-times
     /// and for enforcing the UTC-string-format demand for xml strings in Saml2.0
     /// </summary>
-    internal static class Saml20Utils
+    public static class Saml20Utils
     {
         public static DateTime FromUTCString(string value)
         {
@@ -45,7 +45,6 @@ namespace SAML2.Utils
             return true;
         }
 
-        
         /// <summary>
         /// Make sure that the ID elements is at least 128 bits in length (SAML2.0 std section 1.3.4)
         /// </summary>

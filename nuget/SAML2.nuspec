@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SAML2</id>
-    <version>1.0.0.2</version>
+    <version>1.0.0.3</version>
     <title>SAML2</title>
     <authors>Michael Hallock</authors>
     <owners>Michael Hallock</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://saml2.codeplex.com/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A .NET implementation of the SAML 2.0 specification for SP integrations.</description>
-    <releaseNotes>Fixed some namespaces from package creation.</releaseNotes>
+    <releaseNotes>Opened up some of the profile validator classes for extension.</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>SAML SSO</tags>
   </metadata>
