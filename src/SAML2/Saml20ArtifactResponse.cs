@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 using SAML2;
-using SAML2.config;
+using SAML2.Config;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;

@@ -2,10 +2,10 @@ using System;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using SAML2.config;
+using SAML2.Config;
 using Saml2.Properties;
 
-namespace SAML2.protocol.pages
+namespace SAML2.Protocol.pages
 {
     /// <summary>
     /// Page that handles selecting an IdP when more than one is configured

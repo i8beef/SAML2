@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using SAML2.Schema.Core;
 
-namespace SAML2.identity
+namespace SAML2.Identity
 {
     /// <summary>
     /// The SAML 2.0 extension to the <c>IIdentity</c> interface.

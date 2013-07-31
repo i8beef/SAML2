@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Web;
 
-namespace SAML2.protocol
+namespace SAML2.Protocol
 {
     /// <summary>
     /// Implements access to the common domain cookie specified in the SAML20 indentity provider discovery profile

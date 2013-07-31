@@ -1,6 +1,6 @@
 ﻿using System.Web;
 using System.Security.Principal;
-using SAML2.identity;
+using SAML2.Identity;
 
 namespace SAML2.Identity
 {

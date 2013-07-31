@@ -5,7 +5,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Text;
 
-namespace SAML2.config
+namespace SAML2.Config
 {
     /// <summary>
     /// </summary>

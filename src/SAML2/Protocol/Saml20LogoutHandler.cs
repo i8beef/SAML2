@@ -6,7 +6,7 @@ using System.Web;
 using System.Web.Security;
 using System.Xml;
 using SAML2.Bindings;
-using SAML2.config;
+using SAML2.Config;
 using SAML2.Logging;
 using SAML2.Properties;
 using SAML2.Schema.Metadata;
@@ -15,7 +15,7 @@ using SAML2.Utils;
 using Saml2.Properties;
 using SAML2.Actions;
 
-namespace SAML2.protocol
+namespace SAML2.Protocol
 {
     /// <summary>
     /// Handles logout for all SAML bindings.

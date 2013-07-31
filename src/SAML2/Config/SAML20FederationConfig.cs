@@ -7,19 +7,19 @@ using System.Text;
 using System.Web;
 using System.Xml;
 using System.Xml.Serialization;
-using SAML2.identity;
-using SAML2.protocol;
+using SAML2.Identity;
+using SAML2.Protocol;
 using SAML2.Schema.Metadata;
 using SAML2.Utils;
 using Saml2.Properties;
 using System.Security.Cryptography;
 
-namespace SAML2.config
+namespace SAML2.Config
 {
     /// <summary>
     /// Configuration elements for SAML20 Federation
     /// To create a new XSD Run this command:
-    /// xsd -t:SAML2.config.SAML20Federation SAML2.dll
+    /// xsd -t:SAML2.Config.SAML20Federation SAML2.dll
     /// </summary>
     [Serializable]
     [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]

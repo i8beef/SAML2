@@ -3,7 +3,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
-namespace SAML2.protocol.pages
+namespace SAML2.Protocol.pages
 {
     /// <summary>
     /// A base class for asp pages

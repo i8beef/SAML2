@@ -4,7 +4,7 @@ using System.Web.Configuration;
 using System.Web.UI;
 using Saml2.Properties;
 
-namespace SAML2.protocol.pages
+namespace SAML2.Protocol.pages
 {
     /// <summary>
     /// A page for displaying error messages

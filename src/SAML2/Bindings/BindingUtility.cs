@@ -1,7 +1,7 @@
 using System;
 using System.Security.Cryptography.X509Certificates;
 using System.Web;
-using SAML2.config;
+using SAML2.Config;
 using SAML2.Properties;
 
 namespace SAML2.Bindings

@@ -11,7 +11,7 @@ using System.Text;
 using System.Web;
 using System.Xml;
 using SAML2.Logging;
-using SAML2.config;
+using SAML2.Config;
 
 namespace SAML2.Bindings
 {

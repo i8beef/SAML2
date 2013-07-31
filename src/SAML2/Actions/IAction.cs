@@ -1,5 +1,5 @@
 ﻿using System.Web;
-using SAML2.protocol;
+using SAML2.Protocol;
 
 namespace SAML2.Actions
 {

@@ -1,6 +1,6 @@
 ﻿using SAML2.Schema.Core;
 
-namespace SAML2.identity
+namespace SAML2.Identity
 {
     /// <summary>
     /// Implement this interface and register it in web.config on the relevant IdP endpoint to activate mapping of persistent pseudonyms

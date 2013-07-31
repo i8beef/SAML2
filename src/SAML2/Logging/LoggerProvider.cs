@@ -1,5 +1,5 @@
 ﻿using System;
-using SAML2.config;
+using SAML2.Config;
 
 namespace SAML2.Logging
 {

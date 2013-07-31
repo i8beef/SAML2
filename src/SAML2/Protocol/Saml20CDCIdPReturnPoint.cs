@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Web;
-using SAML2.config;
-using SAML2.protocol;
+using SAML2.Config;
+using SAML2.Protocol;
 using SAML2.Utils;
 
-namespace SAML2.protocol
+namespace SAML2.Protocol
 {
     /// <summary>
     /// 

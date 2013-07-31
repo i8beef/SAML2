@@ -1,4 +1,4 @@
-namespace SAML2.config
+namespace SAML2.Config
 {
     /// <summary>
     /// The common location for all configuration-section related constants
@@ -9,7 +9,7 @@ namespace SAML2.config
         /// We intend to use the same namespace uri for ALL configuration elements to make
         /// reuse of subelements (eg Certificate) easy.
         /// </summary>
-        public const string NamespaceUri = "urn:SAML2.configuration";
+        public const string NamespaceUri = "urn:SAML2.Configuration";
 
         /// <summary>
         /// Section names used in configuration files.

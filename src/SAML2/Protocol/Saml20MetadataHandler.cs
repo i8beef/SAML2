@@ -2,11 +2,11 @@ using System;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Web;
-using SAML2.config;
+using SAML2.Config;
 using Saml2.Properties;
 using System.Security.Cryptography.Xml;
 
-namespace SAML2.protocol
+namespace SAML2.Protocol
 {
     /// <summary>
     /// The handler that exposes a metadata endpoint to the other parties of the federation.

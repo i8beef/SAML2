@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Security;
-using SAML2.identity;
-using SAML2.protocol;
+using SAML2.Identity;
+using SAML2.Protocol;
 using System.Security.Principal;
 using SAML2.Identity;
 

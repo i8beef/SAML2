@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web;
-using SAML2.config;
-using SAML2.protocol;
+using SAML2.Config;
+using SAML2.Protocol;
 
 namespace SAML2.Actions
 {

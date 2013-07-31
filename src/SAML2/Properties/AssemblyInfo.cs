@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SAML2")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A .NET implementation of the SAML 2.0 specification for SP integrations.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SAML2")]

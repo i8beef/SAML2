@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Saml2.Properties;
 
-namespace SAML2.config
+namespace SAML2.Config
 {
     /// <summary>
     /// Container for a list of strings (from config) that represent wellformed absolute audience uris

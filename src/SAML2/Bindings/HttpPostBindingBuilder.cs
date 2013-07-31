@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
-using SAML2.config;
+using SAML2.Config;
 
 namespace SAML2.Bindings
 {

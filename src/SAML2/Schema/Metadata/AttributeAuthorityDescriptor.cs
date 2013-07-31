@@ -26,7 +26,7 @@ namespace SAML2.Schema.Metadata
         
         private string[] attributeProfileField;
         
-        private SAML2.config.Attribute[] attributeField;
+        private SAML2.Config.Attribute[] attributeField;
 
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The attribute.</value>
         [XmlElementAttribute("Attribute", Namespace=Saml20Constants.METADATA)]
-        public SAML2.config.Attribute[] Attribute {
+        public SAML2.Config.Attribute[] Attribute {
             get {
                 return attributeField;
             }

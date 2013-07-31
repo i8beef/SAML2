@@ -4,13 +4,13 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Web;
 using SAML2.Bindings;
-using SAML2.config;
+using SAML2.Config;
 using SAML2.Logging;
 using SAML2.Properties;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
 
-namespace SAML2.protocol
+namespace SAML2.Protocol
 {
     /// <summary>
     /// Base class for all SAML20 specific endpoints.

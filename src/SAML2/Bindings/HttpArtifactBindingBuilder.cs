@@ -4,7 +4,7 @@ using System.IO;
 using System.Web;
 using System.Web.Caching;
 using System.Xml;
-using SAML2.config;
+using SAML2.Config;
 using SAML2.Logging;
 using SAML2.Properties;
 using SAML2.Schema.Protocol;

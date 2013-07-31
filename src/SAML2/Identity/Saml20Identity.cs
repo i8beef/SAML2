@@ -5,11 +5,11 @@ using System.Security.Principal;
 using System.Threading;
 using System.Web;
 using System.Web.Security;
-using SAML2.config;
+using SAML2.Config;
 using SAML2.Schema.Core;
 using SAML2.Identity;
 
-namespace SAML2.identity
+namespace SAML2.Identity
 {
     /// <summary>
     /// <para>

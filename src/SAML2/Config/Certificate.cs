@@ -3,7 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Xml.Serialization;
 using Saml2.Properties;
 
-namespace SAML2.config
+namespace SAML2.Config
 {
     /// <summary>
     /// Common implementation of X509 certificate references used in configuration files. 

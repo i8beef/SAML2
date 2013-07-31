@@ -12,11 +12,11 @@ using System.Web.Caching;
 using System.Xml;
 using SAML2.Actions;
 using SAML2.Bindings;
-using SAML2.config;
-using SAML2.identity;
+using SAML2.Config;
+using SAML2.Identity;
 using SAML2.Logging;
 using SAML2.Properties;
-using SAML2.protocol.pages;
+using SAML2.Protocol.pages;
 using SAML2.Schema.Core;
 using SAML2.Schema.Metadata;
 using SAML2.Schema.Protocol;
@@ -24,7 +24,7 @@ using SAML2.Specification;
 using SAML2.Utils;
 using Saml2.Properties;
 
-namespace SAML2.protocol
+namespace SAML2.Protocol
 {
     /// <summary>
     /// Implements a Saml 2.0 protocol sign-on endpoint. Handles all SAML bindings.

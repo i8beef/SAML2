@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SAML2.config;
+using SAML2.Config;
 using System;
 
 namespace SAML2.Actions

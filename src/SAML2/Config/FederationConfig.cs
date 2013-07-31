@@ -1,7 +1,7 @@
 using System;
 using System.Xml.Serialization;
 
-namespace SAML2.config
+namespace SAML2.Config
 {
     /// <summary>
     /// Common federation parameters container - used by federation initiators to populate the intended audiences in a saml assertion

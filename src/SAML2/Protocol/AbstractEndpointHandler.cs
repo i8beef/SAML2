@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading;
 using System.Web;
 using SAML2.Logging;
-using SAML2.config;
+using SAML2.Config;
 using System.Web.SessionState;
-using SAML2.protocol.pages;
+using SAML2.Protocol.pages;
 
-namespace SAML2.protocol
+namespace SAML2.Protocol
 {
     /// <summary>
     /// A base class for all endpoint handlers.

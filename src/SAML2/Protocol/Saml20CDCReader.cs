@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Web;
 using System;
-using SAML2.config;
+using SAML2.Config;
 using SAML2.Logging;
 using SAML2.Properties;
-using SAML2.protocol;
+using SAML2.Protocol;
 
-namespace SAML2.protocol
+namespace SAML2.Protocol
 {
     /// <summary>
     /// Common Domain Cookie reader endpoint
