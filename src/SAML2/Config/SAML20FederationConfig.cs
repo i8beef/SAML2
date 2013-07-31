@@ -110,6 +110,21 @@ namespace SAML2.config
             set { _logger = value; }
         }
 
+        /// <summary>
+        /// The assertion profile to use, defaults to built in Saml20.
+        /// </summary>
+        private string _profile;
+
+        /// <summary>
+        /// Gets or sets the Profile configuration
+        /// </summary>
+        [XmlElement(ElementName = "Profile")]
+        public string Profile
+        {
+            get { return _profile; }
+            set { _profile = value; }
+        }
+
         private IDPEndpoints _idpEndpoints;
 
         /// <summary>

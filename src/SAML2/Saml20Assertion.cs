@@ -33,7 +33,7 @@ namespace SAML2
 
         private ISaml20AssertionValidator _assertionValidator;
 
-        private AssertionProfile profile;
+        private string profile;
 
         /// <summary>
         /// An list of the unencrypted attributes in the assertion. This list is lazy initialized, ie. it will only be retrieved
@@ -66,17 +66,25 @@ namespace SAML2
                     FederationConfig config = FederationConfig.GetConfig();
                     if (config == null || config.AllowedAudienceUris == null)
                     {
-                        if (profile == AssertionProfile.DKSaml)
-                            _assertionValidator = new DKSaml20AssertionValidator(null, _quirksMode);
-                        else
+                        if (String.IsNullOrEmpty(profile))
+                        {
                             _assertionValidator = new Saml20AssertionValidator(null, _quirksMode);
+                        }
+                        else
+                        {
+                            _assertionValidator = (ISaml20AssertionValidator)Activator.CreateInstance(System.Type.GetType(profile), null, _quirksMode);
+                        }
                     }
                     else
                     {
-                        if (profile == AssertionProfile.DKSaml)
-                            _assertionValidator = new DKSaml20AssertionValidator(config.AllowedAudienceUris.Audiences, _quirksMode);
-                        else
+                        if (String.IsNullOrEmpty(profile))
+                        {
                             _assertionValidator = new Saml20AssertionValidator(config.AllowedAudienceUris.Audiences, _quirksMode);
+                        }
+                        else
+                        {
+                            _assertionValidator = (ISaml20AssertionValidator)Activator.CreateInstance(System.Type.GetType(profile), config.AllowedAudienceUris.Audiences, _quirksMode);
+                        }
                     }
                 }
                 return _assertionValidator;
@@ -314,7 +322,7 @@ namespace SAML2
         public Saml20Assertion(XmlElement assertion, IEnumerable<AsymmetricAlgorithm> trustedSigners, bool quirksMode)
         {
             _quirksMode = quirksMode;
-            profile = AssertionProfile.DKSaml;
+            profile = null;
             LoadXml(assertion, trustedSigners);
         }
 
@@ -325,7 +333,7 @@ namespace SAML2
         /// <param name="trustedSigners">If <code>null</code>, the signature of the given assertion is not verified.</param>
         /// <param name="profile">Determines the type of validation to perform on the token</param>
         /// <param name="quirksMode">if set to <c>true</c> quirks mode is enabled.</param>
-        public Saml20Assertion(XmlElement assertion, IEnumerable<AsymmetricAlgorithm> trustedSigners, AssertionProfile profile, bool quirksMode){
+        public Saml20Assertion(XmlElement assertion, IEnumerable<AsymmetricAlgorithm> trustedSigners, string profile, bool quirksMode){
             this.profile = profile;
             _quirksMode = quirksMode;
             LoadXml(assertion, trustedSigners);
@@ -339,7 +347,7 @@ namespace SAML2
         /// <param name="profile">Determines the type of validation to perform on the token</param>
         /// <param name="quirksMode">if set to <c>true</c> quirks mode is enabled.</param>
         /// <param name="autoValidate">Turn automatic validation on or off</param>
-        public Saml20Assertion(XmlElement assertion, IEnumerable<AsymmetricAlgorithm> trustedSigners, AssertionProfile profile, bool quirksMode, bool autoValidate)
+        public Saml20Assertion(XmlElement assertion, IEnumerable<AsymmetricAlgorithm> trustedSigners, string profile, bool quirksMode, bool autoValidate)
         {
             this.profile = profile;
             _quirksMode = quirksMode;
@@ -602,20 +610,5 @@ namespace SAML2
         {
             _samlAssertion.WriteTo(writer);
         }
-    }
-
-    /// <summary>
-    /// Assertion validation profiles
-    /// </summary>
-    public enum AssertionProfile
-    {
-        /// <summary>
-        /// Validate assertion core profile
-        /// </summary>
-        Core,
-        /// <summary>
-        /// Valiadate DKSaml profile (including core)
-        /// </summary>
-        DKSaml,
     }
 }
