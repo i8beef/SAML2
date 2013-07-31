@@ -32,7 +32,7 @@ namespace SAML2.config
         public SAML20FederationConfig()
         {
             ServiceProvider = new ServiceProviderElement();
-            _idpEndpoints = new IDPEndpoints();                        
+            _idpEndpoints = new IDPEndpoints();
         }
 
         /// <summary>
@@ -578,6 +578,7 @@ namespace SAML2.config
         {
             ContactPerson = new List<Contact>();
             NameIdFormats = new NameIdFormatsElement();
+            AuthenticationContexts = new AuthenticationContextsElement();
         }
 
         private string _id;
@@ -678,6 +679,11 @@ namespace SAML2.config
         /// </summary>
         public NameIdFormatsElement NameIdFormats;
 
+        /// <summary>
+        /// Supported AuthenticationContexts
+        /// </summary>
+        public AuthenticationContextsElement AuthenticationContexts;
+
         private Saml20ServiceEndpoint FindEndpoint(EndpointType type)
         {
             return serviceEndpoints.Find(delegate(Saml20ServiceEndpoint ep) { return ep.endpointType == type; });
@@ -746,6 +752,12 @@ namespace SAML2.config
         public bool All;
 
         /// <summary>
+        /// Allow creation of new identifiers
+        /// </summary>
+        [XmlAttribute(AttributeName = "allowCreate")]
+        public bool AllowCreate;
+
+        /// <summary>
         /// List of supported NameFormatIds
         /// </summary>
         [XmlElement(ElementName = "add")]
@@ -764,6 +776,83 @@ namespace SAML2.config
         /// </summary>
         [XmlAttribute(AttributeName="nameIdFormat")]
         public string NameIdFormat;
+    }
+
+    /// <summary>
+    /// Holds AuthenticationContexts supported by the service provider
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
+    public class AuthenticationContextsElement
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthenticationContextsElement"/> class.
+        /// </summary>
+        public AuthenticationContextsElement()
+        {
+            AuthenticationContexts = new List<AuthenticationContextElement>();
+        }
+
+        /// <summary>
+        /// AuthenticationContexts Comparison Type
+        /// </summary>
+        [XmlAttribute(AttributeName = "comparison")]
+        public AuthenticationContextsComparison Comparison;
+
+        /// <summary>
+        /// List of supported AuthenticationContexts
+        /// </summary>
+        [XmlElement(ElementName = "add")]
+        public List<AuthenticationContextElement> AuthenticationContexts;
+    }
+
+    /// <summary>
+    /// An element that holds a single supported AuthenticationContext
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
+    public class AuthenticationContextElement
+    {
+        /// <summary>
+        /// The AuthenticationContext
+        /// </summary>
+        [XmlAttribute(AttributeName = "context")]
+        public string AuthenticationContext;
+
+        /// <summary>
+        /// The AuthenticationContext Type
+        /// </summary>
+        [XmlAttribute(AttributeName = "referenceType")]
+        public string ReferenceType;
+    }
+
+    /// <summary>
+    /// The AuthenticationContext comparison type
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
+    public enum AuthenticationContextsComparison
+    {
+        /// <summary>
+        /// Exact
+        /// </summary>
+        [XmlEnum("Exact")]
+        Exact,
+        /// <summary>
+        /// Minimum
+        /// </summary>
+        [XmlEnum("Minimum")]
+        Minimum,
+        /// <summary>
+        /// Maximum
+        /// </summary>
+        [XmlEnum("Maximum")]
+        Maximum,
+        /// <summary>
+        /// Better
+        /// </summary>
+        [XmlEnum("Better")]
+        Better
     }
 
     /// <summary>

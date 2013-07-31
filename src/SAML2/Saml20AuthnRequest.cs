@@ -28,6 +28,16 @@ namespace SAML2
         }
 
         /// <summary>
+        /// Gets or sets the assertion consumer service URL.
+        /// </summary>
+        /// <value>The assertion consumer service URL.</value>
+        public string AssertionConsumerServiceURL
+        {
+            get { return request.AssertionConsumerServiceURL; }
+            set { request.AssertionConsumerServiceURL = value; }
+        }
+
+        /// <summary>
         /// The 'Destination' attribute of the &lt;AuthnRequest&gt;.
         /// </summary>
         public string Destination
@@ -82,6 +92,26 @@ namespace SAML2
         {
             get { return request.Issuer.Format; }
             set { request.Issuer.Format = value;}
+        }
+
+        /// <summary>
+        /// Gets or sets the name ID policy.
+        /// </summary>
+        /// <value>The name ID policy.</value>
+        public NameIDPolicy NameIDPolicy
+        {
+            get { return request.NameIDPolicy; }
+            set { request.NameIDPolicy = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the requested authn context.
+        /// </summary>
+        /// <value>The requested authn context.</value>
+        public RequestedAuthnContext RequestedAuthnContext
+        {
+            get { return request.RequestedAuthnContext; }
+            set { request.RequestedAuthnContext = value; }
         }
 
         #endregion
@@ -147,6 +177,98 @@ namespace SAML2
             Saml20AuthnRequest result = new Saml20AuthnRequest();
             result.Issuer = config.ServiceProvider.ID;
 
+            if (config.ServiceProvider.SignOnEndpoint.Binding != SAMLBinding.NOT_SET)
+            {
+                Uri baseURL = new Uri(config.ServiceProvider.Server);
+                result.AssertionConsumerServiceURL =
+                    new Uri(baseURL, config.ServiceProvider.SignOnEndpoint.localPath).ToString();
+            }
+
+            // Binding
+            switch (config.ServiceProvider.SignOnEndpoint.Binding)
+            {
+                case SAMLBinding.ARTIFACT:
+                    result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_Artifact;
+                    break;
+                case SAMLBinding.POST:
+                    result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_Post;
+                    break;
+                case SAMLBinding.REDIRECT:
+                    result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_Redirect;
+                    break;
+                case SAMLBinding.SOAP:
+                    result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_SOAP;
+                    break;
+            }
+
+            // NameIDPolicy
+            if (config.ServiceProvider.NameIdFormats.All || config.ServiceProvider.NameIdFormats.NameIdFormats.Count > 0)
+            {
+                result.NameIDPolicy = new NameIDPolicy
+                {
+                    AllowCreate = config.ServiceProvider.NameIdFormats.AllowCreate,
+                    Format =
+                        config.ServiceProvider.NameIdFormats.All
+                            ? Saml20Constants.NameIdentifierFormats.Unspecified
+                            : config.ServiceProvider.NameIdFormats.NameIdFormats[0].
+                                  NameIdFormat
+                };
+
+                if (result.NameIDPolicy.Format != Saml20Constants.NameIdentifierFormats.Entity)
+                {
+                    result.NameIDPolicy.SPNameQualifier = config.ServiceProvider.ID;
+                }
+            }
+
+            // RequestedAuthnContext
+            if (config.ServiceProvider.AuthenticationContexts.AuthenticationContexts.Count > 0)
+            {
+                result.RequestedAuthnContext = new RequestedAuthnContext();
+
+                switch (config.ServiceProvider.AuthenticationContexts.Comparison)
+                {
+                    case AuthenticationContextsComparison.Better:
+                        result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.better;
+                        result.RequestedAuthnContext.ComparisonSpecified = true;
+                        break;
+                    case AuthenticationContextsComparison.Minimum:
+                        result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.minimum;
+                        result.RequestedAuthnContext.ComparisonSpecified = true;
+                        break;
+                    case AuthenticationContextsComparison.Maximum:
+                        result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.maximum;
+                        result.RequestedAuthnContext.ComparisonSpecified = true;
+                        break;
+                    case AuthenticationContextsComparison.Exact:
+                        result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.exact;
+                        result.RequestedAuthnContext.ComparisonSpecified = true;
+                        break;
+                    default:
+                        result.RequestedAuthnContext.ComparisonSpecified = false;
+                        break;
+                }
+
+                result.RequestedAuthnContext.Items = new string[config.ServiceProvider.AuthenticationContexts.AuthenticationContexts.Count];
+                result.RequestedAuthnContext.ItemsElementName = new ItemsChoiceType7[config.ServiceProvider.AuthenticationContexts.AuthenticationContexts.Count];
+                int count = 0;
+                foreach (var authenticationContext in config.ServiceProvider.AuthenticationContexts.AuthenticationContexts)
+                {
+                    result.RequestedAuthnContext.Items[count] = authenticationContext.AuthenticationContext;
+
+                    switch (authenticationContext.ReferenceType)
+                    {
+                        case "AuthnContextDeclRef":
+                            result.RequestedAuthnContext.ItemsElementName[count] = ItemsChoiceType7.AuthnContextDeclRef;
+                            break;
+                        default:
+                            result.RequestedAuthnContext.ItemsElementName[count] = ItemsChoiceType7.AuthnContextClassRef;
+                            break;
+                    }
+                    count++;
+                }
+            }
+
+            // Restrictions
             List<ConditionAbstract> audienceRestrictions = new List<ConditionAbstract>(1);
 
             AudienceRestriction audienceRestriction = new AudienceRestriction();
