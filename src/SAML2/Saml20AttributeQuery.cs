@@ -212,7 +212,7 @@ namespace SAML2
             }
 
             Saml20Assertion assertion =
-                    new Saml20Assertion(xmlAssertion, null, SAML20FederationConfig.GetConfig().Profile, endPoint.QuirksMode);
+                    new Saml20Assertion(xmlAssertion, null, SAML20FederationConfig.GetConfig().AssertionProfile.AssertionValidator, endPoint.QuirksMode);
 
             if(Trace.ShouldTrace(TraceEventType.Information))
             {

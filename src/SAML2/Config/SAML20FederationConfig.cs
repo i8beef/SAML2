@@ -96,33 +96,53 @@ namespace SAML2.config
         }
 
         /// <summary>
-        /// The logger to use, defaults to NoLogging.
+        /// The logging configuration.
         /// </summary>
-        private string _logger;
+        private LoggingElement _logging;
 
         /// <summary>
         /// Gets or sets the Logger configuration
         /// </summary>
-        [XmlElement(ElementName = "Logger")]
-        public string Logger
+        [XmlElement(ElementName = "Logging")]
+        public LoggingElement Logging
         {
-            get { return _logger; }
-            set { _logger = value; }
+            get
+            {
+                if (_logging == null)
+                {
+                    _logging = new LoggingElement();
+                }
+                return _logging;
+            }
+            set
+            {
+                _logging = value;
+            }
         }
 
         /// <summary>
-        /// The assertion profile to use, defaults to built in Saml20.
+        /// The assertion profile configuration.
         /// </summary>
-        private string _profile;
+        private AssertionProfileElement _assertionProfile;
 
         /// <summary>
-        /// Gets or sets the Profile configuration
+        /// Gets or sets the assertion profile configuration section.
         /// </summary>
-        [XmlElement(ElementName = "Profile")]
-        public string Profile
+        [XmlElement(ElementName = "AssertionProfile")]
+        public AssertionProfileElement AssertionProfile
         {
-            get { return _profile; }
-            set { _profile = value; }
+            get
+            {
+                if (_assertionProfile == null)
+                {
+                    _assertionProfile = new AssertionProfileElement();
+                }
+                return _assertionProfile;
+            }
+            set
+            {
+                _assertionProfile = value;
+            }
         }
 
         private IDPEndpoints _idpEndpoints;
@@ -615,7 +635,8 @@ namespace SAML2.config
         /// <summary>
         /// List of service endpoints
         /// </summary>
-        [XmlElement("ServiceEndpoint")] public List<Saml20ServiceEndpoint> serviceEndpoints;
+        [XmlElement("ServiceEndpoint")]
+        public List<Saml20ServiceEndpoint> serviceEndpoints;
 
         /// <summary>
         /// Gets the logout endpoint.
@@ -674,6 +695,34 @@ namespace SAML2.config
         /// </summary>
         [XmlElement(Namespace = Saml20Constants.METADATA)] 
         public List<Contact> ContactPerson;
+    }
+
+    /// <summary>
+    /// Assertion profile element
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
+    public class AssertionProfileElement
+    {
+        /// <summary>
+        /// Assertion Validator
+        /// </summary>
+        [XmlAttribute("assertionValidator")]
+        public string AssertionValidator;
+    }
+
+    /// <summary>
+    /// Logging element
+    /// </summary>
+    [Serializable]
+    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
+    public class LoggingElement
+    {
+        /// <summary>
+        /// Profile
+        /// </summary>
+        [XmlAttribute("loggingFactory")]
+        public string LoggingFactory;
     }
 
     /// <summary>
