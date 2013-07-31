@@ -13,7 +13,6 @@ using SAML2.Schema.Metadata;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
 using Saml2.Properties;
-using Trace=SAML2.Utils.Trace;
 using SAML2.Actions;
 
 namespace SAML2.protocol
@@ -36,8 +35,7 @@ namespace SAML2.protocol
             }
             catch (Exception e)
             {
-                if (Trace.ShouldTrace(TraceEventType.Error))
-                    Trace.TraceData(TraceEventType.Error, e.ToString());
+                Logger.Error(e.Message, e);
             }
         }
 
@@ -49,7 +47,7 @@ namespace SAML2.protocol
         /// <param name="context">The context.</param>
         protected override void Handle(HttpContext context)
         {
-            Trace.TraceMethodCalled(GetType(), "Handle()");
+            Logger.DebugFormat("{0}.{1} called", GetType(), "Handle()");
             
             try
             {
@@ -117,7 +115,7 @@ namespace SAML2.protocol
 
         private void HandleSOAP(HttpContext context, Stream inputStream)
         {
-            Trace.TraceMethodCalled(GetType(), "HandleSOAP");
+            Logger.DebugFormat("{0}.{1} called", GetType(), "HandleSOAP()");
 
             HttpArtifactBindingParser parser = new HttpArtifactBindingParser(inputStream);
             HttpArtifactBindingBuilder builder = new HttpArtifactBindingBuilder(context);
@@ -127,7 +125,7 @@ namespace SAML2.protocol
             
             if (parser.IsArtifactResolve())
             {
-                Trace.TraceData(TraceEventType.Information, Tracing.ArtifactResolveIn);
+                Logger.Debug(Tracing.ArtifactResolveIn);
 
                 if (!parser.CheckSamlMessageSignature(idp.metadata.Keys))
                 {
@@ -140,7 +138,7 @@ namespace SAML2.protocol
             }
             else if (parser.IsArtifactResponse())
             {
-                Trace.TraceData(TraceEventType.Information, Tracing.ArtifactResponseIn);
+                Logger.Debug(Tracing.ArtifactResponseIn);
 
                 Status status = parser.ArtifactResponse.Status;
                 if (status.StatusCode.Value != Saml20Constants.StatusCodes.Success)
@@ -152,8 +150,7 @@ namespace SAML2.protocol
 
                 if (parser.ArtifactResponse.Any.LocalName == LogoutRequest.ELEMENT_NAME)
                 {
-                    if(Trace.ShouldTrace(TraceEventType.Information))
-                        Trace.TraceData(TraceEventType.Information, string.Format(Tracing.LogoutRequest, parser.ArtifactResponse.Any.OuterXml));
+                    Logger.DebugFormat(Tracing.LogoutRequest, parser.ArtifactResponse.Any.OuterXml);
 
                     //Send logoutresponse via artifact
                     Saml20LogoutResponse response = new Saml20LogoutResponse();
@@ -180,8 +177,7 @@ namespace SAML2.protocol
             }
             else if(parser.IsLogoutReqest())
             {
-                if (Trace.ShouldTrace(TraceEventType.Information))
-                    Trace.TraceData(TraceEventType.Information, string.Format(Tracing.LogoutRequest, parser.SamlMessage.OuterXml));
+                Logger.DebugFormat(Tracing.LogoutRequest, parser.SamlMessage.OuterXml);
 
                 LogoutRequest req = parser.LogoutRequest;
                 
@@ -217,7 +213,7 @@ namespace SAML2.protocol
 
         private void TransferClient(IDPEndPoint endpoint, HttpContext context)
         {
-            Trace.TraceMethodCalled(GetType(), "TransferClient()");
+            Logger.DebugFormat("{0}.{1} called", GetType(), "TransferClient()");
             
             Saml20LogoutRequest request = Saml20LogoutRequest.GetDefault();
             
@@ -241,8 +237,7 @@ namespace SAML2.protocol
                 XmlSignatureUtils.SignDocument(requestDocument, request.ID);
                 builder.Request = requestDocument.OuterXml;
 
-                if(Trace.ShouldTrace(TraceEventType.Information))
-                    Trace.TraceData(TraceEventType.Information, string.Format(Tracing.SendLogoutRequest, "POST", endpoint.Id, requestDocument.OuterXml));
+                Logger.DebugFormat(Tracing.SendLogoutRequest, "POST", endpoint.Id, requestDocument.OuterXml);
 
                 Logger.Debug("Logout request for POST binding");
                 builder.GetPage().ProcessRequest(context);
@@ -262,8 +257,7 @@ namespace SAML2.protocol
                 
                 string redirectUrl = destination.Url + "?" + builder.ToQuery();
 
-                if (Trace.ShouldTrace(TraceEventType.Information))
-                    Trace.TraceData(TraceEventType.Information, string.Format(Tracing.SendLogoutRequest, "REDIRECT", endpoint.Id, redirectUrl));
+                Logger.DebugFormat(Tracing.SendLogoutRequest, "REDIRECT", endpoint.Id, redirectUrl);
 
                 Logger.Debug("Logout request for redirect binding");
                 context.Response.Redirect(redirectUrl, true);
@@ -272,8 +266,7 @@ namespace SAML2.protocol
 
             if(destination.Binding == SAMLBinding.ARTIFACT)
             {
-                if (Trace.ShouldTrace(TraceEventType.Information))
-                    Trace.TraceData(TraceEventType.Information, string.Format(Tracing.SendLogoutRequest, "ARTIFACT", endpoint.Id, string.Empty));
+                Logger.DebugFormat(Tracing.SendLogoutRequest, "ARTIFACT", endpoint.Id, string.Empty);
 
                 request.Destination = destination.Url;
                 request.Reason = Saml20Constants.Reasons.User;
@@ -294,8 +287,7 @@ namespace SAML2.protocol
 
         private void HandleResponse(HttpContext context)
         {
-            Trace.TraceMethodCalled(GetType(), "HandleResponse()");
-
+            Logger.DebugFormat("{0}.{1} called", GetType(), "HandleResponse()");
 
             string message = string.Empty;
 
@@ -387,7 +379,7 @@ namespace SAML2.protocol
 
         private void HandleRequest(HttpContext context)
         {
-            Trace.TraceMethodCalled(GetType(), "HandleRequest()");
+            Logger.DebugFormat("{0}.{1} called", GetType(), "HandleRequest()");
 
             //Fetch the endpoint configuration
             IDPEndPoint idpEndpoint = RetrieveIDPConfiguration(context.Session[IDPLoginSessionKey].ToString());
@@ -514,11 +506,11 @@ namespace SAML2.protocol
         {
             foreach (IAction action in Actions.Actions.GetActions())
             {
-                Trace.TraceMethodCalled(action.GetType(), "LogoutAction()");
+                Logger.DebugFormat("{0}.{1} called", action.GetType(), "LogoutAction()");
                 
                 action.LogoutAction(this, context, IdPInitiated);
 
-                Trace.TraceMethodDone(action.GetType(), "LogoutAction()");
+                Logger.DebugFormat("{0}.{1} finished", action.GetType(), "LogoutAction()");
             }
         }
                 

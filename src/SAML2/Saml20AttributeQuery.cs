@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Xml;
 using SAML2;
 using SAML2.Bindings;
+using SAML2.Logging;
 using SAML2.config;
 using SAML2.identity;
 using SAML2.Properties;
@@ -16,7 +18,6 @@ using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
 using Saml2.Properties;
-using Trace=SAML2.Utils.Trace;
 
 namespace SAML2
 {
@@ -40,6 +41,11 @@ namespace SAML2
             _attributes = new List<SamlAttribute>();
 
         }
+
+        /// <summary>
+        /// Logger instance.
+        /// </summary>
+        protected static readonly IInternalLogger Logger = LoggerProvider.LoggerFor(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Gets or sets the issuer of the attribute query.
@@ -120,7 +126,7 @@ namespace SAML2
 
             if (string.IsNullOrEmpty(endpointId))
             {
-                Trace.TraceData(TraceEventType.Information, Tracing.AttrQueryNoLogin);
+                Logger.Debug(Tracing.AttrQueryNoLogin);
                 throw new InvalidOperationException(Tracing.AttrQueryNoLogin);
             }
 
@@ -153,7 +159,7 @@ namespace SAML2
         /// <param name="nameIdFormat">The nameid format.</param>
         public void PerformQuery(HttpContext context, IDPEndPoint endPoint, string nameIdFormat)
         {
-            Trace.TraceMethodCalled(GetType(), "PerformQuery()");
+            Logger.DebugFormat("{0}.{1} called", GetType(), "PerformQuery()");
 
             HttpSOAPBindingBuilder builder = new HttpSOAPBindingBuilder(context);
             
@@ -172,8 +178,7 @@ namespace SAML2
 
             Stream s;
 
-            if (Trace.ShouldTrace(TraceEventType.Information))
-                Trace.TraceData(TraceEventType.Information, string.Format(Tracing.SendAttrQuery, endPoint.metadata.GetAttributeQueryEndpointLocation(), query.OuterXml));
+            Logger.DebugFormat(Tracing.SendAttrQuery, endPoint.metadata.GetAttributeQueryEndpointLocation(), query.OuterXml);
 
             try
             {
@@ -182,7 +187,7 @@ namespace SAML2
 
             }catch(Exception e)
             {
-                Trace.TraceData(TraceEventType.Error, e.ToString());
+                Logger.Error(e.Message, e);
                 throw;
             }
 
@@ -192,8 +197,7 @@ namespace SAML2
 
             if (status.StatusCode.Value != Saml20Constants.StatusCodes.Success)
             {
-                Trace.TraceData(TraceEventType.Error,
-                                string.Format(Tracing.AttrQueryStatusError, Serialization.SerializeToXmlString(status)));
+                Logger.ErrorFormat(Tracing.AttrQueryStatusError, Serialization.SerializeToXmlString(status));
                 throw new Saml20Exception(status.StatusMessage);
             }
 
@@ -214,13 +218,10 @@ namespace SAML2
             Saml20Assertion assertion =
                     new Saml20Assertion(xmlAssertion, null, SAML20FederationConfig.GetConfig().AssertionProfile.AssertionValidator, endPoint.QuirksMode);
 
-            if(Trace.ShouldTrace(TraceEventType.Information))
-            {
-                Trace.TraceData(TraceEventType.Information, string.Format(Tracing.AttrQueryAssertion, xmlAssertion == null ? string.Empty : xmlAssertion.OuterXml));
-            }
+            Logger.DebugFormat(Tracing.AttrQueryAssertion, xmlAssertion == null ? string.Empty : xmlAssertion.OuterXml);
 
             if(!assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endPoint.metadata.Keys, endPoint))){
-                Trace.TraceData(TraceEventType.Error, Resources.SignatureInvalid);
+                Logger.Error(Resources.SignatureInvalid);
                 throw new Saml20Exception(Resources.SignatureInvalid);
             }
             

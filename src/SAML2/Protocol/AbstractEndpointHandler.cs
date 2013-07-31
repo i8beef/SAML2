@@ -8,7 +8,6 @@ using SAML2.Logging;
 using SAML2.config;
 using System.Web.SessionState;
 using SAML2.protocol.pages;
-using Trace=SAML2.Utils.Trace;
 
 namespace SAML2.protocol
 {

@@ -3,12 +3,14 @@ using System.IO;
 using System.Net;
 using System.Net.Mime;
 using System.Net.Security;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
 using System.Web;
 using System.Xml;
+using SAML2.Logging;
 using SAML2.config;
 
 namespace SAML2.Bindings
@@ -22,6 +24,11 @@ namespace SAML2.Bindings
         /// The current http context
         /// </summary>
         protected HttpContext _context;
+
+        /// <summary>
+        /// Logger instance.
+        /// </summary>
+        protected static readonly IInternalLogger Logger = LoggerProvider.LoggerFor(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpSOAPBindingBuilder"/> class.

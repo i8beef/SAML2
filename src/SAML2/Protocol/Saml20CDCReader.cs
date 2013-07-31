@@ -5,7 +5,6 @@ using SAML2.config;
 using SAML2.Logging;
 using SAML2.Properties;
 using SAML2.protocol;
-using Trace=SAML2.Utils.Trace;
 
 namespace SAML2.protocol
 {
@@ -22,7 +21,7 @@ namespace SAML2.protocol
         {
             try
             {
-                Trace.TraceMethodCalled(GetType(), "ProcessRequest()");
+                Logger.DebugFormat("{0}.{1} called", GetType(), "ProcessRequest()");
                 SAML20FederationConfig config = ConfigurationReader.GetConfig<SAML20FederationConfig>();
 
                 if (config == null)
@@ -42,9 +41,7 @@ namespace SAML2.protocol
                 {
                     returnUrl += "&_saml_idp=" + HttpUtility.UrlEncode(samlIdp.Value);
 
-                    if (Trace.ShouldTrace(TraceEventType.Information))
-                        Trace.TraceData(TraceEventType.Information, string.Format(Tracing.CDC, samlIdp.Value));
-
+                    Logger.DebugFormat(Tracing.CDC, samlIdp.Value);
                     Logger.Debug("Redirection to Signon endpoint found in Common Domain Cookie: " + samlIdp.Value);
                 }
                 else

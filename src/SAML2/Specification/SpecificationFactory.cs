@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using SAML2.config;
-using Trace=SAML2.Utils.Trace;
 
 namespace SAML2.Specification
 {
@@ -31,7 +30,7 @@ namespace SAML2.Specification
                         specs.Add(val);
                     }catch(Exception e)
                     {
-                        Trace.TraceData(TraceEventType.Error, e.ToString());
+                        Logging.LoggerProvider.LoggerFor(typeof(SpecificationFactory)).Error(e.Message, e);
                     }
                 }
             }

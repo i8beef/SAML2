@@ -233,7 +233,6 @@
     <Compile Include="Utils\Saml20Utils.cs" />
     <Compile Include="Utils\Serialization.cs" />
     <Compile Include="Utils\TimeRestrictionValidation.cs" />
-    <Compile Include="Utils\Trace.cs" />
     <Compile Include="Utils\XmlSignatureUtils.cs" />
     <Compile Include="Validation\ISaml20AssertionValidator.cs" />
     <Compile Include="Validation\ISaml20AttributeValidator.cs" />
@@ -254,13 +253,14 @@
     <Compile Include="Validation\Saml20XmlAnyAttributeValidator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="dk.nita.saml20.csproj" />
     <Content Include="Protocol\Resources\DefaultStyle.css" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx" />
     <EmbeddedResource Include="Properties\Saml20Resources.resx" />
-    <EmbeddedResource Include="Properties\Tracing.resx" />
+    <EmbeddedResource Include="Properties\Tracing.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -23,7 +23,6 @@ using SAML2.Schema.Protocol;
 using SAML2.Specification;
 using SAML2.Utils;
 using Saml2.Properties;
-using Trace=SAML2.Utils.Trace;
 
 namespace SAML2.protocol
 {
@@ -54,8 +53,7 @@ namespace SAML2.protocol
             }
             catch(Exception e)
             {
-                if (Trace.ShouldTrace(TraceEventType.Error))
-                    Trace.TraceData(TraceEventType.Error, e.ToString());
+                Logger.Error(e.Message, e);
             }
         }
 
@@ -67,7 +65,7 @@ namespace SAML2.protocol
         /// <param name="context">The context.</param>
         protected override void Handle(HttpContext context)
         {
-            Trace.TraceMethodCalled(GetType(), "Handle()");
+            Logger.DebugFormat("{0}.{1} called", GetType(), "Handle()");
 
             //Some IdP's are known to fail to set an actual value in the SOAPAction header
             //so we just check for the existence of the header field.
@@ -114,13 +112,13 @@ namespace SAML2.protocol
 
         private void HandleSOAP(HttpContext context, Stream inputStream)
         {
-            Trace.TraceMethodCalled(GetType(), "HandleSOAP");
+            Logger.DebugFormat("{0}.{1} called", GetType(), "HandleSOAP");
             HttpArtifactBindingParser parser = new HttpArtifactBindingParser(inputStream);
             HttpArtifactBindingBuilder builder = new HttpArtifactBindingBuilder(context);
 
             if(parser.IsArtifactResolve())
             {
-                Trace.TraceData(TraceEventType.Information, Tracing.ArtifactResolveIn);
+                Logger.Debug(Tracing.ArtifactResolveIn);
 
                 IDPEndPoint idp = RetrieveIDPConfiguration(parser.Issuer);
                 if (!parser.CheckSamlMessageSignature(idp.metadata.Keys))
@@ -131,7 +129,7 @@ namespace SAML2.protocol
                 builder.RespondToArtifactResolve(parser.ArtifactResolve);
             }else if(parser.IsArtifactResponse())
             {
-                Trace.TraceData(TraceEventType.Information, Tracing.ArtifactResponseIn);
+                Logger.Debug(Tracing.ArtifactResponseIn);
 
                 Status status = parser.ArtifactResponse.Status;
                 if (status.StatusCode.Value != Saml20Constants.StatusCodes.Success)
@@ -181,7 +179,7 @@ namespace SAML2.protocol
         /// </summary>
         private void SendRequest(HttpContext context)
         {
-            Trace.TraceMethodCalled(GetType(), "SendRequest()");
+            Logger.DebugFormat("{0}.{1} called", GetType(), "SendRequest()");
 
             // See if the "ReturnUrl" - parameter is set.
             string returnUrl = context.Request.QueryString["ReturnUrl"];
@@ -337,8 +335,7 @@ namespace SAML2.protocol
             XmlDocument doc = new XmlDocument();
             doc.PreserveWhitespace = true;
             string samlResponse = encoding.GetString(Convert.FromBase64String(base64));
-            if (Trace.ShouldTrace(TraceEventType.Information))
-                Trace.TraceData(TraceEventType.Information, "Decoded SAMLResponse", samlResponse);
+            Logger.DebugFormat("Decoded SAMLResponse, msg: {0}", samlResponse);
 
             doc.LoadXml(samlResponse);
             return doc;
@@ -349,7 +346,7 @@ namespace SAML2.protocol
         /// </summary>
         private void HandleEncryptedAssertion(HttpContext context, XmlElement elem)
         {
-            Trace.TraceMethodCalled(GetType(), "HandleEncryptedAssertion()");
+            Logger.DebugFormat("{0}.{1} called", GetType(), "HandleEncryptedAssertion()");
             Saml20EncryptedAssertion decryptedAssertion = GetDecryptedAssertion(elem);
             HandleAssertion(context, decryptedAssertion.Assertion.DocumentElement);
         }
@@ -388,7 +385,7 @@ namespace SAML2.protocol
         /// <param name="endpoint">The endpoint.</param>
         protected virtual void PreHandleAssertion(HttpContext context, XmlElement elem, IDPEndPoint endpoint)
         {
-            Trace.TraceMethodCalled(GetType(), "PreHandleAssertion");
+            Logger.DebugFormat("{0}.{1} called", GetType(), "PreHandleAssertion");
 
             if (endpoint != null && endpoint.SLOEndpoint != null && !String.IsNullOrEmpty(endpoint.SLOEndpoint.IdpTokenAccessor))
             {
@@ -398,7 +395,7 @@ namespace SAML2.protocol
                     idpTokenAccessor.ReadToken(elem);
             }
 
-            Trace.TraceMethodDone(GetType(), "PreHandleAssertion");
+            Logger.DebugFormat("{0}.{1} finished", GetType(), "PreHandleAssertion");
         }
 
         /// <summary>
@@ -406,7 +403,7 @@ namespace SAML2.protocol
         /// </summary>
         private void HandleAssertion(HttpContext context, XmlElement elem)
         {
-            Trace.TraceMethodCalled(GetType(), "HandleAssertion");
+            Logger.DebugFormat("{0}.{1} called", GetType(), "HandleAssertion");
 
             string issuer = GetIssuer(elem);
             
@@ -516,10 +513,7 @@ namespace SAML2.protocol
             context.Session[IDPNameIdFormat] = assertion.Subject.Format;
             context.Session[IDPNameId] = assertion.Subject.Value;
 
-            if(Trace.ShouldTrace(TraceEventType.Information))
-            {
-                Trace.TraceData(TraceEventType.Information, string.Format(Tracing.Login, assertion.Subject.Value, assertion.SessionIndex, assertion.Subject.Format));
-            }
+            Logger.DebugFormat(Tracing.Login, assertion.Subject.Value, assertion.SessionIndex, assertion.Subject.Format);
 
             string inResponseTo = "(unknown)";
             if (assertion.GetSubjectConfirmationData() != null && assertion.GetSubjectConfirmationData().InResponseTo != null)
@@ -538,11 +532,11 @@ namespace SAML2.protocol
 
             foreach(IAction action in Actions.Actions.GetActions())
             {
-                Trace.TraceMethodCalled(action.GetType(), "LoginAction()");
+                Logger.DebugFormat("{0}.{1} called", action.GetType(), "LoginAction()");
 
                 action.LoginAction(this, context, assertion);
-                
-                Trace.TraceMethodDone(action.GetType(), "LoginAction()");
+
+                Logger.DebugFormat("{0}.{1} finished", action.GetType(), "LoginAction()");
             }
         }
 
@@ -592,7 +586,7 @@ namespace SAML2.protocol
 
             if (destination.Binding == SAMLBinding.REDIRECT)
             {
-                Trace.TraceData(TraceEventType.Information, string.Format(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HTTP_Redirect, idpEndpoint.Id));
+                Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HTTP_Redirect, idpEndpoint.Id);
                 
                 HttpRedirectBindingBuilder builder = new HttpRedirectBindingBuilder();
                 builder.signingKey = _certificate.PrivateKey;
@@ -607,7 +601,7 @@ namespace SAML2.protocol
 
             if (destination.Binding == SAMLBinding.POST)
             {
-                Trace.TraceData(TraceEventType.Information, string.Format(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HTTP_Post, idpEndpoint.Id));
+                Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HTTP_Post, idpEndpoint.Id);
 
                 HttpPostBindingBuilder builder = new HttpPostBindingBuilder(destination);
                 //Honor the ForceProtocolBinding and only set this if it's not already set
@@ -625,7 +619,7 @@ namespace SAML2.protocol
 
             if(destination.Binding == SAMLBinding.ARTIFACT)
             {
-                Trace.TraceData(TraceEventType.Information, string.Format(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HTTP_Artifact, idpEndpoint.Id));
+                Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HTTP_Artifact, idpEndpoint.Id);
 
                 HttpArtifactBindingBuilder builder = new HttpArtifactBindingBuilder(context);
                 //Honor the ForceProtocolBinding and only set this if it's not already set

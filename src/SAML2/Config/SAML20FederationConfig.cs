@@ -12,7 +12,6 @@ using SAML2.protocol;
 using SAML2.Schema.Metadata;
 using SAML2.Utils;
 using Saml2.Properties;
-using Trace=SAML2.Utils.Trace;
 using System.Security.Cryptography;
 
 namespace SAML2.config
@@ -477,7 +476,7 @@ namespace SAML2.config
             } catch(Exception e)
             {
                 // Probably not a metadata file.
-                Trace.TraceData(TraceEventType.Error, file, "Probably not a SAML2.0 metadata file.", e.ToString());
+                Logging.LoggerProvider.LoggerFor(GetType()).Error("Problem parsing metadata file", e);
                 return null;
             }            
         }

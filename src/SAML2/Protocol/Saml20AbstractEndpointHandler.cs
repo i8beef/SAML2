@@ -9,7 +9,6 @@ using SAML2.Logging;
 using SAML2.Properties;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
-using Trace=SAML2.Utils.Trace;
 
 namespace SAML2.protocol
 {
@@ -127,8 +126,7 @@ namespace SAML2.protocol
                     IDPEndPoint endPoint = config.FindEndPoint(cdc.PreferredIDP);
                     if (endPoint != null)
                     {
-                        if (Trace.ShouldTrace(TraceEventType.Information))
-                            Trace.TraceData(TraceEventType.Information, "IDP read from Common Domain Cookie: " + cdc.PreferredIDP);
+                        Logger.Debug("IDP read from Common Domain Cookie: " + cdc.PreferredIDP);
                     
                         return endPoint;
                     }
@@ -148,8 +146,7 @@ namespace SAML2.protocol
             var defaultIdp = config.Endpoints.IDPEndPoints.Find(idp => idp.Default);
             if(defaultIdp != null)
             {
-                if (Trace.ShouldTrace(TraceEventType.Information))
-                    Trace.TraceData(TraceEventType.Information, "Using IdP marked as default: " + defaultIdp.Id);
+                Logger.Debug("Using IdP marked as default: " + defaultIdp.Id);
 
                 return defaultIdp;
             }
@@ -157,8 +154,7 @@ namespace SAML2.protocol
             // In case an Idp selection url has been configured, redirect to that one.
             if(!string.IsNullOrEmpty(config.Endpoints.idpSelectionUrl))
             {
-                if (Trace.ShouldTrace(TraceEventType.Information))
-                    Trace.TraceData(TraceEventType.Information, "Redirecting to idpSelectionUrl for selection of IDP: " + config.Endpoints.idpSelectionUrl);
+                Logger.Debug("Redirecting to idpSelectionUrl for selection of IDP: " + config.Endpoints.idpSelectionUrl);
 
                 context.Response.Redirect(config.Endpoints.idpSelectionUrl);
             }

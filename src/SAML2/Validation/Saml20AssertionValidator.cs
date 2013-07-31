@@ -4,7 +4,6 @@ using System.Diagnostics;
 using SAML2.Schema.Core;
 using SAML2.Utils;
 using SAML2.Validation;
-using Trace=SAML2.Utils.Trace;
 
 namespace SAML2.Validation
 {
@@ -297,11 +296,12 @@ namespace SAML2.Validation
                             break;
                     }
 
-                    if (Trace.ShouldTrace(TraceEventType.Verbose))
+                    var logger = Logging.LoggerProvider.LoggerFor(this.GetType());
+                    if (logger.IsDebugEnabled)
                     {
                         string intended = "Intended uris: " + Environment.NewLine + String.Join(Environment.NewLine, audienceRestriction.Audience.ToArray());
                         string allowed = "Allowed uris: " + Environment.NewLine + String.Join(Environment.NewLine, _allowedAudienceUris.ToArray());
-                        Trace.TraceData(TraceEventType.Verbose, Trace.CreateTraceString(GetType(), "ValidateConditions"), intended, allowed);
+                        logger.DebugFormat("{0}.{1} {2}", GetType(), "ValidateConditions", intended + allowed);
                     }
 
                     if (match == null)

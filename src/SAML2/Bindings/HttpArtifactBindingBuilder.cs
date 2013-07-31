@@ -9,7 +9,6 @@ using SAML2.Logging;
 using SAML2.Properties;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
-using Trace=SAML2.Utils.Trace;
 
 namespace SAML2.Bindings
 {
@@ -107,9 +106,9 @@ namespace SAML2.Bindings
                 destinationUrl += "&relayState=" + relayState;
             }
 
-            if(Trace.ShouldTrace(TraceEventType.Information))
+            if (Logger.IsDebugEnabled)
             {
-                Trace.TraceData(TraceEventType.Information, string.Format(Tracing.CreatedArtifact, artifact, signedSamlMessage.OuterXml));
+                Logger.DebugFormat(Tracing.CreatedArtifact, artifact, signedSamlMessage.OuterXml);
             }
 
             _context.Response.Redirect(destinationUrl);
@@ -146,9 +145,9 @@ namespace SAML2.Bindings
 
             XmlSignatureUtils.SignDocument(responseDoc, response.ID);
 
-            if(Trace.ShouldTrace(TraceEventType.Information))
+            if (Logger.IsDebugEnabled)
             {
-                Trace.TraceData(TraceEventType.Information, string.Format(Tracing.RespondToArtifactResolve, artifactResolve.Artifact, responseDoc.OuterXml));
+                Logger.DebugFormat(Tracing.RespondToArtifactResolve, artifactResolve.Artifact, responseDoc.OuterXml);
             }
             SendResponseMessage(responseDoc.OuterXml);
         }
@@ -159,7 +158,7 @@ namespace SAML2.Bindings
         /// <returns>A stream containing the artifact response from the IdP</returns>
         public Stream ResolveArtifact()
         {
-            Trace.TraceMethodCalled(GetType(), "ResolveArtifact()");
+            Logger.DebugFormat("{0}.{1} called", GetType(), "ResolveArtifact()");
 
             string artifact = _context.Request.Params["SAMLart"];
 
@@ -185,10 +184,7 @@ namespace SAML2.Bindings
 
             string artifactResolveString = doc.OuterXml;
 
-            if(Trace.ShouldTrace(TraceEventType.Information))
-            {
-                Trace.TraceData(TraceEventType.Information, string.Format(Tracing.ResolveArtifact, artifact, idpEndPoint.Id, endpointIndex, endpointUrl, artifactResolveString));
-            }
+            Logger.DebugFormat(Tracing.ResolveArtifact, artifact, idpEndPoint.Id, endpointIndex, endpointUrl, artifactResolveString);
 
             return GetResponse(endpointUrl, artifactResolveString, idpEndPoint.ArtifactResolution);
             

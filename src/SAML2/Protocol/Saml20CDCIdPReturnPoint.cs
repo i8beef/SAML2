@@ -19,7 +19,7 @@ namespace SAML2.protocol
         {
             try
             {
-                Trace.TraceMethodCalled(GetType(), "ProcessRequest()");
+                Logger.DebugFormat("{0}.{1} called", GetType(), "ProcessRequest()");
                 SAML20FederationConfig config = ConfigurationReader.GetConfig<SAML20FederationConfig>();
 
                 if (config == null)
