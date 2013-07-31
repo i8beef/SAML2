@@ -95,6 +95,21 @@ namespace SAML2.config
             set { _showError = value; }
         }
 
+        /// <summary>
+        /// The logger to use, defaults to NoLogging.
+        /// </summary>
+        private string _logger;
+
+        /// <summary>
+        /// Gets or sets the Logger configuration
+        /// </summary>
+        [XmlElement(ElementName = "Logger")]
+        public string Logger
+        {
+            get { return _logger; }
+            set { _logger = value; }
+        }
+
         private IDPEndpoints _idpEndpoints;
 
         /// <summary>
