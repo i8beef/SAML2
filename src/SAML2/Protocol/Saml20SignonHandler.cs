@@ -91,13 +91,12 @@ namespace SAML2.protocol
                 if (SAML20FederationConfig.GetConfig().CommonDomain.Enabled && context.Request.QueryString["r"] == null
                     && context.Request.Params["cidp"] == null)
                 {
-                    AuditLogging.logEntry(Direction.OUT, Operation.DISCOVER, "Redirecting to Common Domain for IDP discovery");
+                    Logger.Debug("Redirecting to Common Domain for IDP discovery");
                     context.Response.Redirect(SAML20FederationConfig.GetConfig().CommonDomain.LocalReaderEndpoint);
                 }
                 else
                 {
-                    AuditLogging.logEntry(Direction.IN, Operation.ACCESS,
-                                                 "User accessing resource: " + context.Request.RawUrl +
+                    Logger.Warn("User accessing resource: " + context.Request.RawUrl +
                                                  " without authentication.");
                     SendRequest(context);
                 }
@@ -124,12 +123,10 @@ namespace SAML2.protocol
                 Trace.TraceData(TraceEventType.Information, Tracing.ArtifactResolveIn);
 
                 IDPEndPoint idp = RetrieveIDPConfiguration(parser.Issuer);
-                AuditLogging.IdpId = idp.Id;
-                AuditLogging.AssertionId = parser.ArtifactResolve.ID;
                 if (!parser.CheckSamlMessageSignature(idp.metadata.Keys))
                 {
                     HandleError(context, "Invalid Saml message signature");
-                    AuditLogging.logEntry(Direction.IN, Operation.ARTIFACTRESOLVE, "Could not verify signature", parser.SamlMessage);
+                    Logger.Error("Could not verify signature, msg: " + parser.SamlMessage);
                 };
                 builder.RespondToArtifactResolve(parser.ArtifactResolve);
             }else if(parser.IsArtifactResponse())
@@ -140,7 +137,7 @@ namespace SAML2.protocol
                 if (status.StatusCode.Value != Saml20Constants.StatusCodes.Success)
                 {
                     HandleError(context, status);
-                    AuditLogging.logEntry(Direction.IN, Operation.ARTIFACTRESOLVE, string.Format("Illegal status for ArtifactResponse {0} expected 'Success', msg: {1}", status.StatusCode.Value, parser.SamlMessage));
+                    Logger.ErrorFormat("Illegal status for ArtifactResponse {0} expected 'Success', msg: {1}", status.StatusCode.Value, parser.SamlMessage);
                     return;
                 }
                 if(parser.ArtifactResponse.Any.LocalName == Response.ELEMENT_NAME)
@@ -159,7 +156,7 @@ namespace SAML2.protocol
 
                 }else
                 {
-                    AuditLogging.logEntry(Direction.IN, Operation.ARTIFACTRESOLVE, string.Format("Unsupported payload message in ArtifactResponse: {0}, msg: {1}", parser.ArtifactResponse.Any.LocalName, parser.SamlMessage));
+                    Logger.ErrorFormat("Unsupported payload message in ArtifactResponse: {0}, msg: {1}", parser.ArtifactResponse.Any.LocalName, parser.SamlMessage);
                     HandleError(context,
                                 string.Format("Unsupported payload message in ArtifactResponse: {0}",
                                               parser.ArtifactResponse.Any.LocalName));
@@ -173,7 +170,7 @@ namespace SAML2.protocol
                 }
                 else
                 {
-                    AuditLogging.logEntry(Direction.IN, Operation.ARTIFACTRESOLVE, string.Format("Unsupported SamlMessage element: {0}, msg: {1}", parser.SamlMessageName, parser.SamlMessage));
+                    Logger.ErrorFormat("Unsupported SamlMessage element: {0}, msg: {1}", parser.SamlMessageName, parser.SamlMessage);
                     HandleError(context, string.Format("Unsupported SamlMessage element: {0}", parser.SamlMessageName));
                 }
             }
@@ -247,7 +244,7 @@ namespace SAML2.protocol
             Encoding defaultEncoding = Encoding.UTF8;
             XmlDocument doc = GetDecodedSamlResponse(context, defaultEncoding);
 
-            AuditLogging.logEntry(Direction.IN, Operation.LOGIN, "Received SAMLResponse: " + doc.OuterXml);
+            Logger.Debug("Received SAMLResponse: " + doc.OuterXml);
 
             try
             {
@@ -327,7 +324,7 @@ namespace SAML2.protocol
 
             if (inResponseTo != expectedInResponseTo)
             {
-                AuditLogging.logEntry(Direction.IN, Operation.LOGIN, string.Format("Unexpected value {0} for InResponseTo, expected {1}, possible replay attack!", inResponseTo, expectedInResponseTo));
+                Logger.ErrorFormat("Unexpected value {0} for InResponseTo, expected {1}, possible replay attack!", inResponseTo, expectedInResponseTo);
                 throw new Saml20Exception("Replay attack.");
             }
 
@@ -415,8 +412,6 @@ namespace SAML2.protocol
             
             IDPEndPoint endp = RetrieveIDPConfiguration(issuer);
 
-            AuditLogging.IdpId = endp.Id;
-
             PreHandleAssertion(context, elem, endp);
 
             bool quirksMode = false;
@@ -430,9 +425,7 @@ namespace SAML2.protocol
                         
             if (endp == null || endp.metadata == null)
             {
-                AuditLogging.logEntry(Direction.IN, Operation.AUTHNREQUEST_POST,
-                          "Unknown login IDP, assertion: " + elem);
-
+                Logger.Error("Unknown login IDP, assertion: " + elem);
                 HandleError(context, Resources.UnknownLoginIDP);
                 return;
             }
@@ -441,9 +434,7 @@ namespace SAML2.protocol
             {
                 if (!assertion.CheckSignature(GetTrustedSigners(endp.metadata.GetKeys(KeyTypes.signing), endp)))
                 {
-                    AuditLogging.logEntry(Direction.IN, Operation.AUTHNREQUEST_POST,
-                    "Invalid signature, assertion: " + elem);
-
+                    Logger.Error("Invalid signature, assertion: " + elem);
                     HandleError(context, Resources.SignatureInvalid);
                     return;
                 }
@@ -451,17 +442,13 @@ namespace SAML2.protocol
 
             if (assertion.IsExpired())
             {
-                AuditLogging.logEntry(Direction.IN, Operation.AUTHNREQUEST_POST,
-                "Assertion expired, assertion: " + elem.OuterXml);
-
+                Logger.Error("Assertion expired, assertion: " + elem.OuterXml);
                 HandleError(context, Resources.AssertionExpired);
                 return;
             }
 
             CheckConditions(context, assertion);
-            AuditLogging.AssertionId = assertion.Id;
-            AuditLogging.logEntry(Direction.IN, Operation.AUTHNREQUEST_POST,
-                      "Assertion validated succesfully");
+            Logger.DebugFormat("Assertion with id {0} validated succesfully", assertion.Id);
 
             DoLogin(context, assertion);
         }
@@ -547,8 +534,7 @@ namespace SAML2.protocol
                     assuranceLevel =  attribute.AttributeValue[0];
             }
             
-            AuditLogging.logEntry(Direction.IN, Operation.LOGIN, string.Format("Subject: {0} NameIDFormat: {1}  Level of authentication: {2}  Session timeout in minutes: {3}", assertion.Subject.Value, assertion.Subject.Format, assuranceLevel, HttpContext.Current.Session.Timeout));
-
+            Logger.DebugFormat("Subject: {0} NameIDFormat: {1}  Level of authentication: {2}  Session timeout in minutes: {3}", assertion.Subject.Value, assertion.Subject.Format, assuranceLevel, HttpContext.Current.Session.Timeout);
 
             foreach(IAction action in Actions.Actions.GetActions())
             {
@@ -562,17 +548,12 @@ namespace SAML2.protocol
 
         private void TransferClient(IDPEndPoint idpEndpoint, Saml20AuthnRequest request, HttpContext context)
         {
-            AuditLogging.AssertionId = request.ID;
-            AuditLogging.IdpId = idpEndpoint.Id;
-
             //Set the last IDP we attempted to login at.
             context.Session[IDPTempSessionKey]= idpEndpoint.Id;
 
             // Determine which endpoint to use from the configuration file or the endpoint metadata.
             IDPEndPointElement destination = 
                 DetermineEndpointConfiguration(SAMLBinding.REDIRECT, idpEndpoint.SSOEndpoint, idpEndpoint.metadata.SSOEndpoints());
-
- 
     
             request.Destination = destination.Url;
 
@@ -618,7 +599,7 @@ namespace SAML2.protocol
                 builder.Request = request.GetXml().OuterXml;
                 string s = request.Destination + "?" + builder.ToQuery();
 
-                AuditLogging.logEntry(Direction.OUT, Operation.AUTHNREQUEST_REDIRECT, "Redirecting user to IdP for authentication", builder.Request);
+                Logger.Debug("Redirecting user to IdP for authentication: " + builder.Request);
 
                 context.Response.Redirect(s, true);
                 return;
@@ -635,7 +616,8 @@ namespace SAML2.protocol
                 XmlDocument req = request.GetXml();
                 XmlSignatureUtils.SignDocument(req, request.ID);
                 builder.Request = req.OuterXml;
-                AuditLogging.logEntry(Direction.OUT, Operation.AUTHNREQUEST_POST);
+
+                Logger.Debug("Sending an AuthnRequest with POST binding");
 
                 builder.GetPage().ProcessRequest(context);
                 return;
@@ -649,7 +631,8 @@ namespace SAML2.protocol
                 //Honor the ForceProtocolBinding and only set this if it's not already set
                 if(string.IsNullOrEmpty(request.ProtocolBinding))
                     request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_Artifact;
-                AuditLogging.logEntry(Direction.OUT, Operation.AUTHNREQUEST_REDIRECT_ARTIFACT);
+
+                Logger.Debug("Sending an AuthnRequest with artifact binding");
 
                 builder.RedirectFromLogin(destination, request);
             }

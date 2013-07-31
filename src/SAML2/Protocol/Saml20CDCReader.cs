@@ -45,13 +45,11 @@ namespace SAML2.protocol
                     if (Trace.ShouldTrace(TraceEventType.Information))
                         Trace.TraceData(TraceEventType.Information, string.Format(Tracing.CDC, samlIdp.Value));
 
-                    AuditLogging.logEntry(Direction.OUT, Operation.AUTHNREQUEST_REDIRECT,
-                                             "Redirection to Signon endpoint found in Common Domain Cookie: " + samlIdp.Value);
+                    Logger.Debug("Redirection to Signon endpoint found in Common Domain Cookie: " + samlIdp.Value);
                 }
                 else
                 {
-                    AuditLogging.logEntry(Direction.OUT, Operation.AUTHNREQUEST_REDIRECT,
-                                             "Redirection to Signon endpoint, no Common Domain Cookie found: " + returnUrl);
+                    Logger.Debug("Redirection to Signon endpoint, no Common Domain Cookie found: " + returnUrl);
                 }
                 context.Response.Redirect(returnUrl);
             }

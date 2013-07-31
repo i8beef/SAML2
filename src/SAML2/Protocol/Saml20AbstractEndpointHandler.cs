@@ -111,8 +111,7 @@ namespace SAML2.protocol
             //If idpChoice is set, use it value
             if (!string.IsNullOrEmpty(context.Request.Params[IDPChoiceParameterName]))
             {
-                AuditLogging.logEntry(Direction.IN, Operation.DISCOVER,
-                                      "Using IDPChoiceParamater: " + context.Request.Params[IDPChoiceParameterName]);
+                Logger.Debug("Using IDPChoiceParamater: " + context.Request.Params[IDPChoiceParameterName]);
                 IDPEndPoint endPoint = config.FindEndPoint(context.Request.Params[IDPChoiceParameterName]);
                 if (endPoint != null)                
                     return endPoint;                
@@ -134,14 +133,14 @@ namespace SAML2.protocol
                         return endPoint;
                     }
 
-                    AuditLogging.logEntry(Direction.IN, Operation.DISCOVER, "Invalid IdP in Common Domain Cookie, IdP not found in list of IdPs: " + cdc.PreferredIDP);
+                    Logger.Warn("Invalid IdP in Common Domain Cookie, IdP not found in list of IdPs: " + cdc.PreferredIDP);
                 }
             }
 
             //If there is only one configured IDPEndPoint lets just use that
             if (config.IDPEndPoints.Count == 1 && config.IDPEndPoints[0].metadata != null)
             {
-                AuditLogging.logEntry(Direction.IN, Operation.DISCOVER, "No IdP selected in Common Domain Cookie, using default IdP: " + config.IDPEndPoints[0].Name);
+                Logger.Debug("No IdP selected in Common Domain Cookie, using default IdP: " + config.IDPEndPoints[0].Name);
                 return config.IDPEndPoints[0];
             }
 

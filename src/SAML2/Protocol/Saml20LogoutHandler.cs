@@ -124,8 +124,6 @@ namespace SAML2.protocol
             SAML20FederationConfig config = SAML20FederationConfig.GetConfig();
 
             IDPEndPoint idp = RetrieveIDPConfiguration(parser.Issuer);
-            AuditLogging.IdpId = idp.Id;
-
             
             if (parser.IsArtifactResolve())
             {
@@ -133,11 +131,11 @@ namespace SAML2.protocol
 
                 if (!parser.CheckSamlMessageSignature(idp.metadata.Keys))
                 {
+                    Logger.ErrorFormat("Signature could not be verified during artifact resolve, msg: " + parser.SamlMessage);
                     HandleError(context, "Invalid Saml message signature");
-                    AuditLogging.logEntry(Direction.UNDEFINED, Operation.ARTIFACTRESOLVE, "Signature could not be verified", parser.SamlMessage);
                 }
-                AuditLogging.AssertionId = parser.ArtifactResolve.ID;
-                AuditLogging.logEntry(Direction.IN, Operation.ARTIFACTRESOLVE, "", parser.SamlMessage);
+
+                Logger.DebugFormat("Artifact resolve for assertion id: {0}, msg: {1}", parser.ArtifactResolve.ID, parser.SamlMessage);
                 builder.RespondToArtifactResolve(parser.ArtifactResolve);
             }
             else if (parser.IsArtifactResponse())
@@ -147,7 +145,7 @@ namespace SAML2.protocol
                 Status status = parser.ArtifactResponse.Status;
                 if (status.StatusCode.Value != Saml20Constants.StatusCodes.Success)
                 {
-                    AuditLogging.logEntry(Direction.UNDEFINED, Operation.ARTIFACTRESOLVE, string.Format("Unexpected status code for artifact response: {0}, expected 'Success', msg: {1}", status.StatusCode.Value, parser.SamlMessage));
+                    Logger.ErrorFormat("Unexpected status code for artifact response: {0}, expected 'Success', msg: {1}", status.StatusCode.Value, parser.SamlMessage);
                     HandleError(context, status);
                     return;
                 }
@@ -174,7 +172,7 @@ namespace SAML2.protocol
                 }
                 else
                 {
-                    AuditLogging.logEntry(Direction.UNDEFINED, Operation.ARTIFACTRESOLVE, string.Format("Unsupported payload message in ArtifactResponse: {0}, msg: {1}", parser.ArtifactResponse.Any.LocalName, parser.SamlMessage));
+                    Logger.ErrorFormat("Unsupported payload message in ArtifactResponse: {0}, msg: {1}", parser.ArtifactResponse.Any.LocalName, parser.SamlMessage);
                     HandleError(context,
                                 string.Format("Unsupported payload message in ArtifactResponse: {0}",
                                               parser.ArtifactResponse.Any.LocalName));
@@ -210,7 +208,7 @@ namespace SAML2.protocol
                 }
                 else
                 {
-                    AuditLogging.logEntry(Direction.UNDEFINED, Operation.ARTIFACTRESOLVE, string.Format("Unsupported SamlMessage element: {0}, msg: {1}", parser.SamlMessageName, parser.SamlMessage));
+                    Logger.ErrorFormat("Unsupported SamlMessage element: {0}, msg: {1}", parser.SamlMessageName, parser.SamlMessage);
                     HandleError(context, string.Format("Unsupported SamlMessage element: {0}", parser.SamlMessageName));
                 }
             }
@@ -222,9 +220,6 @@ namespace SAML2.protocol
             Trace.TraceMethodCalled(GetType(), "TransferClient()");
             
             Saml20LogoutRequest request = Saml20LogoutRequest.GetDefault();
-            
-            AuditLogging.AssertionId = request.ID;
-            AuditLogging.IdpId = endpoint.Id;
             
             // Determine which endpoint to use from the configuration file or the endpoint metadata.
             IDPEndPointElement destination =
@@ -249,7 +244,7 @@ namespace SAML2.protocol
                 if(Trace.ShouldTrace(TraceEventType.Information))
                     Trace.TraceData(TraceEventType.Information, string.Format(Tracing.SendLogoutRequest, "POST", endpoint.Id, requestDocument.OuterXml));
 
-                AuditLogging.logEntry(Direction.OUT, Operation.LOGOUTREQUEST, "Binding: POST");
+                Logger.Debug("Logout request for POST binding");
                 builder.GetPage().ProcessRequest(context);
                 context.Response.End();
                 return;
@@ -270,7 +265,7 @@ namespace SAML2.protocol
                 if (Trace.ShouldTrace(TraceEventType.Information))
                     Trace.TraceData(TraceEventType.Information, string.Format(Tracing.SendLogoutRequest, "REDIRECT", endpoint.Id, redirectUrl));
 
-                AuditLogging.logEntry(Direction.OUT, Operation.LOGOUTREQUEST, "Binding: Redirect");
+                Logger.Debug("Logout request for redirect binding");
                 context.Response.Redirect(redirectUrl, true);
                 return;
             }
@@ -286,7 +281,7 @@ namespace SAML2.protocol
                 request.SessionIndex = context.Session[IDPSessionIdKey].ToString();
 
                 HttpArtifactBindingBuilder builder = new HttpArtifactBindingBuilder(context);
-                AuditLogging.logEntry(Direction.OUT, Operation.LOGOUTREQUEST, "Method: Artifact");
+                Logger.Debug("Logout request for artifact binding");
                 builder.RedirectFromLogout(destination, request, Guid.NewGuid().ToString("N"));
             }
 
@@ -309,26 +304,20 @@ namespace SAML2.protocol
                 HttpRedirectBindingParser parser = new HttpRedirectBindingParser(context.Request.Url);
                 LogoutResponse response = Serialization.DeserializeFromXmlString<LogoutResponse>(parser.Message);
 
-                AuditLogging.logEntry(Direction.IN, Operation.LOGOUTRESPONSE,
-                                      string.Format("Binding: redirect, Signature algorithm: {0}  Signature:  {1}, Message: {2}", parser.SignatureAlgorithm, parser.Signature, parser.Message));
+                Logger.DebugFormat("Binding: redirect, Signature algorithm: {0}  Signature:  {1}, Message: {2}", parser.SignatureAlgorithm, parser.Signature, parser.Message);
 
                 IDPEndPoint idp = RetrieveIDPConfiguration(response.Issuer.Value);
                 
-                AuditLogging.IdpId = idp.Id;
-                AuditLogging.AssertionId = response.ID;
-                
                 if (idp.metadata == null)
                 {
-                    AuditLogging.logEntry(Direction.IN, Operation.LOGOUTRESPONSE,
-                                      string.Format("No IDP metadata, unknown IDP, response: {0}", parser.Message));
+                    Logger.ErrorFormat("No IDP metadata, unknown IDP, response: {0}", parser.Message);
                     HandleError(context, Resources.UnknownIDP);
                     return;
                 }
 
                 if (!parser.VerifySignature(idp.metadata.Keys))
                 {
-                    AuditLogging.logEntry(Direction.IN, Operation.LOGOUTRESPONSE,
-                                      string.Format("Invalid signature in redirect-binding, response: {0}", parser.Message));
+                    Logger.ErrorFormat("Invalid signature in redirect-binding, response: {0}", parser.Message);
                     HandleError(context, Resources.SignatureInvalid);
                     return;
                 }
@@ -337,9 +326,7 @@ namespace SAML2.protocol
             }else if(context.Request.RequestType == "POST")
             {
                 HttpPostBindingParser parser = new HttpPostBindingParser(context);
-                AuditLogging.logEntry(Direction.IN, Operation.LOGOUTRESPONSE,
-                                      "Binding: POST, Message: " + parser.Message);
-
+                Logger.Debug("Binding: POST, Message: " + parser.Message);
 
                 LogoutResponse response = Serialization.DeserializeFromXmlString<LogoutResponse>(parser.Message);
 
@@ -347,32 +334,28 @@ namespace SAML2.protocol
 
                 if (idp.metadata == null)
                 {
-                    AuditLogging.logEntry(Direction.IN, Operation.LOGOUTRESPONSE,
-                                      string.Format("No IDP metadata, unknown IDP, response: {0}", parser.Message));
+                    Logger.ErrorFormat("No IDP metadata, unknown IDP, response: {0}", parser.Message);
                     HandleError(context, Resources.UnknownIDP);
                     return;
                 }
 
                 if (!parser.IsSigned())
                 {
-                    AuditLogging.logEntry(Direction.IN, Operation.LOGOUTRESPONSE,
-                                      string.Format("Signature not present, response: {0}", parser.Message));
+                    Logger.ErrorFormat("Signature not present, response: {0}", parser.Message);
                     HandleError(context, Resources.SignatureNotPresent);
                 }
 
                 // signature on final message in logout
                 if (!parser.CheckSignature(idp.metadata.Keys))
                 {
-                    AuditLogging.logEntry(Direction.IN, Operation.LOGOUTRESPONSE,
-                                      string.Format("Invalid signature in post-binding, response: {0}", parser.Message));
+                    Logger.ErrorFormat("Invalid signature in post-binding, response: {0}", parser.Message);
                     HandleError(context, Resources.SignatureInvalid);
                 }
 
                 message = parser.Message;
             }else
             {
-                AuditLogging.logEntry(Direction.IN, Operation.LOGOUTRESPONSE,
-                                      string.Format("Unsupported request type format, type: {0}", context.Request.RequestType));
+                Logger.ErrorFormat("Unsupported request type format, type: {0}", context.Request.RequestType);
                 HandleError(context, Resources.UnsupportedRequestTypeFormat(context.Request.RequestType));
             }
 
@@ -387,14 +370,12 @@ namespace SAML2.protocol
 
             if (status.StatusCode.Value != Saml20Constants.StatusCodes.Success)
             {
-                AuditLogging.logEntry(Direction.IN, Operation.LOGOUTRESPONSE,
-                                      string.Format("Unexpected status code: {0}, msg: {1}", status.StatusCode.Value, message));
+                Logger.ErrorFormat("Unexpected status code: {0}, msg: {1}", status.StatusCode.Value, message);
                 HandleError(context, status);
                 return;
             }
 
-            AuditLogging.logEntry(Direction.IN, Operation.LOGOUTRESPONSE,
-                     "Assertion validated succesfully");
+            Logger.Debug("Assertion validated succesfully");
 
             //Log the user out locally
             DoLogout(context);
@@ -428,15 +409,13 @@ namespace SAML2.protocol
             if(context.Request.RequestType == "GET") // HTTP Redirect binding
             {
                 HttpRedirectBindingParser parser = new HttpRedirectBindingParser(context.Request.Url);
-                AuditLogging.logEntry(Direction.IN, Operation.LOGOUTREQUEST,
-                                      string.Format("Binding: redirect, Signature algorithm: {0}  Signature:  {1}, Message: {2}", parser.SignatureAlgorithm, parser.Signature, parser.Message));
-
+                Logger.DebugFormat("Binding: redirect, Signature algorithm: {0}  Signature:  {1}, Message: {2}", parser.SignatureAlgorithm, parser.Signature, parser.Message);
                 
                 IDPEndPoint endpoint = config.FindEndPoint(idpEndpoint.Id);
 
                 if (endpoint.metadata == null)
                 {
-                    AuditLogging.logEntry(Direction.IN, Operation.LOGOUTREQUEST, "Cannot find metadata for IdP");
+                    Logger.Error("Cannot find metadata for IdP");
                     HandleError(context, "Cannot find metadata for IdP " + idpEndpoint.Id);
                     return;
                 }
@@ -445,7 +424,7 @@ namespace SAML2.protocol
 
                 if (!parser.VerifySignature(metadata.GetKeys(KeyTypes.signing)))
                 {
-                    AuditLogging.logEntry(Direction.IN, Operation.LOGOUTREQUEST, "Invalid signature redirect-binding, msg: " + parser.Message);
+                    Logger.Error("Invalid signature redirect-binding, msg: " + parser.Message);
                     HandleError(context, Resources.SignatureInvalid);
                     return;
                 }
@@ -455,19 +434,18 @@ namespace SAML2.protocol
             else if (context.Request.RequestType == "POST") // HTTP Post binding
             {
                 HttpPostBindingParser parser = new HttpPostBindingParser(context);
-                AuditLogging.logEntry(Direction.IN, Operation.LOGOUTREQUEST,
-                                      "Binding: POST, Message: " + parser.Message);
+                Logger.Debug("Binding: POST, Message: " + parser.Message);
 
                 if (!parser.IsSigned())
                 {
-                    AuditLogging.logEntry(Direction.IN, Operation.LOGOUTREQUEST, "Signature not present, msg: " + parser.Message);
+                    Logger.Error("Signature not present, msg: " + parser.Message);
                     HandleError(context, Resources.SignatureNotPresent);
                 }
 
                 IDPEndPoint endpoint = config.FindEndPoint(idpEndpoint.Id);
                 if (endpoint.metadata == null)
                 {
-                    AuditLogging.logEntry(Direction.IN, Operation.LOGOUTREQUEST, "Cannot find metadata for IdP");
+                    Logger.Error("Cannot find metadata for IdP");
                     HandleError(context, "Cannot find metadata for IdP " + idpEndpoint.Id);
                     return;
                 }
@@ -477,7 +455,7 @@ namespace SAML2.protocol
                 // handle a logout-request
                 if (!parser.CheckSignature(metadata.GetKeys(KeyTypes.signing)))
                 {
-                    AuditLogging.logEntry(Direction.IN, Operation.LOGOUTREQUEST, "Invalid signature post-binding, msg: " + parser.Message);
+                    Logger.Error("Invalid signature post-binding, msg: " + parser.Message);
                     HandleError(context, Resources.SignatureInvalid);
                 }
 
@@ -488,7 +466,7 @@ namespace SAML2.protocol
                 HandleError(context, Resources.UnsupportedRequestTypeFormat(context.Request.RequestType));
             }
 
-            AuditLogging.logEntry(Direction.IN, Operation.LOGOUTREQUEST, message);
+            Logger.Debug(message);
 
             //Log the user out locally
             DoLogout(context, true);

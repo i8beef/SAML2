@@ -76,7 +76,6 @@
     <Compile Include="Identity\Saml20Identity.cs" />
     <Compile Include="Identity\Saml20PrincipalCache.cs" />
     <Compile Include="ISaml20IdpTokenAccessor.cs" />
-    <Compile Include="Logging\AuditLogging.cs" />
     <Compile Include="Logging\IInternalLogger.cs" />
     <Compile Include="Logging\ILoggerFactory.cs" />
     <Compile Include="Logging\LoggerProvider.cs" />
