@@ -52,7 +52,7 @@ namespace SAML2.Protocol
             Boolean showError = ConfigurationInstance<SAML20FederationConfig>.GetConfig().ShowError;
             String DEFAULT_MESSAGE = "Unable to validate SAML message!";
 
-            if (!String.IsNullOrEmpty(ErrorBehaviour) && ErrorBehaviour.Equals(config.ErrorBehaviour.THROWEXCEPTION.ToString()))
+            if (!String.IsNullOrEmpty(ErrorBehaviour) && ErrorBehaviour.Equals(Config.ErrorBehaviour.THROWEXCEPTION.ToString()))
             {
                 if (showError)
                 {

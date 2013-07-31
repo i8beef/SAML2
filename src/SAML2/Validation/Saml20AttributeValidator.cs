@@ -5,7 +5,7 @@ using SAML2.Utils;
 
 namespace SAML2.Validation
 {
-    internal class Saml20AttributeValidator : ISaml20AttributeValidator
+    public class Saml20AttributeValidator : ISaml20AttributeValidator
     {
         private Saml20XmlAnyAttributeValidator _anyAttrValidator;
         public Saml20XmlAnyAttributeValidator AnyAttrValidator

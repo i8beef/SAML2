@@ -4,7 +4,7 @@ using SAML2.Utils;
 
 namespace SAML2.Validation
 {
-    internal class Saml20XmlAnyAttributeValidator
+    public class Saml20XmlAnyAttributeValidator
     {
         public void ValidateXmlAnyAttributes(XmlAttribute[] anyAttributes)
         {

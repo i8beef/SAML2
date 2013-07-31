@@ -5,7 +5,7 @@ using SAML2.Schema.XmlDSig;
 
 namespace SAML2.Validation
 {
-    internal class Saml20KeyInfoValidator
+    public class Saml20KeyInfoValidator
     {
         /// <summary>
         /// Validates the presence and correctness of a <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/> among the any-xml-elements of a SubjectConfirmationData

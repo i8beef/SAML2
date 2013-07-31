@@ -7,7 +7,7 @@ using SAML2.Validation;
 
 namespace SAML2.Validation
 {
-    internal class Saml20AssertionValidator : ISaml20AssertionValidator
+    public class Saml20AssertionValidator : ISaml20AssertionValidator
     {
         private readonly List<string> _allowedAudienceUris;
         protected bool _quirksMode;

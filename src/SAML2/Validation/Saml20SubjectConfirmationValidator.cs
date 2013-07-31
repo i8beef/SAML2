@@ -5,7 +5,7 @@ using SAML2.Utils;
 
 namespace SAML2.Validation
 {
-    internal class Saml20SubjectConfirmationValidator : ISaml20SubjectConfirmationValidator
+    public class Saml20SubjectConfirmationValidator : ISaml20SubjectConfirmationValidator
     {
         private ISaml20NameIDValidator _nameIdValidator;
 

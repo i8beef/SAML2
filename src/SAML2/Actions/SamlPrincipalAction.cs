@@ -3,7 +3,6 @@ using System.Web.Security;
 using SAML2.Identity;
 using SAML2.Protocol;
 using System.Security.Principal;
-using SAML2.Identity;
 
 namespace SAML2.Actions
 {

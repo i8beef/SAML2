@@ -3,7 +3,7 @@ using SAML2.Schema.Protocol;
 
 namespace SAML2.Validation
 {
-    internal class Saml20EncryptedElementValidator
+    public class Saml20EncryptedElementValidator
     {
         public void ValidateEncryptedElement(EncryptedElement encryptedElement, string parentNodeName)
         {

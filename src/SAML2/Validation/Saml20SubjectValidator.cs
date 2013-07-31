@@ -4,7 +4,7 @@ using SAML2.Schema.Protocol;
 
 namespace SAML2.Validation
 {
-    internal class Saml20SubjectValidator : ISaml20SubjectValidator
+    public class Saml20SubjectValidator : ISaml20SubjectValidator
     {
         #region Properties
 

@@ -6,7 +6,7 @@ using my = SAML2.Schema.Core;
 
 namespace SAML2.Validation
 {
-    internal class Saml20StatementValidator : ISaml20StatementValidator
+    public class Saml20StatementValidator : ISaml20StatementValidator
     {
         private ISaml20AttributeValidator _attributeValidator;
 

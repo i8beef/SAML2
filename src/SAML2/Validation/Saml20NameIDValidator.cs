@@ -6,7 +6,7 @@ using SAML2.Utils;
 
 namespace SAML2.Validation
 {
-    internal class Saml20NameIDValidator : ISaml20NameIDValidator
+    public class Saml20NameIDValidator : ISaml20NameIDValidator
     {
         Saml20EncryptedElementValidator EncElemValidator = new Saml20EncryptedElementValidator();
 

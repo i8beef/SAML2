@@ -4,7 +4,7 @@ using SAML2.Utils;
 
 namespace SAML2.Validation
 {
-    internal class Saml20SubjectConfirmationDataValidator : ISaml20SubjectConfirmationDataValidator
+    public class Saml20SubjectConfirmationDataValidator : ISaml20SubjectConfirmationDataValidator
     {
         private readonly Saml20XmlAnyAttributeValidator AnyAttrValidator = new Saml20XmlAnyAttributeValidator();
         private readonly Saml20KeyInfoValidator KeyInfoValidator = new Saml20KeyInfoValidator();
