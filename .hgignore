@@ -36,3 +36,4 @@ StyleCop.Cache
 *.DotSettings
 src\packages\*
 src\[Ll]ogs
+*.nupkg
