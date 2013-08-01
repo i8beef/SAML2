@@ -59,9 +59,5 @@
       </add>
     </IDPEndPoints>
     <CommonDomain enabled="false" />
-    <!-- AssertionProfile if different than base SAML 2 specification
-    <AssertionProfile assertionValidator="SAML2.Profiles.DKSAML20.Validation.DKSaml20AssertionValidator, SAML2.Profiles.DKSAML20" /> -->
-    <!-- Logging implementation if different than NoLogging
-    <Logging loggingFactory="SAML2.Logging.CommonLogging.CommonLoggingLoggerFactory, SAML2.Logging.CommonLoggingLoggerFactory" /> -->
   </SAML20Federation>
 </configuration>
