@@ -9,8 +9,8 @@ namespace SAML2.Config
     /// allowed audiences
     /// </summary>
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = ConfigurationConstants.NamespaceUri)]
-    [XmlRoot(ConfigurationConstants.SectionNames.Federation, Namespace = ConfigurationConstants.NamespaceUri, IsNullable = false)]
+    [XmlType(AnonymousType = true)]
+    [XmlRoot(ConfigurationConstants.SectionNames.Federation, IsNullable = false)]
     public class FederationConfig : ConfigurationInstance<FederationConfig>
     {
         /// <summary>

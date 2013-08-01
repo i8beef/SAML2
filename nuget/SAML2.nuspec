@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SAML2</id>
-    <version>1.0.0.4</version>
+    <version>1.0.0.5</version>
     <title>SAML2</title>
     <authors>Michael Hallock</authors>
     <owners>Michael Hallock</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://saml2.codeplex.com/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A .NET implementation of the SAML 2.0 specification for SP integrations.</description>
-    <releaseNotes>Retarget framework 3.5.</releaseNotes>
+    <releaseNotes>Removed requirement for namespaces on config data.</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>SAML SSO</tags>
   </metadata>

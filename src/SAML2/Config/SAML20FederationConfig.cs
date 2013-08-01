@@ -22,8 +22,7 @@ namespace SAML2.Config
     /// xsd -t:SAML2.Config.SAML20Federation SAML2.dll
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
-    [XmlRoot(ConfigurationConstants.SectionNames.SAML20Federation, Namespace = ConfigurationConstants.NamespaceUri, IsNullable = false)]    
+    [XmlRoot(ConfigurationConstants.SectionNames.SAML20Federation, IsNullable = false)]    
     public class SAML20FederationConfig : ConfigurationInstance<SAML20FederationConfig>
     {
         /// <summary>
@@ -208,14 +207,13 @@ namespace SAML2.Config
     /// Configuration element that defines settings for generating metadata.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class ConfigMetadata
     {
         /// <summary>
         /// Artifact protocol binding is not a part of DK-SAML2.0 and should only be included in metadata
         /// when communicating with a non DK-SAML2.0 compliant IdP
         /// </summary>
-        [XmlAttribute("IncludeArtifactEndpoints", Namespace = ConfigurationConstants.NamespaceUri)]
+        [XmlAttribute("IncludeArtifactEndpoints")]
         public bool IncludeArtifactEndpoints;
     }
 
@@ -223,7 +221,6 @@ namespace SAML2.Config
     /// Requested attributes configuration element
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class RequestedAttributes
     {
         /// <summary>
@@ -247,19 +244,17 @@ namespace SAML2.Config
     /// Attribute configuration element
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]    
     public class Attribute
     {
         /// <summary>
         /// Attribute name, eg. urn:oid:2.5.4.5 or urn:oid:2.5.4.3.
         /// </summary>
-        [XmlAttribute("name", Namespace = ConfigurationConstants.NamespaceUri)]
         public string name;
 
         /// <summary>
         /// Is the attribute required
         /// </summary>
-        [XmlAttribute("isRequired", Namespace = ConfigurationConstants.NamespaceUri)]
+        [XmlAttribute("isRequired")]
         public string required;
 
         /// <summary>
@@ -288,7 +283,6 @@ namespace SAML2.Config
     /// Endpoints configuration element.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class IDPEndpoints
     {
         /// <summary>
@@ -568,7 +562,6 @@ namespace SAML2.Config
     /// Service provider configuration element
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class ServiceProviderElement
     {
         /// <summary>
@@ -706,7 +699,6 @@ namespace SAML2.Config
     /// Assertion profile element
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class AssertionProfileElement
     {
         /// <summary>
@@ -720,7 +712,6 @@ namespace SAML2.Config
     /// Logging element
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class LoggingElement
     {
         /// <summary>
@@ -734,7 +725,6 @@ namespace SAML2.Config
     /// Holds NameIdFormats supported by the service provider
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class NameIdFormatsElement
     {
         /// <summary>
@@ -768,7 +758,6 @@ namespace SAML2.Config
     /// An element that holds a single supported NameIdFormat
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class NameIdFormatElement
     {
         /// <summary>
@@ -782,7 +771,6 @@ namespace SAML2.Config
     /// Holds AuthenticationContexts supported by the service provider
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class AuthenticationContextsElement
     {
         /// <summary>
@@ -810,7 +798,6 @@ namespace SAML2.Config
     /// An element that holds a single supported AuthenticationContext
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class AuthenticationContextElement
     {
         /// <summary>
@@ -830,7 +817,6 @@ namespace SAML2.Config
     /// The AuthenticationContext comparison type
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public enum AuthenticationContextsComparison
     {
         /// <summary>
@@ -859,7 +845,6 @@ namespace SAML2.Config
     /// The service provider behaviour configuration element
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public enum ServiceProviderBehaviour
     {
         /// <summary>
@@ -875,7 +860,6 @@ namespace SAML2.Config
     /// <summary>
     /// The Saml20Service endpoint configuration element
     /// </summary>
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class Saml20ServiceEndpoint
     {
         /// <summary>
@@ -958,7 +942,6 @@ namespace SAML2.Config
     /// the IDPEndpoint configuration element
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class IDPEndPoint
     {
         /// <summary>
@@ -1071,7 +1054,6 @@ namespace SAML2.Config
     /// Holds rules for certificate validation
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class CertificateValidationElements
     {
         private List<CertificateValidationElement> _elems;
@@ -1108,7 +1090,6 @@ namespace SAML2.Config
     /// Holds Http Basic Auth settings
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class HttpBasicAuthElement
     {
         /// <summary>
@@ -1134,7 +1115,6 @@ namespace SAML2.Config
     /// Holds Common Domain Cookie settings
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class CDCElement
     {
         /// <summary>
@@ -1149,7 +1129,6 @@ namespace SAML2.Config
     /// Extra key value settings for a configuration element
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class ExtraSettings
     {
         /// <summary>
@@ -1163,7 +1142,6 @@ namespace SAML2.Config
     /// Hold key value pairs.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class KeyValue
     {
         /// <summary>
@@ -1184,7 +1162,6 @@ namespace SAML2.Config
     /// The persistent pseudonym mapper configuration element
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class PersistentPseudonymMapper
     {
         private IPersistentPseudonymMapper _mapper = null;
@@ -1216,7 +1193,6 @@ namespace SAML2.Config
     /// The IDPEndPointElement configuration element
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     public class IDPEndPointElement
     {
         /// <summary>
@@ -1283,7 +1259,6 @@ namespace SAML2.Config
     /// Saml binding types
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = ConfigurationConstants.NamespaceUri)]
     [Flags]
     public enum SAMLBinding
     {

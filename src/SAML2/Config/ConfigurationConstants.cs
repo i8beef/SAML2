@@ -6,12 +6,6 @@ namespace SAML2.Config
     public class ConfigurationConstants
     {
         /// <summary>
-        /// We intend to use the same namespace uri for ALL configuration elements to make
-        /// reuse of subelements (eg Certificate) easy.
-        /// </summary>
-        public const string NamespaceUri = "urn:SAML2.Configuration";
-
-        /// <summary>
         /// Section names used in configuration files.
         /// </summary>
         public sealed class SectionNames

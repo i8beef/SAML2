@@ -450,7 +450,7 @@ namespace SAML2.Protocol
             DoLogin(context, assertion);
         }
 
-        internal static IEnumerable<AsymmetricAlgorithm> GetTrustedSigners(ICollection<KeyDescriptor> keys, IDPEndPoint ep)
+        public static IEnumerable<AsymmetricAlgorithm> GetTrustedSigners(ICollection<KeyDescriptor> keys, IDPEndPoint ep)
         {
             if (keys == null)
                 throw new ArgumentNullException("keys");

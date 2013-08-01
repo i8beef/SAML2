@@ -111,12 +111,10 @@ namespace SAML2.Config
             StringBuilder str = new StringBuilder();
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.OmitXmlDeclaration = true;
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add(string.Empty, ConfigurationConstants.NamespaceUri);
             using (XmlWriter xml = XmlWriter.Create(str, settings))
             {
                 XmlSerializer ser = new XmlSerializer(_currentConfig.GetType());
-                ser.Serialize(xml, _currentConfig, ns);
+                ser.Serialize(xml, _currentConfig);
             }
 
             return str.ToString();
