@@ -202,16 +202,12 @@ namespace SAML2
             }
 
             // NameIDPolicy
-            if (config.ServiceProvider.NameIdFormats.All || config.ServiceProvider.NameIdFormats.NameIdFormats.Count > 0)
+            if (config.ServiceProvider.NameIdFormats.NameIdFormats.Count > 0)
             {
                 result.NameIDPolicy = new NameIDPolicy
                 {
                     AllowCreate = config.ServiceProvider.NameIdFormats.AllowCreate,
-                    Format =
-                        config.ServiceProvider.NameIdFormats.All
-                            ? Saml20Constants.NameIdentifierFormats.Unspecified
-                            : config.ServiceProvider.NameIdFormats.NameIdFormats[0].
-                                  NameIdFormat
+                    Format = config.ServiceProvider.NameIdFormats.NameIdFormats[0].NameIdFormat
                 };
 
                 if (result.NameIDPolicy.Format != Saml20Constants.NameIdentifierFormats.Entity)

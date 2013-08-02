@@ -76,17 +76,8 @@ namespace SAML2
             spDescriptor.protocolSupportEnumeration = new string[] { Saml20Constants.PROTOCOL };
             spDescriptor.AuthnRequestsSigned = XmlConvert.ToString(true);
             spDescriptor.WantAssertionsSigned = XmlConvert.ToString(true);
-            if(config.ServiceProvider.NameIdFormats.All)
-            {
-                spDescriptor.NameIDFormat = new string[] {Saml20Constants.NameIdentifierFormats.Email,
-                                                          Saml20Constants.NameIdentifierFormats.Entity,
-                                                          Saml20Constants.NameIdentifierFormats.Kerberos,
-                                                          Saml20Constants.NameIdentifierFormats.Persistent,
-                                                          Saml20Constants.NameIdentifierFormats.Transient,
-                                                          Saml20Constants.NameIdentifierFormats.Unspecified,
-                                                          Saml20Constants.NameIdentifierFormats.Windows,
-                                                          Saml20Constants.NameIdentifierFormats.X509SubjectName};
-            }else
+
+            if(config.ServiceProvider.NameIdFormats.NameIdFormats.Count > 0)
             {
                 spDescriptor.NameIDFormat = new string[config.ServiceProvider.NameIdFormats.NameIdFormats.Count];
                 int count = 0;
@@ -95,7 +86,6 @@ namespace SAML2
                     spDescriptor.NameIDFormat[count++] = elem.NameIdFormat;
                 }
             }
-            
             
             Uri baseURL = new Uri(config.ServiceProvider.Server);
             List<Endpoint> logoutServiceEndpoints = new List<Endpoint>();
@@ -150,13 +140,7 @@ namespace SAML2
 
             spDescriptor.SingleLogoutService = logoutServiceEndpoints.ToArray();
             spDescriptor.AssertionConsumerService = signonServiceEndpoints.ToArray();
-
-            // NameIdFormat
-            if (!string.IsNullOrEmpty(config.NameIdFormat))
-            {
-                spDescriptor.NameIDFormat = new string[] { config.NameIdFormat };
-            }
-
+            
             // Attribute consuming service. 
             if (config.RequestedAttributes.Attributes.Count > 0)
             {

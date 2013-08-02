@@ -10,8 +10,7 @@ namespace SAML2.Schema.Metadata
     /// nature and does not directly map to any core SAML elements or attributes.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.METADATA, IsNullable = false)]
+    [XmlRoot(ELEMENT_NAME, IsNullable = false)]
     public class Contact
     {
         /// <summary>
