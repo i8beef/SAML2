@@ -18,6 +18,7 @@ namespace SAML2.Actions
         {
             List<IAction> actions = new List<IAction>();
             actions.Add(new SamlPrincipalAction());
+            actions.Add(new FormsAuthenticationAction());
             actions.Add(new RedirectAction());
             return actions;
         }

@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Actions\Actions.cs" />
     <Compile Include="Actions\CDCRedirectAction.cs" />
+    <Compile Include="Actions\FormsAuthenticationAction.cs" />
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\RedirectAction.cs" />
     <Compile Include="Actions\SamlPrincipalAction.cs" />

@@ -2,20 +2,19 @@
 using System.Web.Security;
 using SAML2.Identity;
 using SAML2.Protocol;
-using System.Security.Principal;
 
 namespace SAML2.Actions
 {
     /// <summary>
-    /// Sets the SamlPrincipal on the current http context
+    /// Handles setting Forms Authentication cookies.
     /// </summary>
-    public class SamlPrincipalAction : IAction
+    public class FormsAuthenticationAction : IAction
     {
 
         /// <summary>
         /// The default action name
         /// </summary>
-        public const string ACTION_NAME = "SetSamlPrincipal";
+        public const string ACTION_NAME = "FormsAuthentication";
 
         /// <summary>
         /// Action performed during login.
@@ -25,10 +24,8 @@ namespace SAML2.Actions
         /// <param name="assertion">The saml assertion of the currently logged in user.</param>
         public void LoginAction(AbstractEndpointHandler handler, HttpContext context, Saml20Assertion assertion)
         {
-            Saml20SignonHandler signonhandler = (Saml20SignonHandler)handler;
-            IPrincipal prince = Saml20Identity.InitSaml20Identity(assertion, signonhandler.RetrieveIDPConfiguration((string)context.Session[Saml20AbstractEndpointHandler.IDPTempSessionKey]));
-
-            Saml20PrincipalCache.AddPrincipal(prince);
+            var prince = Saml20PrincipalCache.GetPrincipal();
+            FormsAuthentication.SetAuthCookie(prince.Identity.Name, false);  
         }
 
         /// <summary>
@@ -39,7 +36,7 @@ namespace SAML2.Actions
         /// <param name="IdPInitiated">During IdP initiated logout some actions such as redirecting should not be performed</param>
         public void LogoutAction(AbstractEndpointHandler handler, HttpContext context, bool IdPInitiated)
         {
-            Saml20PrincipalCache.Clear();
+            FormsAuthentication.SignOut();
         }
 
         private string _name;
