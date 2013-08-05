@@ -325,7 +325,7 @@ namespace SAML2
         /// Contains the endpoints specified in the &lt;AssertionConsumerService&gt; element in the SPSSODescriptor.
         /// These endpoints are only applicable if we are reading metadata issued by a service provider.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of <see cref="IDPEndPointElement"/>.</returns>
         public List<IDPEndPointElement> AssertionConsumerServiceEndpoints()
         {
             if (_AssertionConsumerServiceEndpoints == null)
@@ -334,6 +334,9 @@ namespace SAML2
             return _AssertionConsumerServiceEndpoints;
         }
 
+        /// <summary>
+        /// Extracts the endpoints.
+        /// </summary>
         private void ExtractEndpoints()
         {
             if (_entity != null)

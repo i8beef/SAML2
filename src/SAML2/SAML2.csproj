@@ -256,7 +256,9 @@
     <Content Include="Protocol\Resources\DefaultStyle.css" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Saml20Resources.resx" />
     <EmbeddedResource Include="Properties\Tracing.resx">
       <SubType>Designer</SubType>

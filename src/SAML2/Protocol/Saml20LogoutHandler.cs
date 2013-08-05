@@ -47,7 +47,7 @@ namespace SAML2.Protocol
         /// <param name="context">The context.</param>
         protected override void Handle(HttpContext context)
         {
-            Logger.DebugFormat("{0}.{1} called", GetType(), "Handle()");
+            Logger.Debug("Logout handler called.");
             
             try
             {
@@ -86,6 +86,8 @@ namespace SAML2.Protocol
                     {
                         context.User = null;
                         FormsAuthentication.SignOut();
+
+                        Logger.Error(Resources.UnknownLoginIDP);
                         HandleError(context, Resources.UnknownLoginIDP);
                     }
 
@@ -107,6 +109,8 @@ namespace SAML2.Protocol
 
         private void HandleArtifact(HttpContext context)
         {
+            Logger.Debug("Resolving HTTP SAML artifact.");
+
             HttpArtifactBindingBuilder builder = new HttpArtifactBindingBuilder(context);
             Stream inputStream = builder.ResolveArtifact();
 
@@ -115,7 +119,7 @@ namespace SAML2.Protocol
 
         private void HandleSOAP(HttpContext context, Stream inputStream)
         {
-            Logger.DebugFormat("{0}.{1} called", GetType(), "HandleSOAP()");
+            Logger.DebugFormat("SP initiated SOAP based Logout.");
 
             HttpArtifactBindingParser parser = new HttpArtifactBindingParser(inputStream);
             HttpArtifactBindingBuilder builder = new HttpArtifactBindingBuilder(context);
@@ -170,9 +174,7 @@ namespace SAML2.Protocol
                 else
                 {
                     Logger.ErrorFormat("Unsupported payload message in ArtifactResponse: {0}, msg: {1}", parser.ArtifactResponse.Any.LocalName, parser.SamlMessage);
-                    HandleError(context,
-                                string.Format("Unsupported payload message in ArtifactResponse: {0}",
-                                              parser.ArtifactResponse.Any.LocalName));
+                    HandleError(context, string.Format("Unsupported payload message in ArtifactResponse: {0}", parser.ArtifactResponse.Any.LocalName));
                 }
             }
             else if(parser.IsLogoutReqest())
@@ -213,8 +215,6 @@ namespace SAML2.Protocol
 
         private void TransferClient(IDPEndPoint endpoint, HttpContext context)
         {
-            Logger.DebugFormat("{0}.{1} called", GetType(), "TransferClient()");
-            
             Saml20LogoutRequest request = Saml20LogoutRequest.GetDefault();
             
             // Determine which endpoint to use from the configuration file or the endpoint metadata.
@@ -239,7 +239,6 @@ namespace SAML2.Protocol
 
                 Logger.DebugFormat(Tracing.SendLogoutRequest, "POST", endpoint.Id, requestDocument.OuterXml);
 
-                Logger.Debug("Logout request for POST binding");
                 builder.GetPage().ProcessRequest(context);
                 context.Response.End();
                 return;
@@ -259,7 +258,6 @@ namespace SAML2.Protocol
 
                 Logger.DebugFormat(Tracing.SendLogoutRequest, "REDIRECT", endpoint.Id, redirectUrl);
 
-                Logger.Debug("Logout request for redirect binding");
                 context.Response.Redirect(redirectUrl, true);
                 return;
             }
@@ -274,10 +272,10 @@ namespace SAML2.Protocol
                 request.SessionIndex = context.Session[IDPSessionIdKey].ToString();
 
                 HttpArtifactBindingBuilder builder = new HttpArtifactBindingBuilder(context);
-                Logger.Debug("Logout request for artifact binding");
                 builder.RedirectFromLogout(destination, request, Guid.NewGuid().ToString("N"));
             }
 
+            Logger.Error(Resources.BindingError);
             HandleError(context, Resources.BindingError);
         }
         
@@ -287,7 +285,7 @@ namespace SAML2.Protocol
 
         private void HandleResponse(HttpContext context)
         {
-            Logger.DebugFormat("{0}.{1} called", GetType(), "HandleResponse()");
+            Logger.DebugFormat("Processing SAML Response.");
 
             string message = string.Empty;
 
@@ -355,8 +353,7 @@ namespace SAML2.Protocol
             doc.PreserveWhitespace = true;
             doc.LoadXml(message);
 
-            XmlElement statElem =
-                (XmlElement)doc.GetElementsByTagName(Status.ELEMENT_NAME, Saml20Constants.PROTOCOL)[0];
+            XmlElement statElem = (XmlElement)doc.GetElementsByTagName(Status.ELEMENT_NAME, Saml20Constants.PROTOCOL)[0];
 
             Status status = Serialization.DeserializeFromXmlString<Status>(statElem.OuterXml);
 
@@ -367,7 +364,7 @@ namespace SAML2.Protocol
                 return;
             }
 
-            Logger.Debug("Assertion validated succesfully");
+            Logger.Debug("SAML Response Assertion validated succesfully.");
 
             //Log the user out locally
             DoLogout(context);
@@ -379,7 +376,7 @@ namespace SAML2.Protocol
 
         private void HandleRequest(HttpContext context)
         {
-            Logger.DebugFormat("{0}.{1} called", GetType(), "HandleRequest()");
+            Logger.DebugFormat("Generating Logout SAML Request.");
 
             //Fetch the endpoint configuration
             IDPEndPoint idpEndpoint = RetrieveIDPConfiguration(context.Session[IDPLoginSessionKey].ToString());
@@ -504,6 +501,7 @@ namespace SAML2.Protocol
 
         private void DoLogout(HttpContext context, bool IdPInitiated)
         {
+            Logger.Debug("Processing Logout request and executing Actions.");
             foreach (IAction action in Actions.Actions.GetActions())
             {
                 Logger.DebugFormat("{0}.{1} called", action.GetType(), "LogoutAction()");

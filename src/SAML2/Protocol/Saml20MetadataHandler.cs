@@ -33,6 +33,7 @@ namespace SAML2.Protocol
             }
             catch (ArgumentException)
             {
+                Logger.Error(Resources.UnknownEncodingFormat(encoding));
                 HandleError(context, Resources.UnknownEncodingFormat(encoding));
                 return;
             }
@@ -45,6 +46,7 @@ namespace SAML2.Protocol
                     sign = Convert.ToBoolean(param);
             } catch(FormatException)
             {
+                Logger.Error(Resources.GenericError);
                 HandleError(context, Resources.GenericError);
                 return;
             }
@@ -70,8 +72,14 @@ namespace SAML2.Protocol
 
         #endregion
 
+        /// <summary>
+        /// Creates the metadata document.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="sign">if set to <c>true</c> sign the document.</param>
         private void CreateMetadataDocument(HttpContext context, bool sign)
         {
+            Logger.Debug("Creating metadata document.");
             SAML20FederationConfig configuration = ConfigurationReader.GetConfig<SAML20FederationConfig>();
 
             KeyInfo keyinfo = new KeyInfo();
@@ -80,8 +88,9 @@ namespace SAML2.Protocol
 
             Saml20MetadataDocument doc = new Saml20MetadataDocument(configuration, keyinfo, sign);
 
+            Logger.Debug("Metadata document successfully created.");
+
             context.Response.Write(doc.ToXml( context.Response.ContentEncoding ));
         }
-
     }
 }

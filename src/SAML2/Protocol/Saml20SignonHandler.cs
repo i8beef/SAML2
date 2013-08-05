@@ -65,7 +65,7 @@ namespace SAML2.Protocol
         /// <param name="context">The context.</param>
         protected override void Handle(HttpContext context)
         {
-            Logger.DebugFormat("{0}.{1} called", GetType(), "Handle()");
+            Logger.Debug("Signon handler called.");
 
             //Some IdP's are known to fail to set an actual value in the SOAPAction header
             //so we just check for the existence of the header field.
@@ -89,13 +89,12 @@ namespace SAML2.Protocol
                 if (SAML20FederationConfig.GetConfig().CommonDomain.Enabled && context.Request.QueryString["r"] == null
                     && context.Request.Params["cidp"] == null)
                 {
-                    Logger.Debug("Redirecting to Common Domain for IDP discovery");
+                    Logger.Debug("Redirecting to Common Domain for IDP discovery.");
                     context.Response.Redirect(SAML20FederationConfig.GetConfig().CommonDomain.LocalReaderEndpoint);
                 }
                 else
                 {
-                    Logger.Warn("User accessing resource: " + context.Request.RawUrl +
-                                                 " without authentication.");
+                    Logger.Warn("User accessing resource: " + context.Request.RawUrl + " without authentication.");
                     SendRequest(context);
                 }
             }
@@ -105,6 +104,8 @@ namespace SAML2.Protocol
 
         private void HandleArtifact(HttpContext context)
         {
+            Logger.Debug("Resolving HTTP SAML artifact.");
+
             HttpArtifactBindingBuilder builder = new HttpArtifactBindingBuilder(context);
             Stream inputStream = builder.ResolveArtifact();
             HandleSOAP(context, inputStream);
@@ -112,7 +113,8 @@ namespace SAML2.Protocol
 
         private void HandleSOAP(HttpContext context, Stream inputStream)
         {
-            Logger.DebugFormat("{0}.{1} called", GetType(), "HandleSOAP");
+            Logger.DebugFormat("SP initiated SOAP based Signon.");
+
             HttpArtifactBindingParser parser = new HttpArtifactBindingParser(inputStream);
             HttpArtifactBindingBuilder builder = new HttpArtifactBindingBuilder(context);
 
@@ -125,7 +127,7 @@ namespace SAML2.Protocol
                 {
                     HandleError(context, "Invalid Saml message signature");
                     Logger.Error("Could not verify signature, msg: " + parser.SamlMessage);
-                };
+                }
                 builder.RespondToArtifactResolve(parser.ArtifactResolve);
             }else if(parser.IsArtifactResponse())
             {
@@ -155,9 +157,7 @@ namespace SAML2.Protocol
                 }else
                 {
                     Logger.ErrorFormat("Unsupported payload message in ArtifactResponse: {0}, msg: {1}", parser.ArtifactResponse.Any.LocalName, parser.SamlMessage);
-                    HandleError(context,
-                                string.Format("Unsupported payload message in ArtifactResponse: {0}",
-                                              parser.ArtifactResponse.Any.LocalName));
+                    HandleError(context, string.Format("Unsupported payload message in ArtifactResponse: {0}", parser.ArtifactResponse.Any.LocalName));
                 }
             }else
             {
@@ -179,7 +179,7 @@ namespace SAML2.Protocol
         /// </summary>
         private void SendRequest(HttpContext context)
         {
-            Logger.DebugFormat("{0}.{1} called", GetType(), "SendRequest()");
+            Logger.Debug("Sending SAML Request.");
 
             // See if the "ReturnUrl" - parameter is set.
             string returnUrl = context.Request.QueryString["ReturnUrl"];
@@ -262,8 +262,12 @@ namespace SAML2.Protocol
                 if (status.StatusCode.Value != Saml20Constants.StatusCodes.Success)
                 {
                     if (status.StatusCode.Value == Saml20Constants.StatusCodes.NoPassive)
+                    {
+                        Logger.Error("IdP responded with statuscode NoPassive. A user cannot be signed in with the IsPassiveFlag set when the user does not have a session with the IdP.");
                         HandleError(context, "IdP responded with statuscode NoPassive. A user cannot be signed in with the IsPassiveFlag set when the user does not have a session with the IdP.");
+                    }
 
+                    Logger.Error("Returned status was not successful: " + status);
                     HandleError(context, status);
                     return;
                 }
@@ -289,6 +293,7 @@ namespace SAML2.Protocol
                     }
                     catch (ArgumentException ex)
                     {
+                        Logger.Error(Resources.UnknownEncodingFormat(endpoint.ResponseEncoding));
                         HandleError(context, ex);
                         return;
                     }
@@ -305,6 +310,7 @@ namespace SAML2.Protocol
             }
             catch (Exception e)
             {
+                Logger.Error(Resources.GenericError, e);
                 HandleError(context, e);
                 return;
             }
@@ -346,8 +352,10 @@ namespace SAML2.Protocol
         /// </summary>
         private void HandleEncryptedAssertion(HttpContext context, XmlElement elem)
         {
-            Logger.DebugFormat("{0}.{1} called", GetType(), "HandleEncryptedAssertion()");
             Saml20EncryptedAssertion decryptedAssertion = GetDecryptedAssertion(elem);
+
+            Logger.Debug("Encrypted Assertion was decrypted: " + decryptedAssertion.Assertion.DocumentElement);
+
             HandleAssertion(context, decryptedAssertion.Assertion.DocumentElement);
         }
 
@@ -356,6 +364,9 @@ namespace SAML2.Protocol
             Saml20EncryptedAssertion decryptedAssertion = new Saml20EncryptedAssertion((RSA)FederationConfig.GetConfig().SigningCertificate.GetCertificate().PrivateKey);
             decryptedAssertion.LoadXml(elem);
             decryptedAssertion.Decrypt();
+
+            Logger.Debug("Decrypted assertion: " + decryptedAssertion.Assertion.DocumentElement.OuterXml);
+            
             return decryptedAssertion;
         }
 
@@ -403,7 +414,7 @@ namespace SAML2.Protocol
         /// </summary>
         private void HandleAssertion(HttpContext context, XmlElement elem)
         {
-            Logger.DebugFormat("{0}.{1} called", GetType(), "HandleAssertion");
+            Logger.Debug("Processing Assertion.");
 
             string issuer = GetIssuer(elem);
             
@@ -497,6 +508,7 @@ namespace SAML2.Protocol
             {
                 if (context.Cache[assertion.Id] != null)
                 {
+                    Logger.Error(Resources.OneTimeUseReplay);
                     HandleError(context, Resources.OneTimeUseReplay);
                 }else
                 {
@@ -515,23 +527,9 @@ namespace SAML2.Protocol
 
             Logger.DebugFormat(Tracing.Login, assertion.Subject.Value, assertion.SessionIndex, assertion.Subject.Format);
 
-            string inResponseTo = "(unknown)";
-            if (assertion.GetSubjectConfirmationData() != null && assertion.GetSubjectConfirmationData().InResponseTo != null)
-                inResponseTo = assertion.GetSubjectConfirmationData().InResponseTo;
-
-            string assuranceLevel = "(unknown)";
-            foreach(var attribute in assertion.Attributes)
-            {
-                if (attribute.Name == "dk:gov:saml:attribute:AssuranceLevel"
-                    && attribute.AttributeValue != null 
-                    && attribute.AttributeValue.Length > 0)
-                    assuranceLevel =  attribute.AttributeValue[0];
-            }
-            
-            Logger.DebugFormat("Subject: {0} NameIDFormat: {1}  Level of authentication: {2}  Session timeout in minutes: {3}", assertion.Subject.Value, assertion.Subject.Format, assuranceLevel, HttpContext.Current.Session.Timeout);
-
             foreach(IAction action in Actions.Actions.GetActions())
             {
+                Logger.Debug("Processing Signon request and executing Actions.");
                 Logger.DebugFormat("{0}.{1} called", action.GetType(), "LoginAction()");
 
                 action.LoginAction(this, context, assertion);
@@ -593,8 +591,6 @@ namespace SAML2.Protocol
                 builder.Request = request.GetXml().OuterXml;
                 string s = request.Destination + "?" + builder.ToQuery();
 
-                Logger.Debug("Redirecting user to IdP for authentication: " + builder.Request);
-
                 context.Response.Redirect(s, true);
                 return;
             }
@@ -611,8 +607,6 @@ namespace SAML2.Protocol
                 XmlSignatureUtils.SignDocument(req, request.ID);
                 builder.Request = req.OuterXml;
 
-                Logger.Debug("Sending an AuthnRequest with POST binding");
-
                 builder.GetPage().ProcessRequest(context);
                 return;
             }
@@ -626,13 +620,11 @@ namespace SAML2.Protocol
                 if(string.IsNullOrEmpty(request.ProtocolBinding))
                     request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_Artifact;
 
-                Logger.Debug("Sending an AuthnRequest with artifact binding");
-
                 builder.RedirectFromLogin(destination, request);
             }
 
+            Logger.Error(Resources.BindingError);
             HandleError(context, Resources.BindingError);
         }
-
     }
 }
