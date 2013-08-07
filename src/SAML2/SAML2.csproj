@@ -65,9 +65,12 @@
     <Compile Include="Bindings\HttpSOAPBindingBuilder.cs" />
     <Compile Include="Bindings\HttpSOAPBindingParser.cs" />
     <Compile Include="Bindings\SOAPConstants.cs" />
-    <Compile Include="Config\AllowedAudienceCollection.cs" />
+    <Compile Include="Config\ActionCollection.cs" />
+    <Compile Include="Config\ActionElement.cs" />
+    <Compile Include="Config\AllowedAudienceUriCollection.cs" />
+    <Compile Include="Config\AssertionProfileElement.cs" />
     <Compile Include="Config\AttributeElement.cs" />
-    <Compile Include="Config\AudienceElement.cs" />
+    <Compile Include="Config\AudienceUriElement.cs" />
     <Compile Include="Config\AuthenticationContextCollection.cs" />
     <Compile Include="Config\AuthenticationContextComparison.cs" />
     <Compile Include="Config\AuthenticationContextElement.cs" />
@@ -76,7 +79,12 @@
     <Compile Include="Config\CommonDomainCookieElement.cs" />
     <Compile Include="Config\ContactElement.cs" />
     <Compile Include="Config\ContactCollection.cs" />
+    <Compile Include="Config\BindingType.cs" />
+    <Compile Include="Config\ContactType.cs" />
+    <Compile Include="Config\EndpointType.cs" />
+    <Compile Include="Config\EnumerableConfigurationElementCollection.cs" />
     <Compile Include="Config\HttpBasicAuthElement.cs" />
+    <Compile Include="Config\IConfigurationElementCollectionElement.cs" />
     <Compile Include="Config\IdentityProviderEndpointElement.cs" />
     <Compile Include="Config\IdentityProviderEndpointCollection.cs" />
     <Compile Include="Config\IdentityProviderCollection.cs" />
@@ -87,6 +95,7 @@
     <Compile Include="Config\OrganizationElement.cs" />
     <Compile Include="Config\PersistentPseudonymElement.cs" />
     <Compile Include="Config\RequestedAttributesCollection.cs" />
+    <Compile Include="Config\Saml2Config.cs" />
     <Compile Include="Config\Saml2Section.cs" />
     <Compile Include="Config\ServiceProviderElement.cs" />
     <Compile Include="Config\ServiceProviderEndpointCollection.cs" />

@@ -43,13 +43,13 @@ namespace SAML2.Protocol
         /// </summary>
         public Saml20SignonHandler()
         {
-            _certificate = FederationConfig.GetConfig().SigningCertificate.GetCertificate();
+            _certificate = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate();
 
             // Read the proper redirect url from config
             try
             {
-                RedirectUrl = SAML20FederationConfig.GetConfig().ServiceProvider.SignOnEndpoint.RedirectUrl;
-                ErrorBehaviour = SAML20FederationConfig.GetConfig().ServiceProvider.SignOnEndpoint.ErrorBehaviour.ToString();
+                RedirectUrl = Saml2Config.GetConfig().ServiceProvider.Endpoints.SignOnEndpoint.RedirectUrl;
+                ErrorBehaviour = Saml2Config.GetConfig().ServiceProvider.Endpoints.SignOnEndpoint.ErrorBehaviour.ToString();
             }
             catch(Exception e)
             {
@@ -86,11 +86,11 @@ namespace SAML2.Protocol
             }
             else
             {
-                if (SAML20FederationConfig.GetConfig().CommonDomain.Enabled && context.Request.QueryString["r"] == null
+                if (Saml2Config.GetConfig().CommonDomainCookie.Enabled && context.Request.QueryString["r"] == null
                     && context.Request.Params["cidp"] == null)
                 {
                     Logger.Debug("Redirecting to Common Domain for IDP discovery.");
-                    context.Response.Redirect(SAML20FederationConfig.GetConfig().CommonDomain.LocalReaderEndpoint);
+                    context.Response.Redirect(Saml2Config.GetConfig().CommonDomainCookie.LocalReaderEndpoint);
                 }
                 else
                 {
@@ -122,8 +122,8 @@ namespace SAML2.Protocol
             {
                 Logger.Debug(Tracing.ArtifactResolveIn);
 
-                IDPEndPoint idp = RetrieveIDPConfiguration(parser.Issuer);
-                if (!parser.CheckSamlMessageSignature(idp.metadata.Keys))
+                IdentityProviderElement idp = RetrieveIDPConfiguration(parser.Issuer);
+                if (!parser.CheckSamlMessageSignature(idp.Metadata.Keys))
                 {
                     HandleError(context, "Invalid Saml message signature");
                     Logger.Error("Could not verify signature, msg: " + parser.SamlMessage);
@@ -186,7 +186,7 @@ namespace SAML2.Protocol
             if (!string.IsNullOrEmpty(returnUrl))            
                 context.Session["RedirectUrl"] = returnUrl;            
 
-            IDPEndPoint idpEndpoint = RetrieveIDP(context);
+            IdentityProviderElement idpEndpoint = RetrieveIDP(context);
 
             if (idpEndpoint == null)
             {
@@ -283,7 +283,7 @@ namespace SAML2.Protocol
 
                 // Check if an encoding-override exists for the IdP endpoint in question
                 string issuer = GetIssuer(assertion);
-                IDPEndPoint endpoint = RetrieveIDPConfiguration(issuer);
+                IdentityProviderElement endpoint = RetrieveIDPConfiguration(issuer);
                 if (!string.IsNullOrEmpty(endpoint.ResponseEncoding))
                 {
                     Encoding encodingOverride = null;
@@ -361,7 +361,7 @@ namespace SAML2.Protocol
 
         private static Saml20EncryptedAssertion GetDecryptedAssertion(XmlElement elem)
         {
-            Saml20EncryptedAssertion decryptedAssertion = new Saml20EncryptedAssertion((RSA)FederationConfig.GetConfig().SigningCertificate.GetCertificate().PrivateKey);
+            Saml20EncryptedAssertion decryptedAssertion = new Saml20EncryptedAssertion((RSA)Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey);
             decryptedAssertion.LoadXml(elem);
             decryptedAssertion.Decrypt();
 
@@ -394,14 +394,14 @@ namespace SAML2.Protocol
         /// <param name="context">The httpcontext.</param>
         /// <param name="elem">The assertion element.</param>
         /// <param name="endpoint">The endpoint.</param>
-        protected virtual void PreHandleAssertion(HttpContext context, XmlElement elem, IDPEndPoint endpoint)
+        protected virtual void PreHandleAssertion(HttpContext context, XmlElement elem, IdentityProviderElement endpoint)
         {
             Logger.DebugFormat("{0}.{1} called", GetType(), "PreHandleAssertion");
 
-            if (endpoint != null && endpoint.SLOEndpoint != null && !String.IsNullOrEmpty(endpoint.SLOEndpoint.IdpTokenAccessor))
+            if (endpoint != null && endpoint.Endpoints.LogOffEndpoint != null && !String.IsNullOrEmpty(endpoint.Endpoints.LogOffEndpoint.TokenAccessor))
             {
                 ISaml20IdpTokenAccessor idpTokenAccessor =
-                    Activator.CreateInstance(Type.GetType(endpoint.SLOEndpoint.IdpTokenAccessor, false)) as ISaml20IdpTokenAccessor;
+                    Activator.CreateInstance(Type.GetType(endpoint.Endpoints.LogOffEndpoint.TokenAccessor, false)) as ISaml20IdpTokenAccessor;
                 if (idpTokenAccessor != null)
                     idpTokenAccessor.ReadToken(elem);
             }
@@ -418,7 +418,7 @@ namespace SAML2.Protocol
 
             string issuer = GetIssuer(elem);
             
-            IDPEndPoint endp = RetrieveIDPConfiguration(issuer);
+            IdentityProviderElement endp = RetrieveIDPConfiguration(issuer);
 
             PreHandleAssertion(context, elem, endp);
 
@@ -431,7 +431,7 @@ namespace SAML2.Protocol
             
             Saml20Assertion assertion = new Saml20Assertion(elem, null, quirksMode);
                         
-            if (endp == null || endp.metadata == null)
+            if (endp == null || endp.Metadata == null)
             {
                 Logger.Error("Unknown login IDP, assertion: " + elem);
                 HandleError(context, Resources.UnknownLoginIDP);
@@ -440,7 +440,7 @@ namespace SAML2.Protocol
 
             if (!endp.OmitAssertionSignatureCheck)
             {
-                if (!assertion.CheckSignature(GetTrustedSigners(endp.metadata.GetKeys(KeyTypes.signing), endp)))
+                if (!assertion.CheckSignature(GetTrustedSigners(endp.Metadata.GetKeys(KeyTypes.signing), endp)))
                 {
                     Logger.Error("Invalid signature, assertion: " + elem);
                     HandleError(context, Resources.SignatureInvalid);
@@ -461,7 +461,7 @@ namespace SAML2.Protocol
             DoLogin(context, assertion);
         }
 
-        public static IEnumerable<AsymmetricAlgorithm> GetTrustedSigners(ICollection<KeyDescriptor> keys, IDPEndPoint ep)
+        public static IEnumerable<AsymmetricAlgorithm> GetTrustedSigners(ICollection<KeyDescriptor> keys, IdentityProviderElement ep)
         {
             if (keys == null)
                 throw new ArgumentNullException("keys");
@@ -490,7 +490,7 @@ namespace SAML2.Protocol
             return result;
         }
 
-        private static bool IsSatisfiedByAllSpecifications(IDPEndPoint ep, X509Certificate2 cert)
+        private static bool IsSatisfiedByAllSpecifications(IdentityProviderElement ep, X509Certificate2 cert)
         {
             foreach(ICertificateSpecification spec in SpecificationFactory.GetCertificateSpecifications(ep))
             {
@@ -538,18 +538,18 @@ namespace SAML2.Protocol
             }
         }
 
-        private void TransferClient(IDPEndPoint idpEndpoint, Saml20AuthnRequest request, HttpContext context)
+        private void TransferClient(IdentityProviderElement idpEndpoint, Saml20AuthnRequest request, HttpContext context)
         {
             //Set the last IDP we attempted to login at.
             context.Session[IDPTempSessionKey]= idpEndpoint.Id;
 
             // Determine which endpoint to use from the configuration file or the endpoint metadata.
-            IDPEndPointElement destination = 
-                DetermineEndpointConfiguration(SAMLBinding.REDIRECT, idpEndpoint.SSOEndpoint, idpEndpoint.metadata.SSOEndpoints());
+            IdentityProviderEndpointElement destination = 
+                DetermineEndpointConfiguration(BindingType.Redirect, idpEndpoint.Endpoints.SignOnEndpoint, idpEndpoint.Metadata.SSOEndpoints());
     
             request.Destination = destination.Url;
 
-            if (idpEndpoint.ForceAuthn)
+            if (idpEndpoint.ForceAuth)
                 request.ForceAuthn = true;
 
             object isPassiveFlag = context.Session[IDPIsPassive];
@@ -571,18 +571,18 @@ namespace SAML2.Protocol
                 context.Session[IDPForceAuthn] = null;
             }
 
-            if (idpEndpoint.SSOEndpoint != null)
+            if (idpEndpoint.Endpoints.SignOnEndpoint != null)
             {
-                if (!string.IsNullOrEmpty(idpEndpoint.SSOEndpoint.ForceProtocolBinding))
+                if (!string.IsNullOrEmpty(idpEndpoint.Endpoints.SignOnEndpoint.ForceProtocolBinding))
                 {
-                    request.ProtocolBinding = idpEndpoint.SSOEndpoint.ForceProtocolBinding;
+                    request.ProtocolBinding = idpEndpoint.Endpoints.SignOnEndpoint.ForceProtocolBinding;
                 }
             }
 
             //Save request message id to session
             context.Session.Add(ExpectedInResponseToSessionKey, request.ID);
 
-            if (destination.Binding == SAMLBinding.REDIRECT)
+            if (destination.Binding == BindingType.Redirect)
             {
                 Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HTTP_Redirect, idpEndpoint.Id);
                 
@@ -595,7 +595,7 @@ namespace SAML2.Protocol
                 return;
             }
 
-            if (destination.Binding == SAMLBinding.POST)
+            if (destination.Binding == BindingType.Post)
             {
                 Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HTTP_Post, idpEndpoint.Id);
 
@@ -611,7 +611,7 @@ namespace SAML2.Protocol
                 return;
             }
 
-            if(destination.Binding == SAMLBinding.ARTIFACT)
+            if(destination.Binding == BindingType.Artifact)
             {
                 Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HTTP_Artifact, idpEndpoint.Id);
 

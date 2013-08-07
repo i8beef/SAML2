@@ -5,7 +5,7 @@ namespace SAML2.Config
     /// <summary>
     /// Identity Provider Endpoint configuration element.
     /// </summary>
-    public class IdentityProviderEndpointElement : ConfigurationElement
+    public class IdentityProviderEndpointElement : ConfigurationElement, IConfigurationElementCollectionElement
     {
         #region Attributes
 
@@ -13,9 +13,10 @@ namespace SAML2.Config
         /// Gets the binding.
         /// </summary>
         [ConfigurationProperty("binding", IsRequired = true)]
-        public string Binding
+        public BindingType Binding
         {
-            get { return (string)base["binding"]; }
+            get { return (BindingType)base["binding"]; }
+            set { base["binding"] = value; }
         }
 
         /// <summary>
@@ -45,6 +46,7 @@ namespace SAML2.Config
         public string Type
         {
             get { return (string)base["type"]; }
+            set { base["type"] = value; }
         }
 
         /// <summary>
@@ -54,6 +56,19 @@ namespace SAML2.Config
         public string Url
         {
             get { return (string)base["url"]; }
+            set { base["url"] = value; }
+        }
+
+        #endregion
+
+        #region Implementation of IConfigurationElementCollectionElement
+
+        /// <summary>
+        /// Gets the element key.
+        /// </summary>
+        public object ElementKey
+        {
+            get { return Type; }
         }
 
         #endregion

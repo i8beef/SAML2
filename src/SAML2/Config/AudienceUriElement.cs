@@ -5,7 +5,7 @@ namespace SAML2.Config
     /// <summary>
     /// Audience configuration element.
     /// </summary>
-    public class AudienceElement : ConfigurationElement
+    public class AudienceUriElement : ConfigurationElement, IConfigurationElementCollectionElement
     {
         /// <summary>
         /// Gets the URI.
@@ -15,5 +15,17 @@ namespace SAML2.Config
         {
             get { return (string) base["uri"]; }
         }
+
+        #region Implementation of IConfigurationElementCollectionElement
+
+        /// <summary>
+        /// Gets the element key.
+        /// </summary>
+        public object ElementKey
+        {
+            get { return Uri; }
+        }
+
+        #endregion
     }
 }

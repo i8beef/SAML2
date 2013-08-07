@@ -696,7 +696,7 @@ namespace dk.nita.test.Saml20
         [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "The service is not configured to meet any audience restrictions")]
         public void AudienceRestriction_Invalid_NoConfiguration()
         {
-            FederationConfig sp = FederationConfig.GetConfig();
+            FederationConfig sp = Saml2Config.GetConfig();
             List<string> origAllowedAudiences = new List<string>(sp.AllowedAudienceUris.Audiences);
             try
             {
@@ -719,7 +719,7 @@ namespace dk.nita.test.Saml20
         [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "The service is not configured to meet the given audience restrictions")]
         public void AudienceRestriction_Invalid_ConfigurationSetup()
         {
-            FederationConfig sp = FederationConfig.GetConfig();
+            FederationConfig sp = Saml2Config.GetConfig();
             List<string> origAllowedAudiences = new List<string>(sp.AllowedAudienceUris.Audiences);
             try
             {

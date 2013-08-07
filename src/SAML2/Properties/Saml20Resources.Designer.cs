@@ -80,7 +80,7 @@ namespace SAML2.Properties {
         }
         
         /// <summary>
-        /// Looks up a localized string similar to 'The IDPEndPoint with id &quot;{0}&quot; was not found in configuration file.'.
+        /// Looks up a localized string similar to 'The IdentityProviderEndpointElement with id &quot;{0}&quot; was not found in configuration file.'.
         /// </summary>
         public static string InvalidIdpEndPointId {
             get {
@@ -89,7 +89,7 @@ namespace SAML2.Properties {
         }
         
         /// <summary>
-        /// Looks up a localized string similar to 'Missing &lt;IDPEndPoints&gt; element under &lt;Safewhere.SAML20Federation&gt; in configuration file.'.
+        /// Looks up a localized string similar to 'Missing &lt;IdentityProviderEndpointElements&gt; element under &lt;Safewhere.SAML20Federation&gt; in configuration file.'.
         /// </summary>
         public static string MissingIDPEndpoints {
             get {
@@ -98,7 +98,7 @@ namespace SAML2.Properties {
         }
         
         /// <summary>
-        /// Looks up a localized string similar to 'The &quot;metadata&quot; attribute on the &lt;IDPEndPoints&gt; tag must contain the path to a directory holding metadata descriptions of your federation partners.'.
+        /// Looks up a localized string similar to 'The &quot;metadata&quot; attribute on the &lt;IdentityProviderEndpointElements&gt; tag must contain the path to a directory holding metadata descriptions of your federation partners.'.
         /// </summary>
         public static string MissingMetadataLocation {
             get {
@@ -143,7 +143,7 @@ namespace SAML2.Properties {
         }
         
         /// <summary>
-        /// Looks up a localized string similar to 'Missing &lt;SLO&gt; element or missing attribute under &lt;IDPEndPoints&gt; in configuration file.'.
+        /// Looks up a localized string similar to 'Missing &lt;SLO&gt; element or missing attribute under &lt;IdentityProviderEndpointElements&gt; in configuration file.'.
         /// </summary>
         public static string MissingSLO {
             get {
@@ -152,7 +152,7 @@ namespace SAML2.Properties {
         }
         
         /// <summary>
-        /// Looks up a localized string similar to 'Missing &lt;SSO&gt; element or missing attribute under &lt;IDPEndPoints&gt; in configuration file.'.
+        /// Looks up a localized string similar to 'Missing &lt;SSO&gt; element or missing attribute under &lt;IdentityProviderEndpointElements&gt; in configuration file.'.
         /// </summary>
         public static string MissingSSO {
             get {
@@ -197,7 +197,7 @@ namespace SAML2.Properties {
         }
         
         /// <summary>
-        /// Formats a localized string similar to 'The IDPEndPoint with id &quot;{0}&quot; was not found in configuration file.'.
+        /// Formats a localized string similar to 'The IdentityProviderEndpointElement with id &quot;{0}&quot; was not found in configuration file.'.
         /// </summary>
         /// <param name="arg0">An object (0) to format.</param>
         /// <returns>A copy of format string in which the format items have been replaced by the String equivalent of the corresponding instances of Object in arguments.</returns>

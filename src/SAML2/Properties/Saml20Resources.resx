@@ -124,13 +124,13 @@
     <value>Action SAMLResponse requires you to set the Response property.</value>
   </data>
   <data name="InvalidIdpEndPointId" xml:space="preserve">
-    <value>The IDPEndPoint with id "{0}" was not found in configuration file.</value>
+    <value>The IdentityProviderEndpointElement with id "{0}" was not found in configuration file.</value>
   </data>
   <data name="MissingIDPEndpoints" xml:space="preserve">
-    <value>Missing &lt;IDPEndPoints&gt; element under &lt;Safewhere.SAML20Federation&gt; in configuration file.</value>
+    <value>Missing &lt;IdentityProviderEndpointElements&gt; element under &lt;Safewhere.SAML20Federation&gt; in configuration file.</value>
   </data>
   <data name="MissingMetadataLocation" xml:space="preserve">
-    <value>The "metadata" attribute on the &lt;IDPEndPoints&gt; tag must contain the path to a directory holding metadata descriptions of your federation partners.</value>
+    <value>The "metadata" attribute on the &lt;IdentityProviderEndpointElements&gt; tag must contain the path to a directory holding metadata descriptions of your federation partners.</value>
   </data>
   <data name="MissingSaml20Federation" xml:space="preserve">
     <value>Missing &lt;Safewhere.SAML20Federation&gt; element in configuration file.</value>
@@ -145,10 +145,10 @@
     <value>Missing &lt;SigningCertificate&gt; element under &lt;ServiceProvider&gt; element in configuration file.</value>
   </data>
   <data name="MissingSLO" xml:space="preserve">
-    <value>Missing &lt;SLO&gt; element or missing attribute under &lt;IDPEndPoints&gt; in configuration file.</value>
+    <value>Missing &lt;SLO&gt; element or missing attribute under &lt;IdentityProviderEndpointElements&gt; in configuration file.</value>
   </data>
   <data name="MissingSSO" xml:space="preserve">
-    <value>Missing &lt;SSO&gt; element or missing attribute under &lt;IDPEndPoints&gt; in configuration file.</value>
+    <value>Missing &lt;SSO&gt; element or missing attribute under &lt;IdentityProviderEndpointElements&gt; in configuration file.</value>
   </data>
   <data name="SigningCertficateLoadError" xml:space="preserve">
     <value>Unable to load the certificate specified in &lt;SigningCertificate&gt; element in configuration file.</value>

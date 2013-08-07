@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
@@ -63,7 +64,7 @@ namespace SAML2
             {
                 if (_assertionValidator == null)
                 {
-                    FederationConfig config = FederationConfig.GetConfig();
+                    var config = Saml2Config.GetConfig();
                     if (config == null || config.AllowedAudienceUris == null)
                     {
                         if (String.IsNullOrEmpty(profile))
@@ -79,11 +80,11 @@ namespace SAML2
                     {
                         if (String.IsNullOrEmpty(profile))
                         {
-                            _assertionValidator = new Saml20AssertionValidator(config.AllowedAudienceUris.Audiences, _quirksMode);
+                            _assertionValidator = new Saml20AssertionValidator(config.AllowedAudienceUris.Select(x => x.Uri).ToList(), _quirksMode);
                         }
                         else
                         {
-                            _assertionValidator = (ISaml20AssertionValidator)Activator.CreateInstance(System.Type.GetType(profile), config.AllowedAudienceUris.Audiences, _quirksMode);
+                            _assertionValidator = (ISaml20AssertionValidator)Activator.CreateInstance(System.Type.GetType(profile), config.AllowedAudienceUris, _quirksMode);
                         }
                     }
                 }

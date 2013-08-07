@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using SAML2.Config;
 using SAML2.Protocol;
@@ -33,22 +34,24 @@ namespace SAML2.Actions
         {
             string idpKey = (string) context.Session[Saml20SignonHandler.IDPLoginSessionKey];
             Saml20SignonHandler h = (Saml20SignonHandler) handler;
-            IDPEndPoint ep = h.RetrieveIDPConfiguration(idpKey);
-            if (ep.CDC.ExtraSettings != null)
+            IdentityProviderElement ep = h.RetrieveIDPConfiguration(idpKey);
+            if (ep.CommonDomainCookie != null)
             {
-                List<KeyValue> values = ep.CDC.ExtraSettings.KeyValues;
+                var values = ep.CommonDomainCookie.AllKeys;
 
-                KeyValue idpEndpoint = values.Find(delegate(KeyValue kv) { return kv.Key == IDPCookieWriterEndPoint; });
+                var idpEndpoint = values.FirstOrDefault(x => x == IDPCookieWriterEndPoint);
                 if (idpEndpoint == null)
-                    throw new Saml20Exception(@"Please specify """ + IDPCookieWriterEndPoint +
-                                              @""" in Settings element.");
+                {
+                    throw new Saml20Exception(@"Please specify """ + IDPCookieWriterEndPoint + @""" in Settings element.");
+                }
                 
-                KeyValue localReturnPoint = values.Find(delegate(KeyValue kv) { return kv.Key == LocalReturnUrl; });
-                if(localReturnPoint == null)
-                    throw new Saml20Exception(@"Please specify """ + LocalReturnUrl +
-                                              @""" in Settings element.");
+                var localReturnPoint = values.FirstOrDefault(x => x == LocalReturnUrl);
+                if (localReturnPoint == null)
+                {
+                    throw new Saml20Exception(@"Please specify """ + LocalReturnUrl + @""" in Settings element.");
+                }
 
-                string url = idpEndpoint.Value + "?" + TargetResource + "=" + localReturnPoint.Value;
+                string url = idpEndpoint + "?" + TargetResource + "=" + localReturnPoint;
 
                 context.Response.Redirect(url);
             }else

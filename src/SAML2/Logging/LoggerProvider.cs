@@ -23,7 +23,7 @@ namespace SAML2.Logging
         /// </summary>
         static LoggerProvider()
         {
-            string loggerClass = SAML20FederationConfig.GetConfig().Logging.LoggingFactory;
+            string loggerClass = Saml2Config.GetConfig().Logging.LoggingFactory;
             ILoggerFactory loggerFactory = string.IsNullOrEmpty(loggerClass) ? new NoLoggingLoggerFactory() : GetLoggerFactory(loggerClass);
             SetLoggersFactory(loggerFactory);
         }

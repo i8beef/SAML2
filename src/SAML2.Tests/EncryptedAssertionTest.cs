@@ -52,10 +52,10 @@ namespace dk.nita.test.Saml20
             Assert.That(encryptedList.Count == 1);
 
             // Do some mock configuration.
-            FederationConfig config = FederationConfig.GetConfig();
+            var config = Saml2Config.GetConfig();
             config.AllowedAudienceUris.Audiences.Add("https://saml.safewhere.net");
 
-            SAML20FederationConfig descr = ConfigurationReader.GetConfig<SAML20FederationConfig>();
+            SAML20FederationConfig descr = Saml2Config.GetConfig();
             descr.Endpoints.metadataLocation = @"Protocol\MetadataDocs\FOBS"; // Set it manually.     
             Assert.That(Directory.Exists(descr.Endpoints.metadataLocation));
             descr.Endpoints.Refresh();
@@ -70,7 +70,7 @@ namespace dk.nita.test.Saml20
             // Retrieve metadata                       
             Saml20Assertion assertion = new Saml20Assertion(encass.Assertion.DocumentElement, null, false);
 
-            IDPEndPoint endp = descr.FindEndPoint(assertion.Issuer);
+            IdentityProviderEndpointElement endp = descr.FindEndPoint(assertion.Issuer);
             Assert.IsNotNull(endp, "Endpoint not found");
             Assert.IsNotNull(endp.metadata, "Metadata not found");
 

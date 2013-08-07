@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
 using System.Web;
 using SAML2.Bindings;
 using SAML2.Config;
@@ -102,16 +103,16 @@ namespace SAML2.Protocol
         /// Handles the selection of an IDP. If only one IDP is found, the user is automatically redirected to it.
         /// If several are found, and nothing indicates to which one the user should be sent, this method returns null.
         /// </summary>
-        public IDPEndPoint RetrieveIDP(HttpContext context)
+        public IdentityProviderElement RetrieveIDP(HttpContext context)
         {
-            SAML20FederationConfig config = SAML20FederationConfig.GetConfig();
-            config.Endpoints.Refresh();
+            var config = Saml2Config.GetConfig();
+            config.IdentityProviders.Refresh();
 
             //If idpChoice is set, use it value
             if (!string.IsNullOrEmpty(context.Request.Params[IDPChoiceParameterName]))
             {
                 Logger.Debug("Using IDPChoiceParamater: " + context.Request.Params[IDPChoiceParameterName]);
-                IDPEndPoint endPoint = config.FindEndPoint(context.Request.Params[IDPChoiceParameterName]);
+                IdentityProviderElement endPoint = config.IdentityProviders.FirstOrDefault(x => x.Id == context.Request.Params[IDPChoiceParameterName]);
                 if (endPoint != null)                
                     return endPoint;                
             }
@@ -123,7 +124,7 @@ namespace SAML2.Protocol
                 CommonDomainCookie cdc = new CommonDomainCookie(context.Request.QueryString["_saml_idp"]);
                 if (cdc.IsSet)
                 {
-                    IDPEndPoint endPoint = config.FindEndPoint(cdc.PreferredIDP);
+                    IdentityProviderElement endPoint = config.IdentityProviders.FirstOrDefault(x => x.Id == cdc.PreferredIDP);
                     if (endPoint != null)
                     {
                         Logger.Debug("IDP read from Common Domain Cookie: " + cdc.PreferredIDP);
@@ -135,15 +136,15 @@ namespace SAML2.Protocol
                 }
             }
 
-            //If there is only one configured IDPEndPoint lets just use that
-            if (config.IDPEndPoints.Count == 1 && config.IDPEndPoints[0].metadata != null)
+            //If there is only one configured IdentityProviderEndpointElement lets just use that
+            if (config.IdentityProviders.Count == 1 && config.IdentityProviders[0].Metadata != null)
             {
-                Logger.Debug("No IdP selected in Common Domain Cookie, using default IdP: " + config.IDPEndPoints[0].Name);
-                return config.IDPEndPoints[0];
+                Logger.Debug("No IdP selected in Common Domain Cookie, using default IdP: " + config.IdentityProviders[0].Name);
+                return config.IdentityProviders[0];
             }
 
             // If one of the endpoints are marked with default, use that one
-            var defaultIdp = config.Endpoints.IDPEndPoints.Find(idp => idp.Default);
+            var defaultIdp = config.IdentityProviders.FirstOrDefault(idp => idp.Default);
             if(defaultIdp != null)
             {
                 Logger.Debug("Using IdP marked as default: " + defaultIdp.Id);
@@ -152,15 +153,15 @@ namespace SAML2.Protocol
             }
 
             // In case an Idp selection url has been configured, redirect to that one.
-            if(!string.IsNullOrEmpty(config.Endpoints.idpSelectionUrl))
+            if(!string.IsNullOrEmpty(config.IdentityProviders.SelectionUrl))
             {
-                Logger.Debug("Redirecting to idpSelectionUrl for selection of IDP: " + config.Endpoints.idpSelectionUrl);
+                Logger.Debug("Redirecting to idpSelectionUrl for selection of IDP: " + config.IdentityProviders.SelectionUrl);
 
-                context.Response.Redirect(config.Endpoints.idpSelectionUrl);
+                context.Response.Redirect(config.IdentityProviders.SelectionUrl);
             }
 
             // If an IDPSelectionEvent handler is present, request the handler for an IDP endpoint to use.
-            var idpEndpoint = IDPSelectionUtil.InvokeIDPSelectionEventHandler(config.Endpoints);
+            var idpEndpoint = IDPSelectionUtil.InvokeIDPSelectionEventHandler(config.IdentityProviders);
             if(idpEndpoint != null)
             {
                 return idpEndpoint;
@@ -172,11 +173,11 @@ namespace SAML2.Protocol
         /// <summary>
         /// Looks through the Identity Provider configurations and 
         /// </summary>
-        public IDPEndPoint RetrieveIDPConfiguration(string IDPId)
+        public IdentityProviderElement RetrieveIDPConfiguration(string IDPId)
         {
-            SAML20FederationConfig config = SAML20FederationConfig.GetConfig();
-            config.Endpoints.Refresh();
-            return config.FindEndPoint(IDPId);
+            var config = Saml2Config.GetConfig();
+            config.IdentityProviders.Refresh();
+            return config.IdentityProviders.FirstOrDefault(x => x.Id == IDPId);
         }
 
         /// <summary>
@@ -209,9 +210,9 @@ namespace SAML2.Protocol
         /// <param name="defaultBinding">The binding to use if none has been specified in the configuration and the metadata allows all bindings.</param>
         /// <param name="config">The endpoint as described in the configuration. May be null.</param>
         /// <param name="metadata">A list of endpoints of the given type (eg. SSO or SLO) that the metadata contains. </param>        
-        internal static IDPEndPointElement DetermineEndpointConfiguration(SAMLBinding defaultBinding, IDPEndPointElement config, List<IDPEndPointElement> metadata)
+        internal static IdentityProviderEndpointElement DetermineEndpointConfiguration(BindingType defaultBinding, IdentityProviderEndpointElement config, List<IdentityProviderEndpointElement> metadata)
         {
-            IDPEndPointElement result = new IDPEndPointElement();
+            IdentityProviderEndpointElement result = new IdentityProviderEndpointElement();
             result.Binding = defaultBinding;
 
             // Determine which binding to use.
@@ -220,13 +221,13 @@ namespace SAML2.Protocol
                 result.Binding = config.Binding;
             } else {
                 // Verify that the metadata allows the default binding.
-                bool allowed = metadata.Exists(delegate(IDPEndPointElement el) { return el.Binding == defaultBinding; });
+                bool allowed = metadata.Exists(delegate(IdentityProviderEndpointElement el) { return el.Binding == defaultBinding; });
                 if (!allowed)
                 {
-                    if (result.Binding == SAMLBinding.POST)
-                        result.Binding = SAMLBinding.REDIRECT;
+                    if (result.Binding == BindingType.Post)
+                        result.Binding = BindingType.Redirect;
                     else
-                        result.Binding = SAMLBinding.POST;
+                        result.Binding = BindingType.Post;
                 }                    
             }
 
@@ -235,8 +236,8 @@ namespace SAML2.Protocol
                 result.Url = config.Url;
             } else
             {
-                IDPEndPointElement endpoint =
-                    metadata.Find(delegate(IDPEndPointElement el) { return el.Binding == result.Binding; });
+                IdentityProviderEndpointElement endpoint =
+                    metadata.Find(delegate(IdentityProviderEndpointElement el) { return el.Binding == result.Binding; });
 
                 if (endpoint == null)
                     throw new ConfigurationErrorsException(

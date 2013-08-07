@@ -370,7 +370,7 @@ namespace SAML2.Utils
         /// <param name="id">The is of the topmost element in the xmldocument</param>
         public static void SignDocument(XmlDocument doc, string id)
         {
-            X509Certificate2 cert = FederationConfig.GetConfig().SigningCertificate.GetCertificate();
+            X509Certificate2 cert = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate();
             SignDocument(doc, id, cert);
         }
 

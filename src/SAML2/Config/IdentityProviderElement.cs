@@ -5,8 +5,14 @@ namespace SAML2.Config
     /// <summary>
     /// Identity Provider configuration element.
     /// </summary>
-    public class IdentityProviderElement : ConfigurationElement
+    public class IdentityProviderElement : ConfigurationElement, IConfigurationElementCollectionElement
     {
+        /// <summary>
+        /// Gets or sets the metadata.
+        /// </summary>
+        /// <value>The metadata.</value>
+        public Saml20MetadataDocument Metadata { get; set; }
+
         #region Attributes
 
         /// <summary>
@@ -19,6 +25,7 @@ namespace SAML2.Config
         public bool Default
         {
             get { return (bool)base["default"]; }
+            set { base["default"] = value; }
         }
 
         /// <summary>
@@ -28,15 +35,17 @@ namespace SAML2.Config
         public bool ForceAuth
         {
             get { return (bool)base["forceAuth"]; }
+            set { base["forceAuth"] = value; }
         }
 
         /// <summary>
         /// Gets the id.
         /// </summary>
-        [ConfigurationProperty("id", IsRequired = true)]
+        [ConfigurationProperty("id", IsKey = true, IsRequired = true)]
         public string Id
         {
             get { return (string)base["id"]; }
+            set { base["id"] = value; }
         }
 
         /// <summary>
@@ -46,6 +55,7 @@ namespace SAML2.Config
         public bool IsPassive
         {
             get { return (bool)base["isPassive"]; }
+            set { base["isPassive"] = value; }
         }
 
         /// <summary>
@@ -55,6 +65,7 @@ namespace SAML2.Config
         public string Name
         {
             get { return (string)base["name"]; }
+            set { base["name"] = value; }
         }
 
         /// <summary>
@@ -64,6 +75,7 @@ namespace SAML2.Config
         public bool OmitAssertionSignatureCheck
         {
             get { return (bool)base["omitAssertionSignatureCheck"]; }
+            set { base["omitAssertionSignatureCheck"] = value; }
         }
 
         /// <summary>
@@ -73,6 +85,7 @@ namespace SAML2.Config
         public bool QuirksMode
         {
             get { return (bool)base["quirksMode"]; }
+            set { base["quirksMode"] = value; }
         }
 
         /// <summary>
@@ -82,6 +95,7 @@ namespace SAML2.Config
         public string ResponseEncoding
         {
             get { return (string)base["responseEncoding"]; }
+            set { base["responseEncoding"] = value; }
         }
 
         #endregion
@@ -140,6 +154,18 @@ namespace SAML2.Config
         public PersistentPseudonymElement PersistentPseudonym
         {
             get { return (PersistentPseudonymElement)base["persistentPseudonym"]; }
+        }
+
+        #endregion
+
+        #region Implementation of IConfigurationElementCollectionElement
+
+        /// <summary>
+        /// Gets the element key.
+        /// </summary>
+        public object ElementKey
+        {
+            get { return Id; }
         }
 
         #endregion

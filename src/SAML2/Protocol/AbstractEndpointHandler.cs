@@ -49,7 +49,7 @@ namespace SAML2.Protocol
         /// <param name="overrideConfigSetting">if set to <c>true</c> [override config setting].</param>
         public void HandleError(HttpContext context, string errorMessage, bool overrideConfigSetting)
         {
-            Boolean showError = ConfigurationInstance<SAML20FederationConfig>.GetConfig().ShowError;
+            Boolean showError = Saml2Config.GetConfig().ShowError;
             String DEFAULT_MESSAGE = "Unable to validate SAML message!";
 
             if (!String.IsNullOrEmpty(ErrorBehaviour) && ErrorBehaviour.Equals(Config.ErrorBehaviour.THROWEXCEPTION.ToString()))

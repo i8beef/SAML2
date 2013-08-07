@@ -137,12 +137,12 @@ namespace SAML2
             Saml20LogoutRequest result = new Saml20LogoutRequest();
             result.SubjectToLogOut = new NameID();
             //format
-            SAML20FederationConfig config = SAML20FederationConfig.GetConfig();
+            var config = Saml2Config.GetConfig();
 
-            if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.ID))
+            if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.Id))
                 throw new Saml20FormatException(Resources.ServiceProviderNotSet);
 
-            result.Issuer = config.ServiceProvider.ID;
+            result.Issuer = config.ServiceProvider.Id;
 
             return result;
 

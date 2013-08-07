@@ -5,7 +5,7 @@ namespace SAML2.Config
     /// <summary>
     /// Authentication Context configuration element.
     /// </summary>
-    public class AuthenticationContextElement : ConfigurationElement
+    public class AuthenticationContextElement : ConfigurationElement, IConfigurationElementCollectionElement
     {
         #region Attributes
 
@@ -28,5 +28,18 @@ namespace SAML2.Config
         }
 
         #endregion
+
+        #region Implementation of IConfigurationElementCollectionElement
+
+        /// <summary>
+        /// Gets the element key.
+        /// </summary>
+        public object ElementKey
+        {
+            get { return Context; }
+        }
+
+        #endregion
+
     }
 }

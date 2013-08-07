@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using SAML2.Config;
+using SAML2.Utils;
 using Saml2.Properties;
 
 namespace SAML2.Protocol.pages
@@ -23,20 +24,20 @@ namespace SAML2.Protocol.pages
             
             BodyPanel.Controls.Add(new LiteralControl(Resources.ChooseDesc));
             BodyPanel.Controls.Add(new LiteralControl("<br/><br/>"));
-            SAML20FederationConfig config = ConfigurationReader.GetConfig<SAML20FederationConfig>();            
+            var config = Saml2Config.GetConfig();            
             
-            config.Endpoints.Refresh();
+            config.IdentityProviders.Refresh();
 
-            foreach (IDPEndPoint endPoint in config.IDPEndPoints)
+            foreach (var endPoint in config.IdentityProviders)
             {
-                if (endPoint.metadata != null)
+                if (endPoint.Metadata != null)
                 {
                     HyperLink link = new HyperLink();
 
                     // Link text. If a name has been specified in web.config, use it. Otherwise, use id from metadata.
-                    link.Text = string.IsNullOrEmpty(endPoint.Name) ? endPoint.metadata.EntityId : endPoint.Name;
+                    link.Text = string.IsNullOrEmpty(endPoint.Name) ? endPoint.Metadata.EntityId : endPoint.Name;
 
-                    link.NavigateUrl = endPoint.GetIDPLoginUrl();
+                    link.NavigateUrl = IDPSelectionUtil.GetIDPLoginUrl(endPoint.Id);
                     BodyPanel.Controls.Add(link);
                     BodyPanel.Controls.Add(new LiteralControl("<br/>"));
                 } else

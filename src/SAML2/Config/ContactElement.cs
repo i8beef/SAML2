@@ -5,7 +5,7 @@ namespace SAML2.Config
     /// <summary>
     /// Contact configuration element.
     /// </summary>
-    public class ContactElement : ConfigurationElement
+    public class ContactElement : ConfigurationElement, IConfigurationElementCollectionElement
     {
         #region Attributes
 
@@ -58,9 +58,21 @@ namespace SAML2.Config
         /// Gets the type.
         /// </summary>
         [ConfigurationProperty("type", IsKey = true, IsRequired = true)]
-        public string Type
+        public ContactType Type
         {
-            get { return (string)base["type"]; }
+            get { return (ContactType)base["type"]; }
+        }
+
+        #endregion
+
+        #region Implementation of IConfigurationElementCollectionElement
+
+        /// <summary>
+        /// Gets the element key.
+        /// </summary>
+        public object ElementKey
+        {
+            get { return Type; }
         }
 
         #endregion

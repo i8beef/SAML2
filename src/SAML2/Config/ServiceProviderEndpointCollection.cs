@@ -1,5 +1,5 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
+using System.Linq;
 
 namespace SAML2.Config
 {
@@ -7,38 +7,21 @@ namespace SAML2.Config
     /// Service Provider Endpoint configuration collection.
     /// </summary>
     [ConfigurationCollection(typeof(ServiceProviderEndpointElement), AddItemName = "endpoint", CollectionType = ConfigurationElementCollectionType.BasicMap)]
-    public class ServiceProviderEndpointCollection : ConfigurationElementCollection
+    public class ServiceProviderEndpointCollection : EnumerableConfigurationElementCollection<ServiceProviderEndpointElement>
     {
-        #region Overrides of ConfigurationElementCollection
-
         /// <summary>
-        /// When overridden in a derived class, creates a new <see cref="T:System.Configuration.ConfigurationElement"/>.
+        /// Gets the log off endpoint.
         /// </summary>
-        /// <returns>
-        /// A new <see cref="T:System.Configuration.ConfigurationElement"/>.
-        /// </returns>
-        protected override ConfigurationElement CreateNewElement()
+        public ServiceProviderEndpointElement LogoutEndpoint
         {
-            return new ServiceProviderEndpointElement();
+            get { return this.FirstOrDefault(x => x.Type == EndpointType.Logout); }
         }
-
         /// <summary>
-        /// Gets the element key for a specified configuration element when overridden in a derived class.
+        /// Gets the sign on endpoint.
         /// </summary>
-        /// <returns>
-        /// An <see cref="T:System.Object"/> that acts as the key for the specified <see cref="T:System.Configuration.ConfigurationElement"/>.
-        /// </returns>
-        /// <param name="element">The <see cref="T:System.Configuration.ConfigurationElement"/> to return the key for.</param>
-        protected override object GetElementKey(ConfigurationElement element)
+        public ServiceProviderEndpointElement SignOnEndpoint
         {
-            if (element == null)
-            {
-                throw new ArgumentNullException("element");
-            }
-
-            return ((ServiceProviderEndpointElement)element).Type;
+            get { return this.FirstOrDefault(x => x.Type == EndpointType.SignOn); }
         }
-
-        #endregion
     }
 }

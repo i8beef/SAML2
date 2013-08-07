@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Web;
 using System.Web.Security;
@@ -30,8 +31,8 @@ namespace SAML2.Protocol
             // Read the proper redirect url from config
             try
             {
-                RedirectUrl = SAML20FederationConfig.GetConfig().ServiceProvider.LogoutEndpoint.RedirectUrl;
-                ErrorBehaviour = SAML20FederationConfig.GetConfig().ServiceProvider.LogoutEndpoint.ErrorBehaviour.ToString();
+                RedirectUrl = Saml2Config.GetConfig().ServiceProvider.Endpoints.LogoutEndpoint.RedirectUrl;
+                ErrorBehaviour = Saml2Config.GetConfig().ServiceProvider.Endpoints.LogoutEndpoint.ErrorBehaviour.ToString();
             }
             catch (Exception e)
             {
@@ -75,7 +76,7 @@ namespace SAML2.Protocol
                 }
                 else
                 {
-                    IDPEndPoint idpEndpoint = null;
+                    IdentityProviderElement idpEndpoint = null;
                     //context.Session[IDPLoginSessionKey] may be null if IIS has been restarted
                     if (context.Session[IDPSessionIdKey] != null)
                     {
@@ -84,6 +85,7 @@ namespace SAML2.Protocol
 
                     if (idpEndpoint == null)
                     {
+                        // TODO: Reconsider how to accomplish this.
                         context.User = null;
                         FormsAuthentication.SignOut();
 
@@ -123,15 +125,15 @@ namespace SAML2.Protocol
 
             HttpArtifactBindingParser parser = new HttpArtifactBindingParser(inputStream);
             HttpArtifactBindingBuilder builder = new HttpArtifactBindingBuilder(context);
-            SAML20FederationConfig config = SAML20FederationConfig.GetConfig();
+            var config = Saml2Config.GetConfig();
 
-            IDPEndPoint idp = RetrieveIDPConfiguration(parser.Issuer);
+            IdentityProviderElement idp = RetrieveIDPConfiguration(parser.Issuer);
             
             if (parser.IsArtifactResolve())
             {
                 Logger.Debug(Tracing.ArtifactResolveIn);
 
-                if (!parser.CheckSamlMessageSignature(idp.metadata.Keys))
+                if (!parser.CheckSamlMessageSignature(idp.Metadata.Keys))
                 {
                     Logger.ErrorFormat("Signature could not be verified during artifact resolve, msg: " + parser.SamlMessage);
                     HandleError(context, "Invalid Saml message signature");
@@ -158,13 +160,13 @@ namespace SAML2.Protocol
 
                     //Send logoutresponse via artifact
                     Saml20LogoutResponse response = new Saml20LogoutResponse();
-                    response.Issuer = config.ServiceProvider.ID;
+                    response.Issuer = config.ServiceProvider.Id;
                     LogoutRequest req = Serialization.DeserializeFromXmlString<LogoutRequest>(parser.ArtifactResponse.Any.OuterXml);
                     response.StatusCode = Saml20Constants.StatusCodes.Success;
                     response.InResponseTo = req.ID;
-                    IDPEndPoint endpoint = RetrieveIDPConfiguration(context.Session[IDPLoginSessionKey].ToString());
-                    IDPEndPointElement destination =
-                        DetermineEndpointConfiguration(SAMLBinding.REDIRECT, endpoint.SLOEndpoint, endpoint.metadata.SLOEndpoints());
+                    IdentityProviderElement endpoint = RetrieveIDPConfiguration(context.Session[IDPLoginSessionKey].ToString());
+                    IdentityProviderEndpointElement destination =
+                        DetermineEndpointConfiguration(BindingType.Redirect, endpoint.Endpoints.LogOffEndpoint, endpoint.Metadata.SLOEndpoints());
 
                     builder.RedirectFromLogout(destination, response);
                 }else if(parser.ArtifactResponse.Any.LocalName == LogoutResponse.ELEMENT_NAME)
@@ -185,7 +187,7 @@ namespace SAML2.Protocol
                 
                 //Build the response object
                 Saml20LogoutResponse response = new Saml20LogoutResponse();
-                response.Issuer = config.ServiceProvider.ID;
+                response.Issuer = config.ServiceProvider.Id;
                 //response.Destination = destination.Url;
                 response.StatusCode = Saml20Constants.StatusCodes.Success;
                 response.InResponseTo = req.ID;
@@ -213,20 +215,20 @@ namespace SAML2.Protocol
         }
 
 
-        private void TransferClient(IDPEndPoint endpoint, HttpContext context)
+        private void TransferClient(IdentityProviderElement endpoint, HttpContext context)
         {
             Saml20LogoutRequest request = Saml20LogoutRequest.GetDefault();
             
             // Determine which endpoint to use from the configuration file or the endpoint metadata.
-            IDPEndPointElement destination =
-                DetermineEndpointConfiguration(SAMLBinding.REDIRECT, endpoint.SLOEndpoint, endpoint.metadata.SLOEndpoints());
+            IdentityProviderEndpointElement destination =
+                DetermineEndpointConfiguration(BindingType.Redirect, endpoint.Endpoints.LogOffEndpoint, endpoint.Metadata.SLOEndpoints());
             
             request.Destination = destination.Url;
 
             string nameIdFormat = context.Session[IDPNameIdFormat].ToString();
             request.SubjectToLogOut.Format = nameIdFormat;
             
-            if (destination.Binding == SAMLBinding.POST)
+            if (destination.Binding == BindingType.Post)
             {
                 HttpPostBindingBuilder builder = new HttpPostBindingBuilder(destination);
                 request.Destination = destination.Url;
@@ -244,10 +246,10 @@ namespace SAML2.Protocol
                 return;
             }
 
-            if(destination.Binding == SAMLBinding.REDIRECT)
+            if(destination.Binding == BindingType.Redirect)
             {
                 HttpRedirectBindingBuilder builder = new HttpRedirectBindingBuilder();
-                builder.signingKey = FederationConfig.GetConfig().SigningCertificate.GetCertificate().PrivateKey;
+                builder.signingKey = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey;
                 request.Destination = destination.Url;
                 request.Reason = Saml20Constants.Reasons.User;
                 request.SubjectToLogOut.Value = context.Session[IDPNameId].ToString();
@@ -262,7 +264,7 @@ namespace SAML2.Protocol
                 return;
             }
 
-            if(destination.Binding == SAMLBinding.ARTIFACT)
+            if(destination.Binding == BindingType.Artifact)
             {
                 Logger.DebugFormat(Tracing.SendLogoutRequest, "ARTIFACT", endpoint.Id, string.Empty);
 
@@ -296,16 +298,16 @@ namespace SAML2.Protocol
 
                 Logger.DebugFormat("Binding: redirect, Signature algorithm: {0}  Signature:  {1}, Message: {2}", parser.SignatureAlgorithm, parser.Signature, parser.Message);
 
-                IDPEndPoint idp = RetrieveIDPConfiguration(response.Issuer.Value);
+                IdentityProviderElement idp = RetrieveIDPConfiguration(response.Issuer.Value);
                 
-                if (idp.metadata == null)
+                if (idp.Metadata == null)
                 {
                     Logger.ErrorFormat("No IDP metadata, unknown IDP, response: {0}", parser.Message);
                     HandleError(context, Resources.UnknownIDP);
                     return;
                 }
 
-                if (!parser.VerifySignature(idp.metadata.Keys))
+                if (!parser.VerifySignature(idp.Metadata.Keys))
                 {
                     Logger.ErrorFormat("Invalid signature in redirect-binding, response: {0}", parser.Message);
                     HandleError(context, Resources.SignatureInvalid);
@@ -320,9 +322,9 @@ namespace SAML2.Protocol
 
                 LogoutResponse response = Serialization.DeserializeFromXmlString<LogoutResponse>(parser.Message);
 
-                IDPEndPoint idp = RetrieveIDPConfiguration(response.Issuer.Value);
+                IdentityProviderElement idp = RetrieveIDPConfiguration(response.Issuer.Value);
 
-                if (idp.metadata == null)
+                if (idp.Metadata == null)
                 {
                     Logger.ErrorFormat("No IDP metadata, unknown IDP, response: {0}", parser.Message);
                     HandleError(context, Resources.UnknownIDP);
@@ -336,7 +338,7 @@ namespace SAML2.Protocol
                 }
 
                 // signature on final message in logout
-                if (!parser.CheckSignature(idp.metadata.Keys))
+                if (!parser.CheckSignature(idp.Metadata.Keys))
                 {
                     Logger.ErrorFormat("Invalid signature in post-binding, response: {0}", parser.Message);
                     HandleError(context, Resources.SignatureInvalid);
@@ -379,17 +381,17 @@ namespace SAML2.Protocol
             Logger.DebugFormat("Generating Logout SAML Request.");
 
             //Fetch the endpoint configuration
-            IDPEndPoint idpEndpoint = RetrieveIDPConfiguration(context.Session[IDPLoginSessionKey].ToString());
+            IdentityProviderElement idpEndpoint = RetrieveIDPConfiguration(context.Session[IDPLoginSessionKey].ToString());
 
-            IDPEndPointElement destination =
-                DetermineEndpointConfiguration(SAMLBinding.REDIRECT, idpEndpoint.SLOEndpoint, idpEndpoint.metadata.SLOEndpoints());
+            IdentityProviderEndpointElement destination =
+                DetermineEndpointConfiguration(BindingType.Redirect, idpEndpoint.Endpoints.LogOffEndpoint, idpEndpoint.Metadata.SLOEndpoints());
 
             //Fetch config object
-            SAML20FederationConfig config = ConfigurationReader.GetConfig<SAML20FederationConfig>();
+            var config = Saml2Config.GetConfig();
                         
             //Build the response object
             Saml20LogoutResponse response = new Saml20LogoutResponse();
-            response.Issuer = config.ServiceProvider.ID;
+            response.Issuer = config.ServiceProvider.Id;
             response.Destination = destination.Url;
             response.StatusCode = Saml20Constants.StatusCodes.Success;
 
@@ -400,16 +402,16 @@ namespace SAML2.Protocol
                 HttpRedirectBindingParser parser = new HttpRedirectBindingParser(context.Request.Url);
                 Logger.DebugFormat("Binding: redirect, Signature algorithm: {0}  Signature:  {1}, Message: {2}", parser.SignatureAlgorithm, parser.Signature, parser.Message);
                 
-                IDPEndPoint endpoint = config.FindEndPoint(idpEndpoint.Id);
+                IdentityProviderElement endpoint = config.IdentityProviders.FirstOrDefault(x => x.Id == idpEndpoint.Id);
 
-                if (endpoint.metadata == null)
+                if (endpoint.Metadata == null)
                 {
                     Logger.Error("Cannot find metadata for IdP");
                     HandleError(context, "Cannot find metadata for IdP " + idpEndpoint.Id);
                     return;
                 }
 
-                Saml20MetadataDocument metadata = endpoint.metadata;
+                Saml20MetadataDocument metadata = endpoint.Metadata;
 
                 if (!parser.VerifySignature(metadata.GetKeys(KeyTypes.signing)))
                 {
@@ -431,15 +433,15 @@ namespace SAML2.Protocol
                     HandleError(context, Resources.SignatureNotPresent);
                 }
 
-                IDPEndPoint endpoint = config.FindEndPoint(idpEndpoint.Id);
-                if (endpoint.metadata == null)
+                IdentityProviderElement endpoint = config.IdentityProviders.FirstOrDefault(x => x.Id == idpEndpoint.Id);
+                if (endpoint.Metadata == null)
                 {
                     Logger.Error("Cannot find metadata for IdP");
                     HandleError(context, "Cannot find metadata for IdP " + idpEndpoint.Id);
                     return;
                 }
 
-                Saml20MetadataDocument metadata = endpoint.metadata;
+                Saml20MetadataDocument metadata = endpoint.Metadata;
 
                 // handle a logout-request
                 if (!parser.CheckSignature(metadata.GetKeys(KeyTypes.signing)))
@@ -465,19 +467,19 @@ namespace SAML2.Protocol
             response.InResponseTo = req.ID;
 
             //Respond using redirect binding
-            if(destination.Binding == SAMLBinding.REDIRECT)
+            if(destination.Binding == BindingType.Redirect)
             {
                 HttpRedirectBindingBuilder builder = new HttpRedirectBindingBuilder();
                 builder.RelayState = context.Request.Params["RelayState"];
                 builder.Response = response.GetXml().OuterXml;
-                builder.signingKey = FederationConfig.GetConfig().SigningCertificate.GetCertificate().PrivateKey;
+                builder.signingKey = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey;
                 string s = destination.Url + "?" + builder.ToQuery();
                 context.Response.Redirect(s, true);
                 return;
             }
 
             //Respond using post binding
-            if (destination.Binding == SAMLBinding.POST)
+            if (destination.Binding == BindingType.Post)
             {
                 HttpPostBindingBuilder builder = new HttpPostBindingBuilder(destination);
                 builder.Action = SAMLAction.SAMLResponse;                                

@@ -169,73 +169,73 @@ namespace SAML2
         /// <returns></returns>
         public static Saml20AuthnRequest GetDefault()
         {
-            SAML20FederationConfig config = SAML20FederationConfig.GetConfig();
+            var config = Saml2Config.GetConfig();
 
-            if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.ID))
+            if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.Id))
                 throw new Saml20FormatException(Resources.ServiceProviderNotSet);
 
             Saml20AuthnRequest result = new Saml20AuthnRequest();
-            result.Issuer = config.ServiceProvider.ID;
+            result.Issuer = config.ServiceProvider.Id;
 
-            if (config.ServiceProvider.SignOnEndpoint.Binding != SAMLBinding.NOT_SET)
+            if (config.ServiceProvider.Endpoints.SignOnEndpoint.Binding != BindingType.NotSet)
             {
                 Uri baseURL = new Uri(config.ServiceProvider.Server);
                 result.AssertionConsumerServiceURL =
-                    new Uri(baseURL, config.ServiceProvider.SignOnEndpoint.localPath).ToString();
+                    new Uri(baseURL, config.ServiceProvider.Endpoints.SignOnEndpoint.LocalPath).ToString();
             }
 
             // Binding
-            switch (config.ServiceProvider.SignOnEndpoint.Binding)
+            switch (config.ServiceProvider.Endpoints.SignOnEndpoint.Binding)
             {
-                case SAMLBinding.ARTIFACT:
+                case BindingType.Artifact:
                     result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_Artifact;
                     break;
-                case SAMLBinding.POST:
+                case BindingType.Post:
                     result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_Post;
                     break;
-                case SAMLBinding.REDIRECT:
+                case BindingType.Redirect:
                     result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_Redirect;
                     break;
-                case SAMLBinding.SOAP:
+                case BindingType.Soap:
                     result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_SOAP;
                     break;
             }
 
             // NameIDPolicy
-            if (config.ServiceProvider.NameIdFormats.NameIdFormats.Count > 0)
+            if (config.ServiceProvider.NameIdFormats.Count > 0)
             {
                 result.NameIDPolicy = new NameIDPolicy
                 {
                     AllowCreate = config.ServiceProvider.NameIdFormats.AllowCreate,
-                    Format = config.ServiceProvider.NameIdFormats.NameIdFormats[0].NameIdFormat
+                    Format = config.ServiceProvider.NameIdFormats[0].Format
                 };
 
                 if (result.NameIDPolicy.Format != Saml20Constants.NameIdentifierFormats.Entity)
                 {
-                    result.NameIDPolicy.SPNameQualifier = config.ServiceProvider.ID;
+                    result.NameIDPolicy.SPNameQualifier = config.ServiceProvider.Id;
                 }
             }
 
             // RequestedAuthnContext
-            if (config.ServiceProvider.AuthenticationContexts.AuthenticationContexts.Count > 0)
+            if (config.ServiceProvider.AuthenticationContexts.Count > 0)
             {
                 result.RequestedAuthnContext = new RequestedAuthnContext();
 
                 switch (config.ServiceProvider.AuthenticationContexts.Comparison)
                 {
-                    case AuthenticationContextsComparison.Better:
+                    case AuthenticationContextComparison.Better:
                         result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.better;
                         result.RequestedAuthnContext.ComparisonSpecified = true;
                         break;
-                    case AuthenticationContextsComparison.Minimum:
+                    case AuthenticationContextComparison.Minimum:
                         result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.minimum;
                         result.RequestedAuthnContext.ComparisonSpecified = true;
                         break;
-                    case AuthenticationContextsComparison.Maximum:
+                    case AuthenticationContextComparison.Maximum:
                         result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.maximum;
                         result.RequestedAuthnContext.ComparisonSpecified = true;
                         break;
-                    case AuthenticationContextsComparison.Exact:
+                    case AuthenticationContextComparison.Exact:
                         result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.exact;
                         result.RequestedAuthnContext.ComparisonSpecified = true;
                         break;
@@ -244,12 +244,12 @@ namespace SAML2
                         break;
                 }
 
-                result.RequestedAuthnContext.Items = new string[config.ServiceProvider.AuthenticationContexts.AuthenticationContexts.Count];
-                result.RequestedAuthnContext.ItemsElementName = new ItemsChoiceType7[config.ServiceProvider.AuthenticationContexts.AuthenticationContexts.Count];
+                result.RequestedAuthnContext.Items = new string[config.ServiceProvider.AuthenticationContexts.Count];
+                result.RequestedAuthnContext.ItemsElementName = new ItemsChoiceType7[config.ServiceProvider.AuthenticationContexts.Count];
                 int count = 0;
-                foreach (var authenticationContext in config.ServiceProvider.AuthenticationContexts.AuthenticationContexts)
+                foreach (var authenticationContext in config.ServiceProvider.AuthenticationContexts)
                 {
-                    result.RequestedAuthnContext.Items[count] = authenticationContext.AuthenticationContext;
+                    result.RequestedAuthnContext.Items[count] = authenticationContext.Context;
 
                     switch (authenticationContext.ReferenceType)
                     {
@@ -269,7 +269,7 @@ namespace SAML2
 
             AudienceRestriction audienceRestriction = new AudienceRestriction();
             audienceRestriction.Audience = new List<string>(1);
-            audienceRestriction.Audience.Add(config.ServiceProvider.ID);
+            audienceRestriction.Audience.Add(config.ServiceProvider.Id);
             audienceRestrictions.Add(audienceRestriction);
 
             result.SetConditions(audienceRestrictions);

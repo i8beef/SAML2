@@ -15,18 +15,17 @@ namespace SAML2.Specification
         /// </summary>
         /// <param name="endpoint">The endpoint.</param>
         /// <returns>A list of certificate validation specifications for this endpoint</returns>
-        public static List<ICertificateSpecification> GetCertificateSpecifications(IDPEndPoint endpoint)
+        public static List<ICertificateSpecification> GetCertificateSpecifications(IdentityProviderElement endpoint)
         {
             List<ICertificateSpecification> specs = new List<ICertificateSpecification>();
 
-            if(endpoint.CertificateValidation != null && endpoint.CertificateValidation.CertificateValidations != null &&
-                endpoint.CertificateValidation.CertificateValidations.Count > 0)
+            if(endpoint.CertificateValidations != null && endpoint.CertificateValidations.Count > 0)
             {
-                foreach(CertificateValidationElement elem in endpoint.CertificateValidation.CertificateValidations)
+                foreach(CertificateValidationElement elem in endpoint.CertificateValidations)
                 {
                     try
                     {
-                        ICertificateSpecification val = (ICertificateSpecification) Activator.CreateInstance(Type.GetType(elem.type));
+                        ICertificateSpecification val = (ICertificateSpecification) Activator.CreateInstance(Type.GetType(elem.Type));
                         specs.Add(val);
                     }catch(Exception e)
                     {

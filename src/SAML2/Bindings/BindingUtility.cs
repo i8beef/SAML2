@@ -18,11 +18,11 @@ namespace SAML2.Bindings
         /// <returns>True if validation passes, false otherwise</returns>
         public static bool ValidateConfiguration(out string errorMessage)
         {
-            SAML20FederationConfig _config;
+            Saml2Section _config;
             
             try
             {
-                _config = SAML20FederationConfig.GetConfig();
+                _config = Saml2Config.GetConfig();
                 if (_config == null)
                 {
                     errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingSaml20Federation);
@@ -34,20 +34,20 @@ namespace SAML2.Bindings
                         HttpUtility.HtmlEncode(Saml20Resources.MissingServiceProvider);
                     return false;
                 }
-                if (string.IsNullOrEmpty(_config.ServiceProvider.ID))
+                if (string.IsNullOrEmpty(_config.ServiceProvider.Id))
                 {
                     errorMessage =
                         HttpUtility.HtmlEncode(Saml20Resources.MissingServiceProviderId);
                     return false;
                 }
-                if (FederationConfig.GetConfig().SigningCertificate == null)
+                if (_config.ServiceProvider.SigningCertificate == null)
                 {
                     errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingSigningCertificate);
                     return false;
                 }
                 try
                 {
-                    X509Certificate2 signingCert = FederationConfig.GetConfig().SigningCertificate.GetCertificate();
+                    X509Certificate2 signingCert = _config.ServiceProvider.SigningCertificate.GetCertificate();
                     if (!signingCert.HasPrivateKey)
                     {
                         errorMessage = Saml20Resources.SigningCertificateMissingPrivateKey;
@@ -61,13 +61,13 @@ namespace SAML2.Bindings
                     return false;
                 }
 
-                if (_config.IDPEndPoints == null)
+                if (_config.IdentityProviders == null)
                 {
                     errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingIDPEndpoints);
                     return false;
                 }
 
-                if (_config.Endpoints.metadataLocation == null)
+                if (_config.IdentityProviders.MetadataLocation == null)
                 {
                     errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingMetadataLocation);
                     return false;

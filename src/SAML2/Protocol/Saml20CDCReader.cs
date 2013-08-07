@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using System.Web;
 using System;
 using SAML2.Config;
@@ -22,18 +23,17 @@ namespace SAML2.Protocol
             try
             {
                 Logger.DebugFormat("{0}.{1} called", GetType(), "ProcessRequest()");
-                SAML20FederationConfig config = ConfigurationReader.GetConfig<SAML20FederationConfig>();
+                var config = Saml2Config.GetConfig();
 
                 if (config == null)
                     throw new Saml20Exception("Missing SAML20Federation config section in web.config.");
 
-                Saml20ServiceEndpoint endp
-                    = config.ServiceProvider.serviceEndpoints.Find(delegate(Saml20ServiceEndpoint ep) { return ep.endpointType == EndpointType.SIGNON; });
+                var endp = config.ServiceProvider.Endpoints.FirstOrDefault(ep => ep.Type == EndpointType.SignOn);
 
                 if (endp == null)
                     throw new Saml20Exception("Signon endpoint not found in configuration");
 
-                string returnUrl = config.ServiceProvider.Server + endp.localPath + "?r=1";
+                string returnUrl = config.ServiceProvider.Server + endp.LocalPath + "?r=1";
 
                 HttpCookie samlIdp = context.Request.Cookies[CommonDomainCookie.COMMON_DOMAIN_COOKIE_NAME];
 

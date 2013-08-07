@@ -80,10 +80,10 @@ namespace SAML2.Protocol
         private void CreateMetadataDocument(HttpContext context, bool sign)
         {
             Logger.Debug("Creating metadata document.");
-            SAML20FederationConfig configuration = ConfigurationReader.GetConfig<SAML20FederationConfig>();
+            var configuration = Saml2Config.GetConfig();
 
             KeyInfo keyinfo = new KeyInfo();
-            KeyInfoX509Data keyClause = new KeyInfoX509Data(ConfigurationReader.GetConfig<FederationConfig>().SigningCertificate.GetCertificate(), X509IncludeOption.EndCertOnly);
+            KeyInfoX509Data keyClause = new KeyInfoX509Data(Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate(), X509IncludeOption.EndCertOnly);
             keyinfo.AddClause(keyClause);
 
             Saml20MetadataDocument doc = new Saml20MetadataDocument(configuration, keyinfo, sign);

@@ -1,26 +1,27 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SAML2.Config;
 using System;
 
 namespace SAML2.Actions
 {
     /// <summary>
-    /// 
+    /// Actions helper class.
     /// </summary>
     public class Actions
     {
-
         /// <summary>
         /// Gets the default actions. 
         /// </summary>
         /// <returns></returns>
         public static List<IAction> GetDefaultActions()
         {
-            List<IAction> actions = new List<IAction>();
-            actions.Add(new SamlPrincipalAction());
-            actions.Add(new FormsAuthenticationAction());
-            actions.Add(new RedirectAction());
-            return actions;
+            return new List<IAction>
+                       {
+                           new SamlPrincipalAction(),
+                           new FormsAuthenticationAction(),
+                           new RedirectAction()
+                       };
         }
 
         /// <summary>
@@ -29,27 +30,14 @@ namespace SAML2.Actions
         /// <returns></returns>
         public static List<IAction> GetActions()
         {
-            List<IAction> actions = GetDefaultActions();
-            FederationConfig config = ConfigurationReader.GetConfig<FederationConfig>();
+            var config = Saml2Config.GetConfig();
 
-            foreach (ActionConfigAbstract ac in config.Actions.ActionList)
+            if (config.Actions == null)
             {
-                if (ac is ActionConfigClear)
-                    actions.Clear();
-                else if (ac is ActionConfigRemove)
-                {
-                    actions.RemoveAll(delegate(IAction a) { return a.Name == ac.Name; });
-                }
-                else if(ac is ActionConfigAdd)
-                {
-                    ActionConfigAdd addAction = (ActionConfigAdd)ac;
-                    IAction add = (IAction)Activator.CreateInstance(Type.GetType(addAction.Type));
-                    actions.Add(add);
-                }
-
+                return GetDefaultActions();                
             }
 
-            return actions;
+            return config.Actions.Select(ac => (IAction) Activator.CreateInstance(Type.GetType(ac.Type))).ToList();
         }
     }
 }

@@ -8,12 +8,34 @@ namespace SAML2.Config
     public class Saml2Section : ConfigurationSection
     {
         /// <summary>
+        /// The section name.
+        /// </summary>
+        public static string Name = "saml2";
+
+        #region Elements
+
+        /// <summary>
+        /// Gets the actions to perform on successful processing.
+        /// </summary>
+        [ConfigurationProperty("actions")]
+        public ActionCollection Actions
+        {
+            get { return (ActionCollection)base["actions"]; }
+        }
+
+        /// <summary>
         /// Gets the allowed audience uris.
         /// </summary>
-        [ConfigurationProperty("allowedAudiences")]
-        public AllowedAudienceCollection AllowedAudiences
+        [ConfigurationProperty("allowedAudienceUris")]
+        public AllowedAudienceUriCollection AllowedAudienceUris
         {
-            get { return (AllowedAudienceCollection) base["allowedAudiences"]; }
+            get { return (AllowedAudienceUriCollection) base["allowedAudienceUris"]; }
+        }
+
+        [ConfigurationProperty("assertionProfile")]
+        public AssertionProfileElement AssertionProfile
+        {
+            get { return (AssertionProfileElement)base["assertionProfile"]; }
         }
 
         /// <summary>
@@ -60,5 +82,7 @@ namespace SAML2.Config
         {
             get { return (ServiceProviderElement)base["serviceProvider"]; }
         }
+
+        #endregion
     }
 }

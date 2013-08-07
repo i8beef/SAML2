@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web;
 using SAML2.Config;
 using SAML2.Protocol;
@@ -20,13 +21,12 @@ namespace SAML2.Protocol
             try
             {
                 Logger.DebugFormat("{0}.{1} called", GetType(), "ProcessRequest()");
-                SAML20FederationConfig config = ConfigurationReader.GetConfig<SAML20FederationConfig>();
+                var config = Saml2Config.GetConfig();
 
                 if (config == null)
                     throw new Saml20Exception("Missing SAML20Federation config section in web.config.");
 
-                Saml20ServiceEndpoint endp
-                    = config.ServiceProvider.serviceEndpoints.Find(delegate(Saml20ServiceEndpoint ep) { return ep.endpointType == EndpointType.SIGNON; });
+                var endp = config.ServiceProvider.Endpoints.FirstOrDefault(ep => ep.Type == EndpointType.SignOn);
 
                 if (endp == null)
                     throw new Saml20Exception("Signon endpoint not found in configuration");

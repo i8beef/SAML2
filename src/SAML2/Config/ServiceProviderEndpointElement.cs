@@ -5,9 +5,27 @@ namespace SAML2.Config
     /// <summary>
     /// Service Provider Endpoint configuration element.
     /// </summary>
-    public class ServiceProviderEndpointElement : ConfigurationElement
+    public class ServiceProviderEndpointElement : ConfigurationElement, IConfigurationElementCollectionElement
     {
         #region Attributes
+
+        /// <summary>
+        /// Gets the binding.
+        /// </summary>
+        [ConfigurationProperty("binding")]
+        public BindingType Binding
+        {
+            get { return (BindingType)base["binding"]; }
+        }
+
+        /// <summary>
+        /// Gets the index.
+        /// </summary>
+        [ConfigurationProperty("index")]
+        public ushort Index
+        {
+            get { return (ushort) base["index"]; }
+        }
 
         /// <summary>
         /// Gets the type.
@@ -15,7 +33,7 @@ namespace SAML2.Config
         [ConfigurationProperty("localPath", IsRequired = true)]
         public string LocalPath
         {
-            get { return (string)base["localPath"]; }
+            get { return (string) base["localPath"]; }
         }
 
         /// <summary>
@@ -31,10 +49,21 @@ namespace SAML2.Config
         /// Gets the type.
         /// </summary>
         [ConfigurationProperty("type", IsKey = true, IsRequired = true)]
-        [RegexStringValidator(@"^(signon|logout|metadata)$")]
-        public string Type
+        public EndpointType Type
         {
-            get { return (string) base["type"]; }
+            get { return (EndpointType)base["type"]; }
+        }
+
+        #endregion
+
+        #region Implementation of IConfigurationElementCollectionElement
+
+        /// <summary>
+        /// Gets the element key.
+        /// </summary>
+        public object ElementKey
+        {
+            get { return Type; }
         }
 
         #endregion

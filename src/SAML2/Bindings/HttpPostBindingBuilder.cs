@@ -16,7 +16,7 @@ namespace SAML2.Bindings
         /// <summary>
         /// The endpoint to send the message to.
         /// </summary>
-        private IDPEndPointElement _destinationEndpoint;
+        private IdentityProviderEndpointElement _destinationEndpoint;
 
         #endregion
 
@@ -26,7 +26,7 @@ namespace SAML2.Bindings
         /// Initializes a new instance of the <see cref="HttpPostBindingBuilder"/> class.
         /// </summary>
         /// <param name="endpoint">The IdP endpoint that messages will be sent to.</param>
-        public HttpPostBindingBuilder(IDPEndPointElement endpoint) 
+        public HttpPostBindingBuilder(IdentityProviderEndpointElement endpoint) 
         {
             _destinationEndpoint = endpoint;
             _action = SAMLAction.SAMLRequest;

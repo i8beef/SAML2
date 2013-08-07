@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -121,7 +122,7 @@ namespace SAML2
         /// <param name="context">The http context.</param>
         public void PerformQuery(HttpContext context)
         {
-            SAML20FederationConfig config = SAML20FederationConfig.GetConfig();
+            var config = Saml2Config.GetConfig();
             string endpointId = context.Session[Saml20AbstractEndpointHandler.IDPLoginSessionKey].ToString();
 
             if (string.IsNullOrEmpty(endpointId))
@@ -130,7 +131,7 @@ namespace SAML2
                 throw new InvalidOperationException(Tracing.AttrQueryNoLogin);
             }
 
-            IDPEndPoint ep = config.FindEndPoint(endpointId);
+            IdentityProviderElement ep = config.IdentityProviders.FirstOrDefault(x => x.Id == endpointId);
 
             if (ep == null)
                 throw new Saml20Exception(string.Format("Unable to find information about the IdP with id \"{0}\"", endpointId));
@@ -143,7 +144,7 @@ namespace SAML2
         /// </summary>
         /// <param name="context">The http context.</param>
         /// <param name="endPoint">The IdP to perform the query against.</param>
-        public void PerformQuery(HttpContext context, IDPEndPoint endPoint)
+        public void PerformQuery(HttpContext context, IdentityProviderElement endPoint)
         {
             string nameIdFormat = context.Session[Saml20AbstractEndpointHandler.IDPNameIdFormat].ToString();
             if(string.IsNullOrEmpty(nameIdFormat))
@@ -157,7 +158,7 @@ namespace SAML2
         /// <param name="context">The http context.</param>
         /// <param name="endPoint">The IdP to perform the query against.</param>
         /// <param name="nameIdFormat">The nameid format.</param>
-        public void PerformQuery(HttpContext context, IDPEndPoint endPoint, string nameIdFormat)
+        public void PerformQuery(HttpContext context, IdentityProviderElement endPoint, string nameIdFormat)
         {
             Logger.DebugFormat("{0}.{1} called", GetType(), "PerformQuery()");
 
@@ -178,11 +179,11 @@ namespace SAML2
 
             Stream s;
 
-            Logger.DebugFormat(Tracing.SendAttrQuery, endPoint.metadata.GetAttributeQueryEndpointLocation(), query.OuterXml);
+            Logger.DebugFormat(Tracing.SendAttrQuery, endPoint.Metadata.GetAttributeQueryEndpointLocation(), query.OuterXml);
 
             try
             {
-                 s = builder.GetResponse(endPoint.metadata.GetAttributeQueryEndpointLocation(), query.OuterXml,
+                 s = builder.GetResponse(endPoint.Metadata.GetAttributeQueryEndpointLocation(), query.OuterXml,
                                                endPoint.AttributeQuery);
 
             }catch(Exception e)
@@ -209,18 +210,18 @@ namespace SAML2
             {
                 Saml20EncryptedAssertion ass =
                     new Saml20EncryptedAssertion(
-                        (RSA) FederationConfig.GetConfig().SigningCertificate.GetCertificate().PrivateKey);
+                        (RSA) Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey);
                 ass.LoadXml(xmlAssertion);
                 ass.Decrypt();
                 xmlAssertion = ass.Assertion.DocumentElement;
             }
 
             Saml20Assertion assertion =
-                    new Saml20Assertion(xmlAssertion, null, SAML20FederationConfig.GetConfig().AssertionProfile.AssertionValidator, endPoint.QuirksMode);
+                    new Saml20Assertion(xmlAssertion, null, Saml2Config.GetConfig().AssertionProfile.AssertionValidator, endPoint.QuirksMode);
 
             Logger.DebugFormat(Tracing.AttrQueryAssertion, xmlAssertion == null ? string.Empty : xmlAssertion.OuterXml);
 
-            if(!assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endPoint.metadata.Keys, endPoint))){
+            if(!assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endPoint.Metadata.Keys, endPoint))){
                 Logger.Error(Resources.SignatureInvalid);
                 throw new Saml20Exception(Resources.SignatureInvalid);
             }
@@ -240,12 +241,12 @@ namespace SAML2
         {
             Saml20AttributeQuery result = new Saml20AttributeQuery();
 
-            SAML20FederationConfig config = SAML20FederationConfig.GetConfig();
+            var config = Saml2Config.GetConfig();
 
-            if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.ID))
+            if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.Id))
                 throw new Saml20FormatException(Resources.ServiceProviderNotSet);
 
-            result.Issuer = config.ServiceProvider.ID;
+            result.Issuer = config.ServiceProvider.Id;
             
             return result;
         }

@@ -86,13 +86,13 @@ namespace SAML2
         /// <returns></returns>
         public static Saml20ArtifactResolve GetDefault()
         {
-            SAML20FederationConfig config = SAML20FederationConfig.GetConfig();
+            var config = Saml2Config.GetConfig();
 
-            if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.ID))
+            if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.Id))
                 throw new Saml20FormatException(Resources.ServiceProviderNotSet);
 
             Saml20ArtifactResolve result = new Saml20ArtifactResolve();
-            result.Issuer = config.ServiceProvider.ID;
+            result.Issuer = config.ServiceProvider.Id;
 
             return result;
         }
