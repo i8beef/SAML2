@@ -50,23 +50,6 @@ namespace SAML2.Bindings
         }
 
         /// <summary>
-        /// Converts the URI to dictionary.
-        /// </summary>
-        /// <param name="uri">The URI.</param>
-        /// <returns>Dictionary of query parameters.</returns>
-        private static Dictionary<string, string> UriToDictionary(Uri uri)
-        {
-            var parameters = uri.Query.Substring(1).Split('&');
-            var result = new Dictionary<string, string>(parameters.Length);
-            foreach (var parameter in parameters.Select(s => s.Split('=')))
-            {
-                result.Add(parameter[0], parameter[1]);
-            }
-
-            return result;
-        }
-
-        /// <summary>
         /// <code>true</code> if the parsed message contains a request message.
         /// </summary>
         public bool IsRequest
@@ -145,7 +128,6 @@ namespace SAML2.Bindings
             }
 
             var hash = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(_signedquery));
-
             if (key is RSACryptoServiceProvider)
             {
                 var rsa = (RSACryptoServiceProvider) key;
@@ -202,6 +184,23 @@ namespace SAML2.Bindings
             }
 
             return result.ToString();
+        }
+
+        /// <summary>
+        /// Converts the URI to dictionary.
+        /// </summary>
+        /// <param name="uri">The URI.</param>
+        /// <returns>Dictionary of query parameters.</returns>
+        private static Dictionary<string, string> UriToDictionary(Uri uri)
+        {
+            var parameters = uri.Query.Substring(1).Split('&');
+            var result = new Dictionary<string, string>(parameters.Length);
+            foreach (var parameter in parameters.Select(s => s.Split('=')))
+            {
+                result.Add(parameter[0], parameter[1]);
+            }
+
+            return result;
         }
 
         /// <summary>
