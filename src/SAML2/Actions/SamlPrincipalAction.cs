@@ -1,8 +1,6 @@
 ﻿using System.Web;
-using System.Web.Security;
 using SAML2.Identity;
 using SAML2.Protocol;
-using System.Security.Principal;
 
 namespace SAML2.Actions
 {
@@ -11,38 +9,10 @@ namespace SAML2.Actions
     /// </summary>
     public class SamlPrincipalAction : IAction
     {
-
         /// <summary>
-        /// The default action name
+        /// Name backing field.
         /// </summary>
-        public const string ACTION_NAME = "SetSamlPrincipal";
-
-        /// <summary>
-        /// Action performed during login.
-        /// </summary>
-        /// <param name="handler">The handler initiating the call.</param>
-        /// <param name="context">The current http context.</param>
-        /// <param name="assertion">The saml assertion of the currently logged in user.</param>
-        public void LoginAction(AbstractEndpointHandler handler, HttpContext context, Saml20Assertion assertion)
-        {
-            Saml20SignonHandler signonhandler = (Saml20SignonHandler)handler;
-            IPrincipal prince = Saml20Identity.InitSaml20Identity(assertion, signonhandler.RetrieveIDPConfiguration((string)context.Session[Saml20AbstractEndpointHandler.IDPTempSessionKey]));
-
-            Saml20PrincipalCache.AddPrincipal(prince);
-        }
-
-        /// <summary>
-        /// Action performed during logout.
-        /// </summary>
-        /// <param name="handler">The handler.</param>
-        /// <param name="context">The context.</param>
-        /// <param name="IdPInitiated">During IdP initiated logout some actions such as redirecting should not be performed</param>
-        public void LogoutAction(AbstractEndpointHandler handler, HttpContext context, bool IdPInitiated)
-        {
-            Saml20PrincipalCache.Clear();
-        }
-
-        private string _name;
+        private string _name = "SetSamlPrincipal";
 
         /// <summary>
         /// Gets or sets the name of the action.
@@ -50,11 +20,31 @@ namespace SAML2.Actions
         /// <value>The name.</value>
         public string Name
         {
-            get
-            {
-                return string.IsNullOrEmpty(_name) ? ACTION_NAME : _name;
-            }
+            get { return _name; }
             set { _name = value; }
+        }
+
+        /// <summary>
+        /// Action performed during signon.
+        /// </summary>
+        /// <param name="handler">The handler initiating the call.</param>
+        /// <param name="context">The current http context.</param>
+        /// <param name="assertion">The saml assertion of the currently logged in user.</param>
+        public void SignOnAction(AbstractEndpointHandler handler, HttpContext context, Saml20Assertion assertion)
+        {
+            var signonhandler = (Saml20SignonHandler)handler;
+            Saml20PrincipalCache.AddPrincipal(Saml20Identity.InitSaml20Identity(assertion, signonhandler.RetrieveIDPConfiguration((string)context.Session[Saml20AbstractEndpointHandler.IDPTempSessionKey])));
+        }
+
+        /// <summary>
+        /// Action performed during logout.
+        /// </summary>
+        /// <param name="handler">The handler.</param>
+        /// <param name="context">The context.</param>
+        /// <param name="idpInitiated">During IdP initiated logout some actions such as redirecting should not be performed</param>
+        public void LogoutAction(AbstractEndpointHandler handler, HttpContext context, bool idpInitiated)
+        {
+            Saml20PrincipalCache.Clear();
         }
     }
 }

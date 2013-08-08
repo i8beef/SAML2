@@ -88,7 +88,7 @@ namespace SAML2.Utils
 
             int index = 4;
 
-            for(int i = 0; i < SourceIdLength; i++)
+            for (int i = 0; i < SourceIdLength; i++)
             {
                 sourceIdHash[i] = bytes[i + index];
             }
@@ -136,7 +136,7 @@ namespace SAML2.Utils
             byte[] parsedSourceIdHash = new byte[20];
             byte[] parsedMessageHandle = new byte[20];
 
-            if(TryParseArtifact(artifact, ref parsedTypeCode, ref parsedEndpointIndex, ref parsedSourceIdHash, ref parsedMessageHandle))
+            if (TryParseArtifact(artifact, ref parsedTypeCode, ref parsedEndpointIndex, ref parsedSourceIdHash, ref parsedMessageHandle))
             {
                 return (ushort) parsedEndpointIndex;   
             }

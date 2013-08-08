@@ -211,7 +211,7 @@ namespace SAML2.Schema.Core
             }
             set
             {
-                if(string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                     issueInstantField = null;
                 else
                     issueInstantField = Saml20Utils.FromUTCString(value);

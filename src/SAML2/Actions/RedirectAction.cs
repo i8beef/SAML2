@@ -9,17 +9,27 @@ namespace SAML2.Actions
     public class RedirectAction : IAction
     {
         /// <summary>
-        /// Default action name
+        /// Name backing field.
         /// </summary>
-        public const string ACTION_NAME = "Redirect";
+        private string _name = "Redirect";
 
         /// <summary>
-        /// Action performed during login.
+        /// Gets or sets the name of the action.
+        /// </summary>
+        /// <value>The name.</value>
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+
+        /// <summary>
+        /// Action performed during signon.
         /// </summary>
         /// <param name="handler">The handler initiating the call.</param>
         /// <param name="context">The current http context.</param>
         /// <param name="assertion">The saml assertion of the currently logged in user.</param>
-        public void LoginAction(AbstractEndpointHandler handler, HttpContext context, Saml20Assertion assertion)
+        public void SignOnAction(AbstractEndpointHandler handler, HttpContext context, Saml20Assertion assertion)
         {
             handler.DoRedirect(context);
         }
@@ -29,26 +39,13 @@ namespace SAML2.Actions
         /// </summary>
         /// <param name="handler">The handler.</param>
         /// <param name="context">The context.</param>
-        /// <param name="IdPInitiated">During IdP initiated logout some actions such as redirecting should not be performed</param>
-        public void LogoutAction(AbstractEndpointHandler handler, HttpContext context, bool IdPInitiated)
+        /// <param name="idpInitiated">During IdP initiated logout some actions such as redirecting should not be performed</param>
+        public void LogoutAction(AbstractEndpointHandler handler, HttpContext context, bool idpInitiated)
         {
-            if(!IdPInitiated)
-                handler.DoRedirect(context);
-        }
-
-        private string _name;
-
-        /// <summary>
-        /// Gets or sets the name of the action.
-        /// </summary>
-        /// <value>The name.</value>
-        public string Name
-        {
-            get
+            if (!idpInitiated)
             {
-                return string.IsNullOrEmpty(_name) ? ACTION_NAME : _name;
+                handler.DoRedirect(context);
             }
-            set { _name = value; }
         }
     }
 }

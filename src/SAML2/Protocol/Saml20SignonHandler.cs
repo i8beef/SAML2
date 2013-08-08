@@ -68,7 +68,7 @@ namespace SAML2.Protocol
 
             //Some IdP's are known to fail to set an actual value in the SOAPAction header
             //so we just check for the existence of the header field.
-            if (Array.Exists(context.Request.Headers.AllKeys, delegate(string s) { return s == SOAPConstants.SOAPAction; }))
+            if (Array.Exists(context.Request.Headers.AllKeys, delegate(string s) { return s == SoapConstants.SoapAction; }))
             {
                 HandleSOAP(context, context.Request.InputStream);
                 return;
@@ -117,7 +117,7 @@ namespace SAML2.Protocol
             HttpArtifactBindingParser parser = new HttpArtifactBindingParser(inputStream);
             HttpArtifactBindingBuilder builder = new HttpArtifactBindingBuilder(context);
 
-            if(parser.IsArtifactResolve())
+            if (parser.IsArtifactResolve)
             {
                 Logger.Debug(Tracing.ArtifactResolveIn);
 
@@ -128,7 +128,7 @@ namespace SAML2.Protocol
                     Logger.Error("Could not verify signature, msg: " + parser.SamlMessage);
                 }
                 builder.RespondToArtifactResolve(parser.ArtifactResolve);
-            }else if(parser.IsArtifactResponse())
+            }else if (parser.IsArtifactResponse)
             {
                 Logger.Debug(Tracing.ArtifactResponseIn);
 
@@ -139,13 +139,13 @@ namespace SAML2.Protocol
                     Logger.ErrorFormat("Illegal status for ArtifactResponse {0} expected 'Success', msg: {1}", status.StatusCode.Value, parser.SamlMessage);
                     return;
                 }
-                if(parser.ArtifactResponse.Any.LocalName == Response.ELEMENT_NAME)
+                if (parser.ArtifactResponse.Any.LocalName == Response.ELEMENT_NAME)
                 {
                     bool isEncrypted;
                     XmlElement assertion = GetAssertion(parser.ArtifactResponse.Any, out isEncrypted);
                     if (assertion == null)
                         HandleError(context, "Missing assertion");
-                    if(isEncrypted)
+                    if (isEncrypted)
                     {
                         HandleEncryptedAssertion(context, assertion);
                     }else
@@ -249,7 +249,7 @@ namespace SAML2.Protocol
                 XmlAttribute inResponseToAttribute =
                     doc.DocumentElement.Attributes["InResponseTo"];
 
-                if(inResponseToAttribute == null)
+                if (inResponseToAttribute == null)
                     throw new Saml20Exception("Received a response message that did not contain an InResponseTo attribute");
 
                 string inResponseTo = inResponseToAttribute.Value;
@@ -472,7 +472,7 @@ namespace SAML2.Protocol
                     
                 foreach (KeyInfoClause clause in ki)
                 {
-                    if(clause is KeyInfoX509Data)
+                    if (clause is KeyInfoX509Data)
                     {
                         X509Certificate2 cert = XmlSignatureUtils.GetCertificateFromKeyInfo((KeyInfoX509Data) clause);
 
@@ -503,7 +503,7 @@ namespace SAML2.Protocol
 
         private void CheckConditions(HttpContext context, Saml20Assertion assertion)
         {
-            if(assertion.IsOneTimeUse)
+            if (assertion.IsOneTimeUse)
             {
                 if (context.Cache[assertion.Id] != null)
                 {
@@ -531,7 +531,7 @@ namespace SAML2.Protocol
                 Logger.Debug("Processing Signon request and executing Actions.");
                 Logger.DebugFormat("{0}.{1} called", action.GetType(), "LoginAction()");
 
-                action.LoginAction(this, context, assertion);
+                action.SignOnAction(this, context, assertion);
 
                 Logger.DebugFormat("{0}.{1} finished", action.GetType(), "LoginAction()");
             }
@@ -586,7 +586,7 @@ namespace SAML2.Protocol
                 Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HTTP_Redirect, idpEndpoint.Id);
                 
                 HttpRedirectBindingBuilder builder = new HttpRedirectBindingBuilder();
-                builder.signingKey = _certificate.PrivateKey;
+                builder.SigningKey = _certificate.PrivateKey;
                 builder.Request = request.GetXml().OuterXml;
                 string s = request.Destination + "?" + builder.ToQuery();
 
@@ -610,13 +610,13 @@ namespace SAML2.Protocol
                 return;
             }
 
-            if(destination.Binding == BindingType.Artifact)
+            if (destination.Binding == BindingType.Artifact)
             {
                 Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HTTP_Artifact, idpEndpoint.Id);
 
                 HttpArtifactBindingBuilder builder = new HttpArtifactBindingBuilder(context);
                 //Honor the ForceProtocolBinding and only set this if it's not already set
-                if(string.IsNullOrEmpty(request.ProtocolBinding))
+                if (string.IsNullOrEmpty(request.ProtocolBinding))
                     request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_Artifact;
 
                 builder.RedirectFromLogin(destination, request);

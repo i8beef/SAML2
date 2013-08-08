@@ -105,7 +105,7 @@ namespace SAML2.Protocol
         private void EnsureSet()
         {
             Load();
-            if(!_isSet)
+            if (!_isSet)
                 throw new Saml20Exception("The common domain cookie is not set. Please make sure to check the IsSet property before accessing the class' properties.");
         }
 
@@ -129,10 +129,10 @@ namespace SAML2.Protocol
 
         private void LoadCookie()
         {
-            if(!_isLoaded)
+            if (!_isLoaded)
             {
                 HttpCookie cdc = _cookies[COMMON_DOMAIN_COOKIE_NAME];
-                if(cdc != null)
+                if (cdc != null)
                 {
                     ParseCookie(cdc.Value);
                     _isSet = true;

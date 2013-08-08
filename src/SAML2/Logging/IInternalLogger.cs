@@ -8,6 +8,11 @@ namespace SAML2.Logging
     public interface IInternalLogger
     {
         /// <summary>
+        /// Gets a value indicating whether this instance is debug enabled.
+        /// </summary>
+        bool IsDebugEnabled { get; }
+
+        /// <summary>
         /// Gets a value indicating whether this instance is error enabled.
         /// </summary>
         bool IsErrorEnabled { get; }
@@ -16,11 +21,6 @@ namespace SAML2.Logging
         /// Gets a value indicating whether this instance is fatal enabled.
         /// </summary>
         bool IsFatalEnabled { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is debug enabled.
-        /// </summary>
-        bool IsDebugEnabled { get; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is info enabled.
@@ -32,6 +32,26 @@ namespace SAML2.Logging
         /// </summary>
         bool IsWarnEnabled { get; }
 
+        /// <summary>
+        /// Logs specified debug message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        void Debug(object message);
+
+        /// <summary>
+        /// Logs specified debug message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="exception">The exception.</param>
+        void Debug(object message, Exception exception);
+
+        /// <summary>
+        /// Logs specified debug message.
+        /// </summary>
+        /// <param name="format">The format.</param>
+        /// <param name="args">The args.</param>
+        void DebugFormat(string format, params object[] args);
+        
         /// <summary>
         /// Logs specified error message.
         /// </summary>
@@ -64,26 +84,6 @@ namespace SAML2.Logging
         /// <param name="message">The message.</param>
         /// <param name="exception">The exception.</param>
         void Fatal(object message, Exception exception);
-
-        /// <summary>
-        /// Logs specified debug message.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        void Debug(object message);
-
-        /// <summary>
-        /// Logs specified debug message.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="exception">The exception.</param>
-        void Debug(object message, Exception exception);
-
-        /// <summary>
-        /// Logs specified debug message.
-        /// </summary>
-        /// <param name="format">The format.</param>
-        /// <param name="args">The args.</param>
-        void DebugFormat(string format, params object[] args);
 
         /// <summary>
         /// Logs specified info message.

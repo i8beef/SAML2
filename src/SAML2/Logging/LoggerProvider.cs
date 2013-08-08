@@ -9,25 +9,63 @@ namespace SAML2.Logging
     public class LoggerProvider
     {
         /// <summary>
-        /// The logger factory.
-        /// </summary>
-        private readonly ILoggerFactory loggerFactory;
-
-        /// <summary>
         /// Logger provider static instance.
         /// </summary>
-        private static LoggerProvider instance;
+        private static LoggerProvider _instance;
+
+        /// <summary>
+        /// The logger factory.
+        /// </summary>
+        private readonly ILoggerFactory _loggerFactory;
 
         /// <summary>
         /// Initializes the <see cref="LoggerProvider"/> class.
         /// </summary>
         static LoggerProvider()
         {
-            string loggerClass = Saml2Config.GetConfig().Logging.LoggingFactory;
-            ILoggerFactory loggerFactory = string.IsNullOrEmpty(loggerClass) ? new NoLoggingLoggerFactory() : GetLoggerFactory(loggerClass);
-            SetLoggersFactory(loggerFactory);
+            var loggerClass = Saml2Config.GetConfig().Logging.LoggingFactory;
+            var loggerFactory = string.IsNullOrEmpty(loggerClass) ? new NoLoggingLoggerFactory() : GetLoggerFactory(loggerClass);
+            SetLoggerFactory(loggerFactory);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoggerProvider"/> class.
+        /// </summary>
+        /// <param name="loggerFactory">The logger factory.</param>
+        private LoggerProvider(ILoggerFactory loggerFactory)
+        {
+            _loggerFactory = loggerFactory;
+        }
+
+        /// <summary>
+        /// Gets a logger for the specified key.
+        /// </summary>
+        /// <param name="keyName">Name of the key.</param>
+        /// <returns>An instance of <see cref="IInternalLogger"/>.</returns>
+        public static IInternalLogger LoggerFor(string keyName)
+        {
+            return _instance._loggerFactory.LoggerFor(keyName);
+        }
+
+        /// <summary>
+        /// Gets a logger for the specified type.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>An instance of <see cref="IInternalLogger"/>.</returns>
+        public static IInternalLogger LoggerFor(Type type)
+        {
+            return _instance._loggerFactory.LoggerFor(type);
+        }
+
+        /// <summary>
+        /// Sets the logger factory.
+        /// </summary>
+        /// <param name="loggerFactory">The logger factory.</param>
+        public static void SetLoggerFactory(ILoggerFactory loggerFactory)
+        {
+            _instance = new LoggerProvider(loggerFactory);
+        }
+        
         /// <summary>
         /// Gets the logger factory.
         /// </summary>
@@ -36,7 +74,7 @@ namespace SAML2.Logging
         private static ILoggerFactory GetLoggerFactory(string saml2LoggerClass)
         {
             ILoggerFactory loggerFactory;
-            var loggerFactoryType = System.Type.GetType(saml2LoggerClass);
+            var loggerFactoryType = Type.GetType(saml2LoggerClass);
             try
             {
                 loggerFactory = (ILoggerFactory)Activator.CreateInstance(loggerFactoryType);
@@ -53,45 +91,8 @@ namespace SAML2.Logging
             {
                 throw new ApplicationException("Unable to instantiate: " + loggerFactoryType, ex);
             }
+
             return loggerFactory;
-        }
-
-        /// <summary>
-        /// Sets the loggers factory.
-        /// </summary>
-        /// <param name="loggerFactory">The logger factory.</param>
-        public static void SetLoggersFactory(ILoggerFactory loggerFactory)
-        {
-            instance = new LoggerProvider(loggerFactory);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LoggerProvider"/> class.
-        /// </summary>
-        /// <param name="loggerFactory">The logger factory.</param>
-        private LoggerProvider(ILoggerFactory loggerFactory)
-        {
-            this.loggerFactory = loggerFactory;
-        }
-
-        /// <summary>
-        /// Loggers for.
-        /// </summary>
-        /// <param name="keyName">Name of the key.</param>
-        /// <returns></returns>
-        public static IInternalLogger LoggerFor(string keyName)
-        {
-            return instance.loggerFactory.LoggerFor(keyName);
-        }
-
-        /// <summary>
-        /// Loggers for.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns></returns>
-        public static IInternalLogger LoggerFor(System.Type type)
-        {
-            return instance.loggerFactory.LoggerFor(type);
         }
     }
 }

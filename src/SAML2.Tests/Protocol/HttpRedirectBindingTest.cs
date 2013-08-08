@@ -79,7 +79,7 @@ namespace SAML2.Tests.Saml20.Protocol
             HttpRedirectBindingBuilder binding = new HttpRedirectBindingBuilder();
                         
             RSACryptoServiceProvider key = new RSACryptoServiceProvider();           
-            binding.signingKey = key;
+            binding.SigningKey = key;
             binding.Request = string.Empty.PadLeft(500, 'a');
 
             // Parse the result
@@ -105,7 +105,7 @@ namespace SAML2.Tests.Saml20.Protocol
             HttpRedirectBindingBuilder binding = new HttpRedirectBindingBuilder();            
             
             DSACryptoServiceProvider key = new DSACryptoServiceProvider();
-            binding.signingKey = key;
+            binding.SigningKey = key;
             binding.Request = string.Empty.PadLeft(500, 'a');
 
             // Now, parse the query.

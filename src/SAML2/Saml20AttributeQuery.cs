@@ -147,7 +147,7 @@ namespace SAML2
         public void PerformQuery(HttpContext context, IdentityProviderElement endPoint)
         {
             string nameIdFormat = context.Session[Saml20AbstractEndpointHandler.IDPNameIdFormat].ToString();
-            if(string.IsNullOrEmpty(nameIdFormat))
+            if (string.IsNullOrEmpty(nameIdFormat))
                 nameIdFormat = Saml20Constants.NameIdentifierFormats.Persistent;
             PerformQuery(context, endPoint, nameIdFormat);
         }
@@ -162,7 +162,7 @@ namespace SAML2
         {
             Logger.DebugFormat("{0}.{1} called", GetType(), "PerformQuery()");
 
-            HttpSOAPBindingBuilder builder = new HttpSOAPBindingBuilder(context);
+            HttpSoapBindingBuilder builder = new HttpSoapBindingBuilder(context);
             
             NameID name = new NameID();
             name.Value = Saml20Identity.Current.Name;
@@ -174,7 +174,7 @@ namespace SAML2
             query.LoadXml(Serialization.SerializeToXmlString(_attrQuery));
 
             XmlSignatureUtils.SignDocument(query, ID);
-            if(query.FirstChild is XmlDeclaration)
+            if (query.FirstChild is XmlDeclaration)
                 query.RemoveChild(query.FirstChild);
 
             Stream s;
@@ -192,7 +192,7 @@ namespace SAML2
                 throw;
             }
 
-            HttpSOAPBindingParser parser = new HttpSOAPBindingParser(s);
+            HttpSoapBindingParser parser = new HttpSoapBindingParser(s);
 
             Status status = parser.GetStatus();
 
@@ -221,7 +221,7 @@ namespace SAML2
 
             Logger.DebugFormat(Tracing.AttrQueryAssertion, xmlAssertion == null ? string.Empty : xmlAssertion.OuterXml);
 
-            if(!assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endPoint.Metadata.Keys, endPoint))){
+            if (!assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endPoint.Metadata.Keys, endPoint))){
                 Logger.Error(Resources.SignatureInvalid);
                 throw new Saml20Exception(Resources.SignatureInvalid);
             }

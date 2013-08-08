@@ -31,7 +31,7 @@ namespace SAML2.Utils
 
         internal static IdentityProviderElement InvokeIDPSelectionEventHandler(IdentityProviderCollection endpoints)
         {
-            if(IDPSelectionEvent != null)
+            if (IDPSelectionEvent != null)
             {
                 return IDPSelectionEvent(endpoints);
             }

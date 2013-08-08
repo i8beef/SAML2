@@ -1,5 +1,4 @@
 using System;
-using System.Security.Cryptography.X509Certificates;
 using System.Web;
 using SAML2.Config;
 using SAML2.Properties;
@@ -18,37 +17,36 @@ namespace SAML2.Bindings
         /// <returns>True if validation passes, false otherwise</returns>
         public static bool ValidateConfiguration(out string errorMessage)
         {
-            Saml2Section _config;
-            
             try
             {
-                _config = Saml2Config.GetConfig();
-                if (_config == null)
+                var config = Saml2Config.GetConfig();
+                if (config == null)
                 {
                     errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingSaml20Federation);
                     return false;
                 }
-                if (_config.ServiceProvider == null)
+
+                if (config.ServiceProvider == null)
                 {
-                    errorMessage =
-                        HttpUtility.HtmlEncode(Saml20Resources.MissingServiceProvider);
+                    errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingServiceProvider);
                     return false;
                 }
-                if (string.IsNullOrEmpty(_config.ServiceProvider.Id))
+
+                if (string.IsNullOrEmpty(config.ServiceProvider.Id))
                 {
-                    errorMessage =
-                        HttpUtility.HtmlEncode(Saml20Resources.MissingServiceProviderId);
+                    errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingServiceProviderId);
                     return false;
                 }
-                if (_config.ServiceProvider.SigningCertificate == null)
+
+                if (config.ServiceProvider.SigningCertificate == null)
                 {
                     errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingSigningCertificate);
                     return false;
                 }
+
                 try
                 {
-                    X509Certificate2 signingCert = _config.ServiceProvider.SigningCertificate.GetCertificate();
-                    if (!signingCert.HasPrivateKey)
+                    if (!config.ServiceProvider.SigningCertificate.GetCertificate().HasPrivateKey)
                     {
                         errorMessage = Saml20Resources.SigningCertificateMissingPrivateKey;
                         return false;
@@ -61,18 +59,17 @@ namespace SAML2.Bindings
                     return false;
                 }
 
-                if (_config.IdentityProviders == null)
+                if (config.IdentityProviders == null)
                 {
                     errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingIDPEndpoints);
                     return false;
                 }
 
-                if (_config.IdentityProviders.MetadataLocation == null)
+                if (config.IdentityProviders.MetadataLocation == null)
                 {
                     errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingMetadataLocation);
                     return false;
                 }
-
             }
             catch (Exception ex)
             {

@@ -46,7 +46,7 @@ namespace SAML2.Schema.Core
         {
             get 
             { 
-                if(notOnOrAfterField.HasValue)
+                if (notOnOrAfterField.HasValue)
                 {
                     return Saml20Utils.ToUTCString(notOnOrAfterField.Value);
                 }
@@ -57,7 +57,7 @@ namespace SAML2.Schema.Core
             }
             set 
             {
-                if(string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                     notOnOrAfterField = null;
                 else
                     notOnOrAfterField = Saml20Utils.FromUTCString(value);
@@ -86,7 +86,7 @@ namespace SAML2.Schema.Core
         {
             get
             {
-                if(notBeforeField.HasValue)
+                if (notBeforeField.HasValue)
                 {
                     return Saml20Utils.ToUTCString(notBeforeField.Value);
                 }else
@@ -96,7 +96,7 @@ namespace SAML2.Schema.Core
             }
             set
             {
-                if(string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                     notBeforeField = null;
                 else
                     notBeforeField = Saml20Utils.FromUTCString(value);

@@ -3,9 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Web;
 using System.Xml;
-using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
-using SAML2.Logging;
 using SAML2.Schema.Metadata;
 using SAML2.Utils;
 
@@ -16,11 +14,10 @@ namespace SAML2.Bindings
     /// </summary>
     public class HttpPostBindingParser
     {
+        /// <summary>
+        /// The HTTP Context.
+        /// </summary>
         private readonly HttpContext _context;
-        private XmlDocument _document;
-        private bool _isResponse = false;
-        private bool _isRequest = false;
-        private string _message;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpPostBindingParser"/> class.
@@ -30,99 +27,76 @@ namespace SAML2.Bindings
         {
             _context = context;
 
-            Initialize();
-        }
-
-        /// <summary>
-        /// Initializes this instance.
-        /// </summary>
-        private void Initialize()
-        {
-            string base64 = string.Empty;
+            var base64 = string.Empty;
 
             if (_context.Request.Params["SAMLRequest"] != null)
             {
                 base64 = _context.Request.Params["SAMLRequest"];
-                _isRequest = true;
+                IsRequest = true;
             }
+
             if (_context.Request.Params["SAMLResponse"] != null)
             {
                 base64 = _context.Request.Params["SAMLResponse"];
-                _isResponse = true;
+                IsResponse = true;
             }
 
-            _message = Encoding.UTF8.GetString(Convert.FromBase64String(base64));
+            Message = Encoding.UTF8.GetString(Convert.FromBase64String(base64));
 
-            _document = new XmlDocument();
-            _document.PreserveWhitespace = true;
-            _document.LoadXml(_message);
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is a response message.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is a response message; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsResponse
-        {
-            get{ return _isResponse;}
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is a request message.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is a request message; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsRequest
-        {
-            get { return _isRequest; }
-        }
-
-        /// <summary>
-        /// Gets the message.
-        /// </summary>
-        /// <value>The message.</value>
-        public string Message
-        {
-            get { return _message; }
+            Document = new XmlDocument { PreserveWhitespace = true };
+            Document.LoadXml(Message);
         }
 
         /// <summary>
         /// Gets the document.
         /// </summary>
-        /// <value>The document.</value>
-        public XmlDocument Document
-        {
-            get { return _document; }
-        }
+        public XmlDocument Document { get; private set; }
 
         /// <summary>
-        /// Checks the signature of the message.
+        /// Gets a value indicating whether this instance is request.
         /// </summary>
-        /// <returns></returns>
+        public bool IsRequest { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is response.
+        /// </summary>
+        public bool IsResponse { get; private set; }
+
+        /// <summary>
+        /// Determines whether the message is signed.
+        /// </summary>
+        public bool IsSigned
+        {
+            get { return XmlSignatureUtils.IsSigned(Document); }
+        }
+        
+        /// <summary>
+        /// Gets the message.
+        /// </summary>
+        public string Message { get; private set; }
+
+        /// <summary>
+        /// Checks the signature.
+        /// </summary>
+        /// <returns>True of the signatire is valid, else false.</returns>
         public bool CheckSignature()
         {
-            return XmlSignatureUtils.CheckSignature(_document);
+            return XmlSignatureUtils.CheckSignature(Document);
         }
 
         /// <summary>
         /// Checks the signature of the message, using a specific set of keys
         /// </summary>
         /// <param name="keys">The set of keys to check the signature against</param>
-        /// <returns></returns>
+        /// <returns>True of the signatire is valid, else false.</returns>
         public bool CheckSignature(IEnumerable<KeyDescriptor> keys)
         {
-            foreach (KeyDescriptor keyDescriptor in keys)
+            foreach (var keyDescriptor in keys)
             {
-                KeyInfo ki = (KeyInfo)keyDescriptor.KeyInfo;
-
-                foreach (KeyInfoClause clause in ki)
+                foreach (KeyInfoClause clause in (KeyInfo)keyDescriptor.KeyInfo)
                 {
-                    AsymmetricAlgorithm key = XmlSignatureUtils.ExtractKey(clause);
-
-                    if (key != null && XmlSignatureUtils.CheckSignature(_document, key))
+                    var key = XmlSignatureUtils.ExtractKey(clause);
+                    if (key != null && XmlSignatureUtils.CheckSignature(Document, key))
                     {
                         return true;
                     }
@@ -131,17 +105,5 @@ namespace SAML2.Bindings
 
             return false;
         }
-
-        /// <summary>
-        /// Determines whether the message is signed.
-        /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if the message is signed; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsSigned()
-        {
-            return XmlSignatureUtils.IsSigned(_document);
-        }
-    
     }
 }

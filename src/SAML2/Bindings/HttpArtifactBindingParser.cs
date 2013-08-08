@@ -9,9 +9,16 @@ namespace SAML2.Bindings
     /// <summary>
     /// Parses the response messages related to the artifact binding.
     /// </summary>
-    public class HttpArtifactBindingParser : HttpSOAPBindingParser
+    public class HttpArtifactBindingParser : HttpSoapBindingParser
     {
+        /// <summary>
+        /// The artifact resolve.
+        /// </summary>
         private ArtifactResolve _artifactResolve;
+
+        /// <summary>
+        /// The artifact response.
+        /// </summary>
         private ArtifactResponse _artifactResponse;
 
         /// <summary>
@@ -21,25 +28,21 @@ namespace SAML2.Bindings
         public HttpArtifactBindingParser(Stream inputStream): base(inputStream) {}
 
         /// <summary>
-        /// Determines whether the current message is an artifact resolve
+        /// Gets the artifact resolve message.
         /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if the current message is an artifact resolve; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsArtifactResolve()
+        /// <value>The artifact resolve.</value>
+        public ArtifactResolve ArtifactResolve
         {
-            return SamlMessage.LocalName == HttpArtifactBindingConstants.ArtifactResolve;
-        }
+            get
+            {
+                if (!IsArtifactResolve)
+                {
+                    throw new InvalidOperationException("The Saml message is not an ArtifactResolve");
+                }
+                LoadArtifactResolve();
 
-        /// <summary>
-        /// Determines whether the current message is an artifact response.
-        /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if the current message is an artifact response; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsArtifactResponse()
-        {
-            return SamlMessage.LocalName == HttpArtifactBindingConstants.ArtifactResponse;
+                return _artifactResolve;
+            }
         }
 
         /// <summary>
@@ -50,26 +53,31 @@ namespace SAML2.Bindings
         {
             get
             {
-                if (!IsArtifactResponse())
+                if (!IsArtifactResponse)
+                {
                     throw new InvalidOperationException("The Saml message is not an ArtifactResponse");
+                }
                 LoadArtifactResponse();
+
                 return _artifactResponse;
             }
         }
 
+
         /// <summary>
-        /// Gets the artifact resolve message.
+        /// Gets a value indicating whether this instance is artifact resolve.
         /// </summary>
-        /// <value>The artifact resolve.</value>
-        public ArtifactResolve ArtifactResolve
+        public bool IsArtifactResolve
         {
-            get
-            {
-                if (!IsArtifactResolve())
-                    throw new InvalidOperationException("The Saml message is not an ArtifactResolve");
-                LoadArtifactResolve();
-                return _artifactResolve;
-            }
+            get { return SamlMessage.LocalName == HttpArtifactBindingConstants.ArtifactResolve; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is artifact response.
+        /// </summary>
+        public bool IsArtifactResponse
+        {
+            get { return SamlMessage.LocalName == HttpArtifactBindingConstants.ArtifactResponse; }
         }
 
         /// <summary>
@@ -80,10 +88,16 @@ namespace SAML2.Bindings
         {
             get
             {
-                if (IsArtifactResolve())
+                if (IsArtifactResolve)
+                {
                     return ArtifactResolve.Issuer.Value;
-                if (IsArtifactResponse())
+                }
+
+                if (IsArtifactResponse)
+                {
                     return ArtifactResponse.Issuer.Value;
+                }
+
                 return string.Empty;
             }
         }
@@ -93,7 +107,7 @@ namespace SAML2.Bindings
         /// </summary>
         private void LoadArtifactResolve()
         {
-            if(_artifactResolve == null)
+            if (_artifactResolve == null)
             {
                 _artifactResolve = Serialization.Deserialize<ArtifactResolve>(new XmlNodeReader(SamlMessage));
             }
@@ -104,7 +118,7 @@ namespace SAML2.Bindings
         /// </summary>
         private void LoadArtifactResponse()
         {
-            if(_artifactResponse == null)
+            if (_artifactResponse == null)
             {
                 _artifactResponse = Serialization.Deserialize<ArtifactResponse>(new XmlNodeReader(SamlMessage));
             }

@@ -79,7 +79,7 @@ namespace SAML2
             spDescriptor.AuthnRequestsSigned = XmlConvert.ToString(true);
             spDescriptor.WantAssertionsSigned = XmlConvert.ToString(true);
 
-            if(config.ServiceProvider.NameIdFormats.Count > 0)
+            if (config.ServiceProvider.NameIdFormats.Count > 0)
             {
                 spDescriptor.NameIDFormat = new string[config.ServiceProvider.NameIdFormats.Count];
                 int count = 0;
@@ -472,7 +472,7 @@ namespace SAML2
                         }
                     }
 
-                    if(item is AttributeAuthorityDescriptor)
+                    if (item is AttributeAuthorityDescriptor)
                     {
                         AttributeAuthorityDescriptor aad = (AttributeAuthorityDescriptor) item;
                         _attributeQueryEndpoints.AddRange(aad.AttributeService);
@@ -540,7 +540,7 @@ namespace SAML2
         public string GetARSEndpoint(ushort index)
         {
             IndexedEndpoint ep = _ARSEndpoints[index];
-            if(ep != null)
+            if (ep != null)
             {
                 return ep.Location;
             }
@@ -558,7 +558,7 @@ namespace SAML2
         {
             List<Endpoint> endpoints = GetAttributeQueryEndpoints();
             
-            if(endpoints.Count == 0)            
+            if (endpoints.Count == 0)            
                 throw new Saml20Exception("The identity provider does not support attribute queries.");
             
             return endpoints[0].Location;

@@ -53,7 +53,7 @@ namespace SAML2.Protocol
             {
                 //Some IdP's are known to fail to set an actual value in the SOAPAction header
                 //so we just check for the existence of the header field.
-                if (Array.Exists(context.Request.Headers.AllKeys, delegate(string s) { return s == SOAPConstants.SOAPAction; }))
+                if (Array.Exists(context.Request.Headers.AllKeys, delegate(string s) { return s == SoapConstants.SoapAction; }))
                 {
                     HandleSOAP(context, context.Request.InputStream);
                     return;
@@ -69,7 +69,7 @@ namespace SAML2.Protocol
                 {
                     HandleResponse(context);
                 }
-                else if(!string.IsNullOrEmpty(context.Request.Params["SAMLRequest"]))
+                else if (!string.IsNullOrEmpty(context.Request.Params["SAMLRequest"]))
                 {
                     HandleRequest(context);
                 }
@@ -97,7 +97,7 @@ namespace SAML2.Protocol
             }catch(Exception e)
             {
                 //ThreadAbortException is thrown by response.Redirect so don't worry about it
-                if(e is ThreadAbortException)
+                if (e is ThreadAbortException)
                     throw;
                     
                 HandleError(context, e.Message);
@@ -128,7 +128,7 @@ namespace SAML2.Protocol
 
             IdentityProviderElement idp = RetrieveIDPConfiguration(parser.Issuer);
             
-            if (parser.IsArtifactResolve())
+            if (parser.IsArtifactResolve)
             {
                 Logger.Debug(Tracing.ArtifactResolveIn);
 
@@ -141,7 +141,7 @@ namespace SAML2.Protocol
                 Logger.DebugFormat("Artifact resolve for assertion id: {0}, msg: {1}", parser.ArtifactResolve.ID, parser.SamlMessage);
                 builder.RespondToArtifactResolve(parser.ArtifactResolve);
             }
-            else if (parser.IsArtifactResponse())
+            else if (parser.IsArtifactResponse)
             {
                 Logger.Debug(Tracing.ArtifactResponseIn);
 
@@ -168,7 +168,7 @@ namespace SAML2.Protocol
                         DetermineEndpointConfiguration(BindingType.Redirect, endpoint.Endpoints.LogoutEndpoint, endpoint.Metadata.SLOEndpoints());
 
                     builder.RedirectFromLogout(destination, response);
-                }else if(parser.ArtifactResponse.Any.LocalName == LogoutResponse.ELEMENT_NAME)
+                }else if (parser.ArtifactResponse.Any.LocalName == LogoutResponse.ELEMENT_NAME)
                 {
                     DoLogout(context);
                 }
@@ -178,7 +178,7 @@ namespace SAML2.Protocol
                     HandleError(context, string.Format("Unsupported payload message in ArtifactResponse: {0}", parser.ArtifactResponse.Any.LocalName));
                 }
             }
-            else if(parser.IsLogoutReqest())
+            else if (parser.IsLogoutReqest)
             {
                 Logger.DebugFormat(Tracing.LogoutRequest, parser.SamlMessage.OuterXml);
 
@@ -245,10 +245,10 @@ namespace SAML2.Protocol
                 return;
             }
 
-            if(destination.Binding == BindingType.Redirect)
+            if (destination.Binding == BindingType.Redirect)
             {
                 HttpRedirectBindingBuilder builder = new HttpRedirectBindingBuilder();
-                builder.signingKey = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey;
+                builder.SigningKey = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey;
                 request.Destination = destination.Url;
                 request.Reason = Saml20Constants.Reasons.User;
                 request.SubjectToLogOut.Value = context.Session[IDPNameId].ToString();
@@ -263,7 +263,7 @@ namespace SAML2.Protocol
                 return;
             }
 
-            if(destination.Binding == BindingType.Artifact)
+            if (destination.Binding == BindingType.Artifact)
             {
                 Logger.DebugFormat(Tracing.SendLogoutRequest, "ARTIFACT", endpoint.Id, string.Empty);
 
@@ -290,7 +290,7 @@ namespace SAML2.Protocol
 
             string message = string.Empty;
 
-            if(context.Request.RequestType == "GET")
+            if (context.Request.RequestType == "GET")
             {
                 HttpRedirectBindingParser parser = new HttpRedirectBindingParser(context.Request.Url);
                 LogoutResponse response = Serialization.DeserializeFromXmlString<LogoutResponse>(parser.Message);
@@ -314,7 +314,7 @@ namespace SAML2.Protocol
                 }
 
                 message = parser.Message;
-            }else if(context.Request.RequestType == "POST")
+            }else if (context.Request.RequestType == "POST")
             {
                 HttpPostBindingParser parser = new HttpPostBindingParser(context);
                 Logger.Debug("Binding: POST, Message: " + parser.Message);
@@ -330,7 +330,7 @@ namespace SAML2.Protocol
                     return;
                 }
 
-                if (!parser.IsSigned())
+                if (!parser.IsSigned)
                 {
                     Logger.ErrorFormat("Signature not present, response: {0}", parser.Message);
                     HandleError(context, Resources.SignatureNotPresent);
@@ -396,7 +396,7 @@ namespace SAML2.Protocol
 
             string message = string.Empty;
 
-            if(context.Request.RequestType == "GET") // HTTP Redirect binding
+            if (context.Request.RequestType == "GET") // HTTP Redirect binding
             {
                 HttpRedirectBindingParser parser = new HttpRedirectBindingParser(context.Request.Url);
                 Logger.DebugFormat("Binding: redirect, Signature algorithm: {0}  Signature:  {1}, Message: {2}", parser.SignatureAlgorithm, parser.Signature, parser.Message);
@@ -426,7 +426,7 @@ namespace SAML2.Protocol
                 HttpPostBindingParser parser = new HttpPostBindingParser(context);
                 Logger.Debug("Binding: POST, Message: " + parser.Message);
 
-                if (!parser.IsSigned())
+                if (!parser.IsSigned)
                 {
                     Logger.Error("Signature not present, msg: " + parser.Message);
                     HandleError(context, Resources.SignatureNotPresent);
@@ -466,12 +466,12 @@ namespace SAML2.Protocol
             response.InResponseTo = req.ID;
 
             //Respond using redirect binding
-            if(destination.Binding == BindingType.Redirect)
+            if (destination.Binding == BindingType.Redirect)
             {
                 HttpRedirectBindingBuilder builder = new HttpRedirectBindingBuilder();
                 builder.RelayState = context.Request.Params["RelayState"];
                 builder.Response = response.GetXml().OuterXml;
-                builder.signingKey = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey;
+                builder.SigningKey = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey;
                 string s = destination.Url + "?" + builder.ToQuery();
                 context.Response.Redirect(s, true);
                 return;

@@ -13,7 +13,7 @@ namespace SAML2.Actions
         /// <summary>
         /// Gets the default actions. 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The system default actions.</returns>
         public static List<IAction> GetDefaultActions()
         {
             return new List<IAction>
@@ -27,17 +27,14 @@ namespace SAML2.Actions
         /// <summary>
         /// Gets the actions.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The currently configured Action list.</returns>
         public static List<IAction> GetActions()
         {
             var config = Saml2Config.GetConfig();
 
-            if (config.Actions == null)
-            {
-                return GetDefaultActions();                
-            }
-
-            return config.Actions.Select(ac => (IAction) Activator.CreateInstance(Type.GetType(ac.Type))).ToList();
+            return config.Actions == null
+                       ? GetDefaultActions()
+                       : config.Actions.Select(ac => (IAction) Activator.CreateInstance(Type.GetType(ac.Type))).ToList();
         }
     }
 }

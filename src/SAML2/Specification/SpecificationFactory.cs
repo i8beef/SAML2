@@ -19,7 +19,7 @@ namespace SAML2.Specification
         {
             List<ICertificateSpecification> specs = new List<ICertificateSpecification>();
 
-            if(endpoint.CertificateValidations != null && endpoint.CertificateValidations.Count > 0)
+            if (endpoint.CertificateValidations != null && endpoint.CertificateValidations.Count > 0)
             {
                 foreach(CertificateValidationElement elem in endpoint.CertificateValidations)
                 {
@@ -34,7 +34,7 @@ namespace SAML2.Specification
                 }
             }
 
-            if(specs.Count == 0)
+            if (specs.Count == 0)
             {
                 //Add default specification
                 specs.Add(new DefaultCertificateSpecification());

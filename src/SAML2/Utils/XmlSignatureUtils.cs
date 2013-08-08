@@ -40,18 +40,18 @@ namespace SAML2.Utils
         public override XmlElement GetIdElement(XmlDocument document, string idValue)
         {
             XmlElement elem = null;
-            if((elem = base.GetIdElement(document, idValue)) == null)
+            if ((elem = base.GetIdElement(document, idValue)) == null)
             {
                 XmlNodeList nl = document.GetElementsByTagName("*");
                 IEnumerator enumerator = nl.GetEnumerator();
-                while(enumerator.MoveNext())
+                while (enumerator.MoveNext())
                 {
                     var node = (XmlNode)enumerator.Current;
                     var nodeEnum = node.Attributes.GetEnumerator();
-                    while(nodeEnum.MoveNext())
+                    while (nodeEnum.MoveNext())
                     {
                         var attr = (XmlAttribute) nodeEnum.Current;
-                        if(attr.LocalName.ToLower() == "id" && attr.Value == idValue && node is XmlElement)
+                        if (attr.LocalName.ToLower() == "id" && attr.Value == idValue && node is XmlElement)
                         {
                             return (XmlElement)node;
                         }

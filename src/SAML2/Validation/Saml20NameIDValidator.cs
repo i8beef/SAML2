@@ -14,10 +14,10 @@ namespace SAML2.Validation
         {
             if (nameID == null) throw new ArgumentNullException("nameID");
 
-            if(string.IsNullOrEmpty(nameID.Format))
+            if (string.IsNullOrEmpty(nameID.Format))
                 return;
 
-            if(!Uri.IsWellFormedUriString(nameID.Format, UriKind.Absolute))
+            if (!Uri.IsWellFormedUriString(nameID.Format, UriKind.Absolute))
                 throw new Saml20FormatException("NameID element has Format attribute which is not a wellformed absolute uri.");
 
             // The processing rules from [SAML2.0std] section 8.3 are implemented here
@@ -73,7 +73,7 @@ namespace SAML2.Validation
                 if (!Saml20Utils.ValidateRequiredString(nameID.Value))
                     throw new Saml20FormatException("NameID with Entity Format attribute MUST contain a Value that contains more than whitespace characters");
 
-                if( nameID.Value.Length > 1024)
+                if ( nameID.Value.Length > 1024)
                     throw new Saml20FormatException("NameID with Entity Format attribute MUST have a Value that contains no more than 1024 characters");
 
                 if (nameID.NameQualifier != null)

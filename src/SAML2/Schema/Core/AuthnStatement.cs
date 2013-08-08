@@ -78,7 +78,7 @@ namespace SAML2.Schema.Core
         public string AuthnInstantString
         {
             get { 
-                if(authnInstantField.HasValue)
+                if (authnInstantField.HasValue)
                 {
                     return Saml20Utils.ToUTCString(authnInstantField.Value);
                 }else
@@ -128,7 +128,7 @@ namespace SAML2.Schema.Core
         {
             get
             {
-                if(sessionNotOnOrAfterField.HasValue)
+                if (sessionNotOnOrAfterField.HasValue)
                 {
                     return Saml20Utils.ToUTCString(sessionNotOnOrAfterField.Value);
                 }
@@ -139,7 +139,7 @@ namespace SAML2.Schema.Core
             }
             set
             {
-                if(string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                     sessionNotOnOrAfterField = null;
                 else
                     sessionNotOnOrAfterField = Saml20Utils.FromUTCString(value);

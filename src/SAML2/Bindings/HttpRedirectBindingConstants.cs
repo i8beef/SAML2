@@ -9,19 +9,23 @@ namespace SAML2.Bindings
         /// <summary>
         /// SAMLResponse name
         /// </summary>
-        public const string SAMLResponse = "SAMLResponse";
+        public const string SamlResponse = "SAMLResponse";
+
         /// <summary>
         /// SAMLRequest name
         /// </summary>
-        public const string SAMLRequest = "SAMLRequest";
+        public const string SamlRequest = "SAMLRequest";
+
         /// <summary>
         /// SigAlg name
         /// </summary>
         public const string SigAlg = "SigAlg";
+
         /// <summary>
         /// Relaystate name
         /// </summary>
         public const string RelayState = "RelayState";
+
         /// <summary>
         /// Signature name
         /// </summary>

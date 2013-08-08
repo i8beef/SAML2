@@ -62,9 +62,9 @@
     <Compile Include="Bindings\HttpRedirectBindingBuilder.cs" />
     <Compile Include="Bindings\HttpRedirectBindingConstants.cs" />
     <Compile Include="Bindings\HttpRedirectBindingParser.cs" />
-    <Compile Include="Bindings\HttpSOAPBindingBuilder.cs" />
-    <Compile Include="Bindings\HttpSOAPBindingParser.cs" />
-    <Compile Include="Bindings\SOAPConstants.cs" />
+    <Compile Include="Bindings\HttpSoapBindingBuilder.cs" />
+    <Compile Include="Bindings\HttpSoapBindingParser.cs" />
+    <Compile Include="Bindings\SoapConstants.cs" />
     <Compile Include="Config\ActionCollection.cs" />
     <Compile Include="Config\ActionElement.cs" />
     <Compile Include="Config\AllowedAudienceUriCollection.cs" />

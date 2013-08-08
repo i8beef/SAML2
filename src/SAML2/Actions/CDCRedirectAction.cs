@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Web;
-using SAML2.Config;
 using SAML2.Protocol;
 
 namespace SAML2.Actions
@@ -12,49 +11,70 @@ namespace SAML2.Actions
     public class CDCRedirectAction : IAction
     {
         /// <summary>
+        /// Name backing field.
+        /// </summary>
+        private string _name = "CDCRedirectAction";
+
+        /// <summary>
         /// setting name for the identity provider cookie writer url 
         /// </summary>
-        public const string IDPCookieWriterEndPoint = "IDPCookieWriterEndPoint";
+        public const string IDPCookieWriterEndPoint = "idpCookieWriterEndPoint";
+
         /// <summary>
         /// Local return url setting name
         /// </summary>
-        public const string LocalReturnUrl = "LocalReturnUrl";
+        public const string LocalReturnUrl = "localReturnUrl";
+
         /// <summary>
         /// TargetResource query string parameter name.
         /// </summary>
         public const string TargetResource = "TargetResource";
 
         /// <summary>
-        /// Action performed during login.
+        /// Gets or sets the name of the action.
+        /// </summary>
+        /// <value>The name.</value>
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+
+        /// <summary>
+        /// Action performed during signon.
         /// </summary>
         /// <param name="handler">The handler initiating the call.</param>
         /// <param name="context">The current http context.</param>
         /// <param name="assertion">The saml assertion of the currently logged in user.</param>
-        public void LoginAction(AbstractEndpointHandler handler, HttpContext context, Saml20Assertion assertion)
+        public void SignOnAction(AbstractEndpointHandler handler, HttpContext context, Saml20Assertion assertion)
         {
-            string idpKey = (string) context.Session[Saml20SignonHandler.IDPLoginSessionKey];
-            Saml20SignonHandler h = (Saml20SignonHandler) handler;
-            IdentityProviderElement ep = h.RetrieveIDPConfiguration(idpKey);
-            if (ep.CommonDomainCookie != null)
+            var idpKey = (string) context.Session[Saml20SignonHandler.IDPLoginSessionKey];
+            var signOnHandler = handler as Saml20SignonHandler;
+            if (signOnHandler == null)
             {
-                var values = ep.CommonDomainCookie.AllKeys;
+                throw new ArgumentException("Endpoint handler must be of type Saml20SignonHandler.", "handler");
+            }
+
+            var identityProvider = signOnHandler.RetrieveIDPConfiguration(idpKey);
+            if (identityProvider.CommonDomainCookie != null)
+            {
+                var values = identityProvider.CommonDomainCookie.AllKeys;
 
                 var idpEndpoint = values.FirstOrDefault(x => x == IDPCookieWriterEndPoint);
                 if (idpEndpoint == null)
                 {
-                    throw new Saml20Exception(@"Please specify """ + IDPCookieWriterEndPoint + @""" in Settings element.");
+                    throw new Saml20Exception(@"Please specify """ + IDPCookieWriterEndPoint + @""" in CommonDomainCookie element.");
                 }
                 
                 var localReturnPoint = values.FirstOrDefault(x => x == LocalReturnUrl);
                 if (localReturnPoint == null)
                 {
-                    throw new Saml20Exception(@"Please specify """ + LocalReturnUrl + @""" in Settings element.");
+                    throw new Saml20Exception(@"Please specify """ + LocalReturnUrl + @""" in CommonDomainCookie element.");
                 }
 
-                string url = idpEndpoint + "?" + TargetResource + "=" + localReturnPoint;
-
-                context.Response.Redirect(url);
-            }else
+                context.Response.Redirect(idpEndpoint + "?" + TargetResource + "=" + localReturnPoint);
+            }
+            else
             {
                 handler.DoRedirect(context);
             }
@@ -65,23 +85,13 @@ namespace SAML2.Actions
         /// </summary>
         /// <param name="handler">The handler.</param>
         /// <param name="context">The context.</param>
-        /// <param name="IdPInitiated">During IdP initiated logout some actions such as redirecting should not be performed</param>
-        public void LogoutAction(AbstractEndpointHandler handler, HttpContext context, bool IdPInitiated)
+        /// <param name="idpInitiated">if set to <c>true</c> IDP is initiated.</param>
+        public void LogoutAction(AbstractEndpointHandler handler, HttpContext context, bool idpInitiated)
         {
-            if (!IdPInitiated)
+            if (!idpInitiated)
+            {
                 handler.DoRedirect(context);
-        }
-
-        private string _name = "CDCRedirectAction";
-
-        /// <summary>
-        /// Gets or sets the name of the action.
-        /// </summary>
-        /// <value>The name.</value>
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
+            }
         }
     }
 }

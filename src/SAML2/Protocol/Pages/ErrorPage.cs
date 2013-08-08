@@ -64,7 +64,7 @@ namespace SAML2.Protocol.pages
             
             Configuration conf = WebConfigurationManager.OpenWebConfiguration(Context.Request.Path);
             CustomErrorsSection ces = (CustomErrorsSection)conf.GetSection("system.web/customErrors");
-            if(ces != null && !_overrideConfig)
+            if (ces != null && !_overrideConfig)
             {
                 switch (ces.Mode)
                 {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Net.Mime;
 using System.Net.Security;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
@@ -18,12 +17,12 @@ namespace SAML2.Bindings
     /// <summary>
     /// Implements the HTTP SOAP binding
     /// </summary>
-    public class HttpSOAPBindingBuilder
+    public class HttpSoapBindingBuilder
     {
         /// <summary>
         /// The current http context
         /// </summary>
-        protected HttpContext _context;
+        protected HttpContext Context;
 
         /// <summary>
         /// Logger instance.
@@ -31,12 +30,12 @@ namespace SAML2.Bindings
         protected static readonly IInternalLogger Logger = LoggerProvider.LoggerFor(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpSOAPBindingBuilder"/> class.
+        /// Initializes a new instance of the <see cref="HttpSoapBindingBuilder"/> class.
         /// </summary>
         /// <param name="context">The current HTTP context.</param>
-        public HttpSOAPBindingBuilder(HttpContext context)
+        public HttpSoapBindingBuilder(HttpContext context)
         {
-            _context = context;
+            Context = context;
         }
 
         /// <summary>
@@ -45,12 +44,12 @@ namespace SAML2.Bindings
         /// <param name="samlMessage">The saml message.</param>
         public void SendResponseMessage(string samlMessage)
         {
-            _context.Response.ContentType = "text/xml";
-            StreamWriter writer = new StreamWriter(_context.Response.OutputStream);
+            Context.Response.ContentType = "text/xml";
+            var writer = new StreamWriter(Context.Response.OutputStream);
             writer.Write(WrapInSoapEnvelope(samlMessage));
             writer.Flush();
             writer.Close();
-            _context.Response.End();
+            Context.Response.End();
         }
 
         /// <summary>
@@ -60,12 +59,13 @@ namespace SAML2.Bindings
         /// <returns></returns>
         public string WrapInSoapEnvelope(string s)
         {
-            StringBuilder builder = new StringBuilder();
-            builder.AppendLine(SOAPConstants.EnvelopeBegin);
-            builder.AppendLine(SOAPConstants.BodyBegin);
+            var builder = new StringBuilder();
+
+            builder.AppendLine(SoapConstants.EnvelopeBegin);
+            builder.AppendLine(SoapConstants.BodyBegin);
             builder.AppendLine(s);
-            builder.AppendLine(SOAPConstants.BodyEnd);
-            builder.AppendLine(SOAPConstants.EnvelopeEnd);
+            builder.AppendLine(SoapConstants.BodyEnd);
+            builder.AppendLine(SoapConstants.EnvelopeEnd);
 
             return builder.ToString();
         }
@@ -80,20 +80,16 @@ namespace SAML2.Bindings
         /// <returns>True if validation of the server certificate generates no policy errors</returns>
         public static bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-            if (sslPolicyErrors == SslPolicyErrors.None)
-                return true;
-            return false;
+            return sslPolicyErrors == SslPolicyErrors.None;
         }
 
         /// <summary>
         /// Creates a WCF SSL binding.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The WCF SSL binding.</returns>
         private static Binding CreateSslBinding()
         {
-            BasicHttpBinding binding = new BasicHttpBinding(BasicHttpSecurityMode.Transport);
-            binding.TextEncoding = Encoding.UTF8;
-            return binding;
+            return new BasicHttpBinding(BasicHttpSecurityMode.Transport) { TextEncoding = Encoding.UTF8 };
         }
 
         /// <summary>
@@ -102,63 +98,75 @@ namespace SAML2.Bindings
         /// <param name="endpoint">The IdP endpoint.</param>
         /// <param name="message">The message.</param>
         /// <param name="basicAuth">Basic auth settings.</param>
-        /// <returns></returns>
+        /// <returns>The Stream.</returns>
         public Stream GetResponse(string endpoint, string message, HttpBasicAuthElement basicAuth)
         {
-            Binding binding = CreateSslBinding();
-            Message request = Message.CreateMessage(binding.MessageVersion, HttpArtifactBindingConstants.SOAPAction, new SimpleBodyWriter(message));
-            
+            var binding = CreateSslBinding();
+            var request = Message.CreateMessage(binding.MessageVersion, HttpArtifactBindingConstants.SoapAction, new SimpleBodyWriter(message));
             request.Headers.To = new Uri(endpoint);
 
-            HttpRequestMessageProperty property = new HttpRequestMessageProperty();
-            property.Method = "POST";
+            var property = new HttpRequestMessageProperty { Method = "POST" };
             property.Headers.Add(HttpRequestHeader.ContentType, "text/xml; charset=utf-8");
             
-            //We are using Basic http auth over ssl
+            // We are using Basic http auth over ssl
             if (basicAuth != null && basicAuth.Enabled)
             {
-                string basicAuthzHeader = "Basic " +
-                                          Convert.ToBase64String(Encoding.UTF8.GetBytes(basicAuth.Username + ":" + basicAuth.Password));
+                var basicAuthzHeader = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(basicAuth.Username + ":" + basicAuth.Password));
                 property.Headers.Add(HttpRequestHeader.Authorization, basicAuthzHeader);
             }
             
             request.Properties.Add( HttpRequestMessageProperty.Name, property );
-            if (_context.Request.Params["relayState"] != null)
-                request.Properties.Add("relayState", _context.Request.Params["relayState"]);          
+            if (Context.Request.Params["relayState"] != null)
+            {
+                request.Properties.Add("relayState", Context.Request.Params["relayState"]);
+            }          
   
-            EndpointAddress epa = new EndpointAddress(endpoint);
+            var epa = new EndpointAddress(endpoint);
 
-            ChannelFactory<IRequestChannel> factory = new ChannelFactory<IRequestChannel>(binding, epa);
-            IRequestChannel reqChannel = factory.CreateChannel();
+            var factory = new ChannelFactory<IRequestChannel>(binding, epa);
+            var reqChannel = factory.CreateChannel();
             
             reqChannel.Open();
-            Message response = reqChannel.Request(request);
+            var response = reqChannel.Request(request);
             Console.WriteLine(response);
             reqChannel.Close();
-            XmlDocument xDoc = new XmlDocument();
+
+            var xDoc = new XmlDocument();
             xDoc.Load(response.GetReaderAtBodyContents());
-            string outerXml = xDoc.DocumentElement.OuterXml;
-            MemoryStream memStream = new MemoryStream(Encoding.UTF8.GetBytes(outerXml));
+            var outerXml = xDoc.DocumentElement.OuterXml;
+            var memStream = new MemoryStream(Encoding.UTF8.GetBytes(outerXml));
+
             return memStream;
-        
-        }
-    }
-
-    /// <summary>
-    /// A simple body writer
-    /// </summary>
-    internal class SimpleBodyWriter : BodyWriter
-    {
-        private string _message;
-        
-        public SimpleBodyWriter(string message) : base(false)
-        {
-            _message = message;
         }
 
-        protected override void OnWriteBodyContents(XmlDictionaryWriter writer)
+        /// <summary>
+        /// A simple body writer
+        /// </summary>
+        internal class SimpleBodyWriter : BodyWriter
         {
-            writer.WriteRaw(_message);
+            /// <summary>
+            /// The message.
+            /// </summary>
+            private readonly string _message;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SimpleBodyWriter"/> class.
+            /// </summary>
+            /// <param name="message">The message.</param>
+            public SimpleBodyWriter(string message)
+                : base(false)
+            {
+                _message = message;
+            }
+
+            /// <summary>
+            /// When implemented, provides an extensibility point when the body contents are written.
+            /// </summary>
+            /// <param name="writer">The <see cref="T:System.Xml.XmlDictionaryWriter"/> used to write out the message body.</param>
+            protected override void OnWriteBodyContents(XmlDictionaryWriter writer)
+            {
+                writer.WriteRaw(_message);
+            }
         }
     }
 }

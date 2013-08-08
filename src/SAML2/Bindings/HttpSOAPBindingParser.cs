@@ -13,32 +13,63 @@ namespace SAML2.Bindings
     /// <summary>
     /// Parses messages pertaining to the HTTP SOAP binding.
     /// </summary>
-    public class HttpSOAPBindingParser
+    public class HttpSoapBindingParser
     {
         /// <summary>
         /// The current input stream
         /// </summary>
-        protected Stream _inputStream;
+        protected Stream InputStream;
+
         /// <summary>
         /// The current soap envelope
         /// </summary>
-        protected string _soapEnvelope;
-        /// <summary>
-        /// The current saml message
-        /// </summary>
-        protected XmlElement _samlMessage;
+        protected string SoapEnvelope;
+
         /// <summary>
         /// The current logout request
         /// </summary>
-        protected LogoutRequest _logoutRequest;
+        private LogoutRequest _logoutRequest;
+        
+        /// <summary>
+        /// The current saml message
+        /// </summary>
+        private XmlElement _samlMessage;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpSOAPBindingParser"/> class.
+        /// Initializes a new instance of the <see cref="HttpSoapBindingParser"/> class.
         /// </summary>
         /// <param name="httpInputStream">The HTTP input stream.</param>
-        public HttpSOAPBindingParser(Stream httpInputStream)
+        public HttpSoapBindingParser(Stream httpInputStream)
         {
-            _inputStream = httpInputStream;
+            InputStream = httpInputStream;
+        }
+
+        /// <summary>
+        /// Determines whether the current message is a LogoutRequest.
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if the current message is a LogoutRequest; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsLogoutReqest
+        {
+            get { return SamlMessageName == LogoutRequest.ELEMENT_NAME; }
+        }
+
+        /// <summary>
+        /// Gets the LogoutRequest message.
+        /// </summary>
+        /// <value>The logout request.</value>
+        public LogoutRequest LogoutRequest
+        {
+            get
+            {
+                if (!IsLogoutReqest)
+                {
+                    throw new InvalidOperationException("The Saml message is not an LogoutRequest");
+                }
+                LoadLogoutRequest();
+                return _logoutRequest;
+            }
         }
 
         /// <summary>
@@ -67,29 +98,69 @@ namespace SAML2.Bindings
         }
 
         /// <summary>
-        /// Determines whether the current message is a LogoutRequest.
+        /// Checks the SAML message signature.
         /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if the current message is a LogoutRequest; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsLogoutReqest()
+        /// <param name="keys">The keys to check the signature against.</param>
+        /// <returns></returns>
+        public bool CheckSamlMessageSignature(List<KeyDescriptor> keys)
         {
-            return SamlMessageName == LogoutRequest.ELEMENT_NAME;
+            foreach (var keyDescriptor in keys)
+            {
+                foreach (KeyInfoClause clause in (KeyInfo)keyDescriptor.KeyInfo)
+                {
+                    var key = XmlSignatureUtils.ExtractKey(clause);
+                    if (key != null && CheckSignature(key))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
-        /// Gets the LogoutRequest message.
+        /// Gets the status of the current message.
         /// </summary>
-        /// <value>The logout request.</value>
-        public LogoutRequest LogoutRequest
+        /// <returns></returns>
+        public Status GetStatus()
         {
-            get
+            var status = (XmlElement)SamlMessage.GetElementsByTagName(Status.ELEMENT_NAME, Saml20Constants.PROTOCOL)[0];
+            return status != null ? Serialization.Deserialize<Status>(new XmlNodeReader(status)) : null;
+        }
+
+        /// <summary>
+        /// Loads the SAML message.
+        /// </summary>
+        protected void LoadSamlMessage()
+        {
+            if (_samlMessage != null)
             {
-                if (!IsLogoutReqest())
-                    throw new InvalidOperationException("The Saml message is not an LogoutRequest");
-                LoadLogoutRequest();
-                return _logoutRequest;
+                return;
             }
+
+            var reader = new StreamReader(InputStream);
+            SoapEnvelope = reader.ReadToEnd();
+
+            var doc = new XmlDocument { PreserveWhitespace = true };
+            doc.LoadXml(SoapEnvelope);
+
+            var soapBody = (XmlElement) doc.GetElementsByTagName(SoapConstants.SoapBody, SoapConstants.SoapNamespace)[0];
+
+            _samlMessage = soapBody != null ? (XmlElement) soapBody.FirstChild : doc.DocumentElement;
+        }
+
+        /// <summary>
+        /// Checks the signature.
+        /// </summary>
+        /// <param name="key">The key to check against.</param>
+        /// <returns></returns>
+        private bool CheckSignature(AsymmetricAlgorithm key)
+        {
+            var doc = new XmlDocument { PreserveWhitespace = true };
+            doc.LoadXml(SamlMessage.OuterXml);
+
+            return XmlSignatureUtils.CheckSignature(doc, key);
         }
 
         /// <summary>
@@ -100,78 +171,6 @@ namespace SAML2.Bindings
             if (_logoutRequest == null)
             {
                 _logoutRequest = Serialization.Deserialize<LogoutRequest>(new XmlNodeReader(SamlMessage));
-            }
-        }
-
-        /// <summary>
-        /// Checks the SAML message signature.
-        /// </summary>
-        /// <param name="keys">The keys to check the signature against.</param>
-        /// <returns></returns>
-        public bool CheckSamlMessageSignature(List<KeyDescriptor> keys)
-        {
-            foreach (KeyDescriptor keyDescriptor in keys)
-            {
-                KeyInfo ki = (KeyInfo)keyDescriptor.KeyInfo;
-                foreach (KeyInfoClause clause in ki)
-                {
-                    AsymmetricAlgorithm key = XmlSignatureUtils.ExtractKey(clause);
-                    if (key != null && CheckSignature(key))
-                        return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Checks the signature.
-        /// </summary>
-        /// <param name="key">The key to check against.</param>
-        /// <returns></returns>
-        private bool CheckSignature(AsymmetricAlgorithm key)
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.PreserveWhitespace = true;
-            doc.LoadXml(SamlMessage.OuterXml);
-            return XmlSignatureUtils.CheckSignature(doc, key);
-        }
-
-        /// <summary>
-        /// Gets the status of the current message.
-        /// </summary>
-        /// <returns></returns>
-        public Status GetStatus()
-        {
-            XmlElement status = (XmlElement) SamlMessage.GetElementsByTagName(Status.ELEMENT_NAME, Saml20Constants.PROTOCOL)[0];
-            Status result = null;
-            if (status != null)
-            {
-                result = Serialization.Deserialize<Status>(new XmlNodeReader(status));
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Loads the SAML message.
-        /// </summary>
-        protected void LoadSamlMessage()
-        {
-            if (_samlMessage == null)
-            {
-                StreamReader reader = new StreamReader(_inputStream);
-                _soapEnvelope = reader.ReadToEnd();
-
-                XmlDocument doc = new XmlDocument();
-                doc.PreserveWhitespace = true;
-                doc.LoadXml(_soapEnvelope);
-
-                XmlElement _soapBody = (XmlElement) doc.GetElementsByTagName(SOAPConstants.SOAPBody, SOAPConstants.SOAPNamespace)[0];
-                if (_soapBody != null)
-                    _samlMessage = (XmlElement)_soapBody.FirstChild;
-                else
-                    // Artifact resolve special case
-                    _samlMessage = doc.DocumentElement;
             }
         }
     }

@@ -139,7 +139,7 @@ namespace SAML2.Protocol
             {
                 context.Session.Remove("RedirectUrl");
                 context.Response.Redirect(redirectUrl);
-            } else if(String.IsNullOrEmpty(RedirectUrl))
+            } else if (String.IsNullOrEmpty(RedirectUrl))
             {
                 context.Response.Redirect("~/");
             }else

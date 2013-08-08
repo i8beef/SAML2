@@ -100,7 +100,7 @@ namespace SAML2
         {
             get
             {
-                if(_assertion == null)
+                if (_assertion == null)
                 {
                     if (_samlAssertion == null)
                         throw new InvalidOperationException("No assertion is loaded.");
@@ -135,7 +135,7 @@ namespace SAML2
             {
                 foreach (object o in Assertion.Subject.Items)
                 {
-                    if(o is NameID)
+                    if (o is NameID)
                         return (NameID) o;
                 }
                 return null;
@@ -208,7 +208,7 @@ namespace SAML2
             {
                 foreach (ConditionAbstract item in Assertion.Conditions.Items)
                 {
-                    if(item is OneTimeUse)
+                    if (item is OneTimeUse)
                         return true;
                 }
 
@@ -467,7 +467,7 @@ namespace SAML2
             // Remove existing signatures when resigning the assertion
             XmlElement signatureParentNode = _samlAssertion; //FIX.DocumentElement;
             XmlNode sigNode = null;
-            while( (sigNode = signatureParentNode.GetElementsByTagName(SAML2.Schema.XmlDSig.Signature.ELEMENT_NAME,
+            while ( (sigNode = signatureParentNode.GetElementsByTagName(SAML2.Schema.XmlDSig.Signature.ELEMENT_NAME,
                                                      Saml20Constants.XMLDSIG)[0]) != null )
             {
                 signatureParentNode.RemoveChild(sigNode);

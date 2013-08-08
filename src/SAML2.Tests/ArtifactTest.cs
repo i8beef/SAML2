@@ -38,9 +38,9 @@ namespace SAML2.Tests.Saml20
             Assert.That(typeCode == parsedTypeCode, "Original and parsed typeCode did not match");
             Assert.That(endpointIndex == parsedEndpointIndex, "Original and parsed endpointIndex did not match");
 
-            for(int i = 0; i < 20; i++)
+            for (int i = 0; i < 20; i++)
             {
-                if(sourceIdHash[i] != parsedSourceIdHash[i])
+                if (sourceIdHash[i] != parsedSourceIdHash[i])
                     Assert.Fail("Original and parsed sourceIdHash are not identical");
             }
 
