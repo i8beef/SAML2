@@ -35,7 +35,7 @@ namespace SAML2.Bindings
         public HttpRedirectBindingParser(Uri uri)
         {
             var paramDict = UriToDictionary(uri);
-            foreach (KeyValuePair<string, string> param in paramDict)
+            foreach (var param in paramDict)
             {
                 SetParam(param.Key, HttpUtility.UrlDecode(param.Value));
             }

@@ -15,34 +15,30 @@ namespace SAML2.Schema.Core
     [XmlInclude(typeof(RequestedAttribute))]
     [Serializable]    
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(SamlAttribute.ELEMENT_NAME, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
     public class SamlAttribute
     {
         /// <summary>
+        /// The XML Element name of this class
+        /// </summary>
+        public const string ElementName = "Attribute";
+
+        /// <summary>
         /// Nameformat "uri".
         /// </summary>
-        public const string NAMEFORMAT_URI = "urn:oasis:names:tc:SAML:2.0:attrname-format:uri";
+        public const string NameformatUri = "urn:oasis:names:tc:SAML:2.0:attrname-format:uri";
         
         /// <summary>
         /// Nameformat "basic".
         /// </summary>
-        public const string NAMEFORMAT_BASIC = "urn:oasis:names:tc:SAML:2.0:attrname-format:basic";
-
-
+        public const string NameformatBasic = "urn:oasis:names:tc:SAML:2.0:attrname-format:basic";
 
         /// <summary>
-        /// The XML Element name of this class
+        /// Gets or sets any attr.
         /// </summary>
-        public const string ELEMENT_NAME = "Attribute";
-
-        private XmlAttribute[] anyAttrField;
-        private string[] attributeValueField;
-        private string friendlyNameField;
-
-        private string nameField;
-
-        private string nameFormatField;
-
+        /// <value>Any attr.</value>
+        [XmlAnyAttribute]
+        public XmlAttribute[] AnyAttr { get; set; }
 
         /// <summary>
         /// Gets or sets the attribute value.
@@ -54,23 +50,13 @@ namespace SAML2.Schema.Core
         /// </summary>
         /// <value>The attribute value.</value>
         [XmlElement("AttributeValue", IsNullable=true)]
-        public string[] AttributeValue
-        {
-            get { return attributeValueField; }
-            set { attributeValueField = value; }
-        }
-
+        public string[] AttributeValue { get; set; }
 
         /// <summary>
         /// The name of the attribute.
         /// </summary>
-        [XmlAttributeAttribute]
-        public string Name
-        {
-            get { return nameField; }
-            set { nameField = value; }
-        }
-
+        [XmlAttribute]
+        public string Name { get; set; }
 
         /// <summary>
         /// A URI reference representing the classification of the attribute name for purposes of interpreting the
@@ -79,35 +65,15 @@ namespace SAML2.Schema.Core
         /// the identifier urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified (see Section
         /// 8.2.1) is in effect.
         /// </summary>
-        [XmlAttributeAttribute(DataType="anyURI")]
-        public string NameFormat
-        {
-            get { return nameFormatField; }
-            set { nameFormatField = value; }
-        }
-
+        [XmlAttribute(DataType="anyURI")]
+        public string NameFormat { get; set; }
 
         /// <summary>
         /// A string that provides a more human-readable form of the attribute's name, which may be useful in
         /// cases in which the actual Name is complex or opaque, such as an OID or a UUID. This attribute's
         /// value MUST NOT be used as a basis for formally identifying SAML attributes.
         /// </summary>
-        [XmlAttributeAttribute]
-        public string FriendlyName
-        {
-            get { return friendlyNameField; }
-            set { friendlyNameField = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets any attr.
-        /// </summary>
-        /// <value>Any attr.</value>
-        [XmlAnyAttribute]
-        public XmlAttribute[] AnyAttr
-        {
-            get { return anyAttrField; }
-            set { anyAttrField = value; }
-        }
+        [XmlAttribute]
+        public string FriendlyName { get; set; }
     }
 }

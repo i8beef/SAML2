@@ -9,18 +9,13 @@ namespace SAML2.Schema.Core
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
     public class SubjectLocality
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "SubjectLocality";
-
-        private string addressField;
-
-        private string dNSNameField;
-
+        public const string ElementName = "SubjectLocality";
 
         /// <summary>
         /// Gets or sets the address.
@@ -30,24 +25,15 @@ namespace SAML2.Schema.Core
         /// (e.g., "FEDC:BA98:7654:3210:FEDC:BA98:7654:3210").
         /// </summary>
         /// <value>The address.</value>
-        [XmlAttributeAttribute]
-        public string Address
-        {
-            get { return addressField; }
-            set { addressField = value; }
-        }
-
+        [XmlAttribute]
+        public string Address { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the DNS.
         /// The DNS name of the system from which the principal identified by the subject was authenticated.
         /// </summary>
         /// <value>The name of the DNS.</value>
-        [XmlAttributeAttribute]
-        public string DNSName
-        {
-            get { return dNSNameField; }
-            set { dNSNameField = value; }
-        }
+        [XmlAttribute]
+        public string DNSName { get; set; }
     }
 }

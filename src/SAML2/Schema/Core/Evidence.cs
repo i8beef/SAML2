@@ -10,44 +10,31 @@ namespace SAML2.Schema.Core
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]
     public class Evidence
     {
-        private ItemsChoiceType6[] itemsElementNameField;
-        private object[] itemsField;
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Evidence";
+        public const string ElementName = "Evidence";
 
         /// <summary>
         /// Gets or sets the items.
         /// Items may be of types Assertion, AssertionIDRef, AssertionURIRef and EncryptedAssertion
         /// </summary>
         /// <value>The items.</value>
-        [XmlElementAttribute("Assertion", typeof (Assertion))]
-        [XmlElementAttribute("AssertionIDRef", typeof (string), DataType="NCName")]
-        [XmlElementAttribute("AssertionURIRef", typeof (string), DataType="anyURI")]
-        [XmlElementAttribute("EncryptedAssertion", typeof (EncryptedElement))]
-        [XmlChoiceIdentifierAttribute("ItemsElementName")]
-        public object[] Items
-        {
-            get { return itemsField; }
-            set { itemsField = value; }
-        }
-
+        [XmlElement("Assertion", typeof (Assertion))]
+        [XmlElement("AssertionIDRef", typeof (string), DataType = "NCName")]
+        [XmlElement("AssertionURIRef", typeof (string), DataType = "anyURI")]
+        [XmlElement("EncryptedAssertion", typeof (EncryptedElement))]
+        [XmlChoiceIdentifier("ItemsElementName")]
+        public object[] Items { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the items element.
         /// </summary>
         /// <value>The name of the items element.</value>
-        [XmlElementAttribute("ItemsElementName")]
-        [XmlIgnoreAttribute]
-        public ItemsChoiceType6[] ItemsElementName
-        {
-            get { return itemsElementNameField; }
-            set { itemsElementNameField = value; }
-        }
+        [XmlElement("ItemsElementName"), XmlIgnore]
+        public ItemsChoiceType6[] ItemsElementName { get; set; }
     }
 }

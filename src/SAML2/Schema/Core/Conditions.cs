@@ -10,35 +10,24 @@ namespace SAML2.Schema.Core
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]
     public class Conditions
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Conditions";
-
-        private List<ConditionAbstract> itemsField;
-
-        private DateTime? notBeforeField;
-
-        private DateTime? notOnOrAfterField;
+        public const string ElementName = "Conditions";
 
         /// <summary>
         /// Gets or sets the items.
         /// Items may be of types AudienceRestriction, Condition, OneTimeUse and ProxyRestriction
         /// </summary>
         /// <value>The items.</value>
-        [XmlElementAttribute("AudienceRestriction", typeof (AudienceRestriction))]
-        [XmlElementAttribute("Condition", typeof (ConditionAbstract))]
-        [XmlElementAttribute("OneTimeUse", typeof (OneTimeUse))]
-        [XmlElementAttribute("ProxyRestriction", typeof (ProxyRestriction))]
-        public List<ConditionAbstract> Items
-        {
-            get { return itemsField; }
-            set { itemsField = value; }
-        }
+        [XmlElement("AudienceRestriction", typeof (AudienceRestriction))]
+        [XmlElement("Condition", typeof (ConditionAbstract))]
+        [XmlElement("OneTimeUse", typeof (OneTimeUse))]
+        [XmlElement("ProxyRestriction", typeof (ProxyRestriction))]
+        public List<ConditionAbstract> Items { get; set; }
 
         /// <summary>
         /// Gets or sets the not before.
@@ -46,11 +35,7 @@ namespace SAML2.Schema.Core
         /// </summary>
         /// <value>The not before.</value>
         [XmlIgnore]
-        public DateTime? NotBefore
-        {
-            get { return notBeforeField; }
-            set { notBeforeField = value; }
-        }
+        public DateTime? NotBefore { get; set; }
 
         /// <summary>
         /// Gets or sets the not before string.
@@ -59,24 +44,8 @@ namespace SAML2.Schema.Core
         [XmlAttribute("NotBefore")]
         public string NotBeforeString
         {
-            get
-            {
-                if (notBeforeField.HasValue)
-                {
-                    return Saml20Utils.ToUTCString(notBeforeField.Value);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                    notBeforeField = null;
-                else
-                    notBeforeField = Saml20Utils.FromUTCString(value);
-            }
+            get { return NotBefore.HasValue ? Saml20Utils.ToUtcString(NotBefore.Value) : null; }
+            set { NotBefore = string.IsNullOrEmpty(value) ? (DateTime?) null : Saml20Utils.FromUtcString(value); }
         }
 
         /// <summary>
@@ -85,11 +54,7 @@ namespace SAML2.Schema.Core
         /// </summary>
         /// <value>The not on or after.</value>
         [XmlIgnore]
-        public DateTime? NotOnOrAfter
-        {
-            get { return notOnOrAfterField; }
-            set { notOnOrAfterField = value; }
-        }
+        public DateTime? NotOnOrAfter { get; set; }
 
         /// <summary>
         /// Gets or sets the not on or after string.
@@ -98,22 +63,8 @@ namespace SAML2.Schema.Core
         [XmlAttribute("NotOnOrAfter")]
         public string NotOnOrAfterString
         {
-            get
-            {
-                if (notOnOrAfterField.HasValue)
-                {
-                    return Saml20Utils.ToUTCString(notOnOrAfterField.Value);
-                }else
-                {
-                    return null;
-                }
-            }
-            set {
-                if (string.IsNullOrEmpty(value))
-                    notOnOrAfterField = null;
-                else
-                    notOnOrAfterField = Saml20Utils.FromUTCString(value);
-            }
+            get { return NotOnOrAfter.HasValue ? Saml20Utils.ToUtcString(NotOnOrAfter.Value) : null; }
+            set { NotOnOrAfter = string.IsNullOrEmpty(value) ? (DateTime?) null : Saml20Utils.FromUtcString(value); }
         }
     }
 }

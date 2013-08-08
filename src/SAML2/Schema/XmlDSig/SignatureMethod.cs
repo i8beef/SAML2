@@ -33,7 +33,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the length of the HMAC output.
         /// </summary>
         /// <value>The length of the HMAC output.</value>
-        [XmlElementAttribute(DataType="integer")]
+        [XmlElement(DataType="integer")]
         public string HMACOutputLength {
             get {
                 return hMACOutputLengthField;
@@ -64,7 +64,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the algorithm.
         /// </summary>
         /// <value>The algorithm.</value>
-        [XmlAttributeAttribute(DataType="anyURI")]
+        [XmlAttribute(DataType="anyURI")]
         public string Algorithm {
             get {
                 return algorithmField;

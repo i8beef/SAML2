@@ -80,7 +80,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the algorithm.
         /// </summary>
         /// <value>The algorithm.</value>
-        [XmlAttributeAttribute(DataType="anyURI")]
+        [XmlAttribute(DataType="anyURI")]
         public string Algorithm {
             get {
                 return algorithmField;

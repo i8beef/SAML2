@@ -69,7 +69,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the id.
         /// </summary>
         /// <value>The id.</value>
-        [XmlAttributeAttribute(DataType="ID")]
+        [XmlAttribute(DataType="ID")]
         public string Id {
             get {
                 return idField;
@@ -84,7 +84,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the type of the MIME.
         /// </summary>
         /// <value>The type of the MIME.</value>
-        [XmlAttributeAttribute]
+        [XmlAttribute]
         public string MimeType {
             get {
                 return mimeTypeField;
@@ -99,7 +99,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the encoding.
         /// </summary>
         /// <value>The encoding.</value>
-        [XmlAttributeAttribute(DataType="anyURI")]
+        [XmlAttribute(DataType="anyURI")]
         public string Encoding {
             get {
                 return encodingField;

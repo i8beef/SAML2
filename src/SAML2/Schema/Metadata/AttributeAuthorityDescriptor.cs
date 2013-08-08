@@ -36,7 +36,7 @@ namespace SAML2.Schema.Metadata
         /// such endpoint, by definition.
         /// </summary>
         /// <value>The attribute service.</value>
-        [XmlElementAttribute("AttributeService")]
+        [XmlElement("AttributeService")]
         public Endpoint[] AttributeService {
             get {
                 return attributeServiceField;
@@ -54,7 +54,7 @@ namespace SAML2.Schema.Metadata
         /// requests defined in [SAMLBind].
         /// </summary>
         /// <value>The assertion ID request service.</value>
-        [XmlElementAttribute("AssertionIDRequestService")]
+        [XmlElement("AssertionIDRequestService")]
         public Endpoint[] AssertionIDRequestService {
             get {
                 return assertionIDRequestServiceField;
@@ -71,7 +71,7 @@ namespace SAML2.Schema.Metadata
         /// this authority.
         /// </summary>
         /// <value>The name ID format.</value>
-        [XmlElementAttribute("NameIDFormat", DataType="anyURI")]
+        [XmlElement("NameIDFormat", DataType="anyURI")]
         public string[] NameIDFormat {
             get {
                 return nameIDFormatField;
@@ -88,7 +88,7 @@ namespace SAML2.Schema.Metadata
         /// authority.
         /// </summary>
         /// <value>The attribute profile.</value>
-        [XmlElementAttribute("AttributeProfile", DataType="anyURI")]
+        [XmlElement("AttributeProfile", DataType="anyURI")]
         public string[] AttributeProfile {
             get {
                 return attributeProfileField;
@@ -106,7 +106,7 @@ namespace SAML2.Schema.Metadata
         /// definition are supported.
         /// </summary>
         /// <value>The attribute.</value>
-        [XmlElementAttribute("Attribute", Namespace=Saml20Constants.METADATA)]
+        [XmlElement("Attribute", Namespace=Saml20Constants.METADATA)]
         public Attribute[] Attribute {
             get {
                 return attributeField;

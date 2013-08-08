@@ -69,7 +69,7 @@ namespace SAML2.Tests.Saml20
 
             {
                 assertion.Issuer = new NameID();
-                assertion.ID = "_b8977dc86cda41493fba68b32ae9291d";
+                assertion.Id = "_b8977dc86cda41493fba68b32ae9291d";
                 assertion.IssueInstant = DateTime.UtcNow;
 
                 assertion.Version = "2.0";
@@ -79,7 +79,7 @@ namespace SAML2.Tests.Saml20
             {
                 assertion.Subject = new Subject();
                 SubjectConfirmation subjectConfirmation = new SubjectConfirmation();
-                subjectConfirmation.Method = SubjectConfirmation.BEARER_METHOD;
+                subjectConfirmation.Method = SubjectConfirmation.BearerMethod;
                 subjectConfirmation.SubjectConfirmationData = new SubjectConfirmationData();
                 subjectConfirmation.SubjectConfirmationData.NotOnOrAfter = new DateTime(2008, 12, 31, 12, 0, 0, 0);
                 subjectConfirmation.SubjectConfirmationData.Recipient = "http://borger.dk";
@@ -112,24 +112,24 @@ namespace SAML2.Tests.Saml20
                 SamlAttribute surName = new SamlAttribute();
                 surName.FriendlyName = "SurName";
                 surName.Name = "urn:oid:2.5.4.4";
-                surName.NameFormat = SamlAttribute.NAMEFORMAT_URI;
+                surName.NameFormat = SamlAttribute.NameformatUri;
                 surName.AttributeValue = new string[] { "Fry" };
 
                 SamlAttribute commonName = new SamlAttribute();
                 commonName.FriendlyName = "CommonName";
                 commonName.Name = "urn:oid:2.5.4.3";
-                commonName.NameFormat = SamlAttribute.NAMEFORMAT_URI;
+                commonName.NameFormat = SamlAttribute.NameformatUri;
                 commonName.AttributeValue = new string[] { "Philip J. Fry" };
 
                 SamlAttribute userName = new SamlAttribute();
                 userName.Name = "urn:oid:0.9.2342.19200300.100.1.1";
-                userName.NameFormat = SamlAttribute.NAMEFORMAT_URI;
+                userName.NameFormat = SamlAttribute.NameformatUri;
                 userName.AttributeValue = new string[] { "fry" };
 
                 SamlAttribute eMail = new SamlAttribute();
                 eMail.FriendlyName = "Email";
                 eMail.Name = "urn:oid:0.9.2342.19200300.100.1.3";
-                eMail.NameFormat = SamlAttribute.NAMEFORMAT_URI;
+                eMail.NameFormat = SamlAttribute.NameformatUri;
                 eMail.AttributeValue = new string[] { "fry@planetexpress.com.earth" };
 
                 attributeStatement.Items = new object[] { surName, commonName, userName, eMail };

@@ -29,7 +29,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the id.
         /// </summary>
         /// <value>The id.</value>
-        [XmlAttributeAttribute(DataType="ID")]
+        [XmlAttribute(DataType="ID")]
         public string Id {
             get {
                 return idField;

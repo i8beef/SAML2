@@ -12,39 +12,26 @@ namespace SAML2.Schema.Core
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
     public class ProxyRestriction : ConditionAbstract
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ELEMENT_NAME = "ProxyRestriction";
-
-        private string[] audienceField;
-
-        private string countField;
+        public new const string ElementName = "ProxyRestriction";
 
         /// <summary>
         /// Gets or sets the audience.
         /// </summary>
         /// <value>The audience.</value>
-        [XmlElementAttribute("Audience", DataType="anyURI")]
-        public string[] Audience
-        {
-            get { return audienceField; }
-            set { audienceField = value; }
-        }
-
+        [XmlElement("Audience", DataType="anyURI")]
+        public string[] Audience { get; set; }
 
         /// <summary>
         /// Gets or sets the count.
         /// </summary>
         /// <value>The count.</value>
-        [XmlAttributeAttribute(DataType="nonNegativeInteger")]
-        public string Count
-        {
-            get { return countField; }
-            set { countField = value; }
-        }
+        [XmlAttribute(DataType="nonNegativeInteger")]
+        public string Count { get; set; }
     }
 }

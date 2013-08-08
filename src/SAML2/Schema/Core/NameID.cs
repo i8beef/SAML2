@@ -11,53 +11,13 @@ namespace SAML2.Schema.Core
     /// 
     [Serializable]
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
     public class NameID
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "NameID";
-
-        private string formatField;
-        private string nameQualifierField;
-
-        private string sPNameQualifierField;
-
-        private string sPProvidedIDField;
-
-        private string valueField;
-
-
-        /// <summary>
-        /// Gets or sets the name qualifier.
-        /// The security or administrative domain that qualifies the name. This attribute provides a means to
-        /// federate names from disparate user stores without collision.
-        /// </summary>
-        /// <value>The name qualifier.</value>
-        [XmlAttributeAttribute]
-        public string NameQualifier
-        {
-            get { return nameQualifierField; }
-            set { nameQualifierField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the SP name qualifier.
-        /// Further qualifies a name with the name of a service provider or affiliation of providers. This
-        /// attribute provides an additional means to federate names on the basis of the relying party or
-        /// parties.
-        /// </summary>
-        /// <value>The SP name qualifier.</value>
-        [XmlAttributeAttribute]
-        public string SPNameQualifier
-        {
-            get { return sPNameQualifierField; }
-            set { sPNameQualifierField = value; }
-        }
-
+        public const string ElementName = "NameID";
 
         /// <summary>
         /// Gets or sets the format.
@@ -74,14 +34,28 @@ namespace SAML2.Schema.Core
         /// are implementation-specific.
         /// </summary>
         /// <value>The format.</value>
-        [XmlAttributeAttribute(DataType="anyURI")]
-        public string Format
-        {
-            get { return formatField; }
-            set { formatField = value; }
-        }
+        [XmlAttribute(DataType = "anyURI")]
+        public string Format { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name qualifier.
+        /// The security or administrative domain that qualifies the name. This attribute provides a means to
+        /// federate names from disparate user stores without collision.
+        /// </summary>
+        /// <value>The name qualifier.</value>
+        [XmlAttribute]
+        public string NameQualifier { get; set; }
 
+        /// <summary>
+        /// Gets or sets the SP name qualifier.
+        /// Further qualifies a name with the name of a service provider or affiliation of providers. This
+        /// attribute provides an additional means to federate names on the basis of the relying party or
+        /// parties.
+        /// </summary>
+        /// <value>The SP name qualifier.</value>
+        [XmlAttribute]
+        public string SPNameQualifier { get; set; }
+        
         /// <summary>
         /// Gets or sets the SP provided ID.
         /// A name identifier established by a service provider or affiliation of providers for the entity, if
@@ -91,23 +65,14 @@ namespace SAML2.Schema.Core
         /// Identifier Management protocol defined in Section 3.6.
         /// </summary>
         /// <value>The SP provided ID.</value>
-        [XmlAttributeAttribute]
-        public string SPProvidedID
-        {
-            get { return sPProvidedIDField; }
-            set { sPProvidedIDField = value; }
-        }
-
+        [XmlAttribute]
+        public string SPProvidedID { get; set; }
 
         /// <summary>
         /// Gets or sets the value.
         /// </summary>
         /// <value>The value.</value>
-        [XmlTextAttribute]
-        public string Value
-        {
-            get { return valueField; }
-            set { valueField = value; }
-        }
+        [XmlText]
+        public string Value { get; set; }
     }
 }

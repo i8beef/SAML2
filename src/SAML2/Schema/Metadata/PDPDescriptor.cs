@@ -31,7 +31,7 @@ namespace SAML2.Schema.Metadata
         /// at least one such endpoint, by definition.
         /// </summary>
         /// <value>The authz service.</value>
-        [XmlElementAttribute("AuthzService")]
+        [XmlElement("AuthzService")]
         public Endpoint[] AuthzService {
             get {
                 return authzServiceField;
@@ -49,7 +49,7 @@ namespace SAML2.Schema.Metadata
         /// requests defined in [SAMLBind].
         /// </summary>
         /// <value>The assertion ID request service.</value>
-        [XmlElementAttribute("AssertionIDRequestService")]
+        [XmlElement("AssertionIDRequestService")]
         public Endpoint[] AssertionIDRequestService {
             get {
                 return assertionIDRequestServiceField;
@@ -66,7 +66,7 @@ namespace SAML2.Schema.Metadata
         /// this authority.
         /// </summary>
         /// <value>The name ID format.</value>
-        [XmlElementAttribute("NameIDFormat", DataType="anyURI")]
+        [XmlElement("NameIDFormat", DataType="anyURI")]
         public string[] NameIDFormat {
             get {
                 return nameIDFormatField;

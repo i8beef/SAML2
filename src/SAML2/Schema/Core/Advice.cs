@@ -9,50 +9,33 @@ namespace SAML2.Schema.Core
     /// This information MAY be ignored by applications without affecting either the semantics or the validity of
     /// the assertion.
     /// </summary>
-    // Advice is optional, and there are only implicit demands on the reference types.
-    // We do not use it (yet) and let it pass unvalidated.
+    /// <remarks>
+    /// Advice is optional, and there are only implicit demands on the reference types.
+    /// We do not use it (yet) and let it pass unvalidated.
+    /// </remarks>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]    
+    [XmlRoot(ElementName, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]    
     public class Advice
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Advice";
-
-        private ItemsChoiceType4[] itemsElementNameField;
-        private object[] itemsField;
-
+        public const string ElementName = "Advice";
 
         /// <summary>
         /// Gets or sets the items.
         /// Items may be of types: Assertion, AssertionIDRef, AssertionURIRef abd EncryptedAssertion
         /// </summary>
         /// <value>The items.</value>        
-        [XmlAnyElementAttribute]
-        [XmlElementAttribute("Assertion", typeof (Assertion))]
-        [XmlElementAttribute("AssertionIDRef", typeof (string), DataType="NCName")] 
-        [XmlElementAttribute("AssertionURIRef", typeof (string), DataType="anyURI")]
-        [XmlElementAttribute("EncryptedAssertion", typeof (EncryptedElement))] 
-        [XmlChoiceIdentifierAttribute("ItemsElementName")]
-        public object[] Items
-        {
-            get { return itemsField; }
-            set { itemsField = value; }
-        }
-
+        [XmlAnyElement, XmlElement("Assertion", typeof (Assertion)), XmlElement("AssertionIDRef", typeof (string), DataType="NCName"), XmlElement("AssertionURIRef", typeof (string), DataType="anyURI"), XmlElement("EncryptedAssertion", typeof (EncryptedElement)), XmlChoiceIdentifier("ItemsElementName")]
+        public object[] Items { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the items element.
         /// </summary>
         /// <value>The name of the items element.</value>
-        [XmlElementAttribute("ItemsElementName")]
-        [XmlIgnoreAttribute]
-        public ItemsChoiceType4[] ItemsElementName
-        {
-            get { return itemsElementNameField; }
-            set { itemsElementNameField = value; }
-        }
+        [XmlElement("ItemsElementName"), XmlIgnore]
+        public ItemsChoiceType4[] ItemsElementName { get; set; }
     }
 }

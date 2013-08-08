@@ -51,7 +51,7 @@ namespace SAML2.Schema.Metadata
         /// assigned a URI to identify it.
         /// </summary>
         /// <value>The binding.</value>
-        [XmlAttributeAttribute(DataType="anyURI")]
+        [XmlAttribute(DataType="anyURI")]
         public string Binding {
             get {
                 return bindingField;
@@ -68,7 +68,7 @@ namespace SAML2.Schema.Metadata
         /// URI depends on the protocol binding.
         /// </summary>
         /// <value>The location.</value>
-        [XmlAttributeAttribute(DataType="anyURI")]
+        [XmlAttribute(DataType="anyURI")]
         public string Location {
             get {
                 return locationField;
@@ -85,7 +85,7 @@ namespace SAML2.Schema.Metadata
         /// or profile should be sent. The allowable syntax of this URI depends on the protocol binding.
         /// </summary>
         /// <value>The response location.</value>
-        [XmlAttributeAttribute(DataType="anyURI")]
+        [XmlAttribute(DataType="anyURI")]
         public string ResponseLocation {
             get {
                 return responseLocationField;

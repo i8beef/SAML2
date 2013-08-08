@@ -39,7 +39,7 @@ namespace SAML2.Schema.Metadata
         /// one such endpoint, by definition. The ResponseLocation attribute MUST be omitted.
         /// </summary>
         /// <value>The single sign on service.</value>
-        [XmlElementAttribute("SingleSignOnService")]
+        [XmlElement("SingleSignOnService")]
         public Endpoint[] SingleSignOnService {
             get {
                 return singleSignOnServiceField;
@@ -57,7 +57,7 @@ namespace SAML2.Schema.Metadata
         /// omitted.
         /// </summary>
         /// <value>The name ID mapping service.</value>
-        [XmlElementAttribute("NameIDMappingService")]
+        [XmlElement("NameIDMappingService")]
         public Endpoint[] NameIDMappingService {
             get {
                 return nameIDMappingServiceField;
@@ -75,7 +75,7 @@ namespace SAML2.Schema.Metadata
         /// requests defined in [SAMLBind].
         /// </summary>
         /// <value>The assertion ID request service.</value>
-        [XmlElementAttribute("AssertionIDRequestService")]
+        [XmlElement("AssertionIDRequestService")]
         public Endpoint[] AssertionIDRequestService {
             get {
                 return assertionIDRequestServiceField;
@@ -92,7 +92,7 @@ namespace SAML2.Schema.Metadata
         /// identity provider. See [SAMLProf] for some possible values for this element.
         /// </summary>
         /// <value>The attribute profile.</value>
-        [XmlElementAttribute("AttributeProfile", DataType="anyURI")]
+        [XmlElement("AttributeProfile", DataType="anyURI")]
         public string[] AttributeProfile {
             get {
                 return attributeProfileField;
@@ -111,7 +111,7 @@ namespace SAML2.Schema.Metadata
         /// provider has the capability to include it when delivering assertions during single sign-on.
         /// </summary>
         /// <value>The attribute.</value>
-        [XmlElementAttribute("Attribute", Namespace=Saml20Constants.ASSERTION)]
+        [XmlElement("Attribute", Namespace=Saml20Constants.ASSERTION)]
         public SamlAttribute[] Attributes    {
             get {
                 return attributeField;
@@ -130,7 +130,7 @@ namespace SAML2.Schema.Metadata
         /// <value>
         /// 	<c>true</c> if [want authn requests signed]; otherwise, <c>false</c>.
         /// </value>
-        [XmlAttributeAttribute]
+        [XmlAttribute]
         public bool WantAuthnRequestsSigned {
             get {
                 return wantAuthnRequestsSignedField;
@@ -147,7 +147,7 @@ namespace SAML2.Schema.Metadata
         /// <value>
         /// 	<c>true</c> if [want authn requests signed specified]; otherwise, <c>false</c>.
         /// </value>
-        [XmlIgnoreAttribute]
+        [XmlIgnore]
         public bool WantAuthnRequestsSignedSpecified {
             get {
                 return wantAuthnRequestsSignedFieldSpecified;

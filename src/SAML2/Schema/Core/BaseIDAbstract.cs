@@ -9,17 +9,13 @@ namespace SAML2.Schema.Core
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
     public abstract class BaseIDAbstract
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "BaseID";
-
-        private string nameQualifierField;
-
-        private string sPNameQualifierField;
+        public const string ElementName = "BaseID";
 
         /// <summary>
         /// Gets or sets the name qualifier.
@@ -28,11 +24,7 @@ namespace SAML2.Schema.Core
         /// </summary>
         /// <value>The name qualifier.</value>
         [XmlAttribute]
-        public string NameQualifier
-        {
-            get { return nameQualifierField; }
-            set { nameQualifierField = value; }
-        }
+        public string NameQualifier { get; set; }
 
         /// <summary>
         /// Gets or sets the SP name qualifier.
@@ -42,10 +34,6 @@ namespace SAML2.Schema.Core
         /// </summary>
         /// <value>The SP name qualifier.</value>
         [XmlAttribute]
-        public string SPNameQualifier
-        {
-            get { return sPNameQualifierField; }
-            set { sPNameQualifierField = value; }
-        }
+        public string SPNameQualifier { get; set; }
     }
 }

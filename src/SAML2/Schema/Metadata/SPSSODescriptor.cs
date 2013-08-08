@@ -33,7 +33,7 @@ namespace SAML2.Schema.Metadata
         /// such endpoint, by definition.
         /// </summary>
         /// <value>The assertion consumer service.</value>
-        [XmlElementAttribute("AssertionConsumerService")]
+        [XmlElement("AssertionConsumerService")]
         public IndexedEndpoint[] AssertionConsumerService {
             get {
                 return assertionConsumerServiceField;
@@ -50,7 +50,7 @@ namespace SAML2.Schema.Metadata
         /// that requires or desires the use of SAML attributes.
         /// </summary>
         /// <value>The attribute consuming service.</value>
-        [XmlElementAttribute("AttributeConsumingService")]
+        [XmlElement("AttributeConsumingService")]
         public AttributeConsumingService[] AttributeConsumingService {
             get {
                 return attributeConsumingServiceField;
@@ -67,7 +67,7 @@ namespace SAML2.Schema.Metadata
         /// service provider will be signed. If omitted, the value is assumed to be false.
         /// </summary>
         /// <value><c>true</c> if [authn requests signed]; otherwise, <c>false</c>.</value>
-        [XmlAttributeAttribute]
+        [XmlAttribute]
         public string AuthnRequestsSigned {
             get 
             {
@@ -95,7 +95,7 @@ namespace SAML2.Schema.Metadata
         /// <value>
         /// 	<c>true</c> if [want assertions signed]; otherwise, <c>false</c>.
         /// </value>
-        [XmlAttributeAttribute]
+        [XmlAttribute]
         public string WantAssertionsSigned {
             get 
             {

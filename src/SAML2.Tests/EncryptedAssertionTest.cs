@@ -150,7 +150,7 @@ namespace SAML2.Tests.Saml20
             assertion.Load(new StringReader(System.Text.Encoding.UTF8.GetString(plaintext)));
 
             // A very simple test to ensure that there is indeed an assertion in the plaintext.
-            Assert.AreEqual(Assertion.ELEMENT_NAME, assertion.DocumentElement.LocalName);
+            Assert.AreEqual(Assertion.ElementName, assertion.DocumentElement.LocalName);
             Assert.AreEqual(Saml20Constants.ASSERTION, assertion.DocumentElement.NamespaceURI);
         }
 
@@ -287,7 +287,7 @@ namespace SAML2.Tests.Saml20
             XmlNodeList list;
 
             // Perform some rudimentary tests on the output.
-            list = encryptedAssertion.Assertion.GetElementsByTagName(Assertion.ELEMENT_NAME, Saml20Constants.ASSERTION);
+            list = encryptedAssertion.Assertion.GetElementsByTagName(Assertion.ElementName, Saml20Constants.ASSERTION);
             Assert.AreEqual(1, list.Count);
         }
 
@@ -312,7 +312,7 @@ namespace SAML2.Tests.Saml20
             XmlNodeList list;
 
             // Perform some rudimentary tests on the output.
-            list = encryptedAssertion.Assertion.GetElementsByTagName(Assertion.ELEMENT_NAME, Saml20Constants.ASSERTION);
+            list = encryptedAssertion.Assertion.GetElementsByTagName(Assertion.ElementName, Saml20Constants.ASSERTION);
             Assert.AreEqual(1, list.Count);
         }
 

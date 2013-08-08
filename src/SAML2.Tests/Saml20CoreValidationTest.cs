@@ -32,7 +32,7 @@ namespace SAML2.Tests.Saml20
             string localtime = now.ToString();
             try
             {
-                Saml20Utils.FromUTCString(localtime);
+                Saml20Utils.FromUtcString(localtime);
                 Assert.Fail("Conversion from non-UTC string must not succeed");
             }
             catch (Saml20FormatException)
@@ -40,10 +40,10 @@ namespace SAML2.Tests.Saml20
             }
 
             // If correctly formatted, conversion must succeed
-            Saml20Utils.FromUTCString(now.ToString("o"));
+            Saml20Utils.FromUtcString(now.ToString("o"));
 
             // If created by the utils class itself, string must be valid
-            Saml20Utils.FromUTCString(Saml20Utils.ToUTCString(now));
+            Saml20Utils.FromUtcString(Saml20Utils.ToUtcString(now));
         }
 
         [Test]
@@ -410,7 +410,7 @@ namespace SAML2.Tests.Saml20
         public void MissingID()
         {
             Assertion saml20Assertion = AssertionUtil.GetBasicAssertion();
-            saml20Assertion.ID = null;
+            saml20Assertion.Id = null;
 
             CreateSaml20Token(saml20Assertion);
         }

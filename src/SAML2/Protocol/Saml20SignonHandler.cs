@@ -108,7 +108,7 @@ namespace SAML2.Protocol
                 return (XmlElement)encryptedList[0];
             }
 
-            var assertionList = el.GetElementsByTagName(Assertion.ELEMENT_NAME, Saml20Constants.ASSERTION);
+            var assertionList = el.GetElementsByTagName(Assertion.ElementName, Saml20Constants.ASSERTION);
             if (assertionList.Count == 1)
             {
                 isEncrypted = false;

@@ -99,7 +99,7 @@ namespace SAML2.Schema.Protocol
             get
             {
                 if (notOnOrAfterField.HasValue)
-                    return Saml20Utils.ToUTCString(notOnOrAfterField.Value);
+                    return Saml20Utils.ToUtcString(notOnOrAfterField.Value);
                 else
                 {
                     return null;
@@ -110,7 +110,7 @@ namespace SAML2.Schema.Protocol
                 if (string.IsNullOrEmpty(value))
                     notOnOrAfterField = null;
                 else
-                    notOnOrAfterField = Saml20Utils.FromUTCString(value);
+                    notOnOrAfterField = Saml20Utils.FromUtcString(value);
             }
         }
     }

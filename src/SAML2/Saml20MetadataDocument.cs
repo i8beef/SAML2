@@ -162,7 +162,7 @@ namespace SAML2
                     attConsumingService.RequestedAttribute[i].Name = config.RequestedAttributes[i].Name;
                     if (config.RequestedAttributes[i].IsRequired)
                         attConsumingService.RequestedAttribute[i].isRequired = true;
-                    attConsumingService.RequestedAttribute[i].NameFormat = SamlAttribute.NAMEFORMAT_BASIC;
+                    attConsumingService.RequestedAttribute[i].NameFormat = SamlAttribute.NameformatBasic;
                 }
             }
             else

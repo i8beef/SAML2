@@ -29,7 +29,7 @@ namespace SAML2.Validation
                 && subjectConfirmationData.NotOnOrAfter != null && subjectConfirmationData.NotOnOrAfter.HasValue)
             {
                 if (!(subjectConfirmationData.NotBefore < subjectConfirmationData.NotOnOrAfter))
-                    throw new Saml20FormatException(String.Format("NotBefore {0} MUST BE less than NotOnOrAfter {1} on SubjectConfirmationData", Saml20Utils.ToUTCString(subjectConfirmationData.NotBefore.Value), Saml20Utils.ToUTCString(subjectConfirmationData.NotOnOrAfter.Value)));
+                    throw new Saml20FormatException(String.Format("NotBefore {0} MUST BE less than NotOnOrAfter {1} on SubjectConfirmationData", Saml20Utils.ToUtcString(subjectConfirmationData.NotBefore.Value), Saml20Utils.ToUtcString(subjectConfirmationData.NotOnOrAfter.Value)));
             }
 
             // Make sure the extension-attributes are namespace-qualified and do not use reserved namespaces

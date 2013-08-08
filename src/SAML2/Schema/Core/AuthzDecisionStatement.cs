@@ -11,46 +11,37 @@ namespace SAML2.Schema.Core
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
     public class AuthzDecisionStatement : StatementAbstract
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ELEMENT_NAME = "AuthzDecisionStatement";
-
-        private Action[] actionField;
-        private DecisionType decisionField;
-
-        private Evidence evidenceField;
-
-        private string resourceField;
-
+        public new const string ElementName = "AuthzDecisionStatement";
 
         /// <summary>
         /// Gets or sets the action.
         /// The set of actions authorized to be performed on the specified resource.
         /// </summary>
         /// <value>The action.</value>
-        [XmlElementAttribute("Action")]
-        public Action[] Action
-        {
-            get { return actionField; }
-            set { actionField = value; }
-        }
+        [XmlElement("Action")]
+        public Action[] Action { get; set; }
 
+        /// <summary>
+        /// Gets or sets the decision.
+        /// The decision rendered by the SAML authority with respect to the specified resource. The value is of
+        /// the DecisionType simple type.
+        /// </summary>
+        /// <value>The decision.</value>
+        [XmlAttribute]
+        public DecisionType Decision { get; set; }
 
         /// <summary>
         /// Gets or sets the evidence.
         /// A set of assertions that the SAML authority relied on in making the decision.
         /// </summary>
         /// <value>The evidence.</value>
-        public Evidence Evidence
-        {
-            get { return evidenceField; }
-            set { evidenceField = value; }
-        }
-
+        public Evidence Evidence { get; set; }
 
         /// <summary>
         /// Gets or sets the resource.
@@ -59,25 +50,7 @@ namespace SAML2.Schema.Core
         /// current document", as specified by IETF RFC 2396 [RFC 2396] Section 4.2.
         /// </summary>
         /// <value>The resource.</value>
-        [XmlAttributeAttribute(DataType="anyURI")]
-        public string Resource
-        {
-            get { return resourceField; }
-            set { resourceField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the decision.
-        /// The decision rendered by the SAML authority with respect to the specified resource. The value is of
-        /// the DecisionType simple type.
-        /// </summary>
-        /// <value>The decision.</value>
-        [XmlAttributeAttribute]
-        public DecisionType Decision
-        {
-            get { return decisionField; }
-            set { decisionField = value; }
-        }
+        [XmlAttribute(DataType="anyURI")]
+        public string Resource { get; set; }
     }
 }

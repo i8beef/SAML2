@@ -176,7 +176,7 @@ namespace SAML2
         /// </summary>
         public string Id
         {
-            get { return Assertion.ID; }
+            get { return Assertion.Id; }
         }
 
         /// <summary>
@@ -494,7 +494,7 @@ namespace SAML2
             signedXml.SigningKey = cert.PrivateKey;
 
             // Retrieve the value of the "ID" attribute on the root assertion element.
-            XmlNodeList list = assertionDocument.GetElementsByTagName(Assertion.ELEMENT_NAME, Saml20Constants.ASSERTION);
+            XmlNodeList list = assertionDocument.GetElementsByTagName(Assertion.ElementName, Saml20Constants.ASSERTION);
             XmlElement el = (XmlElement)list[0];            
             Reference reference = new Reference("#" + el.GetAttribute("ID"));
 
@@ -526,7 +526,7 @@ namespace SAML2
             _encryptedAssertionAttributes = new List<EncryptedElement>(0);
 
             XmlNodeList list =
-                _samlAssertion.GetElementsByTagName(AttributeStatement.ELEMENT_NAME, Saml20Constants.ASSERTION);
+                _samlAssertion.GetElementsByTagName(AttributeStatement.ElementName, Saml20Constants.ASSERTION);
 
             if (list.Count == 0)
                 return;
@@ -566,7 +566,7 @@ namespace SAML2
             attributeStatement.Items = statements.ToArray();
 
             XmlNodeList list =
-                _samlAssertion.GetElementsByTagName(AttributeStatement.ELEMENT_NAME, Saml20Constants.ASSERTION);            
+                _samlAssertion.GetElementsByTagName(AttributeStatement.ElementName, Saml20Constants.ASSERTION);            
             
             if (list.Count > 0) // Remove the old AttributeStatement.
                 _samlAssertion.RemoveChild(list[0]);//FIX _samlAssertion.DocumentElement.RemoveChild(list[0]);

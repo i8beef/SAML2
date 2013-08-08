@@ -129,7 +129,7 @@ namespace SAML2.Schema.Protocol
             get 
             {
                 if (issueInstantField.HasValue)
-                    return Saml20Utils.ToUTCString(issueInstantField.Value);
+                    return Saml20Utils.ToUtcString(issueInstantField.Value);
                 else
                 {
                     return null;
@@ -140,7 +140,7 @@ namespace SAML2.Schema.Protocol
                 if (string.IsNullOrEmpty(value))
                     issueInstantField = null;
                 else
-                    issueInstantField = Saml20Utils.FromUTCString(value);
+                    issueInstantField = Saml20Utils.FromUtcString(value);
             }
         }
 

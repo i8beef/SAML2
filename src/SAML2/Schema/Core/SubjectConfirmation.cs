@@ -11,24 +11,18 @@ namespace SAML2.Schema.Core
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
     public class SubjectConfirmation
     {
         /// <summary>
-        /// The XML Element name of this class
-        /// </summary>
-        public const string ELEMENT_NAME = "SubjectConfirmation";
-
-        /// <summary>
         /// The BEARER_METHOD constant
         /// </summary>
-        public const string BEARER_METHOD = "urn:oasis:names:tc:SAML:2.0:cm:bearer";
+        public const string BearerMethod = "urn:oasis:names:tc:SAML:2.0:cm:bearer";
 
-        private object itemField;
-
-        private string methodField;
-        private SubjectConfirmationData subjectConfirmationDataField;
-
+        /// <summary>
+        /// The XML Element name of this class
+        /// </summary>
+        public const string ElementName = "SubjectConfirmation";
 
         /// <summary>
         /// Gets or sets the item.
@@ -36,15 +30,21 @@ namespace SAML2.Schema.Core
         /// Valid elements are &lt;BaseID&gt;, &lt;NameID&gt;, or &lt;EncryptedID&gt; 
         /// </summary>
         /// <value>The item.</value>
-        [XmlElementAttribute("BaseID", typeof (BaseIDAbstract))]
-        [XmlElementAttribute("EncryptedID", typeof (EncryptedElement))]
-        [XmlElementAttribute("NameID", typeof (NameID))]
-        public object Item
-        {
-            get { return itemField; }
-            set { itemField = value; }
-        }
+        [XmlElement("BaseID", typeof (BaseIDAbstract))]
+        [XmlElement("EncryptedID", typeof (EncryptedElement))]
+        [XmlElement("NameID", typeof (NameID))]
+        public object Item { get; set; }
 
+        /// <summary>
+        /// Gets or sets the method.
+        /// A URI reference that identifies a protocol or mechanism to be used to confirm the subject. URI
+        /// references identifying SAML-defined confirmation methods are currently defined in the SAML profiles
+        /// specification [SAMLProf]. Additional methods MAY be added by defining new URIs and profiles or by
+        /// private agreement.
+        /// </summary>
+        /// <value>The method.</value>
+        [XmlAttribute(DataType = "anyURI")]
+        public string Method { get; set; }
 
         /// <summary>
         /// Gets or sets the subject confirmation data.
@@ -55,26 +55,6 @@ namespace SAML2.Schema.Core
         /// attributes, or content that may appear in the &lt;SubjectConfirmationData&gt; element.
         /// </summary>
         /// <value>The subject confirmation data.</value>
-        public SubjectConfirmationData SubjectConfirmationData
-        {
-            get { return subjectConfirmationDataField; }
-            set { subjectConfirmationDataField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the method.
-        /// A URI reference that identifies a protocol or mechanism to be used to confirm the subject. URI
-        /// references identifying SAML-defined confirmation methods are currently defined in the SAML profiles
-        /// specification [SAMLProf]. Additional methods MAY be added by defining new URIs and profiles or by
-        /// private agreement.
-        /// </summary>
-        /// <value>The method.</value>
-        [XmlAttributeAttribute(DataType="anyURI")]
-        public string Method
-        {
-            get { return methodField; }
-            set { methodField = value; }
-        }
+        public SubjectConfirmationData SubjectConfirmationData { get; set; }
     }
 }

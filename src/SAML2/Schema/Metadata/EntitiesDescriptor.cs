@@ -40,7 +40,7 @@ namespace SAML2.Schema.Metadata
         /// An XML signature that authenticates the containing element and its contents
         /// </summary>
         /// <value>The signature.</value>
-        [XmlElementAttribute(Namespace=Saml20Constants.XMLDSIG)]
+        [XmlElement(Namespace=Saml20Constants.XMLDSIG)]
         public Signature Signature {
             get {
                 return signatureField;
@@ -73,8 +73,8 @@ namespace SAML2.Schema.Metadata
         /// Contains the metadata for one or more SAML entities, or a nested group of additional metadata
         /// </summary>
         /// <value>The items.</value>
-        [XmlElementAttribute("EntitiesDescriptor", typeof(EntitiesDescriptor))]
-        [XmlElementAttribute("EntityDescriptor", typeof(EntityDescriptor))]
+        [XmlElement("EntitiesDescriptor", typeof(EntitiesDescriptor))]
+        [XmlElement("EntityDescriptor", typeof(EntityDescriptor))]
         public object[] Items {
             get {
                 return itemsField;
@@ -120,7 +120,7 @@ namespace SAML2.Schema.Metadata
         /// Gets or sets a value indicating whether [valid until specified].
         /// </summary>
         /// <value><c>true</c> if [valid until specified]; otherwise, <c>false</c>.</value>
-        [XmlIgnoreAttribute]
+        [XmlIgnore]
         public bool validUntilSpecified {
             get {
                 return validUntilFieldSpecified;
@@ -137,7 +137,7 @@ namespace SAML2.Schema.Metadata
         /// contained in the element and any contained elements.
         /// </summary>
         /// <value>The cache duration.</value>
-        [XmlAttributeAttribute(DataType="duration")]
+        [XmlAttribute(DataType="duration")]
         public string cacheDuration {
             get {
                 return cacheDurationField;
@@ -153,7 +153,7 @@ namespace SAML2.Schema.Metadata
         /// A document-unique identifier for the element, typically used as a reference point when signing
         /// </summary>
         /// <value>The ID.</value>
-        [XmlAttributeAttribute(DataType="ID")]
+        [XmlAttribute(DataType="ID")]
         public string ID {
             get {
                 return idField;
@@ -169,7 +169,7 @@ namespace SAML2.Schema.Metadata
         /// A string name that identifies a group of SAML entities in the context of some deployment.
         /// </summary>
         /// <value>The name.</value>
-        [XmlAttributeAttribute]
+        [XmlAttribute]
         public string Name {
             get {
                 return nameField;

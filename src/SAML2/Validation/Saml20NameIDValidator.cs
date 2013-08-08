@@ -101,7 +101,7 @@ namespace SAML2.Validation
                 if (nameID.Value.Length > 256)
                     throw new Saml20FormatException("NameID with Transient Format attribute MUST have a Value that contains no more than 256 characters");
 
-                if (!Saml20Utils.ValidateIDString(nameID.Value))
+                if (!Saml20Utils.ValidateIdString(nameID.Value))
                     throw new Saml20FormatException("NameID with Transient Format attribute MUST have a Value with at least 16 characters (the equivalent of 128 bits)");
                 
             }

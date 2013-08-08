@@ -51,7 +51,7 @@ namespace SAML2.Schema.Metadata
         /// One or more language-qualified names that may or may not be suitable for human consumption
         /// </summary>
         /// <value>The name of the organization.</value>
-        [XmlElementAttribute("OrganizationName")]
+        [XmlElement("OrganizationName")]
         public LocalizedName[] OrganizationName {
             get {
                 return organizationNameField;
@@ -67,7 +67,7 @@ namespace SAML2.Schema.Metadata
         /// One or more language-qualified names that are suitable for human consumption.
         /// </summary>
         /// <value>The display name of the organization.</value>
-        [XmlElementAttribute("OrganizationDisplayName")]
+        [XmlElement("OrganizationDisplayName")]
         public LocalizedName[] OrganizationDisplayName {
             get {
                 return organizationDisplayNameField;
@@ -85,7 +85,7 @@ namespace SAML2.Schema.Metadata
         /// location.
         /// </summary>
         /// <value>The organization URL.</value>
-        [XmlElementAttribute("OrganizationURL")]
+        [XmlElement("OrganizationURL")]
         public LocalizedURI[] OrganizationURL {
             get {
                 return organizationURLField;

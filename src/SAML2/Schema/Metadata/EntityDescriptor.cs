@@ -55,7 +55,7 @@ namespace SAML2.Schema.Metadata
         /// An XML signature that authenticates the containing element and its contents
         /// </summary>
         /// <value>The signature.</value>
-        [XmlElementAttribute(Namespace=Saml20Constants.XMLDSIG)]
+        [XmlElement(Namespace=Saml20Constants.XMLDSIG)]
         public Signature Signature {
             get {
                 return signatureField;
@@ -86,13 +86,13 @@ namespace SAML2.Schema.Metadata
         /// &lt;AffiliationDescriptor&gt;
         /// </summary>
         /// <value>The items.</value>
-        [XmlElementAttribute("AffiliationDescriptor", typeof(AffiliationDescriptor))]
-        [XmlElementAttribute("AttributeAuthorityDescriptor", typeof(AttributeAuthorityDescriptor))]
-        [XmlElementAttribute("AuthnAuthorityDescriptor", typeof(AuthnAuthorityDescriptor))]
-        [XmlElementAttribute("IDPSSODescriptor", typeof(IDPSSODescriptor))]
-        [XmlElementAttribute("PDPDescriptor", typeof(PDPDescriptor))]
-        [XmlElementAttribute("RoleDescriptor", typeof(RoleDescriptor))]
-        [XmlElementAttribute("SPSSODescriptor", typeof(SPSSODescriptor))]
+        [XmlElement("AffiliationDescriptor", typeof(AffiliationDescriptor))]
+        [XmlElement("AttributeAuthorityDescriptor", typeof(AttributeAuthorityDescriptor))]
+        [XmlElement("AuthnAuthorityDescriptor", typeof(AuthnAuthorityDescriptor))]
+        [XmlElement("IDPSSODescriptor", typeof(IDPSSODescriptor))]
+        [XmlElement("PDPDescriptor", typeof(PDPDescriptor))]
+        [XmlElement("RoleDescriptor", typeof(RoleDescriptor))]
+        [XmlElement("SPSSODescriptor", typeof(SPSSODescriptor))]
         public object[] Items {
             get { return itemsField; }
             set { itemsField = value; }
@@ -116,7 +116,7 @@ namespace SAML2.Schema.Metadata
         /// Optional sequence of elements identifying various kinds of contact personnel.
         /// </summary>
         /// <value>The contact person.</value>
-        [XmlElementAttribute("ContactPerson")]
+        [XmlElement("ContactPerson")]
         public Contact[] ContactPerson {
             get { return contactPersonField; }
             set { contactPersonField = value; }
@@ -130,7 +130,7 @@ namespace SAML2.Schema.Metadata
         /// non-SAML specifications.
         /// </summary>
         /// <value>The additional metadata location.</value>
-        [XmlElementAttribute("AdditionalMetadataLocation")]
+        [XmlElement("AdditionalMetadataLocation")]
         public AdditionalMetadataLocation[] AdditionalMetadataLocation {
             get {
                 return additionalMetadataLocationField;
@@ -147,7 +147,7 @@ namespace SAML2.Schema.Metadata
         /// contents.
         /// </summary>
         /// <value>The entity ID.</value>
-        [XmlAttributeAttribute(DataType="anyURI")]
+        [XmlAttribute(DataType="anyURI")]
         public string entityID {
             get {
                 return entityIDField;
@@ -200,7 +200,7 @@ namespace SAML2.Schema.Metadata
         /// contained in the element and any contained elements.
         /// </summary>
         /// <value>The cache duration.</value>
-        [XmlAttributeAttribute(DataType="duration")]
+        [XmlAttribute(DataType="duration")]
         public string cacheDuration {
             get {
                 return cacheDurationField;
@@ -216,7 +216,7 @@ namespace SAML2.Schema.Metadata
         /// A document-unique identifier for the element, typically used as a reference point when signing
         /// </summary>
         /// <value>The ID.</value>
-        [XmlAttributeAttribute(DataType="ID")]
+        [XmlAttribute(DataType="ID")]
         public string ID {
             get {
                 return idField;

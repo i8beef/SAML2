@@ -33,7 +33,7 @@ namespace SAML2.Schema.Metadata
         /// MUST be omitted.
         /// </summary>
         /// <value>The artifact resolution service.</value>
-        [XmlElementAttribute("ArtifactResolutionService")]
+        [XmlElement("ArtifactResolutionService")]
         public IndexedEndpoint[] ArtifactResolutionService {
             get {
                 return artifactResolutionServiceField;
@@ -50,7 +50,7 @@ namespace SAML2.Schema.Metadata
         /// Logout profiles defined in [SAMLProf].
         /// </summary>
         /// <value>The single logout service.</value>
-        [XmlElementAttribute("SingleLogoutService")]
+        [XmlElement("SingleLogoutService")]
         public Endpoint[] SingleLogoutService {
             get {
                 return singleLogoutServiceField;
@@ -67,7 +67,7 @@ namespace SAML2.Schema.Metadata
         /// Identifier Management profiles defined in [SAMLProf].
         /// </summary>
         /// <value>The manage name ID service.</value>
-        [XmlElementAttribute("ManageNameIDService")]
+        [XmlElement("ManageNameIDService")]
         public Endpoint[] ManageNameIDService {
             get {
                 return manageNameIDServiceField;
@@ -85,7 +85,7 @@ namespace SAML2.Schema.Metadata
         /// this element.
         /// </summary>
         /// <value>The name ID format.</value>
-        [XmlElementAttribute("NameIDFormat", DataType="anyURI")]
+        [XmlElement("NameIDFormat", DataType="anyURI")]
         public string[] NameIDFormat {
             get {
                 return nameIDFormatField;

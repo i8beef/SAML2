@@ -15,15 +15,13 @@ namespace SAML2.Schema.Core
     [Serializable]
     [DebuggerStepThrough]
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
     public class AudienceRestriction : ConditionAbstract
     {
-        private List<string> audienceField;
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ELEMENT_NAME = "AudienceRestriction";
+        public new const string ElementName = "AudienceRestriction";
 
         /// <summary>
         /// Gets or sets the audience.
@@ -32,11 +30,7 @@ namespace SAML2.Schema.Core
         /// identifier URI from a SAML name identifier that describes a system entity
         /// </summary>
         /// <value>The audience.</value>
-        [XmlElementAttribute("Audience", DataType="anyURI")]
-        public List<string> Audience
-        {
-            get { return audienceField; }
-            set { audienceField = value; }
-        }
+        [XmlElement("Audience", DataType="anyURI")]
+        public List<string> Audience { get; set; }
     }
 }

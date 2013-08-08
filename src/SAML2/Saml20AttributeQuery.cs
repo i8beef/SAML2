@@ -102,10 +102,10 @@ namespace SAML2
             switch (nameFormat)
             {
                 case Saml20NameFormat.BASIC:
-                    result = SamlAttribute.NAMEFORMAT_BASIC;
+                    result = SamlAttribute.NameformatBasic;
                     break;
                 case Saml20NameFormat.URI:
-                    result = SamlAttribute.NAMEFORMAT_URI;
+                    result = SamlAttribute.NameformatUri;
                     break;
                 default:
                     throw new ArgumentException(

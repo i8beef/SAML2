@@ -9,18 +9,13 @@ namespace SAML2.Schema.Core
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]
     public class Action
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Action";
-
-        private string namespaceField;
-
-        private string valueField;
-
+        public const string ElementName = "Action";
 
         /// <summary>
         /// Gets or sets the namespace.
@@ -30,23 +25,14 @@ namespace SAML2.Schema.Core
         /// effect.
         /// </summary>
         /// <value>The namespace.</value>
-        [XmlAttributeAttribute(DataType="anyURI")]
-        public string Namespace
-        {
-            get { return namespaceField; }
-            set { namespaceField = value; }
-        }
-
+        [XmlAttribute(DataType="anyURI")]
+        public string Namespace { get; set; }
 
         /// <summary>
         /// Gets or sets the value.
         /// </summary>
         /// <value>The value.</value>
-        [XmlTextAttribute]
-        public string Value
-        {
-            get { return valueField; }
-            set { valueField = value; }
-        }
+        [XmlText]
+        public string Value { get; set; }
     }
 }

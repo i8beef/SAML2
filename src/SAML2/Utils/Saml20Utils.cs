@@ -9,7 +9,12 @@ namespace SAML2.Utils
     /// </summary>
     public static class Saml20Utils
     {
-        public static DateTime FromUTCString(string value)
+        /// <summary>
+        /// Froms the UTC string.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The represented DateTime.</returns>
+        public static DateTime FromUtcString(string value)
         {
             try
             {
@@ -21,9 +26,30 @@ namespace SAML2.Utils
             }
         }
 
-        public static string ToUTCString(DateTime value)
+        /// <summary>
+        /// Toes the UTC string.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The DateTime represented as a UTC string.</returns>
+        public static string ToUtcString(DateTime value)
         {
             return XmlConvert.ToString(value, XmlDateTimeSerializationMode.Utc);
+        }
+
+        /// <summary>
+        /// Make sure that the ID elements is at least 128 bits in length (SAML2.0 std section 1.3.4)
+        /// </summary>
+        public static bool ValidateIdString(string id)
+        {
+            return id != null && id.Length >= 16;
+        }
+
+        /// <summary>
+        /// A string value marked as OPTIONAL in [SAML2.0std] must contain at least one non-whitespace character
+        /// </summary>
+        public static bool ValidateOptionalString(string optString)
+        {
+            return optString == null || ValidateRequiredString(optString);
         }
 
         /// <summary>
@@ -32,28 +58,6 @@ namespace SAML2.Utils
         public static bool ValidateRequiredString(string reqString)
         {
             return !(String.IsNullOrEmpty(reqString) || reqString.Trim().Length == 0);
-        }
-
-        /// <summary>
-        /// A string value marked as OPTIONAL in [SAML2.0std] must contain at least one non-whitespace character
-        /// </summary>
-        public static bool ValidateOptionalString(string optString)
-        {
-            if (optString != null)
-                return ValidateRequiredString(optString);
-            
-            return true;
-        }
-
-        /// <summary>
-        /// Make sure that the ID elements is at least 128 bits in length (SAML2.0 std section 1.3.4)
-        /// </summary>
-        public static bool ValidateIDString(string id)
-        {
-            if (id == null)
-                return false;
-
-            return id.Length >= 16;
         }
     }
 }

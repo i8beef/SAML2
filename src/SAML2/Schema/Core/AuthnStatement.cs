@@ -11,37 +11,13 @@ namespace SAML2.Schema.Core
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
     public class AuthnStatement : StatementAbstract
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ELEMENT_NAME = "AuthnStatement";
-
-        private AuthnContext authnContextField;
-
-        private DateTime? authnInstantField;
-
-        private string sessionIndexField;
-
-        private DateTime? sessionNotOnOrAfterField;
-
-        private SubjectLocality subjectLocalityField;
-
-
-        /// <summary>
-        /// Gets or sets the subject locality.
-        /// Specifies the DNS domain name and IP address for the system from which the assertion subject was
-        /// apparently authenticated.
-        /// </summary>
-        /// <value>The subject locality.</value>
-        public SubjectLocality SubjectLocality
-        {
-            get { return subjectLocalityField; }
-            set { subjectLocalityField = value; }
-        }
-
+        public new const string ElementName = "AuthnStatement";
 
         /// <summary>
         /// Gets or sets the authn context.
@@ -51,12 +27,7 @@ namespace SAML2.Schema.Core
         /// [SAMLAuthnCxt] for a full description of authentication context information.
         /// </summary>
         /// <value>The authn context.</value>
-        public AuthnContext AuthnContext
-        {
-            get { return authnContextField; }
-            set { authnContextField = value; }
-        }
-
+        public AuthnContext AuthnContext { get; set; }
 
         /// <summary>
         /// Gets or sets the authn instant.
@@ -64,11 +35,7 @@ namespace SAML2.Schema.Core
         /// </summary>
         /// <value>The authn instant.</value>
         [XmlIgnore]
-        public DateTime? AuthnInstant
-        {
-            get { return authnInstantField; }
-            set { authnInstantField = value; }
-        }
+        public DateTime? AuthnInstant { get; set; }
 
         /// <summary>
         /// Gets or sets the authn instant string.
@@ -77,18 +44,9 @@ namespace SAML2.Schema.Core
         [XmlAttribute("AuthnInstant")]
         public string AuthnInstantString
         {
-            get { 
-                if (authnInstantField.HasValue)
-                {
-                    return Saml20Utils.ToUTCString(authnInstantField.Value);
-                }else
-                {
-                    return null;
-                }
-            }
-            set { authnInstantField = Saml20Utils.FromUTCString(value); }
+            get { return AuthnInstant.HasValue ? Saml20Utils.ToUtcString(AuthnInstant.Value) : null; }
+            set { AuthnInstant = Saml20Utils.FromUtcString(value); }
         }
-
 
         /// <summary>
         /// Gets or sets the index of the session.
@@ -96,13 +54,8 @@ namespace SAML2.Schema.Core
         /// authenticating authority.
         /// </summary>
         /// <value>The index of the session.</value>
-        [XmlAttributeAttribute]
-        public string SessionIndex
-        {
-            get { return sessionIndexField; }
-            set { sessionIndexField = value; }
-        }
-
+        [XmlAttribute]
+        public string SessionIndex { get; set; }
 
         /// <summary>
         /// Gets or sets the session not on or after.
@@ -113,11 +66,7 @@ namespace SAML2.Schema.Core
         /// </summary>
         /// <value>The session not on or after.</value>
         [XmlIgnore]
-        public DateTime? SessionNotOnOrAfter
-        {
-            get { return sessionNotOnOrAfterField; }
-            set { sessionNotOnOrAfterField = value; }
-        }
+        public DateTime? SessionNotOnOrAfter { get; set; }
 
         /// <summary>
         /// Gets or sets the session not on or after string.
@@ -126,25 +75,16 @@ namespace SAML2.Schema.Core
         [XmlAttribute("SessionNotOnOrAfter")]
         public string SessionNotOnOrAfterString
         {
-            get
-            {
-                if (sessionNotOnOrAfterField.HasValue)
-                {
-                    return Saml20Utils.ToUTCString(sessionNotOnOrAfterField.Value);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                    sessionNotOnOrAfterField = null;
-                else
-                    sessionNotOnOrAfterField = Saml20Utils.FromUTCString(value);
-            }
+            get { return SessionNotOnOrAfter.HasValue ? Saml20Utils.ToUtcString(SessionNotOnOrAfter.Value) : null; }
+            set { SessionNotOnOrAfter = string.IsNullOrEmpty(value) ? (DateTime?) null : Saml20Utils.FromUtcString(value); }
         }
-        
+
+        /// <summary>
+        /// Gets or sets the subject locality.
+        /// Specifies the DNS domain name and IP address for the system from which the assertion subject was
+        /// apparently authenticated.
+        /// </summary>
+        /// <value>The subject locality.</value>
+        public SubjectLocality SubjectLocality { get; set; }
     }
 }

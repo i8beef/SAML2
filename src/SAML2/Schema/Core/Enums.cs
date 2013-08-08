@@ -7,21 +7,24 @@ namespace SAML2.Schema.Core
     /// Item Choices
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.ASSERTION, IncludeInSchema=false)]
+    [XmlType(Namespace = Saml20Constants.ASSERTION, IncludeInSchema = false)]
     public enum ItemsChoiceType6
     {
         /// <summary>
         /// Item of type Assertion
         /// </summary>
         Assertion,
+
         /// <summary>
         /// Item of type AssertionIDRef
         /// </summary>
         AssertionIDRef,
+
         /// <summary>
         /// Item of type AssertionURIRef
         /// </summary>
         AssertionURIRef,
+
         /// <summary>
         /// Item of type EncryptedAssertion
         /// </summary>
@@ -32,17 +35,19 @@ namespace SAML2.Schema.Core
     /// Decision types
     /// </summary>
     [Serializable]
-    [XmlTypeAttribute(Namespace=Saml20Constants.ASSERTION)]
+    [XmlTypeAttribute(Namespace = Saml20Constants.ASSERTION)]
     public enum DecisionType
     {
         /// <summary>
         /// Permit decision type
         /// </summary>
         Permit,
+
         /// <summary>
         /// Deny decision type
         /// </summary>
         Deny,
+
         /// <summary>
         /// Indeterminate decision type
         /// </summary>
@@ -53,25 +58,29 @@ namespace SAML2.Schema.Core
     /// Item Choices
     /// </summary>
     [Serializable]
-    [XmlTypeAttribute(Namespace=Saml20Constants.ASSERTION, IncludeInSchema=false)]
+    [XmlTypeAttribute(Namespace = Saml20Constants.ASSERTION, IncludeInSchema = false)]
     public enum ItemsChoiceType4
     {
         /// <summary>
         /// Item of type any 
         /// </summary>
         [XmlEnumAttribute("##any:")] Item,
+
         /// <summary>
         /// Item of type Assertion
         /// </summary>
         Assertion,
+
         /// <summary>
         /// Item of type AssertionIDRef
         /// </summary>
         AssertionIDRef,
+
         /// <summary>
         /// Item of type AssertionURIRef
         /// </summary>
         AssertionURIRef,
+
         /// <summary>
         /// Item of type EncryptedAssertion
         /// </summary>
@@ -82,17 +91,19 @@ namespace SAML2.Schema.Core
     /// Item Choices
     /// </summary>
     [Serializable]
-    [XmlTypeAttribute(Namespace=Saml20Constants.ASSERTION, IncludeInSchema=false)]
+    [XmlTypeAttribute(Namespace = Saml20Constants.ASSERTION, IncludeInSchema = false)]
     public enum ItemsChoiceType5
     {
         /// <summary>
         /// Item of type AuthnContextClassRef
         /// </summary>
         AuthnContextClassRef,
+
         /// <summary>
         /// Item of type AuthnContextDecl
         /// </summary>
         AuthnContextDecl,
+
         /// <summary>
         /// Item of type AuthnContextDeclRef
         /// </summary>

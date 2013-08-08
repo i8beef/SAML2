@@ -55,7 +55,7 @@ namespace SAML2.Schema.Metadata
         /// An XML signature that authenticates the containing element and its contents
         /// </summary>
         /// <value>The signature.</value>
-        [XmlElementAttribute(Namespace=Saml20Constants.XMLDSIG)]
+        [XmlElement(Namespace=Saml20Constants.XMLDSIG)]
         public Signature Signature {
             get {
                 return signatureField;
@@ -89,7 +89,7 @@ namespace SAML2.Schema.Metadata
         /// entity uses when acting in this role.
         /// </summary>
         /// <value>The key descriptor.</value>
-        [XmlElementAttribute("KeyDescriptor")]
+        [XmlElement("KeyDescriptor")]
         public KeyDescriptor[] KeyDescriptor {
             get {
                 return keyDescriptorField;
@@ -122,7 +122,7 @@ namespace SAML2.Schema.Metadata
         /// element used within the &lt;EntityDescriptor&gt; element.
         /// </summary>
         /// <value>The contact person.</value>
-        [XmlElementAttribute("ContactPerson")]
+        [XmlElement("ContactPerson")]
         public Contact[] ContactPerson {
             get {
                 return contactPersonField;
@@ -138,7 +138,7 @@ namespace SAML2.Schema.Metadata
         /// A document-unique identifier for the element, typically used as a reference point when signing.
         /// </summary>
         /// <value>The ID.</value>
-        [XmlAttributeAttribute(DataType="ID")]
+        [XmlAttribute(DataType="ID")]
         public string ID {
             get {
                 return idField;
@@ -170,7 +170,7 @@ namespace SAML2.Schema.Metadata
             get
             {
                 if (validUntilField.HasValue)
-                    return Saml20Utils.ToUTCString(validUntilField.Value);
+                    return Saml20Utils.ToUtcString(validUntilField.Value);
                 else
                     return null;
 
@@ -180,7 +180,7 @@ namespace SAML2.Schema.Metadata
                 if (string.IsNullOrEmpty(value))
                     validUntilField = null;
                 else
-                    validUntilField = Saml20Utils.FromUTCString(value);
+                    validUntilField = Saml20Utils.FromUtcString(value);
             }
         }
 
@@ -190,7 +190,7 @@ namespace SAML2.Schema.Metadata
         /// contained in the element and any contained elements.
         /// </summary>
         /// <value>The cache duration.</value>
-        [XmlAttributeAttribute(DataType="duration")]
+        [XmlAttribute(DataType="duration")]
         public string cacheDuration {
             get {
                 return cacheDurationField;
@@ -210,7 +210,7 @@ namespace SAML2.Schema.Metadata
         /// ensure discrimination when necessary.
         /// </summary>
         /// <value>The protocol support enumeration.</value>
-        [XmlAttributeAttribute(DataType="anyURI")]
+        [XmlAttribute(DataType="anyURI")]
         public string[] protocolSupportEnumeration {
             get {
                 return protocolSupportEnumerationField;
@@ -227,7 +227,7 @@ namespace SAML2.Schema.Metadata
         /// additional support related to this role.
         /// </summary>
         /// <value>The error URL.</value>
-        [XmlAttributeAttribute(DataType="anyURI")]
+        [XmlAttribute(DataType="anyURI")]
         public string errorURL {
             get {
                 return errorURLField;

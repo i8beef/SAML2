@@ -162,11 +162,11 @@ namespace SAML2.Validation
                 throw new Saml20FormatException("Wrong value of version attribute on Assertion element");
 
             //Assertion must have an ID
-            if (!Saml20Utils.ValidateRequiredString(assertion.ID))
+            if (!Saml20Utils.ValidateRequiredString(assertion.Id))
                 throw new Saml20FormatException("Assertion element must have the ID attribute set.");
 
             // Make sure that the ID elements is at least 128 bits in length (SAML2.0 std section 1.3.4)
-            if (!Saml20Utils.ValidateIDString(assertion.ID))
+            if (!Saml20Utils.ValidateIdString(assertion.Id))
                 throw new Saml20FormatException("Assertion element must have an ID attribute with at least 16 characters (the equivalent of 128 bits)");
 
             //IssueInstant must be set.
@@ -322,7 +322,7 @@ namespace SAML2.Validation
                 return;
             
             if (conditions.NotBefore != null && conditions.NotOnOrAfter != null && conditions.NotBefore.Value >= conditions.NotOnOrAfter.Value)
-                throw new Saml20FormatException(String.Format("NotBefore {0} MUST BE less than NotOnOrAfter {1} on Conditions", Saml20Utils.ToUTCString(conditions.NotBefore.Value), Saml20Utils.ToUTCString(conditions.NotOnOrAfter.Value)));
+                throw new Saml20FormatException(String.Format("NotBefore {0} MUST BE less than NotOnOrAfter {1} on Conditions", Saml20Utils.ToUtcString(conditions.NotBefore.Value), Saml20Utils.ToUtcString(conditions.NotOnOrAfter.Value)));
         }
 
         /// <summary>

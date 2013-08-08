@@ -65,7 +65,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the reference.
         /// </summary>
         /// <value>The reference.</value>
-        [XmlElementAttribute("Reference")]
+        [XmlElement("Reference")]
         public Reference[] Reference {
             get {
                 return referenceField;
@@ -80,7 +80,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the id.
         /// </summary>
         /// <value>The id.</value>
-        [XmlAttributeAttribute(DataType="ID")]
+        [XmlAttribute(DataType="ID")]
         public string Id {
             get {
                 return idField;

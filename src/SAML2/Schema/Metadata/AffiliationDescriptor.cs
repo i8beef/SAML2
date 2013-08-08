@@ -133,7 +133,7 @@ namespace SAML2.Schema.Metadata
             get
             {
                 if (validUntilField.HasValue)
-                    return Saml20Utils.ToUTCString(validUntilField.Value);
+                    return Saml20Utils.ToUtcString(validUntilField.Value);
                 else
                     return null;
             }
@@ -142,7 +142,7 @@ namespace SAML2.Schema.Metadata
                 if (string.IsNullOrEmpty(value))
                     validUntilField = null;
                 else
-                    validUntilField = Saml20Utils.FromUTCString(value);
+                    validUntilField = Saml20Utils.FromUtcString(value);
 
             }
         }

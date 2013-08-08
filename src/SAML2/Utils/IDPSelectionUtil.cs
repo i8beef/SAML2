@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
+﻿using System.Web;
 using SAML2.Config;
 using SAML2.Protocol;
 
@@ -29,14 +25,14 @@ namespace SAML2.Utils
         /// </summary>
         public static event IDPSelectionEventHandler IDPSelectionEvent;
 
+        /// <summary>
+        /// Invokes the IDP selection event handler.
+        /// </summary>
+        /// <param name="endpoints">The endpoints.</param>
+        /// <returns>The <see cref="IdentityProviderElement"/>.</returns>
         internal static IdentityProviderElement InvokeIDPSelectionEventHandler(IdentityProviderCollection endpoints)
         {
-            if (IDPSelectionEvent != null)
-            {
-                return IDPSelectionEvent(endpoints);
-            }
-
-            return null;
+            return IDPSelectionEvent != null ? IDPSelectionEvent(endpoints) : null;
         }
 
         /// <summary>

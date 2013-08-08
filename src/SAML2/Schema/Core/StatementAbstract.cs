@@ -11,12 +11,12 @@ namespace SAML2.Schema.Core
     [XmlIncludeAttribute(typeof (AuthnStatement))]
     [Serializable]
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
     public abstract class StatementAbstract
     {        
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Statement";
+        public const string ElementName = "Statement";
     }
 }
