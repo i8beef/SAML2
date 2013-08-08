@@ -1,5 +1,4 @@
 using System;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using SAML2.Config;
@@ -24,31 +23,35 @@ namespace SAML2.Protocol.pages
             
             BodyPanel.Controls.Add(new LiteralControl(Resources.ChooseDesc));
             BodyPanel.Controls.Add(new LiteralControl("<br/><br/>"));
-            var config = Saml2Config.GetConfig();            
-            
+
+            var config = Saml2Config.GetConfig();
             config.IdentityProviders.Refresh();
 
             foreach (var endPoint in config.IdentityProviders)
             {
                 if (endPoint.Metadata != null)
                 {
-                    HyperLink link = new HyperLink();
+                    var link = new HyperLink
+                                   {
+                                       Text =
+                                           string.IsNullOrEmpty(endPoint.Name)
+                                               ? endPoint.Metadata.EntityId
+                                               : endPoint.Name,
+                                       NavigateUrl = IDPSelectionUtil.GetIDPLoginUrl(endPoint.Id)
+                                   };
 
                     // Link text. If a name has been specified in web.config, use it. Otherwise, use id from metadata.
-                    link.Text = string.IsNullOrEmpty(endPoint.Name) ? endPoint.Metadata.EntityId : endPoint.Name;
 
-                    link.NavigateUrl = IDPSelectionUtil.GetIDPLoginUrl(endPoint.Id);
                     BodyPanel.Controls.Add(link);
                     BodyPanel.Controls.Add(new LiteralControl("<br/>"));
-                } else
+                }
+                else
                 {
-                    Label label = new Label();                               
-                    label.Text = endPoint.Name;
+                    var label = new Label {Text = endPoint.Name};
                     label.Style.Add(HtmlTextWriterStyle.TextDecoration, "line-through");
                     BodyPanel.Controls.Add(label);
 
-                    label = new Label();
-                    label.Text = " (Metadata not found)";
+                    label = new Label {Text = " (Metadata not found)"};
                     label.Style.Add(HtmlTextWriterStyle.FontSize, "x-small");
                     BodyPanel.Controls.Add(label);
 

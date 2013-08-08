@@ -111,26 +111,26 @@ namespace SAML2.Protocol
                         return endPoint;
                     }
 
-                    Logger.Warn("Invalid IdP in Common Domain Cookie, IdP not found in list of IdPs: " + cdc.PreferredIDP);
+                    Logger.Warn("Invalid IDP in Common Domain Cookie, IDP not found in list of IDPs: " + cdc.PreferredIDP);
                 }
             }
 
             //If there is only one configured IdentityProviderEndpointElement lets just use that
             if (config.IdentityProviders.Count == 1 && config.IdentityProviders[0].Metadata != null)
             {
-                Logger.Debug("No IdP selected in Common Domain Cookie, using default IdP: " + config.IdentityProviders[0].Name);
+                Logger.Debug("No IDP selected in Common Domain Cookie, using default IDP: " + config.IdentityProviders[0].Name);
                 return config.IdentityProviders[0];
             }
 
             // If one of the endpoints are marked with default, use that one
-            var defaultIdp = config.IdentityProviders.FirstOrDefault(idp => idp.Default);
-            if (defaultIdp != null)
+            var defaultIDP = config.IdentityProviders.FirstOrDefault(idp => idp.Default);
+            if (defaultIDP != null)
             {
-                Logger.Debug("Using IdP marked as default: " + defaultIdp.Id);
-                return defaultIdp;
+                Logger.Debug("Using IDP marked as default: " + defaultIDP.Id);
+                return defaultIDP;
             }
 
-            // In case an Idp selection url has been configured, redirect to that one.
+            // In case an IDP selection url has been configured, redirect to that one.
             if (!string.IsNullOrEmpty(config.IdentityProviders.SelectionUrl))
             {
                 Logger.Debug("Redirecting to idpSelectionUrl for selection of IDP: " + config.IdentityProviders.SelectionUrl);

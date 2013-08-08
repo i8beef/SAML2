@@ -20,16 +20,29 @@ namespace SAML2.Protocol
         #region IHttpHandler Members
 
         /// <summary>
+        /// Gets a value indicating whether this instance is reusable.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is reusable; otherwise, <c>false</c>.
+        /// </value>
+        public new bool IsReusable
+        {
+            get { return false; }
+        }
+        
+        /// <summary>
         /// Enables processing of HTTP Web requests by a custom HttpHandler that implements the <see cref="T:System.Web.IHttpHandler"/> interface.
         /// </summary>
         /// <param name="context">An <see cref="T:System.Web.HttpContext"/> object that provides references to the intrinsic server objects (for example, Request, Response, Session, and Server) used to service HTTP requests.</param>
         public override void ProcessRequest(HttpContext context)
         {
-            string encoding = context.Request.QueryString["encoding"];
+            var encoding = context.Request.QueryString["encoding"];
             try
             {
                 if (!string.IsNullOrEmpty(encoding))
+                {
                     context.Response.ContentEncoding = Encoding.GetEncoding(encoding);
+                }
             }
             catch (ArgumentException)
             {
@@ -38,13 +51,16 @@ namespace SAML2.Protocol
                 return;
             }
 
-            bool sign = true;
+            var sign = true;
             try
             {
-                string param = context.Request.QueryString["sign"];                
+                var param = context.Request.QueryString["sign"];                
                 if (!string.IsNullOrEmpty(param))
+                {
                     sign = Convert.ToBoolean(param);
-            } catch(FormatException)
+                }
+            }
+            catch(FormatException)
             {
                 Logger.Error(Resources.GenericError);
                 HandleError(context, Resources.GenericError);
@@ -59,17 +75,6 @@ namespace SAML2.Protocol
             context.Response.End();            
         }
 
-        /// <summary>
-        /// Gets a value indicating whether this instance is reusable.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is reusable; otherwise, <c>false</c>.
-        /// </value>
-        public new bool IsReusable
-        {
-            get { return false; }
-        }
-
         #endregion
 
         /// <summary>
@@ -82,11 +87,11 @@ namespace SAML2.Protocol
             Logger.Debug("Creating metadata document.");
             var configuration = Saml2Config.GetConfig();
 
-            KeyInfo keyinfo = new KeyInfo();
-            KeyInfoX509Data keyClause = new KeyInfoX509Data(Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate(), X509IncludeOption.EndCertOnly);
+            var keyinfo = new KeyInfo();
+            var keyClause = new KeyInfoX509Data(Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate(), X509IncludeOption.EndCertOnly);
             keyinfo.AddClause(keyClause);
 
-            Saml20MetadataDocument doc = new Saml20MetadataDocument(configuration, keyinfo, sign);
+            var doc = new Saml20MetadataDocument(configuration, keyinfo, sign);
 
             Logger.Debug("Metadata document successfully created.");
 

@@ -2,13 +2,11 @@
 using System.Linq;
 using System.Web;
 using SAML2.Config;
-using SAML2.Protocol;
-using SAML2.Utils;
 
 namespace SAML2.Protocol
 {
     /// <summary>
-    /// 
+    /// Saml 2 common domain cookie Id return point.
     /// </summary>
     public class Saml20CDCIdPReturnPoint : AbstractEndpointHandler
     {
@@ -21,18 +19,20 @@ namespace SAML2.Protocol
             try
             {
                 Logger.DebugFormat("{0}.{1} called", GetType(), "ProcessRequest()");
+                
                 var config = Saml2Config.GetConfig();
-
                 if (config == null)
+                {
                     throw new Saml20Exception("Missing SAML20Federation config section in web.config.");
+                }
 
                 var endp = config.ServiceProvider.Endpoints.FirstOrDefault(ep => ep.Type == EndpointType.SignOn);
-
                 if (endp == null)
+                {
                     throw new Saml20Exception("Signon endpoint not found in configuration");
+                }
 
-                string redirectUrl = (string)context.Session["RedirectUrl"];
-
+                var redirectUrl = (string)context.Session["RedirectUrl"];
                 if (!string.IsNullOrEmpty(redirectUrl))
                 {
                     context.Session.Remove("RedirectUrl");

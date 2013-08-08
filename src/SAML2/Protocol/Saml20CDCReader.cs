@@ -1,11 +1,8 @@
-﻿using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using System.Web;
 using System;
 using SAML2.Config;
-using SAML2.Logging;
 using SAML2.Properties;
-using SAML2.Protocol;
 
 namespace SAML2.Protocol
 {
@@ -23,20 +20,22 @@ namespace SAML2.Protocol
             try
             {
                 Logger.DebugFormat("{0}.{1} called", GetType(), "ProcessRequest()");
-                var config = Saml2Config.GetConfig();
 
+                var config = Saml2Config.GetConfig();
                 if (config == null)
-                    throw new Saml20Exception("Missing SAML20Federation config section in web.config.");
+                {
+                    throw new Saml20Exception("Missing saml2 config section in web.config.");
+                }
 
                 var endp = config.ServiceProvider.Endpoints.FirstOrDefault(ep => ep.Type == EndpointType.SignOn);
-
                 if (endp == null)
+                {
                     throw new Saml20Exception("Signon endpoint not found in configuration");
+                }
 
-                string returnUrl = config.ServiceProvider.Server + endp.LocalPath + "?r=1";
+                var returnUrl = config.ServiceProvider.Server + endp.LocalPath + "?r=1";
 
-                HttpCookie samlIdp = context.Request.Cookies[CommonDomainCookie.COMMON_DOMAIN_COOKIE_NAME];
-
+                var samlIdp = context.Request.Cookies[CommonDomainCookie.COMMON_DOMAIN_COOKIE_NAME];
                 if (samlIdp != null)
                 {
                     returnUrl += "&_saml_idp=" + HttpUtility.UrlEncode(samlIdp.Value);
@@ -48,6 +47,7 @@ namespace SAML2.Protocol
                 {
                     Logger.Debug("Redirection to Signon endpoint, no Common Domain Cookie found: " + returnUrl);
                 }
+
                 context.Response.Redirect(returnUrl);
             }
             catch (Exception ex)
