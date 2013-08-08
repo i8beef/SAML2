@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Text;
@@ -34,44 +34,45 @@ namespace SAML2.Bindings
         /// that the URL is not modified in any way, eg. by URL-decoding it.</param>
         public HttpRedirectBindingParser(Uri uri)
         {
-            var queryParameters = HttpUtility.ParseQueryString(uri.Query);
-            foreach (var key in queryParameters.AllKeys)
+            var paramDict = UriToDictionary(uri);
+            foreach (KeyValuePair<string, string> param in paramDict)
             {
-                switch (key.ToLower())
-                {
-                    case "samlrequest":
-                        IsResponse = false;
-                        Message = HttpUtility.UrlDecode(queryParameters[key]);
-                        return;
-                    case "samlresponse":
-                        IsResponse = true;
-                        Message = HttpUtility.UrlDecode(queryParameters[key]);
-                        return;
-                    case "relaystate":
-                        RelayState = HttpUtility.UrlDecode(queryParameters[key]);
-                        return;
-                    case "sigalg":
-                        SignatureAlgorithm = HttpUtility.UrlDecode(queryParameters[key]);
-                        return;
-                    case "signature":
-                        Signature = HttpUtility.UrlDecode(queryParameters[key]);
-                        return;
-                }
+                SetParam(param.Key, HttpUtility.UrlDecode(param.Value));
             }
 
             // If the message is signed, save the original, encoded parameters so that the signature can be verified.
             if (IsSigned)
             {
-                CreateSignatureSubject(queryParameters);
+                CreateSignatureSubject(paramDict);
             }
 
             ReadMessageParameter();
         }
 
         /// <summary>
+        /// Converts the URI to dictionary.
+        /// </summary>
+        /// <param name="uri">The URI.</param>
+        /// <returns>Dictionary of query parameters.</returns>
+        private static Dictionary<string, string> UriToDictionary(Uri uri)
+        {
+            var parameters = uri.Query.Substring(1).Split('&');
+            var result = new Dictionary<string, string>(parameters.Length);
+            foreach (var parameter in parameters.Select(s => s.Split('=')))
+            {
+                result.Add(parameter[0], parameter[1]);
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// <code>true</code> if the parsed message contains a request message.
         /// </summary>
-        public bool IsRequest { get { return !IsResponse;  } }
+        public bool IsRequest
+        {
+            get { return !IsResponse; }
+        }
 
         /// <summary>
         /// <code>true</code> if the parsed message contains a response message.
@@ -81,7 +82,10 @@ namespace SAML2.Bindings
         /// <summary>
         /// <code>true</code> if the parsed message contains a signature.
         /// </summary>
-        public bool IsSigned { get { return Signature != null;  } }
+        public bool IsSigned
+        {
+            get { return Signature != null; }
+        }
 
         /// <summary>
         /// Returns the message that was contained in the query. Use the <code>IsResponse</code> or the <code>IsRequest</code> property 
@@ -144,14 +148,14 @@ namespace SAML2.Bindings
 
             if (key is RSACryptoServiceProvider)
             {
-                var rsa = (RSACryptoServiceProvider)key;
-                return rsa.VerifyHash(hash, "SHA1", DecodeSignature());                
+                var rsa = (RSACryptoServiceProvider) key;
+                return rsa.VerifyHash(hash, "SHA1", DecodeSignature());
             }
             else
             {
-                DSA dsa = (DSA)key;
+                var dsa = (DSA) key;
                 return dsa.VerifySignature(hash, DecodeSignature());
-            }                
+            }
         }
 
         /// <summary>
@@ -163,7 +167,7 @@ namespace SAML2.Bindings
         {
             foreach (var keyDescriptor in keys)
             {
-                foreach (KeyInfoClause clause in (KeyInfo)keyDescriptor.KeyInfo)
+                foreach (KeyInfoClause clause in (KeyInfo) keyDescriptor.KeyInfo)
                 {
                     var key = XmlSignatureUtils.ExtractKey(clause);
                     if (key != null && CheckSignature(key))
@@ -182,7 +186,8 @@ namespace SAML2.Bindings
         /// </summary>
         private static string DeflateDecompress(string str)
         {
-            var memoryStream = new MemoryStream(Convert.FromBase64String(str));
+            var encoded = Convert.FromBase64String(str);
+            var memoryStream = new MemoryStream(encoded);
 
             var result = new StringBuilder();
             using (var stream = new DeflateStream(memoryStream, CompressionMode.Decompress))
@@ -203,28 +208,30 @@ namespace SAML2.Bindings
         /// Re-creates the list of parameters that are signed, in order to verify the signature.
         /// </summary>
         /// <param name="queryParams">The query params.</param>
-        private void CreateSignatureSubject(NameValueCollection queryParams)
+        private void CreateSignatureSubject(IDictionary<string, string> queryParams)
         {
             var signedQuery = new StringBuilder();
             if (IsResponse)
             {
-                signedQuery.AppendFormat("{0}=", HttpRedirectBindingConstants.SamlResponse);
-                signedQuery.Append(queryParams[HttpRedirectBindingConstants.SamlResponse]);
-            } 
+                signedQuery.AppendFormat("{0}={1}", HttpRedirectBindingConstants.SamlResponse,
+                                         queryParams[HttpRedirectBindingConstants.SamlResponse]);
+            }
             else
             {
-                signedQuery.AppendFormat("{0}=", HttpRedirectBindingConstants.SamlRequest);
-                signedQuery.Append(queryParams[HttpRedirectBindingConstants.SamlRequest]);
-            }                
-            
+                signedQuery.AppendFormat("{0}={1}", HttpRedirectBindingConstants.SamlRequest,
+                                         queryParams[HttpRedirectBindingConstants.SamlRequest]);
+            }
+
             if (RelayState != null)
             {
-                signedQuery.AppendFormat("&{0}=", HttpRedirectBindingConstants.RelayState).Append(queryParams[HttpRedirectBindingConstants.RelayState]);
+                signedQuery.AppendFormat("&{0}={1}", HttpRedirectBindingConstants.RelayState,
+                                         queryParams[HttpRedirectBindingConstants.RelayState]);
             }
 
             if (Signature != null)
             {
-                signedQuery.AppendFormat("&{0}=", HttpRedirectBindingConstants.SigAlg).Append(queryParams[HttpRedirectBindingConstants.SigAlg]);
+                signedQuery.AppendFormat("&{0}={1}", HttpRedirectBindingConstants.SigAlg,
+                                         queryParams[HttpRedirectBindingConstants.SigAlg]);
             }
 
             _signedquery = signedQuery.ToString();
@@ -250,6 +257,35 @@ namespace SAML2.Bindings
         private void ReadMessageParameter()
         {
             Message = DeflateDecompress(Message);
+        }
+
+        /// <summary>
+        /// Sets the param.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        private void SetParam(string key, string value)
+        {
+            switch (key.ToLower())
+            {
+                case "samlrequest":
+                    IsResponse = false;
+                    Message = value;
+                    return;
+                case "samlresponse":
+                    IsResponse = true;
+                    Message = value;
+                    return;
+                case "relaystate":
+                    RelayState = value;
+                    return;
+                case "sigalg":
+                    SignatureAlgorithm = value;
+                    return;
+                case "signature":
+                    Signature = value;
+                    return;
+            }
         }
     }
 }
