@@ -49,7 +49,6 @@ namespace SAML2.Protocol
             try
             {
                 RedirectUrl = Saml2Config.GetConfig().ServiceProvider.Endpoints.SignOnEndpoint.RedirectUrl;
-                ErrorBehaviour = Saml2Config.GetConfig().ServiceProvider.Endpoints.SignOnEndpoint.ErrorBehaviour.ToString();
             }
             catch(Exception e)
             {
@@ -398,10 +397,10 @@ namespace SAML2.Protocol
         {
             Logger.DebugFormat("{0}.{1} called", GetType(), "PreHandleAssertion");
 
-            if (endpoint != null && endpoint.Endpoints.LogOffEndpoint != null && !String.IsNullOrEmpty(endpoint.Endpoints.LogOffEndpoint.TokenAccessor))
+            if (endpoint != null && endpoint.Endpoints.LogoutEndpoint != null && !String.IsNullOrEmpty(endpoint.Endpoints.LogoutEndpoint.TokenAccessor))
             {
                 ISaml20IdpTokenAccessor idpTokenAccessor =
-                    Activator.CreateInstance(Type.GetType(endpoint.Endpoints.LogOffEndpoint.TokenAccessor, false)) as ISaml20IdpTokenAccessor;
+                    Activator.CreateInstance(Type.GetType(endpoint.Endpoints.LogoutEndpoint.TokenAccessor, false)) as ISaml20IdpTokenAccessor;
                 if (idpTokenAccessor != null)
                     idpTokenAccessor.ReadToken(elem);
             }

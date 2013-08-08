@@ -61,6 +61,7 @@ namespace SAML2.Config
         public string MetadataLocation
         {
             get { return (string)base["metadata"]; }
+            set { base["metadata"] = value; }
         }
 
         /// <summary>
@@ -89,10 +90,12 @@ namespace SAML2.Config
             if (string.IsNullOrEmpty(Encodings))
             {
                 // If it has not been specified in the config file, use the defaults.
-                return new List<Encoding> {Encoding.UTF8, Encoding.GetEncoding("iso-8859-1")};
+                _encodings = new List<Encoding> { Encoding.UTF8, Encoding.GetEncoding("iso-8859-1") };
             }
-
-            _encodings.AddRange(Encodings.Split(' ').Select(Encoding.GetEncoding));
+            else
+            {
+                _encodings = new List<Encoding>(Encodings.Split(' ').Select(Encoding.GetEncoding));
+            }
 
             return _encodings;
         }

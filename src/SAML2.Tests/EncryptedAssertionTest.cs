@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
@@ -14,7 +15,7 @@ using SAML2.Protocol;
 using Assertion=SAML2.Schema.Core.Assertion;
 using Saml20Assertion=SAML2.Saml20Assertion;
 
-namespace dk.nita.test.Saml20
+namespace SAML2.Tests.Saml20
 {
     /// <summary>
     /// Unit tests related to the handling and functionality of encrypted assertions.
@@ -53,12 +54,12 @@ namespace dk.nita.test.Saml20
 
             // Do some mock configuration.
             var config = Saml2Config.GetConfig();
-            config.AllowedAudienceUris.Audiences.Add("https://saml.safewhere.net");
+            config.AllowedAudienceUris.Add(new AudienceUriElement { Uri = "https://saml.safewhere.net" });
 
-            SAML20FederationConfig descr = Saml2Config.GetConfig();
-            descr.Endpoints.metadataLocation = @"Protocol\MetadataDocs\FOBS"; // Set it manually.     
-            Assert.That(Directory.Exists(descr.Endpoints.metadataLocation));
-            descr.Endpoints.Refresh();
+            var descr = Saml2Config.GetConfig();
+            descr.IdentityProviders.MetadataLocation = @"Protocol\MetadataDocs\FOBS"; // Set it manually.     
+            Assert.That(Directory.Exists(descr.IdentityProviders.MetadataLocation));
+            descr.IdentityProviders.Refresh();
 
             X509Certificate2 cert = new X509Certificate2(@"Certificates\SafewhereTest_SFS.pfx", "test1234");
             Saml20EncryptedAssertion encass = 
@@ -69,10 +70,9 @@ namespace dk.nita.test.Saml20
 
             // Retrieve metadata                       
             Saml20Assertion assertion = new Saml20Assertion(encass.Assertion.DocumentElement, null, false);
-
-            IdentityProviderEndpointElement endp = descr.FindEndPoint(assertion.Issuer);
+            IdentityProviderElement endp = descr.IdentityProviders.FirstOrDefault(x => x.Id == assertion.Issuer);
             Assert.IsNotNull(endp, "Endpoint not found");
-            Assert.IsNotNull(endp.metadata, "Metadata not found");
+            Assert.IsNotNull(endp.Metadata, "Metadata not found");
 
             try
             {
@@ -82,7 +82,7 @@ namespace dk.nita.test.Saml20
             {}
 
             Assert.IsNull(assertion.SigningKey, "Signing key is already present on assertion. Modify test.");
-            Assert.That(assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endp.metadata.GetKeys(KeyTypes.signing), endp)));
+            Assert.That(assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endp.Metadata.GetKeys(KeyTypes.signing), endp)));
             Assert.IsNotNull(assertion.SigningKey, "Signing key was not set on assertion instance.");             
         }
 

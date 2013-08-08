@@ -12,6 +12,15 @@ namespace SAML2.Config
         /// </summary>
         public static string Name = "saml2";
 
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only.
+        /// </summary>
+        /// <returns>true if the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only; otherwise, false.</returns>
+        public override bool IsReadOnly()
+        {
+            return false;
+        }
+
         #region Elements
 
         /// <summary>
@@ -30,6 +39,7 @@ namespace SAML2.Config
         public AllowedAudienceUriCollection AllowedAudienceUris
         {
             get { return (AllowedAudienceUriCollection) base["allowedAudienceUris"]; }
+            set { base["allowedAudienceUris"] = value; }
         }
 
         [ConfigurationProperty("assertionProfile")]
@@ -66,6 +76,15 @@ namespace SAML2.Config
         }
 
         /// <summary>
+        /// Gets the metadata.
+        /// </summary>
+        [ConfigurationProperty("metadata")]
+        public MetadataElement Metadata
+        {
+            get { return (MetadataElement)base["metadata"]; }
+        }
+
+        /// <summary>
         /// Gets the requested attributes.
         /// </summary>
         [ConfigurationProperty("requestedAttributes")]
@@ -81,6 +100,15 @@ namespace SAML2.Config
         public ServiceProviderElement ServiceProvider
         {
             get { return (ServiceProviderElement)base["serviceProvider"]; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether to show errors, or a default error message.
+        /// </summary>
+        [ConfigurationProperty("showError")]
+        public bool ShowError
+        {
+            get { return (bool)base["showError"]; }
         }
 
         #endregion

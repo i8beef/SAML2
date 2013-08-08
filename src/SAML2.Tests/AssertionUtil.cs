@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
@@ -13,7 +14,7 @@ using SAML2.Utils;
 using NUnit.Framework;
 using Assertion=SAML2.Schema.Core.Assertion;
 
-namespace dk.nita.test.Saml20
+namespace SAML2.Tests.Saml20
 {
     /// <summary>
     /// Utility class for generating assertions.
@@ -203,19 +204,19 @@ namespace dk.nita.test.Saml20
                 throw new ArgumentNullException("issuer");
 
             var config = Saml2Config.GetConfig();
-            config.Endpoints.Refresh();
-            IdentityProviderEndpointElement idpEndpoint = config.FindEndPoint(issuer);
+            config.IdentityProviders.Refresh();
+            IdentityProviderElement idpEndpoint = config.IdentityProviders.FirstOrDefault(x => x.Id == issuer);
             if (idpEndpoint == null)
                 throw new InvalidOperationException(String.Format("No idp endpoint found for issuer {0}", issuer));
 
-            if (idpEndpoint.metadata == null)
+            if (idpEndpoint.Metadata == null)
                 throw new InvalidOperationException(String.Format("No metadata found for issuer {0}", issuer));
 
-            if (idpEndpoint.metadata.Keys == null)
+            if (idpEndpoint.Metadata.Keys == null)
                 throw new InvalidOperationException(String.Format("No key descriptors found in metadata found for issuer {0}", issuer));
 
             List<AsymmetricAlgorithm> result = new List<AsymmetricAlgorithm>(1);
-            foreach (KeyDescriptor key in idpEndpoint.metadata.Keys)
+            foreach (KeyDescriptor key in idpEndpoint.Metadata.Keys)
             {
                 KeyInfo ki = (KeyInfo) key.KeyInfo;
                 foreach (KeyInfoClause clause in ki)

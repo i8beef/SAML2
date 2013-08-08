@@ -14,6 +14,7 @@ namespace SAML2.Config
         public string Uri
         {
             get { return (string) base["uri"]; }
+            set { base["uri"] = value; }
         }
 
         #region Implementation of IConfigurationElementCollectionElement

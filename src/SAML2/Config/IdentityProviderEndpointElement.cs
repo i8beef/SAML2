@@ -42,10 +42,9 @@ namespace SAML2.Config
         /// Gets the type.
         /// </summary>
         [ConfigurationProperty("type", IsKey = true, IsRequired = true)]
-        [RegexStringValidator(@"^(signon|logout)$")]
-        public string Type
+        public EndpointType Type
         {
-            get { return (string)base["type"]; }
+            get { return (EndpointType)base["type"]; }
             set { base["type"] = value; }
         }
 

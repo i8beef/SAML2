@@ -32,7 +32,6 @@ namespace SAML2.Protocol
             try
             {
                 RedirectUrl = Saml2Config.GetConfig().ServiceProvider.Endpoints.LogoutEndpoint.RedirectUrl;
-                ErrorBehaviour = Saml2Config.GetConfig().ServiceProvider.Endpoints.LogoutEndpoint.ErrorBehaviour.ToString();
             }
             catch (Exception e)
             {
@@ -166,7 +165,7 @@ namespace SAML2.Protocol
                     response.InResponseTo = req.ID;
                     IdentityProviderElement endpoint = RetrieveIDPConfiguration(context.Session[IDPLoginSessionKey].ToString());
                     IdentityProviderEndpointElement destination =
-                        DetermineEndpointConfiguration(BindingType.Redirect, endpoint.Endpoints.LogOffEndpoint, endpoint.Metadata.SLOEndpoints());
+                        DetermineEndpointConfiguration(BindingType.Redirect, endpoint.Endpoints.LogoutEndpoint, endpoint.Metadata.SLOEndpoints());
 
                     builder.RedirectFromLogout(destination, response);
                 }else if(parser.ArtifactResponse.Any.LocalName == LogoutResponse.ELEMENT_NAME)
@@ -221,7 +220,7 @@ namespace SAML2.Protocol
             
             // Determine which endpoint to use from the configuration file or the endpoint metadata.
             IdentityProviderEndpointElement destination =
-                DetermineEndpointConfiguration(BindingType.Redirect, endpoint.Endpoints.LogOffEndpoint, endpoint.Metadata.SLOEndpoints());
+                DetermineEndpointConfiguration(BindingType.Redirect, endpoint.Endpoints.LogoutEndpoint, endpoint.Metadata.SLOEndpoints());
             
             request.Destination = destination.Url;
 
@@ -384,7 +383,7 @@ namespace SAML2.Protocol
             IdentityProviderElement idpEndpoint = RetrieveIDPConfiguration(context.Session[IDPLoginSessionKey].ToString());
 
             IdentityProviderEndpointElement destination =
-                DetermineEndpointConfiguration(BindingType.Redirect, idpEndpoint.Endpoints.LogOffEndpoint, idpEndpoint.Metadata.SLOEndpoints());
+                DetermineEndpointConfiguration(BindingType.Redirect, idpEndpoint.Endpoints.LogoutEndpoint, idpEndpoint.Metadata.SLOEndpoints());
 
             //Fetch config object
             var config = Saml2Config.GetConfig();

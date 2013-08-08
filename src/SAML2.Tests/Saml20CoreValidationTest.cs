@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using SAML2;
@@ -14,7 +15,7 @@ using NUnit.Framework;
 using Action = SAML2.Schema.Core.Action;
 using Assertion=SAML2.Schema.Core.Assertion;
 
-namespace dk.nita.test.Saml20
+namespace SAML2.Tests.Saml20
 {
     ///<summary>
     /// Tests Saml20 core validation 
@@ -696,18 +697,20 @@ namespace dk.nita.test.Saml20
         [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "The service is not configured to meet any audience restrictions")]
         public void AudienceRestriction_Invalid_NoConfiguration()
         {
-            FederationConfig sp = Saml2Config.GetConfig();
-            List<string> origAllowedAudiences = new List<string>(sp.AllowedAudienceUris.Audiences);
+            var sp = Saml2Config.GetConfig();
+            var origAllowedAudiences = new AllowedAudienceUriCollection();
+            origAllowedAudiences.AddRange(sp.AllowedAudienceUris.Select(x => new AudienceUriElement {Uri = x.Uri}));
+
             try
             {
-                sp.AllowedAudienceUris.Audiences = null;
+                sp.AllowedAudienceUris = null;
 
                 Assertion saml20Assertion = AssertionUtil.GetBasicAssertion();
                 CreateSaml20Token(saml20Assertion);
             }
             finally
             {
-                sp.AllowedAudienceUris.Audiences = origAllowedAudiences;
+                sp.AllowedAudienceUris = origAllowedAudiences;
             }
         }
 
@@ -719,18 +722,21 @@ namespace dk.nita.test.Saml20
         [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "The service is not configured to meet the given audience restrictions")]
         public void AudienceRestriction_Invalid_ConfigurationSetup()
         {
-            FederationConfig sp = Saml2Config.GetConfig();
-            List<string> origAllowedAudiences = new List<string>(sp.AllowedAudienceUris.Audiences);
+            var sp = Saml2Config.GetConfig();
+            var origAllowedAudiences = new AllowedAudienceUriCollection();
+            origAllowedAudiences.AddRange(sp.AllowedAudienceUris.Select(x => new AudienceUriElement { Uri = x.Uri }));
+
             try
             {
-                sp.AllowedAudienceUris.Audiences = new List<string>(new string[] { "urn:lalal" });
+                sp.AllowedAudienceUris = new AllowedAudienceUriCollection();
+                sp.AllowedAudienceUris.Add(new AudienceUriElement { Uri = "urn:lalal" });
 
                 Assertion saml20Assertion = AssertionUtil.GetBasicAssertion();
                 CreateSaml20Token(saml20Assertion);
             }
             finally
             {
-                sp.AllowedAudienceUris.Audiences = origAllowedAudiences;
+                sp.AllowedAudienceUris = origAllowedAudiences;
             }
         }
 

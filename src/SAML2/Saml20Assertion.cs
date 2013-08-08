@@ -597,9 +597,9 @@ namespace SAML2
             if (trustedSigners != null)
                 if (!CheckSignature(trustedSigners))
                     throw new Saml20Exception("Assertion signature could not be verified.");
-            
+
             // Validate the saml20Assertion.      
-            if(_autoValidate)
+            if (_autoValidate)
                 AssertionValidator.ValidateAssertion(Assertion);
         }
 

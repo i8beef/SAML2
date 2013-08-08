@@ -12,16 +12,16 @@ namespace SAML2.Config
         /// <summary>
         /// Gets the log off endpoint.
         /// </summary>
-        public IdentityProviderEndpointElement LogOffEndpoint
+        public IdentityProviderEndpointElement LogoutEndpoint
         {
-            get { return this.FirstOrDefault(x => x.Type == "logoff"); }
+            get { return this.FirstOrDefault(x => x.Type == EndpointType.Logout); }
         }
         /// <summary>
         /// Gets the sign on endpoint.
         /// </summary>
         public IdentityProviderEndpointElement SignOnEndpoint
         {
-            get { return this.FirstOrDefault(x => x.Type == "signon"); }
+            get { return this.FirstOrDefault(x => x.Type == EndpointType.SignOn); }
         }
     }
 }

@@ -83,6 +83,7 @@
     <Compile Include="Config\ContactType.cs" />
     <Compile Include="Config\EndpointType.cs" />
     <Compile Include="Config\EnumerableConfigurationElementCollection.cs" />
+    <Compile Include="Config\ErrorBehavior.cs" />
     <Compile Include="Config\HttpBasicAuthElement.cs" />
     <Compile Include="Config\IConfigurationElementCollectionElement.cs" />
     <Compile Include="Config\IdentityProviderEndpointElement.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Config\IdentityProviderCollection.cs" />
     <Compile Include="Config\IdentityProviderElement.cs" />
     <Compile Include="Config\LoggingElement.cs" />
+    <Compile Include="Config\MetadataElement.cs" />
     <Compile Include="Config\NameIdFormatCollection.cs" />
     <Compile Include="Config\NameIdFormatElement.cs" />
     <Compile Include="Config\OrganizationElement.cs" />

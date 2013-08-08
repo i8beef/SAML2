@@ -7,7 +7,7 @@ using SAML2.Schema.Metadata;
 using SAML2.Utils;
 using NUnit.Framework;
 
-namespace dk.nita.test.Saml20.Protocol
+namespace SAML2.Tests.Saml20.Protocol
 {
     [TestFixture]
     public class SamlMetadataDocumentTest

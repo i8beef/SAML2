@@ -7,7 +7,7 @@ using SAML2;
 using SAML2.Schema.Core;
 using NUnit.Framework;
 
-namespace dk.nita.test.Saml20
+namespace SAML2.Tests.Saml20
 {
     /// <summary>
     /// Tests related to the handling of attributes on Saml Assertions.

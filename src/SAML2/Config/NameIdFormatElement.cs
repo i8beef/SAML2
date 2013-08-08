@@ -18,7 +18,6 @@ namespace SAML2.Config
         /// Gets the type.
         /// </summary>
         [ConfigurationProperty("format", IsKey = true, IsRequired = true)]
-        [RegexStringValidator(NameIdFormatsRegex)]
         public string Format
         {
             get { return (string)base["format"]; }

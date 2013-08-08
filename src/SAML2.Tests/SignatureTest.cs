@@ -9,7 +9,7 @@ using NUnit.Framework;
 using SAML2;
 using Signature=SAML2.Schema.XmlDSig.Signature;
 
-namespace dk.nita.test.Saml20
+namespace SAML2.Tests.Saml20
 {
     /// <summary>
     /// Contains tests that verify the signatures of the sample assertions in the Assertions directory. 

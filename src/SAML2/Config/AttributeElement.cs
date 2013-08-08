@@ -12,7 +12,7 @@ namespace SAML2.Config
         /// <summary>
         /// Gets a value indicating whether this attribute is required.
         /// </summary>
-        [ConfigurationProperty("isRequired", IsRequired = true)]
+        [ConfigurationProperty("isRequired")]
         public bool IsRequired
         {
             get { return (bool) base["isRequired"]; }

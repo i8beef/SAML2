@@ -170,8 +170,10 @@ namespace SAML2
                 spDescriptor.AttributeConsumingService = new AttributeConsumingService[0];
             }
 
-            if(config.Metadata != null && config.Metadata.IncludeArtifactEndpoints)
+            if (config.Metadata == null || !config.Metadata.ExcludeArtifactEndpoints)
+            {
                 spDescriptor.ArtifactResolutionService = artifactResolutionEndpoints.ToArray();
+            }
 
             entity.Items = new object[] { spDescriptor };
 
