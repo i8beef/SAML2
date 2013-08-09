@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
-using System.Text;
 using System.Web;
 using System.Xml;
-using SAML2;
 using SAML2.Bindings;
 using SAML2.Logging;
 using SAML2.Config;
@@ -27,26 +24,45 @@ namespace SAML2
     /// </summary>
     public class Saml20AttributeQuery
     {
-        private readonly AttributeQuery _attrQuery;
-
-        private readonly List<SamlAttribute> _attributes;
-
-        private Saml20AttributeQuery()
-        {
-            _attrQuery = new AttributeQuery();
-            _attrQuery.Version = Saml20Constants.Version;
-            _attrQuery.ID = "id" + Guid.NewGuid().ToString("N");
-            _attrQuery.Issuer = new NameID();
-            _attrQuery.IssueInstant = DateTime.Now;
-            _attrQuery.Subject = new Subject();
-            _attributes = new List<SamlAttribute>();
-
-        }
-
         /// <summary>
         /// Logger instance.
         /// </summary>
         protected static readonly IInternalLogger Logger = LoggerProvider.LoggerFor(MethodBase.GetCurrentMethod().DeclaringType);
+
+        /// <summary>
+        /// List of attributes.
+        /// </summary>
+        private readonly List<SamlAttribute> _attributes;
+
+        /// <summary>
+        /// The attribute query.
+        /// </summary>
+        private readonly AttributeQuery _attrQuery;
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="Saml20AttributeQuery"/> class from being created.
+        /// </summary>
+        private Saml20AttributeQuery()
+        {
+            _attrQuery = new AttributeQuery
+                             {
+                                 Version = Saml20Constants.Version,
+                                 ID = "id" + Guid.NewGuid().ToString("N"),
+                                 Issuer = new NameID(),
+                                 IssueInstant = DateTime.Now,
+                                 Subject = new Subject()
+                             };
+            _attributes = new List<SamlAttribute>();
+        }
+
+        /// <summary>
+        /// Gets the ID of the attribute query.
+        /// </summary>
+        /// <value>The ID.</value>
+        public string Id
+        {
+            get { return _attrQuery.ID; }
+        }
 
         /// <summary>
         /// Gets or sets the issuer of the attribute query.
@@ -59,12 +75,22 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Gets the ID of the attribute query.
+        /// Gets a default instance of this class with meaningful default values set.
         /// </summary>
-        /// <value>The ID.</value>
-        public string ID
+        /// <returns>The default <see cref="Saml20AttributeQuery"/>.</returns>
+        public static Saml20AttributeQuery GetDefault()
         {
-            get { return _attrQuery.ID; }
+            var result = new Saml20AttributeQuery();
+
+            var config = Saml2Config.GetConfig();
+            if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.Id))
+            {
+                throw new Saml20FormatException(Resources.ServiceProviderNotSet);
+            }
+
+            result.Issuer = config.ServiceProvider.Id;
+
+            return result;
         }
 
         /// <summary>
@@ -73,7 +99,7 @@ namespace SAML2
         /// <param name="attrName">Name of the attribute.</param>
         public void AddAttribute(string attrName)
         {
-            AddAttribute(attrName, Saml20NameFormat.BASIC);
+            AddAttribute(attrName, Saml20NameFormat.Basic);
         }
 
         /// <summary>
@@ -83,37 +109,18 @@ namespace SAML2
         /// <param name="nameFormat">The name format of the attribute.</param>
         public void AddAttribute(string attrName, Saml20NameFormat nameFormat)
         {
-            List<SamlAttribute> found = _attributes.FindAll(delegate(SamlAttribute at) { return at.Name == attrName && at.NameFormat == GetNameFormat(nameFormat); });
-            if (found.Count > 0)
-                throw new InvalidOperationException(
-                    string.Format("An attribute with name \"{0}\" and name format \"{1}\" has already been added", attrName, Enum.GetName(typeof(Saml20NameFormat), nameFormat)));
-            
-            SamlAttribute attr = new SamlAttribute();
-            attr.Name = attrName;
-            attr.NameFormat = GetNameFormat(nameFormat);
-
-            _attributes.Add(attr);
-        }
-
-        private static string GetNameFormat(Saml20NameFormat nameFormat)
-        {
-            string result;
-
-            switch (nameFormat)
+            if (_attributes.Any(at => at.Name == attrName && at.NameFormat == GetNameFormat(nameFormat)))
             {
-                case Saml20NameFormat.BASIC:
-                    result = SamlAttribute.NameformatBasic;
-                    break;
-                case Saml20NameFormat.URI:
-                    result = SamlAttribute.NameformatUri;
-                    break;
-                default:
-                    throw new ArgumentException(
-                        string.Format("Unsupported nameFormat: {0}", Enum.GetName(typeof(Saml20NameFormat), nameFormat)),
-                        "nameFormat");
+                throw new InvalidOperationException(string.Format("An attribute with name \"{0}\" and name format \"{1}\" has already been added", attrName, Enum.GetName(typeof(Saml20NameFormat), nameFormat)));
             }
 
-            return result;
+            var attr = new SamlAttribute
+                           {
+                               Name = attrName,
+                               NameFormat = GetNameFormat(nameFormat)
+                           };
+
+            _attributes.Add(attr);
         }
 
         /// <summary>
@@ -123,18 +130,19 @@ namespace SAML2
         public void PerformQuery(HttpContext context)
         {
             var config = Saml2Config.GetConfig();
-            string endpointId = context.Session[Saml20AbstractEndpointHandler.IDPLoginSessionKey].ToString();
 
+            var endpointId = context.Session[Saml20AbstractEndpointHandler.IDPLoginSessionKey].ToString();
             if (string.IsNullOrEmpty(endpointId))
             {
                 Logger.Debug(Tracing.AttrQueryNoLogin);
                 throw new InvalidOperationException(Tracing.AttrQueryNoLogin);
             }
 
-            IdentityProviderElement ep = config.IdentityProviders.FirstOrDefault(x => x.Id == endpointId);
-
+            var ep = config.IdentityProviders.FirstOrDefault(x => x.Id == endpointId);
             if (ep == null)
+            {
                 throw new Saml20Exception(string.Format("Unable to find information about the IdP with id \"{0}\"", endpointId));
+            }
 
             PerformQuery(context, ep);
         }
@@ -146,9 +154,12 @@ namespace SAML2
         /// <param name="endPoint">The IdP to perform the query against.</param>
         public void PerformQuery(HttpContext context, IdentityProviderElement endPoint)
         {
-            string nameIdFormat = context.Session[Saml20AbstractEndpointHandler.IDPNameIdFormat].ToString();
+            var nameIdFormat = context.Session[Saml20AbstractEndpointHandler.IDPNameIdFormat].ToString();
             if (string.IsNullOrEmpty(nameIdFormat))
+            {
                 nameIdFormat = Saml20Constants.NameIdentifierFormats.Persistent;
+            }
+
             PerformQuery(context, endPoint, nameIdFormat);
         }
 
@@ -162,40 +173,41 @@ namespace SAML2
         {
             Logger.DebugFormat("{0}.{1} called", GetType(), "PerformQuery()");
 
-            HttpSoapBindingBuilder builder = new HttpSoapBindingBuilder(context);
-            
-            NameID name = new NameID();
-            name.Value = Saml20Identity.Current.Name;
-            name.Format = nameIdFormat;
-            _attrQuery.Subject.Items = new object[] { name };
+            var builder = new HttpSoapBindingBuilder(context);
 
+            var name = new NameID
+                           {
+                               Value = Saml20Identity.Current.Name,
+                               Format = nameIdFormat
+                           };
+            _attrQuery.Subject.Items = new object[] { name };
             _attrQuery.SamlAttribute = _attributes.ToArray();
-            XmlDocument query = new XmlDocument();
+
+            var query = new XmlDocument();
             query.LoadXml(Serialization.SerializeToXmlString(_attrQuery));
 
-            XmlSignatureUtils.SignDocument(query, ID);
+            XmlSignatureUtils.SignDocument(query, Id);
             if (query.FirstChild is XmlDeclaration)
+            {
                 query.RemoveChild(query.FirstChild);
-
-            Stream s;
+            }
 
             Logger.DebugFormat(Tracing.SendAttrQuery, endPoint.Metadata.GetAttributeQueryEndpointLocation(), query.OuterXml);
 
+            Stream s;
             try
             {
-                 s = builder.GetResponse(endPoint.Metadata.GetAttributeQueryEndpointLocation(), query.OuterXml,
-                                               endPoint.AttributeQuery);
+                 s = builder.GetResponse(endPoint.Metadata.GetAttributeQueryEndpointLocation(), query.OuterXml, endPoint.AttributeQuery);
 
-            }catch(Exception e)
+            }
+            catch(Exception e)
             {
                 Logger.Error(e.Message, e);
                 throw;
             }
 
-            HttpSoapBindingParser parser = new HttpSoapBindingParser(s);
-
-            Status status = parser.GetStatus();
-
+            var parser = new HttpSoapBindingParser(s);
+            var status = parser.GetStatus();
             if (status.StatusCode.Value != Saml20Constants.StatusCodes.Success)
             {
                 Logger.ErrorFormat(Tracing.AttrQueryStatusError, Serialization.SerializeToXmlString(status));
@@ -203,68 +215,52 @@ namespace SAML2
             }
 
             bool isEncrypted;
-
-            XmlElement xmlAssertion = Saml20SignonHandler.GetAssertion(parser.SamlMessage, out isEncrypted);
-
+            var xmlAssertion = Saml20SignonHandler.GetAssertion(parser.SamlMessage, out isEncrypted);
             if (isEncrypted)
             {
-                Saml20EncryptedAssertion ass =
-                    new Saml20EncryptedAssertion(
-                        (RSA) Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey);
+                var ass = new Saml20EncryptedAssertion((RSA) Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey);
                 ass.LoadXml(xmlAssertion);
                 ass.Decrypt();
                 xmlAssertion = ass.Assertion.DocumentElement;
             }
 
-            Saml20Assertion assertion =
-                    new Saml20Assertion(xmlAssertion, null, Saml2Config.GetConfig().AssertionProfile.AssertionValidator, endPoint.QuirksMode);
-
+            var assertion = new Saml20Assertion(xmlAssertion, null, Saml2Config.GetConfig().AssertionProfile.AssertionValidator, endPoint.QuirksMode);
             Logger.DebugFormat(Tracing.AttrQueryAssertion, xmlAssertion == null ? string.Empty : xmlAssertion.OuterXml);
 
-            if (!assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endPoint.Metadata.Keys, endPoint))){
+            if (!assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endPoint.Metadata.Keys, endPoint)))
+            {
                 Logger.Error(Resources.SignatureInvalid);
                 throw new Saml20Exception(Resources.SignatureInvalid);
             }
             
-            foreach (SamlAttribute attr in assertion.Attributes)
+            foreach (var attr in assertion.Attributes)
             {
                 Saml20Identity.Current.AddAttributeFromQuery(attr.Name, attr);
             }
-           
         }
 
         /// <summary>
-        /// Gets a default instance of this class with meaningful default values set.
+        /// Gets the name format.
         /// </summary>
-        /// <returns></returns>
-        public static Saml20AttributeQuery GetDefault()
+        /// <param name="nameFormat">The name format.</param>
+        /// <returns>The name format.</returns>
+        private static string GetNameFormat(Saml20NameFormat nameFormat)
         {
-            Saml20AttributeQuery result = new Saml20AttributeQuery();
+            string result;
 
-            var config = Saml2Config.GetConfig();
+            switch (nameFormat)
+            {
+                case Saml20NameFormat.Basic:
+                    result = SamlAttribute.NameformatBasic;
+                    break;
+                case Saml20NameFormat.Uri:
+                    result = SamlAttribute.NameformatUri;
+                    break;
+                default:
+                    throw new ArgumentException(string.Format("Unsupported nameFormat: {0}", Enum.GetName(typeof(Saml20NameFormat), nameFormat)), "nameFormat");
+            }
 
-            if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.Id))
-                throw new Saml20FormatException(Resources.ServiceProviderNotSet);
-
-            result.Issuer = config.ServiceProvider.Id;
-            
             return result;
         }
-
-    }
-
-    /// <summary>
-    /// Name formats for queried attributes
-    /// </summary>
-    public enum Saml20NameFormat
-    {
-        /// <summary>
-        /// Basic name format
-        /// </summary>
-        BASIC,
-        /// <summary>
-        /// Uri name format
-        /// </summary>
-        URI,
     }
 }

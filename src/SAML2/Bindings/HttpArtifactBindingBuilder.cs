@@ -129,7 +129,7 @@ namespace SAML2.Bindings
                 doc.RemoveChild(doc.FirstChild);
             }
 
-            XmlSignatureUtils.SignDocument(doc, resolve.ID);
+            XmlSignatureUtils.SignDocument(doc, resolve.Id);
 
             var artifactResolveString = doc.OuterXml;
 
@@ -157,7 +157,7 @@ namespace SAML2.Bindings
                 responseDoc.RemoveChild(responseDoc.FirstChild);
             }
 
-            XmlSignatureUtils.SignDocument(responseDoc, response.ID);
+            XmlSignatureUtils.SignDocument(responseDoc, response.Id);
 
             Logger.DebugFormat(Tracing.RespondToArtifactResolve, artifactResolve.Artifact, responseDoc.OuterXml);
 

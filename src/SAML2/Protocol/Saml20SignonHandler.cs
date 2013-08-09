@@ -331,7 +331,7 @@ namespace SAML2.Protocol
             }
 
             // Check expiration
-            if (assertion.IsExpired())
+            if (assertion.IsExpired)
             {
                 Logger.Error("Assertion expired, assertion: " + elem.OuterXml);
                 HandleError(context, Resources.AssertionExpired);
@@ -604,7 +604,7 @@ namespace SAML2.Protocol
             }
 
             //Save request message id to session
-            context.Session.Add(ExpectedInResponseToSessionKey, request.ID);
+            context.Session.Add(ExpectedInResponseToSessionKey, request.Id);
 
             // Handle Redirect binding
             if (destination.Binding == BindingType.Redirect)
@@ -634,7 +634,7 @@ namespace SAML2.Protocol
                     request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_Post;
                 }
                 var req = request.GetXml();
-                XmlSignatureUtils.SignDocument(req, request.ID);
+                XmlSignatureUtils.SignDocument(req, request.Id);
                 builder.Request = req.OuterXml;
 
                 builder.GetPage().ProcessRequest(context);

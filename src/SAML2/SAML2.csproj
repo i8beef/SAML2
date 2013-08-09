@@ -147,6 +147,7 @@
     <Compile Include="Saml20LogoutRequest.cs" />
     <Compile Include="Saml20LogoutResponse.cs" />
     <Compile Include="Saml20MetadataDocument.cs" />
+    <Compile Include="Saml20NameFormat.cs" />
     <Compile Include="Schema\Core\Action.cs" />
     <Compile Include="Schema\Core\Advice.cs" />
     <Compile Include="Schema\Core\AdviceType.cs" />
@@ -235,7 +236,7 @@
     <Compile Include="Schema\XEnc\EncryptionMethod.cs" />
     <Compile Include="Schema\XEnc\EncryptionProperties.cs" />
     <Compile Include="Schema\XEnc\EncryptionProperty.cs" />
-    <Compile Include="Schema\XEnc\Enums.cs" />
+    <Compile Include="Schema\XEnc\ReferenceListType.cs" />
     <Compile Include="Schema\XEnc\ReferenceList.cs" />
     <Compile Include="Schema\XEnc\ReferenceType.cs" />
     <Compile Include="Schema\XEnc\TransformsType.cs" />

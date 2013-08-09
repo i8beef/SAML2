@@ -21,20 +21,12 @@ namespace SAML2
     public class Saml20Assertion 
     {
         #region Private variables
-        /// <summary>
-        /// The primary storage of the assertion. When deserialized or signed, the token will be stored in this field.
-        /// </summary>
-        private XmlElement _samlAssertion;
 
         /// <summary>
         /// A strongly-typed version of the assertion. It is generated on-demand from the contents of the <code>_samlAssertion</code>
         /// field. 
         /// </summary>
         private Assertion _assertion;
-
-        private ISaml20AssertionValidator _assertionValidator;
-
-        private string profile;
 
         /// <summary>
         /// An list of the unencrypted attributes in the assertion. This list is lazy initialized, ie. it will only be retrieved
@@ -45,264 +37,30 @@ namespace SAML2
         /// </summary>
         private List<SamlAttribute> _assertionAttributes;
 
-        private List<EncryptedElement> _encryptedAssertionAttributes;
+        /// <summary>
+        /// The assertion validator.
+        /// </summary>
+        private ISaml20AssertionValidator _assertionValidator;
 
-        private string _encryptedId;
-
-        private AsymmetricAlgorithm _signingKey;
-
-        private bool _quirksMode = false;
+        /// <summary>
+        /// Auto validate assertions.
+        /// </summary>
         private readonly bool _autoValidate = true;
 
-        #endregion
-
-        #region Properties
-
-        private ISaml20AssertionValidator AssertionValidator
-        {
-            get
-            {
-                if (_assertionValidator == null)
-                {
-                    var config = Saml2Config.GetConfig();
-                    if (config == null || config.AllowedAudienceUris == null)
-                    {
-                        if (String.IsNullOrEmpty(profile))
-                        {
-                            _assertionValidator = new Saml20AssertionValidator(null, _quirksMode);
-                        }
-                        else
-                        {
-                            _assertionValidator = (ISaml20AssertionValidator)Activator.CreateInstance(System.Type.GetType(profile), null, _quirksMode);
-                        }
-                    }
-                    else
-                    {
-                        if (String.IsNullOrEmpty(profile))
-                        {
-                            _assertionValidator = new Saml20AssertionValidator(config.AllowedAudienceUris.Select(x => x.Uri).ToList(), _quirksMode);
-                        }
-                        else
-                        {
-                            _assertionValidator = (ISaml20AssertionValidator)Activator.CreateInstance(System.Type.GetType(profile), config.AllowedAudienceUris, _quirksMode);
-                        }
-                    }
-                }
-                return _assertionValidator;
-            }
-        }
+        /// <summary>
+        /// List of encrypted assertion attributes.
+        /// </summary>
+        private List<EncryptedElement> _encryptedAssertionAttributes;
 
         /// <summary>
-        /// A strongly-typed version of the Saml Assertion. It is lazily generated based on the contents of the
-        /// <code>_samlAssertion</code> field.
+        /// The profile.
         /// </summary>
-        public Assertion Assertion
-        {
-            get
-            {
-                if (_assertion == null)
-                {
-                    if (_samlAssertion == null)
-                        throw new InvalidOperationException("No assertion is loaded.");
-
-                    XmlNodeReader reader = new XmlNodeReader(_samlAssertion);
-                    _assertion = Serialization.Deserialize<Assertion>(reader);
-                }
-                    
-                return _assertion;
-            }
-        }
+        private readonly string _profile;
 
         /// <summary>
-        /// Gets the assertion in XmlElement representation.
+        /// Quirksmode switch.
         /// </summary>
-        /// <value>The XML assertion.</value>
-        public XmlElement XmlAssertion
-        {
-            get
-            {
-                return _samlAssertion;
-            }
-        }
-
-        /// <summary>
-        /// Gets the subject.
-        /// </summary>
-        /// <value>The subject.</value>
-        public NameID Subject
-        {
-            get
-            {
-                foreach (object o in Assertion.Subject.Items)
-                {
-                    if (o is NameID)
-                        return (NameID) o;
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets the subject items.
-        /// </summary>
-        /// <value>The subject items.</value>
-        public object[] SubjectItems
-        {
-            get
-            {
-                return Assertion.Subject.Items;
-            }
-        }
-
-        /// <summary>
-        /// They asymmetric key that can verify the signature of the assertion.
-        /// </summary>
-        public AsymmetricAlgorithm SigningKey
-        {
-            get { return _signingKey; }
-            set { _signingKey = value; }
-        }
-
-        /// <summary>
-        /// Retrieve the value of the &lt;Issuer&gt; element.
-        /// </summary>
-        public string Issuer
-        {
-            get { return Assertion.Issuer.Value; }
-        }
-
-        /// <summary>
-        /// The ID attribute of the &lt;Assertion&gt; element.
-        /// </summary>
-        public string Id
-        {
-            get { return Assertion.ID; }
-        }
-
-        /// <summary>
-        /// Gets the SessionIndex of the AuthnStatement
-        /// </summary>
-        public string SessionIndex
-        {
-            get
-            {
-                List<AuthnStatement> list = Assertion.GetAuthnStatements();
-                if (list.Count > 0)
-                {
-                    return list[0].SessionIndex;
-                }
-
-                return string.Empty;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the assertion has a OneTimeUse condition.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if the assertion has a OneTimeUse condition; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsOneTimeUse
-        {
-            get
-            {
-                foreach (ConditionAbstract item in Assertion.Conditions.Items)
-                {
-                    if (item is OneTimeUse)
-                        return true;
-                }
-
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// The unencrypted attributes of the assertion.
-        /// </summary>
-        public List<SamlAttribute> Attributes
-        {
-            get
-            {
-                if (_assertionAttributes == null)
-                    ExtractAttributes(); // Lazy initialization of the attributes list.                
-                return _assertionAttributes;
-            }
-            set
-            {
-                // _assertionAttributes == null is reserved for signalling that the attribute is not initialized, so 
-                // convert it to an empty list.
-                if (value == null) 
-                    value = new List<SamlAttribute>(0);
-                _assertionAttributes = value;
-            }
-        }
-
-        /// <summary>
-        /// The encrypted attributes of the assertion.
-        /// </summary>
-        public List<EncryptedElement> EncryptedAttributes
-        {
-            get 
-            { 
-                if (_encryptedAssertionAttributes == null)
-                    ExtractAttributes(); // Lazy initialization of the attributes list.
-                return _encryptedAssertionAttributes;
-            }
-
-            set
-            {
-                // _encryptedAssertionAttributes == null is reserved for signalling that the attribute is not initialized, so 
-                // convert it to an empty list.
-                if (value == null)
-                    value = new List<EncryptedElement>(0);
-
-                _encryptedAssertionAttributes = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the encrypted id.
-        /// </summary>
-        /// <value>The encrypted id.</value>
-        public string EncryptedId
-        {
-            get { return _encryptedId; }
-            set { _encryptedId = value; }
-        }
-
-        /// <summary>
-        /// Retrieve the NotOnOrAfter propoerty, if it is included in the assertion.
-        /// </summary>
-        public DateTime NotOnOrAfter
-        {
-            get
-            {
-                // Find the SubjectConfirmation element for the ValidTo attribute. [DKSAML] ch. 7.1.4.
-                foreach (object o in Assertion.Subject.Items)
-                {
-                    if (o is SubjectConfirmation)
-                    {
-                        SubjectConfirmation subjectConfirmation = (SubjectConfirmation)o;
-                        if (subjectConfirmation.SubjectConfirmationData.NotOnOrAfter.HasValue)
-                            return subjectConfirmation.SubjectConfirmationData.NotOnOrAfter.Value;
-                    }
-                }
-
-                return DateTime.MaxValue;
-            }
-        }
-
-        /// <summary>
-        /// Gets the conditions element of the assertion.
-        /// </summary>
-        /// <value>The conditions element.</value>
-        public Conditions Conditions
-        {
-            get
-            {
-                return _assertion.Conditions;
-            }
-        }
+        private readonly bool _quirksMode;
 
         #endregion
 
@@ -323,7 +81,7 @@ namespace SAML2
         public Saml20Assertion(XmlElement assertion, IEnumerable<AsymmetricAlgorithm> trustedSigners, bool quirksMode)
         {
             _quirksMode = quirksMode;
-            profile = null;
+            _profile = null;
             LoadXml(assertion, trustedSigners);
         }
 
@@ -335,7 +93,7 @@ namespace SAML2
         /// <param name="profile">Determines the type of validation to perform on the token</param>
         /// <param name="quirksMode">if set to <c>true</c> quirks mode is enabled.</param>
         public Saml20Assertion(XmlElement assertion, IEnumerable<AsymmetricAlgorithm> trustedSigners, string profile, bool quirksMode){
-            this.profile = profile;
+            _profile = profile;
             _quirksMode = quirksMode;
             LoadXml(assertion, trustedSigners);
         }
@@ -350,10 +108,250 @@ namespace SAML2
         /// <param name="autoValidate">Turn automatic validation on or off</param>
         public Saml20Assertion(XmlElement assertion, IEnumerable<AsymmetricAlgorithm> trustedSigners, string profile, bool quirksMode, bool autoValidate)
         {
-            this.profile = profile;
+            _profile = profile;
             _quirksMode = quirksMode;
             _autoValidate = autoValidate;
             LoadXml(assertion, trustedSigners);
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// A strongly-typed version of the Saml Assertion. It is lazily generated based on the contents of the
+        /// <code>_samlAssertion</code> field.
+        /// </summary>
+        public Assertion Assertion
+        {
+            get
+            {
+                if (_assertion == null)
+                {
+                    if (XmlAssertion == null)
+                    {
+                        throw new InvalidOperationException("No assertion is loaded.");
+                    }
+
+                    _assertion = Serialization.Deserialize<Assertion>(new XmlNodeReader(XmlAssertion));
+                }
+
+                return _assertion;
+            }
+        }
+
+        /// <summary>
+        /// The unencrypted attributes of the assertion.
+        /// </summary>
+        public List<SamlAttribute> Attributes
+        {
+            get
+            {
+                if (_assertionAttributes == null)
+                {
+                    ExtractAttributes(); // Lazy initialization of the attributes list.                
+                }
+
+                return _assertionAttributes;
+            }
+            set
+            {
+                // _assertionAttributes == null is reserved for signalling that the attribute is not initialized, so 
+                // convert it to an empty list.
+                if (value == null)
+                {
+                    value = new List<SamlAttribute>(0);
+                }
+                _assertionAttributes = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the conditions element of the assertion.
+        /// </summary>
+        /// <value>The conditions element.</value>
+        public Conditions Conditions
+        {
+            get
+            {
+                return _assertion.Conditions;
+            }
+        }
+
+        /// <summary>
+        /// The encrypted attributes of the assertion.
+        /// </summary>
+        /// <value>The encrypted attributes.</value>
+        public List<EncryptedElement> EncryptedAttributes
+        {
+            get
+            {
+                if (_encryptedAssertionAttributes == null)
+                {
+                    ExtractAttributes(); // Lazy initialization of the attributes list.
+                }
+
+                return _encryptedAssertionAttributes;
+            }
+
+            set
+            {
+                // _encryptedAssertionAttributes == null is reserved for signalling that the attribute is not initialized, so 
+                // convert it to an empty list.
+                if (value == null)
+                {
+                    value = new List<EncryptedElement>(0);
+                }
+
+                _encryptedAssertionAttributes = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the encrypted id.
+        /// </summary>
+        /// <value>The encrypted id.</value>
+        public string EncryptedId { get; set; }
+        
+        /// <summary>
+        /// The ID attribute of the &lt;Assertion&gt; element.
+        /// </summary>
+        public string Id
+        {
+            get { return Assertion.ID; }
+        }
+        
+        /// <summary>
+        /// Checks if the expiration time has been exceeded.
+        /// </summary>
+        public bool IsExpired
+        {
+            get { return DateTime.Now.ToUniversalTime() > NotOnOrAfter; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the assertion has a OneTimeUse condition.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the assertion has a OneTimeUse condition; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsOneTimeUse
+        {
+            get { return Assertion.Conditions.Items.OfType<OneTimeUse>().Any(); }
+        }
+
+        /// <summary>
+        /// Retrieve the value of the &lt;Issuer&gt; element.
+        /// </summary>
+        public string Issuer
+        {
+            get { return Assertion.Issuer.Value; }
+        }
+
+        /// <summary>
+        /// Retrieve the NotOnOrAfter propoerty, if it is included in the assertion.
+        /// </summary>
+        public DateTime NotOnOrAfter
+        {
+            get
+            {
+                // Find the SubjectConfirmation element for the ValidTo attribute. [DKSAML] ch. 7.1.4.
+                foreach (var o in Assertion.Subject.Items)
+                {
+                    if (o is SubjectConfirmation)
+                    {
+                        var subjectConfirmation = (SubjectConfirmation)o;
+                        if (subjectConfirmation.SubjectConfirmationData.NotOnOrAfter.HasValue)
+                        {
+                            return subjectConfirmation.SubjectConfirmationData.NotOnOrAfter.Value;
+                        }
+                    }
+                }
+
+                return DateTime.MaxValue;
+            }
+        }
+
+        /// <summary>
+        /// Gets the SessionIndex of the AuthnStatement
+        /// </summary>
+        public string SessionIndex
+        {
+            get
+            {
+                var list = Assertion.GetAuthnStatements();
+                return list.Count > 0 ? list[0].SessionIndex : string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// They asymmetric key that can verify the signature of the assertion.
+        /// </summary>
+        public AsymmetricAlgorithm SigningKey { get; set; }
+
+        /// <summary>
+        /// Gets the subject.
+        /// </summary>
+        /// <value>The subject.</value>
+        public NameID Subject
+        {
+            get { return Assertion.Subject.Items.OfType<NameID>().FirstOrDefault(); }
+        }
+
+        /// <summary>
+        /// Gets the subject items.
+        /// </summary>
+        /// <value>The subject items.</value>
+        public object[] SubjectItems
+        {
+            get
+            {
+                return Assertion.Subject.Items;
+            }
+        }
+
+        /// <summary>
+        /// Gets the assertion in XmlElement representation.
+        /// </summary>
+        /// <value>The XML assertion.</value>
+        public XmlElement XmlAssertion { get; private set; }
+
+        /// <summary>
+        /// Gets the assertion validator.
+        /// </summary>
+        private ISaml20AssertionValidator AssertionValidator
+        {
+            get
+            {
+                if (_assertionValidator == null)
+                {
+                    var config = Saml2Config.GetConfig();
+                    if (config == null || config.AllowedAudienceUris == null)
+                    {
+                        if (String.IsNullOrEmpty(_profile))
+                        {
+                            _assertionValidator = new Saml20AssertionValidator(null, _quirksMode);
+                        }
+                        else
+                        {
+                            _assertionValidator = (ISaml20AssertionValidator)Activator.CreateInstance(Type.GetType(_profile), null, _quirksMode);
+                        }
+                    }
+                    else
+                    {
+                        if (String.IsNullOrEmpty(_profile))
+                        {
+                            _assertionValidator = new Saml20AssertionValidator(config.AllowedAudienceUris.Select(x => x.Uri).ToList(), _quirksMode);
+                        }
+                        else
+                        {
+                            _assertionValidator = (ISaml20AssertionValidator)Activator.CreateInstance(Type.GetType(_profile), config.AllowedAudienceUris, _quirksMode);
+                        }
+                    }
+                }
+
+                return _assertionValidator;
+            }
         }
 
         #endregion
@@ -367,51 +365,47 @@ namespace SAML2
         public bool CheckSignature(IEnumerable<AsymmetricAlgorithm> keys)
         {
             if (keys == null)
-                throw new ArgumentNullException("keys");
-
-            foreach (AsymmetricAlgorithm key in keys)
             {
-                if (key == null)
-                    continue;
-
-                if (CheckSignature(key)) 
-                    return true;
+                throw new ArgumentNullException("keys");
             }
 
-            return false;
+            return keys.Where(key => key != null).Any(CheckSignature);
         }
 
+        /// <summary>
+        /// Checks the signature.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>True, if the given key was able to verify the signature. False in all other cases.</returns>
         private bool CheckSignature(AsymmetricAlgorithm key)
         {
-            if (XmlSignatureUtils.CheckSignature(_samlAssertion, key))
+            if (XmlSignatureUtils.CheckSignature(XmlAssertion, key))
             {
                 SigningKey = key;
                 return true;
             }
+
             return false;
-            
         }
 
         /// <summary>
         /// Verifies the assertion's signature and its time to live.
         /// </summary>
+        /// <param name="trustedSigners">The trusted signers.</param>
         /// <exception cref="Saml20Exception">if the assertion's signature can not be verified or its time to live has been exceeded.</exception>
         public void CheckValid(IEnumerable<AsymmetricAlgorithm> trustedSigners)
         {
             if (!CheckSignature(trustedSigners))
+            {
                 throw new Saml20Exception("Signature could not be verified.");
+            }
 
-            if (IsExpired())
+            if (IsExpired)
+            {
                 throw new Saml20Exception("Assertion is no longer valid.");
+            }
         }
-        
-        /// <summary>
-        /// Checks if the expiration time has been exceeded.
-        /// </summary>        
-        public bool IsExpired()
-        {
-            return DateTime.Now.ToUniversalTime() > NotOnOrAfter;
-        }
+       
 
         /// <summary>
         /// Returns the KeyInfo element of the signature of the token.
@@ -419,12 +413,7 @@ namespace SAML2
         /// <returns>Null if the token is not signed. The KeyInfo element otherwise.</returns>
         public KeyInfo GetSignatureKeys()
         {
-            if (!XmlSignatureUtils.IsSigned(_samlAssertion))
-                return null;
-
-            return XmlSignatureUtils.ExtractSignatureKeys(_samlAssertion);
-            
-            
+            return !XmlSignatureUtils.IsSigned(XmlAssertion) ? null : XmlSignatureUtils.ExtractSignatureKeys(XmlAssertion);
         }
 
         /// <summary>
@@ -433,27 +422,22 @@ namespace SAML2
         /// <returns>SubjectConfirmationData object from subject items, null if none present</returns>
         public SubjectConfirmationData GetSubjectConfirmationData()
         {
-            foreach (var item in SubjectItems)
-            {
-                if (item is SubjectConfirmation)
-                    return ((SubjectConfirmation)item).SubjectConfirmationData;
-            }
-            return null;
+            return SubjectItems.OfType<SubjectConfirmation>().Select(item => (item).SubjectConfirmationData).FirstOrDefault();
         }
 
         /// <summary>
         /// Gets the assertion as an XmlDocument.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The Xml of the assertion.</returns>
         public XmlElement GetXml()
         {
-            return _samlAssertion;
+            return XmlAssertion;
         }
 
         /// <summary>
         /// Signs the assertion with the given certificate.
         /// </summary>
-        /// <param name="cert">The certificate to sign the assertion with.</param>        
+        /// <param name="cert">The certificate to sign the assertion with.</param>
         public void Sign(X509Certificate2 cert)
         {
             CheckCertificateCanSign(cert);            
@@ -465,38 +449,45 @@ namespace SAML2
             InsertAttributes();
 
             // Remove existing signatures when resigning the assertion
-            XmlElement signatureParentNode = _samlAssertion; //FIX.DocumentElement;
-            XmlNode sigNode = null;
-            while ( (sigNode = signatureParentNode.GetElementsByTagName(SAML2.Schema.XmlDSig.Signature.ELEMENT_NAME,
-                                                     Saml20Constants.XMLDSIG)[0]) != null )
+            var signatureParentNode = XmlAssertion; //FIX.DocumentElement;
+            XmlNode sigNode;
+            while ( (sigNode = signatureParentNode.GetElementsByTagName(Schema.XmlDSig.Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG)[0]) != null )
             {
                 signatureParentNode.RemoveChild(sigNode);
             }
 
-            XmlDocument assertionDocument = new XmlDocument();
-            assertionDocument.Load(new StringReader(Serialization.SerializeToXmlString(_samlAssertion)));
+            var assertionDocument = new XmlDocument();
+            assertionDocument.Load(new StringReader(Serialization.SerializeToXmlString(XmlAssertion)));
 
             AddSignature(assertionDocument, cert);
 
-            LoadXml(assertionDocument.DocumentElement, new List<AsymmetricAlgorithm>(new AsymmetricAlgorithm[] { cert.PublicKey.Key }));
+            LoadXml(assertionDocument.DocumentElement, new List<AsymmetricAlgorithm>(new[] { cert.PublicKey.Key }));
         }
 
-        private static void CheckCertificateCanSign(X509Certificate2 cert)
+        /// <summary>
+        /// Writes the token to a writer.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        public void WriteAssertion(XmlWriter writer)
         {
-            if (!cert.HasPrivateKey)
-                throw new Saml20Exception("The private key must be part of the certificate.");
+            XmlAssertion.WriteTo(writer);
         }
 
+        /// <summary>
+        /// Adds the signature.
+        /// </summary>
+        /// <param name="assertionDocument">The assertion document.</param>
+        /// <param name="cert">The cert.</param>
         private static void AddSignature(XmlDocument assertionDocument, X509Certificate2 cert)
         {
-            SignedXml signedXml = new SignedXml(assertionDocument);
+            var signedXml = new SignedXml(assertionDocument);
             signedXml.SignedInfo.CanonicalizationMethod = SignedXml.XmlDsigExcC14NTransformUrl;
             signedXml.SigningKey = cert.PrivateKey;
 
             // Retrieve the value of the "ID" attribute on the root assertion element.
-            XmlNodeList list = assertionDocument.GetElementsByTagName(Assertion.ElementName, Saml20Constants.ASSERTION);
-            XmlElement el = (XmlElement)list[0];            
-            Reference reference = new Reference("#" + el.GetAttribute("ID"));
+            var list = assertionDocument.GetElementsByTagName(Assertion.ElementName, Saml20Constants.ASSERTION);
+            var el = (XmlElement)list[0];            
+            var reference = new Reference("#" + el.GetAttribute("ID"));
 
             reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());            
             reference.AddTransform(new XmlDsigExcC14NTransform());            
@@ -509,12 +500,31 @@ namespace SAML2
 
             signedXml.ComputeSignature();
             // Append the computed signature. The signature must be placed as the sibling of the Issuer element.
-            XmlNodeList nodes = assertionDocument.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.ASSERTION);            
+            var nodes = assertionDocument.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.ASSERTION);            
             if (nodes.Count != 1)
-                throw new Saml20Exception("Assertion MUST contain one <Issuer> element.");            
+            {
+                throw new Saml20Exception("Assertion MUST contain one <Issuer> element.");
+            }
+
             assertionDocument.DocumentElement.InsertAfter(assertionDocument.ImportNode(signedXml.GetXml(), true), nodes[0]);
         }
 
+        /// <summary>
+        /// Checks the certificate can sign.
+        /// </summary>
+        /// <param name="cert">The cert.</param>
+        private static void CheckCertificateCanSign(X509Certificate2 cert)
+        {
+            if (cert == null)
+            {
+                throw new ArgumentNullException("cert");
+            }
+
+            if (!cert.HasPrivateKey)
+            {
+                throw new Saml20Exception("The private key must be part of the certificate.");
+            }
+        }
 
         /// <summary>
         /// Extracts the list of attributes from the &lt;AttributeStatement&gt; of the assertion, and 
@@ -525,28 +535,34 @@ namespace SAML2
             _assertionAttributes = new List<SamlAttribute>(0);
             _encryptedAssertionAttributes = new List<EncryptedElement>(0);
 
-            XmlNodeList list =
-                _samlAssertion.GetElementsByTagName(AttributeStatement.ElementName, Saml20Constants.ASSERTION);
-
+            var list = XmlAssertion.GetElementsByTagName(AttributeStatement.ElementName, Saml20Constants.ASSERTION);
             if (list.Count == 0)
+            {
                 return;
+            }
 
             // NOTE It would be nice to implement a better-performing solution where only the AttributeStatement is converted.
             // NOTE Namespace issues in the xml-schema "type"-attribute prevents this, though.
-            Assertion assertion = Serialization.Deserialize<Assertion>(new XmlNodeReader(_samlAssertion));
+            var assertion = Serialization.Deserialize<Assertion>(new XmlNodeReader(XmlAssertion));
                         
-            List<AttributeStatement> attributeStatements = assertion.GetAttributeStatements();
+            var attributeStatements = assertion.GetAttributeStatements();
             if (attributeStatements.Count == 0 || attributeStatements[0].Items == null)
+            {
                 return;
+            }
 
-            AttributeStatement attributeStatement = attributeStatements[0];            
-            foreach (object item in attributeStatement.Items)
+            var attributeStatement = attributeStatements[0];            
+            foreach (var item in attributeStatement.Items)
             {
                 if (item is SamlAttribute)
+                {
                     _assertionAttributes.Add((SamlAttribute)item);
+                }
 
                 if (item is EncryptedElement)
+                {
                     _encryptedAssertionAttributes.Add((EncryptedElement) item);
+                }
             }
         }
 
@@ -556,30 +572,33 @@ namespace SAML2
         private void InsertAttributes()
         {
             if (_assertionAttributes == null)
+            {
                 return;
+            }
             
             // Generate the new AttributeStatement
-            AttributeStatement attributeStatement = new AttributeStatement();
-            List<object> statements = new List<object>(_encryptedAssertionAttributes.Count + _assertionAttributes.Count);
+            var attributeStatement = new AttributeStatement();
+            var statements = new List<object>(_encryptedAssertionAttributes.Count + _assertionAttributes.Count);
             statements.AddRange(_assertionAttributes.ToArray());
             statements.AddRange(_encryptedAssertionAttributes.ToArray());
             attributeStatement.Items = statements.ToArray();
 
-            XmlNodeList list =
-                _samlAssertion.GetElementsByTagName(AttributeStatement.ElementName, Saml20Constants.ASSERTION);            
-            
+            var list = XmlAssertion.GetElementsByTagName(AttributeStatement.ElementName, Saml20Constants.ASSERTION);
+
             if (list.Count > 0) // Remove the old AttributeStatement.
-                _samlAssertion.RemoveChild(list[0]);//FIX _samlAssertion.DocumentElement.RemoveChild(list[0]);
+            {
+                XmlAssertion.RemoveChild(list[0]); //FIX _samlAssertion.DocumentElement.RemoveChild(list[0]);
+            }
 
             // Only insert a new AttributeStatement if there are attributes.
             if (statements.Count > 0)
             {
                 // Convert the new AttributeStatement to the Document Object Model and make a silent prayer that one day we will
                 // be able to make this transition in a more elegant way.
-                XmlDocument attributeStatementDoc = Serialization.Serialize(attributeStatement);
-                XmlNode attr = _samlAssertion.OwnerDocument.ImportNode(attributeStatementDoc.DocumentElement, true);
-                // Insert the new statement.                            
-                _samlAssertion.AppendChild(attr);                
+                var attributeStatementDoc = Serialization.Serialize(attributeStatement);
+                var attr = XmlAssertion.OwnerDocument.ImportNode(attributeStatementDoc.DocumentElement, true);
+                // Insert the new statement.
+                XmlAssertion.AppendChild(attr);                
             }
 
             _encryptedAssertionAttributes = null;
@@ -593,23 +612,20 @@ namespace SAML2
         /// <param name="trustedSigners">The trusted signers.</param>
         private void LoadXml(XmlElement element, IEnumerable<AsymmetricAlgorithm> trustedSigners)
         {
-            _samlAssertion = element;
+            XmlAssertion = element;
             if (trustedSigners != null)
+            {
                 if (!CheckSignature(trustedSigners))
+                {
                     throw new Saml20Exception("Assertion signature could not be verified.");
+                }
+            }
 
             // Validate the saml20Assertion.      
             if (_autoValidate)
+            {
                 AssertionValidator.ValidateAssertion(Assertion);
-        }
-
-        /// <summary>
-        /// Writes the token to a writer.
-        /// </summary>
-        /// <param name="writer">The writer.</param>
-        public void WriteAssertion(XmlWriter writer)
-        {
-            _samlAssertion.WriteTo(writer);
+            }
         }
     }
 }

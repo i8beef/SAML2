@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml;
-using SAML2;
 using SAML2.Config;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
@@ -14,20 +13,33 @@ namespace SAML2
     /// </summary>
     public class Saml20ArtifactResponse
     {
-        private ArtifactResponse _artifactResponse;
+        /// <summary>
+        /// The artifact response.
+        /// </summary>
+        private readonly ArtifactResponse _artifactResponse;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20ArtifactResponse"/> class.
         /// </summary>
         public Saml20ArtifactResponse()
         {
-            _artifactResponse = new ArtifactResponse();
-            _artifactResponse.Version = Saml20Constants.Version;
-            _artifactResponse.ID = "id" + Guid.NewGuid().ToString("N");
-            _artifactResponse.Issuer = new NameID();
-            _artifactResponse.IssueInstant = DateTime.Now;
-            _artifactResponse.Status = new Status();
-            _artifactResponse.Status.StatusCode = new StatusCode();
+            _artifactResponse = new ArtifactResponse
+                                    {
+                                        Version = Saml20Constants.Version,
+                                        ID = "id" + Guid.NewGuid().ToString("N"),
+                                        Issuer = new NameID(),
+                                        IssueInstant = DateTime.Now,
+                                        Status = new Status {StatusCode = new StatusCode()}
+                                    };
+        }
+
+        /// <summary>
+        /// Gets the ID.
+        /// </summary>
+        /// <value>The ID.</value>
+        public string Id
+        {
+            get { return _artifactResponse.ID; }
         }
 
         /// <summary>
@@ -61,15 +73,6 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Gets the ID.
-        /// </summary>
-        /// <value>The ID.</value>
-        public string ID
-        {
-            get { return _artifactResponse.ID; }
-        }
-
-        /// <summary>
         /// Gets or sets the status code.
         /// </summary>
         /// <value>The status code.</value>
@@ -80,32 +83,32 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Returns the ArtifactResponse as an XML document.
-        /// </summary>
-        public XmlDocument GetXml()
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.PreserveWhitespace = true;
-            doc.LoadXml(Serialization.SerializeToXmlString(_artifactResponse));
-            return doc;
-        }
-
-        /// <summary>
         /// Gets a default instance of this class with proper values set.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The default <see cref="Saml20ArtifactResponse"/>.</returns>
         public static Saml20ArtifactResponse GetDefault()
         {
-            Saml20ArtifactResponse result = new Saml20ArtifactResponse();
+            var result = new Saml20ArtifactResponse();
 
             var config = Saml2Config.GetConfig();
-
             if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.Id))
+            {
                 throw new Saml20FormatException(Resources.ServiceProviderNotSet);
+            }
 
             result.Issuer = config.ServiceProvider.Id;
 
             return result;
+        }
+
+        /// <summary>
+        /// Returns the ArtifactResponse as an XML document.
+        /// </summary>
+        public XmlDocument GetXml()
+        {
+            var doc = new XmlDocument { PreserveWhitespace = true };
+            doc.LoadXml(Serialization.SerializeToXmlString(_artifactResponse));
+            return doc;
         }
     }
 }

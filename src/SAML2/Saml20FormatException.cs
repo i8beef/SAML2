@@ -25,7 +25,5 @@ namespace SAML2
         /// <param name="msg">A message describing the problem that caused the exception.</param>
         /// <param name="cause">Another exception that may be related to the problem.</param>
         public Saml20FormatException(string msg, Exception cause) : base(msg, cause) { }
-
-        
     }
 }

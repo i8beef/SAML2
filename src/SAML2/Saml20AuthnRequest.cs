@@ -15,36 +15,46 @@ namespace SAML2
     /// </summary>
     public class Saml20AuthnRequest
     {
-        private AuthnRequest request;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Saml20AuthnRequest"/> class.
+        /// </summary>
+        public Saml20AuthnRequest()
+        {
+            Request = new AuthnRequest
+                          {
+                              Version = Saml20Constants.Version,
+                              ID = "id" + Guid.NewGuid().ToString("N"),
+                              Issuer = new NameID(),
+                              IssueInstant = DateTime.Now
+                          };
+
+        }
 
         #region Request properties
-
-        /// <summary>
-        /// The ID attribute of the &lt;AuthnRequest&gt; message.
-        /// </summary>
-        public string ID
-        {
-            get { return request.ID; }
-            set { request.ID = value; }
-        }
 
         /// <summary>
         /// Gets or sets the assertion consumer service URL.
         /// </summary>
         /// <value>The assertion consumer service URL.</value>
-        public string AssertionConsumerServiceURL
+        public string AssertionConsumerServiceUrl
         {
-            get { return request.AssertionConsumerServiceURL; }
-            set { request.AssertionConsumerServiceURL = value; }
+            get { return Request.AssertionConsumerServiceURL; }
+            set { Request.AssertionConsumerServiceURL = value; }
         }
+
+        /// <summary>
+        /// Gets the underlying schema class object.
+        /// </summary>
+        /// <value>The request.</value>
+        public AuthnRequest Request { get; private set; }
 
         /// <summary>
         /// The 'Destination' attribute of the &lt;AuthnRequest&gt;.
         /// </summary>
         public string Destination
         {
-            get { return request.Destination; }
-            set { request.Destination = value; }
+            get { return Request.Destination; }
+            set { Request.Destination = value; }
         }
 
         ///<summary>
@@ -52,8 +62,17 @@ namespace SAML2
         ///</summary>
         public bool? ForceAuthn
         {
-            get { return request.ForceAuthn; }
-            set { request.ForceAuthn = value; }
+            get { return Request.ForceAuthn; }
+            set { Request.ForceAuthn = value; }
+        }
+
+        /// <summary>
+        /// The ID attribute of the &lt;AuthnRequest&gt; message.
+        /// </summary>
+        public string Id
+        {
+            get { return Request.ID; }
+            set { Request.ID = value; }
         }
 
         ///<summary>
@@ -61,8 +80,8 @@ namespace SAML2
         ///</summary>
         public bool? IsPassive
         {
-            get { return request.IsPassive; }
-            set { request.IsPassive = value; }
+            get { return Request.IsPassive; }
+            set { Request.IsPassive = value; }
         }
 
         /// <summary>
@@ -71,8 +90,8 @@ namespace SAML2
         /// <value>The issue instant.</value>
         public DateTime? IssueInstant
         {
-            get { return request.IssueInstant; }
-            set { request.IssueInstant = value;}
+            get { return Request.IssueInstant; }
+            set { Request.IssueInstant = value; }
         }
 
         /// <summary>
@@ -81,8 +100,8 @@ namespace SAML2
         /// <value>The issuer value.</value>
         public string Issuer
         {
-            get { return request.Issuer.Value; }
-            set { request.Issuer.Value = value;}
+            get { return Request.Issuer.Value; }
+            set { Request.Issuer.Value = value; }
         }
 
         /// <summary>
@@ -91,18 +110,27 @@ namespace SAML2
         /// <value>The issuer format.</value>
         public string IssuerFormat
         {
-            get { return request.Issuer.Format; }
-            set { request.Issuer.Format = value;}
+            get { return Request.Issuer.Format; }
+            set { Request.Issuer.Format = value; }
         }
 
         /// <summary>
         /// Gets or sets the name ID policy.
         /// </summary>
         /// <value>The name ID policy.</value>
-        public NameIDPolicy NameIDPolicy
+        public NameIDPolicy NameIdPolicy
         {
-            get { return request.NameIDPolicy; }
-            set { request.NameIDPolicy = value; }
+            get { return Request.NameIDPolicy; }
+            set { Request.NameIDPolicy = value; }
+        }
+
+        /// <summary>
+        /// Sets the ProtocolBinding on the request
+        /// </summary>
+        public string ProtocolBinding
+        {
+            get { return Request.ProtocolBinding; }
+            set { Request.ProtocolBinding = value; }
         }
 
         /// <summary>
@@ -111,58 +139,11 @@ namespace SAML2
         /// <value>The requested authn context.</value>
         public RequestedAuthnContext RequestedAuthnContext
         {
-            get { return request.RequestedAuthnContext; }
-            set { request.RequestedAuthnContext = value; }
+            get { return Request.RequestedAuthnContext; }
+            set { Request.RequestedAuthnContext = value; }
         }
 
         #endregion
-
-        /// <summary>
-        /// Gets the underlying schema class object.
-        /// </summary>
-        /// <value>The request.</value>
-        public AuthnRequest Request
-        {
-            get { return request; }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Saml20AuthnRequest"/> class.
-        /// </summary>
-        public Saml20AuthnRequest()
-        {
-            request = new AuthnRequest();
-            request.Version = Saml20Constants.Version;
-            request.ID = "id" + Guid.NewGuid().ToString("N");            
-            request.Issuer = new NameID();
-            request.IssueInstant = DateTime.Now;
-        }
-
-        private void SetConditions(List<ConditionAbstract> conditions)
-        {
-            request.Conditions = new Conditions();
-            request.Conditions.Items = conditions;
-        }
-
-        /// <summary>
-        /// Sets the ProtocolBinding on the request
-        /// </summary>
-        public string ProtocolBinding
-        {
-            get { return request.ProtocolBinding; }
-            set { request.ProtocolBinding = value; }
-        }
-
-        /// <summary>
-        /// Returns the AuthnRequest as an XML document.
-        /// </summary>
-        public XmlDocument GetXml()
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.PreserveWhitespace = true;
-            doc.LoadXml(Serialization.SerializeToXmlString(request));
-            return doc;
-        }
 
         /// <summary>
         /// Returns an instance of the class with meaningful default values set.
@@ -171,18 +152,16 @@ namespace SAML2
         public static Saml20AuthnRequest GetDefault()
         {
             var config = Saml2Config.GetConfig();
-
             if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.Id))
+            {
                 throw new Saml20FormatException(Resources.ServiceProviderNotSet);
+            }
 
-            Saml20AuthnRequest result = new Saml20AuthnRequest();
-            result.Issuer = config.ServiceProvider.Id;
-
+            var result = new Saml20AuthnRequest { Issuer = config.ServiceProvider.Id };
             if (config.ServiceProvider.Endpoints.SignOnEndpoint.Binding != BindingType.NotSet)
             {
-                Uri baseURL = new Uri(config.ServiceProvider.Server);
-                result.AssertionConsumerServiceURL =
-                    new Uri(baseURL, config.ServiceProvider.Endpoints.SignOnEndpoint.LocalPath).ToString();
+                var baseUrl = new Uri(config.ServiceProvider.Server);
+                result.AssertionConsumerServiceUrl = new Uri(baseUrl, config.ServiceProvider.Endpoints.SignOnEndpoint.LocalPath).ToString();
             }
 
             // Binding
@@ -205,15 +184,15 @@ namespace SAML2
             // NameIDPolicy
             if (config.ServiceProvider.NameIdFormats.Count > 0)
             {
-                result.NameIDPolicy = new NameIDPolicy
-                {
-                    AllowCreate = config.ServiceProvider.NameIdFormats.AllowCreate,
-                    Format = config.ServiceProvider.NameIdFormats[0].Format
-                };
+                result.NameIdPolicy = new NameIDPolicy
+                                          {
+                                              AllowCreate = config.ServiceProvider.NameIdFormats.AllowCreate,
+                                              Format = config.ServiceProvider.NameIdFormats[0].Format
+                                          };
 
-                if (result.NameIDPolicy.Format != Saml20Constants.NameIdentifierFormats.Entity)
+                if (result.NameIdPolicy.Format != Saml20Constants.NameIdentifierFormats.Entity)
                 {
-                    result.NameIDPolicy.SPNameQualifier = config.ServiceProvider.Id;
+                    result.NameIdPolicy.SPNameQualifier = config.ServiceProvider.Id;
                 }
             }
 
@@ -221,7 +200,6 @@ namespace SAML2
             if (config.ServiceProvider.AuthenticationContexts.Count > 0)
             {
                 result.RequestedAuthnContext = new RequestedAuthnContext();
-
                 switch (config.ServiceProvider.AuthenticationContexts.Comparison)
                 {
                     case AuthenticationContextComparison.Better:
@@ -247,11 +225,11 @@ namespace SAML2
 
                 result.RequestedAuthnContext.Items = new string[config.ServiceProvider.AuthenticationContexts.Count];
                 result.RequestedAuthnContext.ItemsElementName = new AuthnContextType[config.ServiceProvider.AuthenticationContexts.Count];
-                int count = 0;
+
+                var count = 0;
                 foreach (var authenticationContext in config.ServiceProvider.AuthenticationContexts)
                 {
                     result.RequestedAuthnContext.Items[count] = authenticationContext.Context;
-
                     switch (authenticationContext.ReferenceType)
                     {
                         case "AuthnContextDeclRef":
@@ -261,21 +239,40 @@ namespace SAML2
                             result.RequestedAuthnContext.ItemsElementName[count] = AuthnContextType.AuthnContextClassRef;
                             break;
                     }
+
                     count++;
                 }
             }
 
             // Restrictions
-            List<ConditionAbstract> audienceRestrictions = new List<ConditionAbstract>(1);
-
-            AudienceRestriction audienceRestriction = new AudienceRestriction();
-            audienceRestriction.Audience = new List<string>(1);
-            audienceRestriction.Audience.Add(config.ServiceProvider.Id);
+            var audienceRestrictions = new List<ConditionAbstract>(1);
+            var audienceRestriction = new AudienceRestriction { Audience = new List<string>(1) };
             audienceRestrictions.Add(audienceRestriction);
 
             result.SetConditions(audienceRestrictions);
 
             return result;
+        }
+
+        /// <summary>
+        /// Returns the AuthnRequest as an XML document.
+        /// </summary>
+        /// <returns>The request XML.</returns>
+        public XmlDocument GetXml()
+        {
+            var doc = new XmlDocument { PreserveWhitespace = true };
+            doc.LoadXml(Serialization.SerializeToXmlString(Request));
+
+            return doc;
+        }
+
+        /// <summary>
+        /// Sets the conditions.
+        /// </summary>
+        /// <param name="conditions">The conditions.</param>
+        private void SetConditions(List<ConditionAbstract> conditions)
+        {
+            Request.Conditions = new Conditions {Items = conditions};
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml;
-using SAML2;
 using SAML2.Config;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
@@ -14,6 +13,9 @@ namespace SAML2
     /// </summary>
     public class Saml20ArtifactResolve
     {
+        /// <summary>
+        /// Artifact resolve.
+        /// </summary>
         private readonly ArtifactResolve _artifactResolve;
 
         /// <summary>
@@ -21,32 +23,13 @@ namespace SAML2
         /// </summary>
         public Saml20ArtifactResolve()
         {
-            _artifactResolve = new ArtifactResolve();
-            _artifactResolve.Version = Saml20Constants.Version;
-            _artifactResolve.ID = "id" + Guid.NewGuid().ToString("N");
-            _artifactResolve.Issuer = new NameID();
-            _artifactResolve.IssueInstant = DateTime.Now;
-        }
-
-        /// <summary>
-        /// Gets the underlying schema instance.
-        /// </summary>
-        /// <value>The resolve.</value>
-        public ArtifactResolve Resolve
-        {
-            get
-            {
-                return _artifactResolve;
-            }
-        }
-
-        /// <summary>
-        /// Gets the ID of the SAML message.
-        /// </summary>
-        /// <value>The ID.</value>
-        public string ID
-        {
-            get { return _artifactResolve.ID; }
+            _artifactResolve = new ArtifactResolve
+                                   {
+                                       Version = Saml20Constants.Version,
+                                       ID = "id" + Guid.NewGuid().ToString("N"),
+                                       Issuer = new NameID(),
+                                       IssueInstant = DateTime.Now
+                                   };
         }
 
         /// <summary>
@@ -57,6 +40,15 @@ namespace SAML2
         {
             get { return _artifactResolve.Artifact; }
             set { _artifactResolve.Artifact = value; }
+        }
+        
+        /// <summary>
+        /// Gets the ID of the SAML message.
+        /// </summary>
+        /// <value>The ID.</value>
+        public string Id
+        {
+            get { return _artifactResolve.ID; }
         }
 
         /// <summary>
@@ -70,31 +62,44 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Returns the ArtifactResolve as an XML document.
+        /// Gets the underlying schema instance.
         /// </summary>
-        public XmlDocument GetXml()
+        /// <value>The <see cref="ArtifactResolve"/>.</value>
+        public ArtifactResolve Resolve
         {
-            XmlDocument doc = new XmlDocument();
-            doc.PreserveWhitespace = true;
-            doc.LoadXml(Serialization.SerializeToXmlString(_artifactResolve));
-            return doc;
+            get
+            {
+                return _artifactResolve;
+            }
         }
 
         /// <summary>
         /// Gets a default instance of this class with proper values set.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The default <see cref="Saml20ArtifactResolve"/>.</returns>
         public static Saml20ArtifactResolve GetDefault()
         {
             var config = Saml2Config.GetConfig();
-
             if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.Id))
+            {
                 throw new Saml20FormatException(Resources.ServiceProviderNotSet);
+            }
 
-            Saml20ArtifactResolve result = new Saml20ArtifactResolve();
-            result.Issuer = config.ServiceProvider.Id;
+            var result = new Saml20ArtifactResolve { Issuer = config.ServiceProvider.Id };
 
             return result;
+        }
+
+        /// <summary>
+        /// Returns the ArtifactResolve as an XML document.
+        /// </summary>
+        /// <returns>The XML document.</returns>
+        public XmlDocument GetXml()
+        {
+            var doc = new XmlDocument { PreserveWhitespace = true };
+            doc.LoadXml(Serialization.SerializeToXmlString(_artifactResolve));
+
+            return doc;
         }
     }
 }
