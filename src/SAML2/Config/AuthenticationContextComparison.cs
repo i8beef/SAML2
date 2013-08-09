@@ -9,14 +9,17 @@
         /// Exact
         /// </summary>
         Exact,
+
         /// <summary>
         /// Minimum
         /// </summary>
         Minimum,
+
         /// <summary>
         /// Maximum
         /// </summary>
         Maximum,
+
         /// <summary>
         /// Better
         /// </summary>

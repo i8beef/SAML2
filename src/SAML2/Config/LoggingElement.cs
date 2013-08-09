@@ -5,17 +5,19 @@ namespace SAML2.Config
     /// <summary>
     /// Logging configuration element.
     /// </summary>
-    public class LoggingElement : ConfigurationElement
+    public class LoggingElement : WritableConfigurationElement
     {
         #region Attributes
 
         /// <summary>
-        /// Gets the logging factory.
+        /// Gets or sets the logging factory.
         /// </summary>
+        /// <value>The logging factory.</value>
         [ConfigurationProperty("loggingFactory")]
         public string LoggingFactory
         {
             get { return (string) base["loggingFactory"];  }
+            set { base["loggingFactory"] = value; }
         }
 
         #endregion

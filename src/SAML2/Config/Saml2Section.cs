@@ -24,17 +24,20 @@ namespace SAML2.Config
         #region Elements
 
         /// <summary>
-        /// Gets the actions to perform on successful processing.
+        /// Gets or sets the actions to perform on successful processing.
         /// </summary>
+        /// <value>The actions.</value>
         [ConfigurationProperty("actions")]
         public ActionCollection Actions
         {
             get { return (ActionCollection)base["actions"]; }
+            set { base["actions"] = value; }
         }
 
         /// <summary>
-        /// Gets the allowed audience uris.
+        /// Gets or sets the allowed audience uris.
         /// </summary>
+        /// <value>The allowed audience uris.</value>
         [ConfigurationProperty("allowedAudienceUris")]
         public AllowedAudienceUriCollection AllowedAudienceUris
         {
@@ -42,73 +45,92 @@ namespace SAML2.Config
             set { base["allowedAudienceUris"] = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the assertion profile.
+        /// </summary>
+        /// <value>The assertion profile configuration.</value>
         [ConfigurationProperty("assertionProfile")]
         public AssertionProfileElement AssertionProfile
         {
             get { return (AssertionProfileElement)base["assertionProfile"]; }
+            set { base["assertionProfile"] = value; }
         }
 
         /// <summary>
-        /// Gets the common domain cookie configuration.
+        /// Gets or sets the common domain cookie configuration.
         /// </summary>
+        /// <value>The common domain cookie configuration.</value>
         [ConfigurationProperty("commonDomainCookie")]
         public CommonDomainCookieElement CommonDomainCookie
         {
             get { return (CommonDomainCookieElement) base["commonDomainCookie"]; }
+            set { base["commonDomainCookie"] = value; }
         }
 
         /// <summary>
-        /// Gets the identity providers.
+        /// Gets or sets the identity providers.
         /// </summary>
+        /// <value>The identity providers.</value>
         [ConfigurationProperty("identityProviders")]
         public IdentityProviderCollection IdentityProviders
         {
             get { return (IdentityProviderCollection) base["identityProviders"]; }
+            set { base["identityProviders"] = value; }
         }
 
         /// <summary>
-        /// Gets the logging configuration.
+        /// Gets or sets the logging configuration.
         /// </summary>
+        /// <value>The logging configuration.</value>
         [ConfigurationProperty("logging")]
         public LoggingElement Logging
         {
             get { return (LoggingElement) base["logging"]; }
+            set { base["logging"] = value; }
         }
 
         /// <summary>
-        /// Gets the metadata.
+        /// Gets or sets the metadata.
         /// </summary>
+        /// <value>The metadata.</value>
         [ConfigurationProperty("metadata")]
         public MetadataElement Metadata
         {
             get { return (MetadataElement)base["metadata"]; }
+            set { base["metadata"] = value; }
         }
 
         /// <summary>
-        /// Gets the requested attributes.
+        /// Gets or sets the requested attributes.
         /// </summary>
+        /// <value>The requested attributes.</value>
         [ConfigurationProperty("requestedAttributes")]
         public RequestedAttributesCollection RequestedAttributes
         {
             get { return (RequestedAttributesCollection)base["requestedAttributes"]; }            
+            set { base["requestedAttributes"] = value; }            
         }
 
         /// <summary>
-        /// Gets the service provider.
+        /// Gets or sets the service provider.
         /// </summary>
+        /// <value>The service provider.</value>
         [ConfigurationProperty("serviceProvider")]
         public ServiceProviderElement ServiceProvider
         {
             get { return (ServiceProviderElement)base["serviceProvider"]; }
+            set { base["serviceProvider"] = value; }
         }
 
         /// <summary>
-        /// Gets a value indicating whether to show errors, or a default error message.
+        /// Gets or sets a value indicating whether to show errors, or a default error message.
         /// </summary>
+        /// <value><c>true</c> if errors should be shown; otherwise, <c>false</c>.</value>
         [ConfigurationProperty("showError")]
         public bool ShowError
         {
             get { return (bool)base["showError"]; }
+            set { base["showError"] = value; }
         }
 
         #endregion

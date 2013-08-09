@@ -103,6 +103,7 @@
     <Compile Include="Config\ServiceProviderEndpointCollection.cs" />
     <Compile Include="Config\ServiceProviderEndpointElement.cs" />
     <Compile Include="Config\SigningCertificateElement.cs" />
+    <Compile Include="Config\WritableConfigurationElement.cs" />
     <Compile Include="Identity\IPersistentPseudonymMapper.cs" />
     <Compile Include="Identity\ISaml20Identity.cs" />
     <Compile Include="Identity\Saml20Identity.cs" />

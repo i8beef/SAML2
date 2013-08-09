@@ -5,53 +5,63 @@ namespace SAML2.Config
     /// <summary>
     /// Service Provider Endpoint configuration element.
     /// </summary>
-    public class ServiceProviderEndpointElement : ConfigurationElement, IConfigurationElementCollectionElement
+    public class ServiceProviderEndpointElement : WritableConfigurationElement, IConfigurationElementCollectionElement
     {
         #region Attributes
 
         /// <summary>
-        /// Gets the binding.
+        /// Gets or sets the binding.
         /// </summary>
+        /// <value>The binding.</value>
         [ConfigurationProperty("binding")]
         public BindingType Binding
         {
             get { return (BindingType)base["binding"]; }
+            set { base["binding"] = value; }
         }
 
         /// <summary>
-        /// Gets the index.
+        /// Gets or sets the index.
         /// </summary>
+        /// <value>The index.</value>
         [ConfigurationProperty("index")]
-        public ushort Index
+        public int Index
         {
-            get { return (ushort) base["index"]; }
+            get { return (int) base["index"]; }
+            set { base["index"] = value; }
         }
 
         /// <summary>
-        /// Gets the type.
+        /// Gets or sets the local path.
         /// </summary>
+        /// <value>The local path.</value>
         [ConfigurationProperty("localPath", IsRequired = true)]
         public string LocalPath
         {
             get { return (string) base["localPath"]; }
+            set { base["localPath"] = value; }
         }
 
         /// <summary>
-        /// Gets the redirect URL.
+        /// Gets or sets the redirect URL.
         /// </summary>
+        /// <value>The redirect URL.</value>
         [ConfigurationProperty("redirectUrl")]
         public string RedirectUrl
         {
             get { return (string)base["redirectUrl"]; }
+            set { base["redirectUrl"] = value; }
         }
 
         /// <summary>
-        /// Gets the type.
+        /// Gets or sets the type.
         /// </summary>
+        /// <value>The type.</value>
         [ConfigurationProperty("type", IsKey = true, IsRequired = true)]
         public EndpointType Type
         {
             get { return (EndpointType)base["type"]; }
+            set { base["type"] = value; }
         }
 
         #endregion

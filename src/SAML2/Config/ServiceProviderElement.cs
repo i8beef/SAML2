@@ -5,26 +5,30 @@ namespace SAML2.Config
     /// <summary>
     /// ServiceProvider configuration element.
     /// </summary>
-    public class ServiceProviderElement : ConfigurationElement
+    public class ServiceProviderElement : WritableConfigurationElement
     {
         #region Attributes
 
         /// <summary>
-        /// Gets the id.
+        /// Gets or sets the id.
         /// </summary>
+        /// <value>The id.</value>
         [ConfigurationProperty("id", IsRequired = true)]
         public string Id
         {
             get { return (string)base["id"]; }
+            set { base["id"] = value; }
         }
 
         /// <summary>
-        /// Gets the server.
+        /// Gets or sets the server.
         /// </summary>
+        /// <value>The server.</value>
         [ConfigurationProperty("server", IsRequired = true)]
         public string Server
         {
             get { return (string)base["server"]; }
+            set { base["server"] = value; }
         }
 
         #endregion
@@ -32,57 +36,69 @@ namespace SAML2.Config
         #region Elements
 
         /// <summary>
-        /// Gets the authentication contexts.
+        /// Gets or sets the authentication contexts.
         /// </summary>
+        /// <value>The authentication contexts.</value>
         [ConfigurationProperty("authenticationContexts")]
         public AuthenticationContextCollection AuthenticationContexts
         {
             get { return (AuthenticationContextCollection)base["authenticationContexts"]; }
+            set { base["authenticationContexts"] = value; }
         }
 
         /// <summary>
-        /// Gets the contacts.
+        /// Gets or sets the contacts.
         /// </summary>
+        /// <value>The contacts.</value>
         [ConfigurationProperty("contacts")]
         public ContactCollection Contacts
         {
             get { return (ContactCollection)base["contacts"]; }
+            set { base["contacts"] = value; }
         }
 
         /// <summary>
-        /// Gets the endpoints.
+        /// Gets or sets the endpoints.
         /// </summary>
+        /// <value>The endpoints.</value>
         [ConfigurationProperty("endpoints", Options = ConfigurationPropertyOptions.IsRequired)]
         public ServiceProviderEndpointCollection Endpoints
         {
             get { return (ServiceProviderEndpointCollection) base["endpoints"]; }
+            set { base["endpoints"] = value; }
         }
 
         /// <summary>
-        /// Gets the name id formats.
+        /// Gets or sets the name id formats.
         /// </summary>
+        /// <value>The name id formats.</value>
         [ConfigurationProperty("nameIdFormats")]
         public NameIdFormatCollection NameIdFormats
         {
             get { return (NameIdFormatCollection)base["nameIdFormats"]; }
+            set { base["nameIdFormats"] = value; }
         }
 
         /// <summary>
-        /// Gets the organization.
+        /// Gets or sets the organization.
         /// </summary>
+        /// <value>The organization.</value>
         [ConfigurationProperty("organization")]
         public OrganizationElement Organization
         {
             get { return (OrganizationElement)base["organization"]; }            
+            set { base["organization"] = value; }            
         }
 
         /// <summary>
-        /// Gets the organization.
+        /// Gets or sets the signing certificate.
         /// </summary>
+        /// <value>The signing certificate.</value>
         [ConfigurationProperty("signingCertificate")]
         public SigningCertificateElement SigningCertificate
         {
             get { return (SigningCertificateElement)base["signingCertificate"]; }
+            set { base["signingCertificate"] = value; }
         }
 
         #endregion

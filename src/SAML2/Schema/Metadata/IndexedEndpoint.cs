@@ -18,7 +18,7 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         public new const string ELEMENT_NAME = "ArtifactResolutionService";
 
-        private ushort indexField;
+        private int indexField;
         
         private bool? isDefaultField;
         
@@ -31,7 +31,7 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The index.</value>
         [XmlAttribute]
-        public ushort index {
+        public int index {
             get {
                 return indexField;
             }

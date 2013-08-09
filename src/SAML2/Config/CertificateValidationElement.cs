@@ -5,17 +5,19 @@ namespace SAML2.Config
     /// <summary>
     /// Certificate Validation configuration element.
     /// </summary>
-    public class CertificateValidationElement : ConfigurationElement, IConfigurationElementCollectionElement
+    public class CertificateValidationElement : WritableConfigurationElement, IConfigurationElementCollectionElement
     {
         #region Attributes
 
         /// <summary>
-        /// Gets the type.
+        /// Gets or sets the type.
         /// </summary>
+        /// <value>The type.</value>
         [ConfigurationProperty("type")]
         public string Type
         {
             get { return (string)base["type"]; }
+            set { base["type"] = value; }
         }
 
         #endregion

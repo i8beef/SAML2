@@ -18,7 +18,7 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         public const string ELEMENT_NAME = "AttributeConsumingService";
 
-        private ushort indexField;
+        private int indexField;
 
         private bool? isDefaultField;
 
@@ -73,7 +73,7 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The index.</value>
         [XmlAttribute]
-        public ushort index
+        public int index
         {
             get { return indexField; }
             set { indexField = value; }

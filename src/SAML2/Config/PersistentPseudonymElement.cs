@@ -7,7 +7,7 @@ namespace SAML2.Config
     /// <summary>
     /// Persistent Pseudonym configuration element.
     /// </summary>
-    public class PersistentPseudonymElement : ConfigurationElement
+    public class PersistentPseudonymElement : WritableConfigurationElement
     {
         /// <summary>
         /// Persistent Pseudonym mapper instance.
@@ -17,12 +17,14 @@ namespace SAML2.Config
         #region Attributes
 
         /// <summary>
-        /// Gets the mapper.
+        /// Gets or sets the mapper.
         /// </summary>
+        /// <value>The mapper.</value>
         [ConfigurationProperty("mapper")]
         public string Mapper
         {
             get { return (string)base["mapper"]; }
+            set { base["mapper"] = value; }
         }
 
         #endregion

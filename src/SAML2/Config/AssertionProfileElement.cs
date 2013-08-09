@@ -5,17 +5,19 @@ namespace SAML2.Config
     /// <summary>
     /// Assertion Profile configuration element.
     /// </summary>
-    public class AssertionProfileElement : ConfigurationElement
+    public class AssertionProfileElement : WritableConfigurationElement
     {
         #region Attributes
 
         /// <summary>
-        /// Gets the assertion validator.
+        /// Gets or sets the assertion validator.
         /// </summary>
+        /// <value>The assertion validator.</value>
         [ConfigurationProperty("assertionValidator", IsRequired = true)]
         public string AssertionValidator
         {
             get { return (string)base["assertionValidator"]; }
+            set { base["assertionValidator"] = value; }
         }
 
         #endregion

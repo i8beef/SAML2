@@ -5,7 +5,7 @@ namespace SAML2.Config
     /// <summary>
     /// NameIdFormat configuration element.
     /// </summary>
-    public class NameIdFormatElement : ConfigurationElement, IConfigurationElementCollectionElement
+    public class NameIdFormatElement : WritableConfigurationElement, IConfigurationElementCollectionElement
     {
         /// <summary>
         /// The RegEx string used to validate the Format attribute.
@@ -15,12 +15,14 @@ namespace SAML2.Config
         #region Attributes
 
         /// <summary>
-        /// Gets the type.
+        /// Gets or sets the format.
         /// </summary>
+        /// <value>The format.</value>
         [ConfigurationProperty("format", IsKey = true, IsRequired = true)]
         public string Format
         {
             get { return (string)base["format"]; }
+            set { base["format"] = value; }
         }
 
         #endregion

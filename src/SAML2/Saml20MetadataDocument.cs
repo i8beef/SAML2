@@ -289,7 +289,7 @@ namespace SAML2
             }
         }
 
-        private Dictionary<ushort, IndexedEndpoint> _ARSEndpoints;
+        private Dictionary<int, IndexedEndpoint> _ARSEndpoints;
 
         private List<IdentityProviderEndpointElement> _SSOEndpoints;
         private List<IdentityProviderEndpointElement> _SLOEndpoints;
@@ -361,7 +361,7 @@ namespace SAML2
             {
                 _SSOEndpoints = new List<IdentityProviderEndpointElement>();
                 _SLOEndpoints = new List<IdentityProviderEndpointElement>();
-                _ARSEndpoints = new Dictionary<ushort, IndexedEndpoint>();
+                _ARSEndpoints = new Dictionary<int, IndexedEndpoint>();
                 _AssertionConsumerServiceEndpoints = new List<IdentityProviderEndpointElement>();
                 _attributeQueryEndpoints = new List<Endpoint>();
 

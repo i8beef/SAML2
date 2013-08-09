@@ -11,13 +11,13 @@ namespace SAML2.Schema.Metadata
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.METADATA)]
-    [XmlRoot(RequestedAttribute.ELEMENT_NAME, Namespace = Saml20Constants.METADATA, IsNullable = false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.METADATA, IsNullable = false)]
     public class RequestedAttribute : SamlAttribute
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ELEMENT_NAME = "RequestedAttribute";
+        public new const string ElementName = "RequestedAttribute";
 
         private bool? isRequiredField;
 

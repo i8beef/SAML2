@@ -5,11 +5,12 @@ namespace SAML2.Config
     /// <summary>
     /// Audience configuration element.
     /// </summary>
-    public class AudienceUriElement : ConfigurationElement, IConfigurationElementCollectionElement
+    public class AudienceUriElement : WritableConfigurationElement, IConfigurationElementCollectionElement
     {
         /// <summary>
-        /// Gets the URI.
+        /// Gets or sets the URI.
         /// </summary>
+        /// <value>The URI.</value>
         [ConfigurationProperty("uri", IsKey = true, IsRequired = true)]
         public string Uri
         {
