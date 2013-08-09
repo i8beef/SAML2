@@ -13,80 +13,55 @@ namespace SAML2.Schema.XEnc
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.XENC)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XENC, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.XENC, IsNullable=false)]
     public class EncryptionProperty
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "EncryptionProperty";
-
-        private XmlAttribute[] anyAttrField;
-        private string idField;
-        private XmlElement[] itemsField;
-
-        private string targetField;
-        private string[] textField;
-
-
-        /// <summary>
-        /// Gets or sets the items.
-        /// </summary>
-        /// <value>The items.</value>
-        [XmlAnyElement]
-        public XmlElement[] Items
-        {
-            get { return itemsField; }
-            set { itemsField = value; }
-        }
-
+        public const string ElementName = "EncryptionProperty";
 
         /// <summary>
         /// Gets or sets the text.
         /// </summary>
         /// <value>The text.</value>
         [XmlText]
-        public string[] Text
-        {
-            get { return textField; }
-            set { textField = value; }
-        }
+        public string[] Text { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the target.
-        /// </summary>
-        /// <value>The target.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Target
-        {
-            get { return targetField; }
-            set { targetField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>The id.</value>
-        [XmlAttribute(DataType="ID")]
-        public string Id
-        {
-            get { return idField; }
-            set { idField = value; }
-        }
-
+        #region Attributes
 
         /// <summary>
         /// Gets or sets any attr.
         /// </summary>
         /// <value>Any attr.</value>
         [XmlAnyAttribute]
-        public XmlAttribute[] AnyAttr
-        {
-            get { return anyAttrField; }
-            set { anyAttrField = value; }
-        }
+        public XmlAttribute[] AnyAttr { get; set; }
+
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        /// <value>The id.</value>
+        [XmlAttribute("Id", DataType = "ID")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the target.
+        /// </summary>
+        /// <value>The target.</value>
+        [XmlAttribute("Target", DataType = "anyURI")]
+        public string Target { get; set; }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the items.
+        /// </summary>
+        /// <value>The items.</value>
+        [XmlAnyElement]
+        public XmlElement[] Items { get; set; }
+
+        #endregion
     }
 }

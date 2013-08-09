@@ -10,40 +10,34 @@ namespace SAML2.Schema.XEnc
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.XENC)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XENC, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.XENC, IsNullable=false)]
     public class CipherReference
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "CipherReference";
+        public const string ElementName = "CipherReference";
 
-        private TransformsType1 itemField;
+        #region Attributes
 
-        private string uRIField;
+        /// <summary>
+        /// Gets or sets the URI.
+        /// </summary>
+        /// <value>The URI.</value>
+        [XmlAttribute("URI", DataType = "anyURI")]
+        public string URI { get; set; }
 
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets the item.
         /// </summary>
         /// <value>The item.</value>
         [XmlElement("Transforms")]
-        public TransformsType1 Item
-        {
-            get { return itemField; }
-            set { itemField = value; }
-        }
+        public TransformsType Item { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the URI.
-        /// </summary>
-        /// <value>The URI.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string URI
-        {
-            get { return uRIField; }
-            set { uRIField = value; }
-        }
+        #endregion
     }
 }

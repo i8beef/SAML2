@@ -165,7 +165,7 @@ namespace SAML2
             XmlDocument result = new XmlDocument();
             result.LoadXml(Serialization.SerializeToXmlString(encryptedAssertion));
 
-            XmlElement encryptedDataElement = GetElement(SfwEncryptedData.ELEMENT_NAME, Saml20Constants.XENC, result.DocumentElement);
+            XmlElement encryptedDataElement = GetElement(SfwEncryptedData.ElementName, Saml20Constants.XENC, result.DocumentElement);
             EncryptedXml.ReplaceElement(encryptedDataElement, encryptedData, false);
 
             _encryptedAssertion = result;
@@ -184,7 +184,7 @@ namespace SAML2
             if (_encryptedAssertion == null)
                 throw new InvalidOperationException("Unable to find the <EncryptedAssertion> element. Use a constructor or the LoadXml - method to set it.");
 
-            XmlElement encryptedDataElement = GetElement(SfwEncryptedData.ELEMENT_NAME, Saml20Constants.XENC, _encryptedAssertion.DocumentElement);
+            XmlElement encryptedDataElement = GetElement(SfwEncryptedData.ElementName, Saml20Constants.XENC, _encryptedAssertion.DocumentElement);
             EncryptedData encryptedData = new EncryptedData();
             encryptedData.LoadXml(encryptedDataElement);
 
@@ -240,18 +240,18 @@ namespace SAML2
         {
             // Check if there are any <EncryptedKey> elements immediately below the EncryptedAssertion element.
             foreach (XmlNode node in encryptedAssertionDoc.DocumentElement.ChildNodes)            
-                if (node.LocalName == Schema.XEnc.EncryptedKey.ELEMENT_NAME && node.NamespaceURI == Saml20Constants.XENC)
+                if (node.LocalName == Schema.XEnc.EncryptedKey.ElementName && node.NamespaceURI == Saml20Constants.XENC)
                 {
                     return ToSymmetricKey((XmlElement) node, keyAlgorithm);
                 }
 
             // Check if the key is embedded in the <EncryptedData> element.
             XmlElement encryptedData = 
-                GetElement(SfwEncryptedData.ELEMENT_NAME, Saml20Constants.XENC, encryptedAssertionDoc.DocumentElement);
+                GetElement(SfwEncryptedData.ElementName, Saml20Constants.XENC, encryptedAssertionDoc.DocumentElement);
             if (encryptedData != null)
             {
                 XmlElement encryptedKeyElement =
-                    GetElement(Schema.XEnc.EncryptedKey.ELEMENT_NAME, Saml20Constants.XENC, encryptedAssertionDoc.DocumentElement);
+                    GetElement(Schema.XEnc.EncryptedKey.ElementName, Saml20Constants.XENC, encryptedAssertionDoc.DocumentElement);
                 if (encryptedKeyElement != null)
                 {
                     return ToSymmetricKey(encryptedKeyElement, keyAlgorithm);

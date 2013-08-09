@@ -8,17 +8,18 @@ namespace SAML2.Schema.XEnc
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.XENC, IncludeInSchema=false)]
-    public enum ItemsChoiceType3
+    public enum ReferenceListType
     {
         /// <summary>
         /// DataReference
         /// </summary>
+        [XmlEnum("DataReference")]
         DataReference,
-
 
         /// <summary>
         /// KeyReference
         /// </summary>
+        [XmlEnum("KeyReference")]
         KeyReference,
     }
 }

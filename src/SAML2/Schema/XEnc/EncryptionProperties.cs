@@ -8,41 +8,34 @@ namespace SAML2.Schema.XEnc
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.XENC)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XENC, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.XENC, IsNullable=false)]
     public class EncryptionProperties
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "EncryptionProperties";
+        public const string ElementName = "EncryptionProperties";
 
-        private EncryptionProperty[] encryptionPropertyField;
+        #region Attributes
 
-        private string idField;
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        /// <value>The id.</value>
+        [XmlAttribute("Id", DataType = "ID")]
+        public string Id { get; set; }
 
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets the encryption property.
         /// </summary>
         /// <value>The encryption property.</value>
         [XmlElement("EncryptionProperty")]
-        public EncryptionProperty[] EncryptionProperty
-        {
-            get { return encryptionPropertyField; }
-            set { encryptionPropertyField = value; }
-        }
+        public EncryptionProperty[] EncryptionProperty { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>The id.</value>
-        [XmlAttribute(DataType="ID")]
-        public string Id
-        {
-            get { return idField; }
-            set { idField = value; }
-        }
+        #endregion
     }
 }

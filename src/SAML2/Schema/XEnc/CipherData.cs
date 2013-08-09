@@ -10,27 +10,24 @@ namespace SAML2.Schema.XEnc
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.XENC)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XENC, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.XENC, IsNullable=false)]
     public class CipherData
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "CipherData";
+        public const string ElementName = "CipherData";
 
-        private object itemField;
-
+        #region Elements
 
         /// <summary>
         /// Gets or sets the item.
         /// </summary>
         /// <value>The item.</value>
         [XmlElement("CipherReference", typeof (CipherReference))]
-        [XmlElement("CipherValue", typeof (byte[]), DataType="base64Binary")]
-        public object Item
-        {
-            get { return itemField; }
-            set { itemField = value; }
-        }
+        [XmlElement("CipherValue", typeof (byte[]), DataType = "base64Binary")]
+        public object Item { get; set; }
+
+        #endregion
     }
 }

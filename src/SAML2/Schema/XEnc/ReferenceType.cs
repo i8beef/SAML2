@@ -11,40 +11,33 @@ namespace SAML2.Schema.XEnc
     /// </summary>
     [Serializable]
     [XmlType(TypeName="ReferenceType", Namespace=Saml20Constants.XENC)]
-    public class ReferenceType1
+    public class ReferenceType
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "ReferenceType";
+        public const string ElementName = "ReferenceType";
 
-        private XmlElement[] anyField;
+        #region Attributes
 
-        private string uRIField;
+        /// <summary>
+        /// Gets or sets the URI.
+        /// </summary>
+        /// <value>The URI.</value>
+        [XmlAttribute("URI", DataType="anyURI")]
+        public string URI { get; set; }
 
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets any.
         /// </summary>
         /// <value>Any.</value>
         [XmlAnyElement]
-        public XmlElement[] Any
-        {
-            get { return anyField; }
-            set { anyField = value; }
-        }
+        public XmlElement[] Any { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the URI.
-        /// </summary>
-        /// <value>The URI.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string URI
-        {
-            get { return uRIField; }
-            set { uRIField = value; }
-        }
+        #endregion
     }
 }

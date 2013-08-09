@@ -16,35 +16,26 @@ namespace SAML2.Schema.XEnc
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.XENC)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XENC, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.XENC, IsNullable=false)]
     public class AgreementMethod
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "AgreementMethod";
+        public const string ElementName = "AgreementMethod";
 
-        private string algorithmField;
-        private XmlNode[] anyField;
-        private byte[] kANonceField;
-
-        private KeyInfo originatorKeyInfoField;
-
-        private KeyInfo recipientKeyInfoField;
-
+        #region Attributes
 
         /// <summary>
-        /// Gets or sets the KA nonce.
+        /// Gets or sets the algorithm.
         /// </summary>
-        /// <value>The KA nonce.</value>
-        [XmlElement("KA-Nonce", DataType="base64Binary")]
-        public byte[] KANonce
-        {
-            get { return kANonceField; }
-            set { kANonceField = value; }
-        }
+        /// <value>The algorithm.</value>
+        [XmlAttribute(DataType = "anyURI")]
+        public string Algorithm { get; set; }
 
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets any.
@@ -52,44 +43,31 @@ namespace SAML2.Schema.XEnc
         /// <value>Any.</value>
         [XmlText]
         [XmlAnyElement]
-        public XmlNode[] Any
-        {
-            get { return anyField; }
-            set { anyField = value; }
-        }
+        public XmlNode[] Any { get; set; }
+
+        /// <summary>
+        /// Gets or sets the KA nonce.
+        /// </summary>
+        /// <value>The KA nonce.</value>
+        [XmlElement("KA-Nonce", DataType="base64Binary")]
+        public byte[] KANonce { get; set; }
 
 
         /// <summary>
         /// Gets or sets the originator key info.
         /// </summary>
         /// <value>The originator key info.</value>
-        public KeyInfo OriginatorKeyInfo
-        {
-            get { return originatorKeyInfoField; }
-            set { originatorKeyInfoField = value; }
-        }
+        [XmlElement("OriginatorKeyInfo")]
+        public KeyInfo OriginatorKeyInfo { get; set; }
 
 
         /// <summary>
         /// Gets or sets the recipient key info.
         /// </summary>
         /// <value>The recipient key info.</value>
-        public KeyInfo RecipientKeyInfo
-        {
-            get { return recipientKeyInfoField; }
-            set { recipientKeyInfoField = value; }
-        }
+        [XmlElement("RecipientKeyInfo")]
+        public KeyInfo RecipientKeyInfo { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the algorithm.
-        /// </summary>
-        /// <value>The algorithm.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Algorithm
-        {
-            get { return algorithmField; }
-            set { algorithmField = value; }
-        }
+        #endregion
     }
 }

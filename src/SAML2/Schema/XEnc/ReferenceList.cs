@@ -12,24 +12,17 @@ namespace SAML2.Schema.XEnc
     [XmlRoot(Namespace=Saml20Constants.XENC, IsNullable=false)]
     public class ReferenceList
     {
-        private ItemsChoiceType3[] itemsElementNameField;
-        private ReferenceType1[] itemsField;
-
-
+        #region Elements
+        
         /// <summary>
         /// Gets or sets the items.
         /// DataReferencee and KeyReference elements
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("DataReference", typeof (ReferenceType1))]
-        [XmlElement("KeyReference", typeof (ReferenceType1))]
+        [XmlElement("DataReference", typeof (ReferenceType))]
+        [XmlElement("KeyReference", typeof (ReferenceType))]
         [XmlChoiceIdentifier("ItemsElementName")]
-        public ReferenceType1[] Items
-        {
-            get { return itemsField; }
-            set { itemsField = value; }
-        }
-
+        public ReferenceType[] Items { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the items element.
@@ -37,10 +30,8 @@ namespace SAML2.Schema.XEnc
         /// <value>The name of the items element.</value>
         [XmlElement("ItemsElementName")]
         [XmlIgnore]
-        public ItemsChoiceType3[] ItemsElementName
-        {
-            get { return itemsElementNameField; }
-            set { itemsElementNameField = value; }
-        }
+        public ReferenceListType[] ItemsElementName { get; set; }
+
+        #endregion
     }
 }

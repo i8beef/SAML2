@@ -13,110 +13,69 @@ namespace SAML2.Schema.XEnc
     [XmlType(Namespace=Saml20Constants.XENC)]
     public abstract class Encrypted
     {
-        private CipherData cipherDataField;
-        private string encodingField;
-        private EncryptionMethod encryptionMethodField;
+        #region Attributes
 
-        private EncryptionProperties encryptionPropertiesField;
+        /// <summary>
+        /// Gets or sets the encoding.
+        /// </summary>
+        /// <value>The encoding.</value>
+        [XmlAttribute("Encoding", DataType = "anyURI")]
+        public string Encoding { get; set; }
 
-        private string idField;
-        private KeyInfo keyInfoField;
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        /// <value>The id.</value>
+        [XmlAttribute("Id", DataType = "ID")]
+        public string Id { get; set; }
 
-        private string mimeTypeField;
-        private string typeField;
+        /// <summary>
+        /// Gets or sets the type of the MIME.
+        /// </summary>
+        /// <value>The type of the MIME.</value>
+        [XmlAttribute("MimeType")]
+        public string MimeType { get; set; }
 
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>The type.</value>
+        [XmlAttribute("Type", DataType = "anyURI")]
+        public string Type { get; set; }
+
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets the encryption method.
         /// the RSA public key algorithm.
         /// </summary>
         /// <value>The encryption method.</value>
-        public EncryptionMethod EncryptionMethod
-        {
-            get { return encryptionMethodField; }
-            set { encryptionMethodField = value; }
-        }
-
+        [XmlElement("EncryptionMethod")]
+        public EncryptionMethod EncryptionMethod { get; set; }
 
         /// <summary>
         /// Gets or sets the key info.
         /// </summary>
         /// <value>The key info.</value>
-        [XmlElement(Namespace=Saml20Constants.XMLDSIG)]
-        public KeyInfo KeyInfo
-        {
-            get { return keyInfoField; }
-            set { keyInfoField = value; }
-        }
-
+        [XmlElement("KeyInfo", Namespace=Saml20Constants.XMLDSIG)]
+        public KeyInfo KeyInfo { get; set; }
 
         /// <summary>
         /// Gets or sets the cipher data.
         /// </summary>
         /// <value>The cipher data.</value>
-        public CipherData CipherData
-        {
-            get { return cipherDataField; }
-            set { cipherDataField = value; }
-        }
-
+        [XmlElement("CipherData")]
+        public CipherData CipherData { get; set; }
 
         /// <summary>
         /// Gets or sets the encryption properties.
         /// </summary>
         /// <value>The encryption properties.</value>
-        public EncryptionProperties EncryptionProperties
-        {
-            get { return encryptionPropertiesField; }
-            set { encryptionPropertiesField = value; }
-        }
+        [XmlElement("EncryptionProperties")]
+        public EncryptionProperties EncryptionProperties { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>The id.</value>
-        [XmlAttribute(DataType="ID")]
-        public string Id
-        {
-            get { return idField; }
-            set { idField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the type.
-        /// </summary>
-        /// <value>The type.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Type
-        {
-            get { return typeField; }
-            set { typeField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the type of the MIME.
-        /// </summary>
-        /// <value>The type of the MIME.</value>
-        [XmlAttribute]
-        public string MimeType
-        {
-            get { return mimeTypeField; }
-            set { mimeTypeField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the encoding.
-        /// </summary>
-        /// <value>The encoding.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Encoding
-        {
-            get { return encodingField; }
-            set { encodingField = value; }
-        }
+        #endregion
     }
 }

@@ -9,25 +9,22 @@ namespace SAML2.Schema.XEnc
     /// </summary>
     [Serializable]
     [XmlType(TypeName="TransformsType", Namespace=Saml20Constants.XENC)]
-    public class TransformsType1
+    public class TransformsType
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "TransformsType";
+        public const string ElementName = "TransformsType";
 
-        private Transform[] transformField;
-
+        #region Elements
 
         /// <summary>
         /// Gets or sets the transform.
         /// </summary>
         /// <value>The transform.</value>
         [XmlElement("Transform", Namespace=Saml20Constants.XMLDSIG)]
-        public Transform[] Transform
-        {
-            get { return transformField; }
-            set { transformField = value; }
-        }
+        public Transform[] Transform { get; set; }
+
+        #endregion
     }
 }

@@ -237,8 +237,8 @@
     <Compile Include="Schema\XEnc\EncryptionProperty.cs" />
     <Compile Include="Schema\XEnc\Enums.cs" />
     <Compile Include="Schema\XEnc\ReferenceList.cs" />
-    <Compile Include="Schema\XEnc\ReferenceType1.cs" />
-    <Compile Include="Schema\XEnc\TransformsType1.cs" />
+    <Compile Include="Schema\XEnc\ReferenceType.cs" />
+    <Compile Include="Schema\XEnc\TransformsType.cs" />
     <Compile Include="Schema\XmlDSig\CanonicalizationMethod.cs" />
     <Compile Include="Schema\XmlDSig\DigestMethod.cs" />
     <Compile Include="Schema\XmlDSig\DSAKeyValue.cs" />

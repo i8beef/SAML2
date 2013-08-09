@@ -12,52 +12,41 @@ namespace SAML2.Schema.XEnc
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.XENC)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XENC, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.XENC, IsNullable=false)]
     public class EncryptedKey : Encrypted
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "EncryptedKey";
+        public const string ElementName = "EncryptedKey";
 
-        private string carriedKeyNameField;
-
-        private string recipientField;
-        private ReferenceList referenceListField;
-
-
-        /// <summary>
-        /// Gets or sets the reference list.
-        /// </summary>
-        /// <value>The reference list.</value>
-        public ReferenceList ReferenceList
-        {
-            get { return referenceListField; }
-            set { referenceListField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the name of the carried key.
-        /// </summary>
-        /// <value>The name of the carried key.</value>
-        public string CarriedKeyName
-        {
-            get { return carriedKeyNameField; }
-            set { carriedKeyNameField = value; }
-        }
-
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the recipient.
         /// </summary>
         /// <value>The recipient.</value>
-        [XmlAttribute]
-        public string Recipient
-        {
-            get { return recipientField; }
-            set { recipientField = value; }
-        }
+        [XmlAttribute("Recipient")]
+        public string Recipient { get; set; }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the name of the carried key.
+        /// </summary>
+        /// <value>The name of the carried key.</value>
+        [XmlElement("CarriedKeyName")]
+        public string CarriedKeyName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reference list.
+        /// </summary>
+        /// <value>The reference list.</value>
+        [XmlElement("ReferenceList")]
+        public ReferenceList ReferenceList { get; set; }
+
+        #endregion
     }
 }

@@ -102,7 +102,7 @@ namespace SAML2.Tests.Saml20
         {            
             XmlDocument doc = new XmlDocument();
             doc.Load(file);            
-            XmlElement encryptedDataElement = GetElement(SAML2.Schema.XEnc.EncryptedData.ELEMENT_NAME, Saml20Constants.XENC, doc);                        
+            XmlElement encryptedDataElement = GetElement(SAML2.Schema.XEnc.EncryptedData.ElementName, Saml20Constants.XENC, doc);                        
 
             
             EncryptedData encryptedData = new EncryptedData();
@@ -201,7 +201,7 @@ namespace SAML2.Tests.Saml20
             XmlDocument result;
             result = Serialization.Serialize(encryptedAssertion);            
 
-            XmlElement encryptedDataElement = GetElement(SAML2.Schema.XEnc.EncryptedData.ELEMENT_NAME, Saml20Constants.XENC, result);
+            XmlElement encryptedDataElement = GetElement(SAML2.Schema.XEnc.EncryptedData.ElementName, Saml20Constants.XENC, result);
             EncryptedXml.ReplaceElement(encryptedDataElement, encryptedData, false);
         }        
 
@@ -339,7 +339,7 @@ namespace SAML2.Tests.Saml20
             list = encryptedAssertionXML.GetElementsByTagName(EncryptedAssertion.ElementName, Saml20Constants.ASSERTION);
             Assert.AreEqual(1, list.Count);
 
-            list = encryptedAssertionXML.GetElementsByTagName(SAML2.Schema.XEnc.EncryptedKey.ELEMENT_NAME, Saml20Constants.XENC);
+            list = encryptedAssertionXML.GetElementsByTagName(SAML2.Schema.XEnc.EncryptedKey.ElementName, Saml20Constants.XENC);
             Assert.AreEqual(1, list.Count);
         }
 
@@ -378,7 +378,7 @@ namespace SAML2.Tests.Saml20
 
             // Verify that the EncryptionMethod element is set correctly.
             XmlNodeList list = 
-                encryptedAssertionXML.GetElementsByTagName(SAML2.Schema.XEnc.EncryptedData.ELEMENT_NAME,
+                encryptedAssertionXML.GetElementsByTagName(SAML2.Schema.XEnc.EncryptedData.ElementName,
                                                            Saml20Constants.XENC);
             Assert.AreEqual(1, list.Count);
             XmlElement el = (XmlElement) list[0];
@@ -387,7 +387,7 @@ namespace SAML2.Tests.Saml20
             bool encryptionMethodFound = false;
             foreach (XmlNode node in el.ChildNodes)
             {
-                if (node.LocalName == SAML2.Schema.XEnc.EncryptionMethod.ELEMENT_NAME &&
+                if (node.LocalName == SAML2.Schema.XEnc.EncryptionMethod.ElementName &&
                     node.NamespaceURI == Saml20Constants.XENC)
                 {
                     el = (XmlElement) node;
