@@ -22,7 +22,7 @@ namespace SAML2.Tests.Saml20.Protocol
             Saml20MetadataDocument doc = new Saml20MetadataDocument(true);
             
             EntityDescriptor entity = doc.CreateDefaultEntity();
-            entity.validUntil = DateTime.Now.AddDays(14);
+            entity.ValidUntil = DateTime.Now.AddDays(14);
 
             Console.WriteLine(doc.ToXml());
             
@@ -38,11 +38,11 @@ namespace SAML2.Tests.Saml20.Protocol
             Saml20MetadataDocument metadata = new Saml20MetadataDocument(doc);
             List<KeyDescriptor> keys = metadata.Keys;            
 
-            Assert.That(keys[0].use == KeyTypes.signing);
-            Assert.That(keys[1].use == KeyTypes.encryption);
+            Assert.That(keys[0].Use == KeyTypes.Signing);
+            Assert.That(keys[1].Use == KeyTypes.Encryption);
 
-            Assert.That(metadata.GetKeys(KeyTypes.signing).Count == 1);
-            Assert.That(metadata.GetKeys(KeyTypes.encryption).Count == 1);
+            Assert.That(metadata.GetKeys(KeyTypes.Signing).Count == 1);
+            Assert.That(metadata.GetKeys(KeyTypes.Encryption).Count == 1);
 
             // The two certs in the metadata document happen to be identical, and are also 
             // used for signing the entire document.

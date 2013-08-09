@@ -9,20 +9,15 @@ namespace SAML2.Schema.Metadata
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.METADATA, IsNullable=false)]
-    public class PDPDescriptor : RoleDescriptor {
-        
+    [XmlRoot(ElementName, Namespace = Saml20Constants.METADATA, IsNullable = false)]
+    public class PDPDescriptor : RoleDescriptor
+    {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ELEMENT_NAME = "Organization";
+        public new const string ElementName = "Organization";
 
-        private Endpoint[] authzServiceField;
-        
-        private Endpoint[] assertionIDRequestServiceField;
-        
-        private string[] nameIDFormatField;
-
+        #region Elements
 
         /// <summary>
         /// Gets or sets the authz service.
@@ -32,15 +27,7 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The authz service.</value>
         [XmlElement("AuthzService")]
-        public Endpoint[] AuthzService {
-            get {
-                return authzServiceField;
-            }
-            set {
-                authzServiceField = value;
-            }
-        }
-
+        public Endpoint[] AuthzService { get; set; }
 
         /// <summary>
         /// Gets or sets the assertion ID request service.
@@ -50,15 +37,7 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The assertion ID request service.</value>
         [XmlElement("AssertionIDRequestService")]
-        public Endpoint[] AssertionIDRequestService {
-            get {
-                return assertionIDRequestServiceField;
-            }
-            set {
-                assertionIDRequestServiceField = value;
-            }
-        }
-
+        public Endpoint[] AssertionIDRequestService { get; set; }
 
         /// <summary>
         /// Gets or sets the name ID format.
@@ -67,13 +46,8 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The name ID format.</value>
         [XmlElement("NameIDFormat", DataType="anyURI")]
-        public string[] NameIDFormat {
-            get {
-                return nameIDFormatField;
-            }
-            set {
-                nameIDFormatField = value;
-            }
-        }
+        public string[] NameIDFormat { get; set; }
+
+        #endregion
     }
 }

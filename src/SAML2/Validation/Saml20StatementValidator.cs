@@ -89,20 +89,20 @@ namespace SAML2.Validation
             {
                 switch (authnContext.ItemsElementName[i])
                 {
-                    case ItemsChoiceType5.AuthnContextClassRef:
+                    case AuthnContextType.AuthnContextClassRef:
                         if (i > 0)
                             throw new Saml20FormatException("AuthnContextClassRef must be in the first element");
                         if (!Uri.IsWellFormedUriString((string)authnContext.Items[i], UriKind.Absolute))
                             throw new Saml20FormatException("AuthnContextClassRef has a value which is not a wellformed absolute uri");
                         break;
-                    case ItemsChoiceType5.AuthnContextDeclRef:
+                    case AuthnContextType.AuthnContextDeclRef:
                         if (authnContextDeclRefFound)
                             throw new Saml20FormatException("AuthnContextDeclRef MUST only be present once.");
                         authnContextDeclRefFound = true;
                         if (!Uri.IsWellFormedUriString((string)authnContext.Items[i], UriKind.Absolute))
                             throw new Saml20FormatException("AuthnContextDeclRef has a value which is not a wellformed absolute uri");
                         break;
-                    case ItemsChoiceType5.AuthnContextDecl:
+                    case AuthnContextType.AuthnContextDecl:
                         throw new Saml20FormatException("AuthnContextDecl elements are not allowed in this implementation");
                     default:
                         throw new Saml20FormatException(string.Format("Subelement {0} of AuthnContext is not supported", authnContext.ItemsElementName[i]));

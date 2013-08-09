@@ -24,6 +24,22 @@ namespace SAML2.Schema.Core
         public const string ElementName = "SubjectConfirmationData";
 
         /// <summary>
+        /// Gets or sets the not before.
+        /// </summary>
+        /// <value>The not before.</value>
+        [XmlIgnore]
+        public DateTime? NotBefore { get; set; }
+
+        /// <summary>
+        /// Gets or sets the not on or after.
+        /// </summary>
+        /// <value>The not on or after.</value>
+        [XmlIgnore]
+        public DateTime? NotOnOrAfter { get; set; }
+
+        #region Attributes
+
+        /// <summary>
         /// Gets or sets the address.
         /// </summary>
         /// <value>The address.</value>
@@ -38,25 +54,11 @@ namespace SAML2.Schema.Core
         public XmlAttribute[] AnyAttr { get; set; }
 
         /// <summary>
-        /// Gets or sets the any-elements-array.
-        /// </summary>
-        /// <value>The any-elements-array</value>
-        [XmlAnyElement]
-        public XmlElement[] AnyElements { get; set; }
-
-        /// <summary>
         /// Gets or sets the in response to.
         /// </summary>
         /// <value>The in response to.</value>
         [XmlAttribute("InResponseTo", DataType = "NCName")]
         public string InResponseTo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the not before.
-        /// </summary>
-        /// <value>The not before.</value>
-        [XmlIgnore]
-        public DateTime? NotBefore { get; set; }
 
         /// <summary>
         /// Gets or sets the not on or after string.
@@ -69,13 +71,6 @@ namespace SAML2.Schema.Core
             set { NotBefore = string.IsNullOrEmpty(value) ? (DateTime?)null : Saml20Utils.FromUtcString(value); }
         }
         
-        /// <summary>
-        /// Gets or sets the not on or after.
-        /// </summary>
-        /// <value>The not on or after.</value>
-        [XmlIgnore]
-        public DateTime? NotOnOrAfter { get; set; }
-
         /// <summary>
         /// Gets or sets the not on or after string.
         /// </summary>
@@ -93,5 +88,18 @@ namespace SAML2.Schema.Core
         /// <value>The recipient.</value>
         [XmlAttribute("Recipient", DataType = "anyURI")]
         public string Recipient { get; set; }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the any-elements-array.
+        /// </summary>
+        /// <value>The any-elements-array</value>
+        [XmlAnyElement]
+        public XmlElement[] AnyElements { get; set; }
+
+        #endregion
     }
 }

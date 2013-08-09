@@ -19,10 +19,6 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         public new const string ElementName = "RequestedAttribute";
 
-        private bool? isRequiredField;
-
-
-
         /// <summary>
         /// Gets or sets a value indicating whether this instance is required.
         /// Optional XML attribute indicates if the service requires the corresponding SAML attribute in order
@@ -32,32 +28,21 @@ namespace SAML2.Schema.Metadata
         /// 	<c>true</c> if this instance is required; otherwise, <c>false</c>.
         /// </value>
         [XmlIgnore]
-        public bool? isRequired
-        {
-            get { return isRequiredField; }
-            set { isRequiredField = value; }
-        }
+        public bool? IsRequired { get; set; }
+
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the is required string.
         /// </summary>
         /// <value>The is required string.</value>
         [XmlAttribute("isRequired")]
-        public string isRequiredString
+        public string IsRequiredString
         {
-            get {
-                if (isRequiredField.HasValue)
-                    return XmlConvert.ToString(isRequiredField.Value);
-                else
-                    return null;
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                    isRequiredField = null;
-                else
-                    isRequiredField = XmlConvert.ToBoolean(value);
-            }
+            get { return IsRequired.HasValue ? XmlConvert.ToString(IsRequired.Value) : null; }
+            set { IsRequired = string.IsNullOrEmpty(value) ? (bool?) null : XmlConvert.ToBoolean(value); }
         }
+
+        #endregion
     }
 }

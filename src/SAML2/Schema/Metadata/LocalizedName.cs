@@ -10,9 +10,14 @@ namespace SAML2.Schema.Metadata
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.METADATA, IsNullable = false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.METADATA, IsNullable = false)]
     public class LocalizedName
     {
+        /// <summary>
+        /// The XML Element name of this class
+        /// </summary>
+        public const string ElementName = "OrganizationName";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalizedName"/> class.
         /// </summary>
@@ -22,44 +27,29 @@ namespace SAML2.Schema.Metadata
         /// Initializes a new instance of the <see cref="LocalizedName"/> class.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <param name="lang">The language.</param>
-        public LocalizedName(string value, string lang)
+        /// <param name="language">The language.</param>
+        public LocalizedName(string value, string language)
         {
-            valueField = value;
-            langField = lang;
+            Value = value;
+            Language = language;
         }
-
-        /// <summary>
-        /// The XML Element name of this class
-        /// </summary>
-        public const string ELEMENT_NAME = "OrganizationName";
-
-        private string langField;
-
-        private string valueField;
-
-
-        /// <summary>
-        /// Gets or sets the lang.
-        /// </summary>
-        /// <value>The lang.</value>
-        [XmlAttribute(Form=XmlSchemaForm.Qualified, Namespace="http://www.w3.org/XML/1998/namespace")]
-        public string lang
-        {
-            get { return langField; }
-            set { langField = value; }
-        }
-
 
         /// <summary>
         /// Gets or sets the value.
         /// </summary>
         /// <value>The value.</value>
         [XmlText]
-        public string Value
-        {
-            get { return valueField; }
-            set { valueField = value; }
-        }
+        public string Value { get; set; }
+
+        #region Attributes
+
+        /// <summary>
+        /// Gets or sets the lang.
+        /// </summary>
+        /// <value>The lang.</value>
+        [XmlAttribute("lang", Form=XmlSchemaForm.Qualified, Namespace="http://www.w3.org/XML/1998/namespace")]
+        public string Language { get; set; }
+
+        #endregion
     }
 }

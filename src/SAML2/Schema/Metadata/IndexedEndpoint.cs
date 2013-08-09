@@ -10,36 +10,13 @@ namespace SAML2.Schema.Metadata
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.METADATA, IsNullable = false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.METADATA, IsNullable = false)]
     public class IndexedEndpoint : Endpoint {
         
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ELEMENT_NAME = "ArtifactResolutionService";
-
-        private int indexField;
-        
-        private bool? isDefaultField;
-        
-        /// <summary>
-        /// Gets or sets the index.
-        /// A required attribute that assigns a unique integer value to the endpoint so that it can be
-        /// referenced in a protocol message. The index value need only be unique within a collection of like
-        /// elements contained within the same parent element (i.e., they need not be unique across the
-        /// entire instance).
-        /// </summary>
-        /// <value>The index.</value>
-        [XmlAttribute]
-        public int index {
-            get {
-                return indexField;
-            }
-            set {
-                indexField = value;
-            }
-        }
-
+        public new const string ElementName = "ArtifactResolutionService";
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is default.
@@ -50,36 +27,32 @@ namespace SAML2.Schema.Metadata
         /// 	<c>true</c> if this instance is default; otherwise, <c>false</c>.
         /// </value>
         [XmlIgnore]
-        public bool? isDefault {
-            get {
-                return isDefaultField;
-            }
-            set {
-                isDefaultField = value;
-            }
-        }
+        public bool? IsDefault { get; set; }
+
+        #region Attributes
+
+        /// <summary>
+        /// Gets or sets the index.
+        /// A required attribute that assigns a unique integer value to the endpoint so that it can be
+        /// referenced in a protocol message. The index value need only be unique within a collection of like
+        /// elements contained within the same parent element (i.e., they need not be unique across the
+        /// entire instance).
+        /// </summary>
+        /// <value>The index.</value>
+        [XmlAttribute("index")]
+        public int Index { get; set; }
 
         /// <summary>
         /// Gets or sets the isDefault string.
         /// </summary>
         /// <value>The isDefault string.</value>
         [XmlAttribute("isDefault")]
-        public string isDefaultString
+        public string IsDefaultString
         {
-            get
-            {
-                if (isDefaultField == null)
-                    return null;
-                else
-                    return XmlConvert.ToString(isDefaultField.Value);
-            }
-            set
-            {
-                if (value == null)
-                    isDefaultField = null;
-                else
-                    isDefaultField = XmlConvert.ToBoolean(value);
-            }
+            get { return IsDefault == null ? null : XmlConvert.ToString(IsDefault.Value); }
+            set { IsDefault = value == null ? (bool?) null : XmlConvert.ToBoolean(value); }
         }
+
+        #endregion
     }
 }

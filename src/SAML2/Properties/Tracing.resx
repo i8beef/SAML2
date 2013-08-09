@@ -158,7 +158,7 @@ Saml message: {1}</value>
 
 User: {0}
 SessionIndex: {1}
-NameIdFormat: {2}</value>
+NameIDFormat: {2}</value>
   </data>
   <data name="LogoutRequest" xml:space="preserve">
     <value>Received a LogoutRequest

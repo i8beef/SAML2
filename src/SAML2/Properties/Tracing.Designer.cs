@@ -166,7 +166,7 @@ namespace SAML2.Properties {
         ///
         ///User: {0}
         ///SessionIndex: {1}
-        ///NameIdFormat: {2}.
+        ///NameIDFormat: {2}.
         /// </summary>
         internal static string Login {
             get {

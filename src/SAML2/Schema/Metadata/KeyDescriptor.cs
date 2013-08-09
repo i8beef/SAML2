@@ -11,32 +11,35 @@ namespace SAML2.Schema.Metadata
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.METADATA, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.METADATA, IsNullable=false)]
     public class KeyDescriptor
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "KeyDescriptor";
-
-        private EncryptionMethod[] encryptionMethodField;
-        private KeyInfo keyInfoField;
-
-        private KeyTypes useField;
-
-        private bool useFieldSpecified;
-
+        public const string ElementName = "KeyDescriptor";
 
         /// <summary>
-        /// The XML Signature element KeyInfo. Can be implicitly converted to the .NET class System.Security.Cryptography.Xml.KeyInfo.
+        /// Gets or sets a value indicating whether [use specified].
         /// </summary>
-        [XmlElement(Namespace=Saml20Constants.XMLDSIG)]
-        public KeyInfo KeyInfo
-        {
-            get { return keyInfoField; }
-            set { keyInfoField = value; }
-        }
+        /// <value><c>true</c> if [use specified]; otherwise, <c>false</c>.</value>
+        [XmlIgnore]
+        public bool UseSpecified { get; set; }
 
+        #region Attributes
+
+        /// <summary>
+        /// Gets or sets the use.
+        /// Optional attribute specifying the purpose of the key being described. Values are drawn from the
+        /// KeyTypes enumeration, and consist of the values encryption and signing.
+        /// </summary>
+        /// <value>The use.</value>
+        [XmlAttribute("use")]
+        public KeyTypes Use { get; set; }
+
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets the encryption method.
@@ -46,36 +49,14 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The encryption method.</value>
         [XmlElement("EncryptionMethod")]
-        public EncryptionMethod[] EncryptionMethod
-        {
-            get { return encryptionMethodField; }
-            set { encryptionMethodField = value; }
-        }
-
+        public EncryptionMethod[] EncryptionMethod { get; set; }
 
         /// <summary>
-        /// Gets or sets the use.
-        /// Optional attribute specifying the purpose of the key being described. Values are drawn from the
-        /// KeyTypes enumeration, and consist of the values encryption and signing.
+        /// The XML Signature element KeyInfo. Can be implicitly converted to the .NET class System.Security.Cryptography.Xml.KeyInfo.
         /// </summary>
-        /// <value>The use.</value>
-        [XmlAttribute]
-        public KeyTypes use
-        {
-            get { return useField; }
-            set { useField = value; }
-        }
+        [XmlElement("KeyInfo", Namespace = Saml20Constants.XMLDSIG)]
+        public KeyInfo KeyInfo { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [use specified].
-        /// </summary>
-        /// <value><c>true</c> if [use specified]; otherwise, <c>false</c>.</value>
-        [XmlIgnore]
-        public bool useSpecified
-        {
-            get { return useFieldSpecified; }
-            set { useFieldSpecified = value; }
-        }
+        #endregion
     }
 }

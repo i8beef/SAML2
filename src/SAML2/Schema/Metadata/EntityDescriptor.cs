@@ -19,109 +19,74 @@ namespace SAML2.Schema.Metadata
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.METADATA, IsNullable=false)]
-    public class EntityDescriptor {
-
+    [XmlRoot(ElementName, Namespace=Saml20Constants.METADATA, IsNullable=false)]
+    public class EntityDescriptor
+    {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "EntityDescriptor";
-        
-        private Signature signatureField;
-        
-        private ExtensionsType1 extensionsField;
-        
-        private object[] itemsField;
-        
-        private Organization organizationField;
-        
-        private Contact[] contactPersonField;
-        
-        private AdditionalMetadataLocation[] additionalMetadataLocationField;
-        
-        private string entityIDField;
-        
-        private DateTime? validUntilField;
-        
-        private string cacheDurationField;
-        
-        private string idField;
-        
-        private XmlAttribute[] anyAttrField;
-
+        public const string ElementName = "EntityDescriptor";
 
         /// <summary>
-        /// Gets or sets the signature.
-        /// An XML signature that authenticates the containing element and its contents
+        /// Gets or sets the valid until.
+        /// Optional attribute indicates the expiration time of the metadata contained in the element and any
+        /// contained elements.
         /// </summary>
-        /// <value>The signature.</value>
-        [XmlElement(Namespace=Saml20Constants.XMLDSIG)]
-        public Signature Signature {
-            get {
-                return signatureField;
-            }
-            set {
-                signatureField = value;
-            }
-        }
+        /// <value>The valid until.</value>
+        [XmlIgnore]
+        public DateTime? ValidUntil { get; set; }
 
+        #region Attributes
 
         /// <summary>
-        /// Gets or sets the extensions.
-        /// This contains optional metadata extensions that are agreed upon between a metadata publisher
-        /// and consumer. Extension elements MUST be namespace-qualified by a non-SAML-defined
-        /// namespace.
+        /// Gets or sets any attr.
         /// </summary>
-        /// <value>The extensions.</value>
-        public ExtensionsType1 Extensions {
-            get { return extensionsField; }
-            set { extensionsField = value; }
-        }
-
+        /// <value>Any attr.</value>
+        [XmlAnyAttribute]
+        public XmlAttribute[] AnyAttr { get; set; }
 
         /// <summary>
-        /// Gets or sets the items.
-        /// &lt;RoleDescriptor&gt;, &lt;IDPSSODescriptor&gt;, &lt;SPSSODescriptor&gt;,
-        /// &lt;AuthnAuthorityDescriptor&gt;, &lt;AttributeAuthorityDescriptor&gt;, &lt;PDPDescriptor&gt;
-        /// &lt;AffiliationDescriptor&gt;
+        /// Gets or sets the cache duration.
+        /// Optional attribute indicates the maximum length of time a consumer should cache the metadata
+        /// contained in the element and any contained elements.
         /// </summary>
-        /// <value>The items.</value>
-        [XmlElement("AffiliationDescriptor", typeof(AffiliationDescriptor))]
-        [XmlElement("AttributeAuthorityDescriptor", typeof(AttributeAuthorityDescriptor))]
-        [XmlElement("AuthnAuthorityDescriptor", typeof(AuthnAuthorityDescriptor))]
-        [XmlElement("IDPSSODescriptor", typeof(IDPSSODescriptor))]
-        [XmlElement("PDPDescriptor", typeof(PDPDescriptor))]
-        [XmlElement("RoleDescriptor", typeof(RoleDescriptor))]
-        [XmlElement("SPSSODescriptor", typeof(SPSSODescriptor))]
-        public object[] Items {
-            get { return itemsField; }
-            set { itemsField = value; }
-        }
-
+        /// <value>The cache duration.</value>
+        [XmlAttribute("cacheDuration", DataType = "duration")]
+        public string CacheDuration { get; set; }
 
         /// <summary>
-        /// Gets or sets the organization.
-        /// Optional element identifying the organization responsible for the SAML entity described by the
-        /// element.
+        /// Gets or sets the entity ID.
+        /// Specifies the unique identifier of the SAML entity whose metadata is described by the element's
+        /// contents.
         /// </summary>
-        /// <value>The organization.</value>
-        public Organization Organization {
-            get { return organizationField; }
-            set { organizationField = value; }
-        }
-
+        /// <value>The entity ID.</value>
+        [XmlAttribute("entityID", DataType = "anyURI")]
+        public string EntityID { get; set; }
 
         /// <summary>
-        /// Gets or sets the contact person.
-        /// Optional sequence of elements identifying various kinds of contact personnel.
+        /// Gets or sets the ID.
+        /// A document-unique identifier for the element, typically used as a reference point when signing
         /// </summary>
-        /// <value>The contact person.</value>
-        [XmlElement("ContactPerson")]
-        public Contact[] ContactPerson {
-            get { return contactPersonField; }
-            set { contactPersonField = value; }
+        /// <value>The ID.</value>
+        [XmlAttribute("ID", DataType = "ID")]
+        public string ID { get; set; }
+
+        /// <summary>
+        /// Gets or sets the valid until string.
+        /// Optional attribute indicates the expiration time of the metadata contained in the element and any
+        /// contained elements.
+        /// </summary>
+        /// <value>The valid until string.</value>
+        [XmlAttribute("validUntil")]
+        public string ValidUntilString
+        {
+            get { return ValidUntil == null ? null : ValidUntil.Value.ToUniversalTime().ToString("o"); }
+            set { ValidUntil = value == null ? (DateTime?)null : DateTime.Parse(value); }
         }
 
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets the additional metadata location.
@@ -131,114 +96,59 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The additional metadata location.</value>
         [XmlElement("AdditionalMetadataLocation")]
-        public AdditionalMetadataLocation[] AdditionalMetadataLocation {
-            get {
-                return additionalMetadataLocationField;
-            }
-            set {
-                additionalMetadataLocationField = value;
-            }
-        }
-
+        public AdditionalMetadataLocation[] AdditionalMetadataLocation { get; set; }
 
         /// <summary>
-        /// Gets or sets the entity ID.
-        /// Specifies the unique identifier of the SAML entity whose metadata is described by the element's
-        /// contents.
+        /// Gets or sets the contact person.
+        /// Optional sequence of elements identifying various kinds of contact personnel.
         /// </summary>
-        /// <value>The entity ID.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string entityID {
-            get {
-                return entityIDField;
-            }
-            set {
-                entityIDField = value;
-            }
-        }
-
+        /// <value>The contact person.</value>
+        [XmlElement("ContactPerson")]
+        public Contact[] ContactPerson { get; set; }
 
         /// <summary>
-        /// Gets or sets the valid until.
-        /// Optional attribute indicates the expiration time of the metadata contained in the element and any
-        /// contained elements.
+        /// Gets or sets the extensions.
+        /// This contains optional metadata extensions that are agreed upon between a metadata publisher
+        /// and consumer. Extension elements MUST be namespace-qualified by a non-SAML-defined
+        /// namespace.
         /// </summary>
-        /// <value>The valid until.</value>
-        [XmlIgnore]
-        public DateTime? validUntil {
-            get { return validUntilField; }
-            set { validUntilField = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the valid until string.
-        /// Optional attribute indicates the expiration time of the metadata contained in the element and any
-        /// contained elements.
-        /// </summary>
-        /// <value>The valid until string.</value>
-        [XmlAttribute("validUntil")]
-        public string validUntilString {
-            get
-            {
-                if (validUntilField == null)
-                    return null;
-                else
-                    return validUntilField.Value.ToUniversalTime().ToString("o");
-            }
-            set
-            {
-                if (value == null)
-                    validUntilField = null;
-                else
-                    validUntilField = DateTime.Parse(value);
-            }
-        }
+        /// <value>The extensions.</value>
+        [XmlElement("Extensions")]
+        public ExtensionType Extensions { get; set; }
         
         /// <summary>
-        /// Gets or sets the cache duration.
-        /// Optional attribute indicates the maximum length of time a consumer should cache the metadata
-        /// contained in the element and any contained elements.
+        /// Gets or sets the items.
+        /// &lt;RoleDescriptor&gt;, &lt;IDPSSODescriptor&gt;, &lt;SPSSODescriptor&gt;,
+        /// &lt;AuthnAuthorityDescriptor&gt;, &lt;AttributeAuthorityDescriptor&gt;, &lt;PDPDescriptor&gt;
+        /// &lt;AffiliationDescriptor&gt;
         /// </summary>
-        /// <value>The cache duration.</value>
-        [XmlAttribute(DataType="duration")]
-        public string cacheDuration {
-            get {
-                return cacheDurationField;
-            }
-            set {
-                cacheDurationField = value;
-            }
-        }
-
+        /// <value>The items.</value>
+        [XmlElement("AffiliationDescriptor", typeof (AffiliationDescriptor))]
+        [XmlElement("AttributeAuthorityDescriptor", typeof (AttributeAuthorityDescriptor))]
+        [XmlElement("AuthnAuthorityDescriptor", typeof (AuthnAuthorityDescriptor))]
+        [XmlElement("IDPSSODescriptor", typeof (IDPSSODescriptor))]
+        [XmlElement("PDPDescriptor", typeof (PDPDescriptor))]
+        [XmlElement("RoleDescriptor", typeof (RoleDescriptor))]
+        [XmlElement("SPSSODescriptor", typeof (SPSSODescriptor))]
+        public object[] Items { get; set; }
 
         /// <summary>
-        /// Gets or sets the ID.
-        /// A document-unique identifier for the element, typically used as a reference point when signing
+        /// Gets or sets the organization.
+        /// Optional element identifying the organization responsible for the SAML entity described by the
+        /// element.
         /// </summary>
-        /// <value>The ID.</value>
-        [XmlAttribute(DataType="ID")]
-        public string ID {
-            get {
-                return idField;
-            }
-            set {
-                idField = value;
-            }
-        }
-
+        /// <value>The organization.</value>
+        [XmlElement("Organization")]
+        public Organization Organization { get; set; }
 
         /// <summary>
-        /// Gets or sets any attr.
+        /// Gets or sets the signature.
+        /// An XML signature that authenticates the containing element and its contents
         /// </summary>
-        /// <value>Any attr.</value>
-        [XmlAnyAttributeAttribute]
-        public XmlAttribute[] AnyAttr {
-            get {
-                return anyAttrField;
-            }
-            set {
-                anyAttrField = value;
-            }
-        }
+        /// <value>The signature.</value>
+        [XmlElement("Signature", Namespace = Saml20Constants.XMLDSIG)]
+        public Signature Signature { get; set; }
+
+        #endregion
     }
 }

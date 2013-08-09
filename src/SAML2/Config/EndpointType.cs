@@ -9,10 +9,12 @@
         /// Signon endpoint
         /// </summary>
         SignOn,
+
         /// <summary>
         /// Logout endpoint
         /// </summary>
         Logout,
+
         /// <summary>
         /// Metadata endpoint
         /// </summary>

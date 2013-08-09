@@ -10,74 +10,13 @@ namespace SAML2.Schema.Metadata
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.METADATA, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.METADATA, IsNullable=false)]
     public class AttributeConsumingService
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "AttributeConsumingService";
-
-        private int indexField;
-
-        private bool? isDefaultField;
-
-        private RequestedAttribute[] requestedAttributeField;
-        private LocalizedName[] serviceDescriptionField;
-        private LocalizedName[] serviceNameField;
-
-
-        /// <summary>
-        /// Gets or sets the name of the service.
-        /// One or more language-qualified names for the service.
-        /// </summary>
-        /// <value>The name of the service.</value>
-        [XmlElement("ServiceName")]
-        public LocalizedName[] ServiceName
-        {
-            get { return serviceNameField; }
-            set { serviceNameField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the service description.
-        /// Zero or more language-qualified strings that describe the service.
-        /// </summary>
-        /// <value>The service description.</value>
-        [XmlElement("ServiceDescription")]
-        public LocalizedName[] ServiceDescription
-        {
-            get { return serviceDescriptionField; }
-            set { serviceDescriptionField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the requested attribute.
-        /// One or more elements specifying attributes required or desired by this service.
-        /// </summary>
-        /// <value>The requested attribute.</value>
-        [XmlElement("RequestedAttribute")]
-        public RequestedAttribute[] RequestedAttribute
-        {
-            get { return requestedAttributeField; }
-            set { requestedAttributeField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the index.
-        /// A required attribute that assigns a unique integer value to the element so that it can be referenced
-        /// in a protocol message.
-        /// </summary>
-        /// <value>The index.</value>
-        [XmlAttribute]
-        public int index
-        {
-            get { return indexField; }
-            set { indexField = value; }
-        }
+        public const string ElementName = "AttributeConsumingService";
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is default.
@@ -88,11 +27,18 @@ namespace SAML2.Schema.Metadata
         /// 	<c>true</c> if this instance is default; otherwise, <c>false</c>.
         /// </value>
         [XmlIgnore]
-        public bool? isDefault
-        {
-            get { return isDefaultField; }
-            set { isDefaultField = value; }
-        } 
+        public bool? IsDefault { get; set; }
+
+        #region Attributes
+
+        /// <summary>
+        /// Gets or sets the index.
+        /// A required attribute that assigns a unique integer value to the element so that it can be referenced
+        /// in a protocol message.
+        /// </summary>
+        /// <value>The index.</value>
+        [XmlAttribute("index")]
+        public int Index { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is default.
@@ -103,22 +49,40 @@ namespace SAML2.Schema.Metadata
         /// 	<c>true</c> if this instance is default; otherwise, <c>false</c>.
         /// </value>
         [XmlAttribute("isDefault")]
-        public string isDefaultString
+        public string IsDefaultString
         {
-            get
-            {
-                if (isDefaultField == null)
-                    return null;
-                else
-                    return XmlConvert.ToString(isDefaultField.Value);
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                    isDefaultField = null;
-                else 
-                    isDefaultField = XmlConvert.ToBoolean(value);
-            }
+            get { return IsDefault == null ? null : XmlConvert.ToString(IsDefault.Value); }
+            set { IsDefault = string.IsNullOrEmpty(value) ? (bool?)null : XmlConvert.ToBoolean(value); }
         }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the requested attribute.
+        /// One or more elements specifying attributes required or desired by this service.
+        /// </summary>
+        /// <value>The requested attribute.</value>
+        [XmlElement("RequestedAttribute")]
+        public RequestedAttribute[] RequestedAttribute { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the service.
+        /// One or more language-qualified names for the service.
+        /// </summary>
+        /// <value>The name of the service.</value>
+        [XmlElement("ServiceName")]
+        public LocalizedName[] ServiceName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the service description.
+        /// Zero or more language-qualified strings that describe the service.
+        /// </summary>
+        /// <value>The service description.</value>
+        [XmlElement("ServiceDescription")]
+        public LocalizedName[] ServiceDescription { get; set; }
+
+        #endregion
     }
 }

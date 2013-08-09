@@ -33,12 +33,42 @@ namespace SAML2.Schema.Core
         /// </summary>
         public const string NameformatBasic = "urn:oasis:names:tc:SAML:2.0:attrname-format:basic";
 
+        #region Attributes
+
         /// <summary>
         /// Gets or sets any attr.
         /// </summary>
         /// <value>Any attr.</value>
         [XmlAnyAttribute]
         public XmlAttribute[] AnyAttr { get; set; }
+
+        /// <summary>
+        /// The name of the attribute.
+        /// </summary>
+        [XmlAttribute("Name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// A URI reference representing the classification of the attribute name for purposes of interpreting the
+        /// name. See Section 8.2 for some URI references that MAY be used as the value of the NameFormat
+        /// attribute and their associated descriptions and processing rules. If no NameFormat value is provided,
+        /// the identifier urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified (see Section
+        /// 8.2.1) is in effect.
+        /// </summary>
+        [XmlAttribute("NameFormat", DataType = "anyURI")]
+        public string NameFormat { get; set; }
+
+        /// <summary>
+        /// A string that provides a more human-readable form of the attribute's name, which may be useful in
+        /// cases in which the actual Name is complex or opaque, such as an OID or a UUID. This attribute's
+        /// value MUST NOT be used as a basis for formally identifying SAML attributes.
+        /// </summary>
+        [XmlAttribute("FriendlyName")]
+        public string FriendlyName { get; set; }
+
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets the attribute value.
@@ -52,28 +82,6 @@ namespace SAML2.Schema.Core
         [XmlElement("AttributeValue", IsNullable=true)]
         public string[] AttributeValue { get; set; }
 
-        /// <summary>
-        /// The name of the attribute.
-        /// </summary>
-        [XmlAttribute]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// A URI reference representing the classification of the attribute name for purposes of interpreting the
-        /// name. See Section 8.2 for some URI references that MAY be used as the value of the NameFormat
-        /// attribute and their associated descriptions and processing rules. If no NameFormat value is provided,
-        /// the identifier urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified (see Section
-        /// 8.2.1) is in effect.
-        /// </summary>
-        [XmlAttribute(DataType="anyURI")]
-        public string NameFormat { get; set; }
-
-        /// <summary>
-        /// A string that provides a more human-readable form of the attribute's name, which may be useful in
-        /// cases in which the actual Name is complex or opaque, such as an OID or a UUID. This attribute's
-        /// value MUST NOT be used as a basis for formally identifying SAML attributes.
-        /// </summary>
-        [XmlAttribute]
-        public string FriendlyName { get; set; }
+        #endregion
     }
 }

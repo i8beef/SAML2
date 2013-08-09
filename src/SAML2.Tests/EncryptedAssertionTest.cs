@@ -82,7 +82,7 @@ namespace SAML2.Tests.Saml20
             {}
 
             Assert.IsNull(assertion.SigningKey, "Signing key is already present on assertion. Modify test.");
-            Assert.That(assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endp.Metadata.GetKeys(KeyTypes.signing), endp)));
+            Assert.That(assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endp.Metadata.GetKeys(KeyTypes.Signing), endp)));
             Assert.IsNotNull(assertion.SigningKey, "Signing key was not set on assertion instance.");             
         }
 

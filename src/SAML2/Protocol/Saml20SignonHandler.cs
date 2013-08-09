@@ -322,7 +322,7 @@ namespace SAML2.Protocol
             // Check signatures
             if (!endp.OmitAssertionSignatureCheck)
             {
-                if (!assertion.CheckSignature(GetTrustedSigners(endp.Metadata.GetKeys(KeyTypes.signing), endp)))
+                if (!assertion.CheckSignature(GetTrustedSigners(endp.Metadata.GetKeys(KeyTypes.Signing), endp)))
                 {
                     Logger.Error("Invalid signature, assertion: " + elem);
                     HandleError(context, Resources.SignatureInvalid);

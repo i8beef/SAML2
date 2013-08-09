@@ -10,15 +10,15 @@ namespace SAML2.Schema.Core
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
     public class Subject
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Subject";
+        public const string ElementName = "Subject";
 
-        private object[] itemsField;
+        #region Elements
 
         /// <summary>
         /// Gets or sets the items.
@@ -28,10 +28,8 @@ namespace SAML2.Schema.Core
         [XmlElement("EncryptedID", typeof (EncryptedElement))]
         [XmlElement("NameID", typeof (NameID))]
         [XmlElement("SubjectConfirmation", typeof (SubjectConfirmation))]
-        public object[] Items
-        {
-            get { return itemsField; }
-            set { itemsField = value; }
-        }
+        public object[] Items { get; set; }
+
+        #endregion
     }
 }

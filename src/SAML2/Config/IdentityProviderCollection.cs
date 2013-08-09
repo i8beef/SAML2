@@ -186,7 +186,7 @@ namespace SAML2.Config
             var remove = new List<XmlNode>();
             foreach (XmlNode node in other.DocumentElement.ChildNodes)
             {
-                if (node.Name != IDPSSODescriptor.ELEMENT_NAME)
+                if (node.Name != IDPSSODescriptor.ElementName)
                 {
                     remove.Add(node);
                 }
@@ -211,13 +211,13 @@ namespace SAML2.Config
             {
                 foreach (XmlNode child in doc.ChildNodes.Cast<XmlNode>().Where(child => child.NamespaceURI == Saml20Constants.METADATA))
                 {
-                    if (child.LocalName == EntityDescriptor.ELEMENT_NAME)
+                    if (child.LocalName == EntityDescriptor.ElementName)
                     {
                         return new Saml20MetadataDocument(doc);
                     }
 
                     // TODO Decide how to handle several entities in one metadata file.
-                    if (child.LocalName == EntitiesDescriptor.ELEMENT_NAME)
+                    if (child.LocalName == EntitiesDescriptor.ElementName)
                     {
                         throw new NotImplementedException();
                     }

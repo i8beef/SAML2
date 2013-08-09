@@ -162,11 +162,11 @@ namespace SAML2.Validation
                 throw new Saml20FormatException("Wrong value of version attribute on Assertion element");
 
             //Assertion must have an ID
-            if (!Saml20Utils.ValidateRequiredString(assertion.Id))
+            if (!Saml20Utils.ValidateRequiredString(assertion.ID))
                 throw new Saml20FormatException("Assertion element must have the ID attribute set.");
 
             // Make sure that the ID elements is at least 128 bits in length (SAML2.0 std section 1.3.4)
-            if (!Saml20Utils.ValidateIdString(assertion.Id))
+            if (!Saml20Utils.ValidateIdString(assertion.ID))
                 throw new Saml20FormatException("Assertion element must have an ID attribute with at least 16 characters (the equivalent of 128 bits)");
 
             //IssueInstant must be set.

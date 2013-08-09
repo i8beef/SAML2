@@ -11,39 +11,22 @@ namespace SAML2.Schema.Metadata
     [XmlInclude(typeof(IndexedEndpoint))]
     [Serializable]
     [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.METADATA, IsNullable = false)]
-    public class Endpoint {
-        
+    [XmlRoot(ElementName, Namespace = Saml20Constants.METADATA, IsNullable = false)]
+    public class Endpoint
+    {   
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "SingleLogoutService";
+        public const string ElementName = "SingleLogoutService";
 
-        private XmlElement[] anyField;
-        
-        private string bindingField;
-        
-        private string locationField;
-        
-        private string responseLocationField;
-        
-        private XmlAttribute[] anyAttrField;
-
+        #region Attributes
 
         /// <summary>
-        /// Gets or sets any.
+        /// Gets or sets any attr.
         /// </summary>
-        /// <value>Any.</value>
-        [XmlAnyElementAttribute]
-        public XmlElement[] Any {
-            get {
-                return anyField;
-            }
-            set {
-                anyField = value;
-            }
-        }
-
+        /// <value>Any attr.</value>
+        [XmlAnyAttribute]
+        public XmlAttribute[] AnyAttr { get; set; }
 
         /// <summary>
         /// Gets or sets the binding.
@@ -51,16 +34,8 @@ namespace SAML2.Schema.Metadata
         /// assigned a URI to identify it.
         /// </summary>
         /// <value>The binding.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Binding {
-            get {
-                return bindingField;
-            }
-            set {
-                bindingField = value;
-            }
-        }
-
+        [XmlAttribute("Binding", DataType="anyURI")]
+        public string Binding { get; set; }
 
         /// <summary>
         /// Gets or sets the location.
@@ -68,16 +43,8 @@ namespace SAML2.Schema.Metadata
         /// URI depends on the protocol binding.
         /// </summary>
         /// <value>The location.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Location {
-            get {
-                return locationField;
-            }
-            set {
-                locationField = value;
-            }
-        }
-
+        [XmlAttribute("Location", DataType="anyURI")]
+        public string Location { get; set; }
 
         /// <summary>
         /// Gets or sets the response location.
@@ -85,29 +52,20 @@ namespace SAML2.Schema.Metadata
         /// or profile should be sent. The allowable syntax of this URI depends on the protocol binding.
         /// </summary>
         /// <value>The response location.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string ResponseLocation {
-            get {
-                return responseLocationField;
-            }
-            set {
-                responseLocationField = value;
-            }
-        }
+        [XmlAttribute("ResponseLocation", DataType="anyURI")]
+        public string ResponseLocation { get; set; }
 
+        #endregion
+
+        #region Elements
 
         /// <summary>
-        /// Gets or sets any attr.
+        /// Gets or sets any.
         /// </summary>
-        /// <value>Any attr.</value>
-        [XmlAnyAttributeAttribute]
-        public XmlAttribute[] AnyAttr {
-            get {
-                return anyAttrField;
-            }
-            set {
-                anyAttrField = value;
-            }
-        }
+        /// <value>Any.</value>
+        [XmlAnyElement]
+        public XmlElement[] Any { get; set; }
+
+        #endregion
     }
 }

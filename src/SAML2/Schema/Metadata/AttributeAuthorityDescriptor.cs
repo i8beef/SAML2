@@ -10,24 +10,34 @@ namespace SAML2.Schema.Metadata
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.METADATA, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.METADATA, IsNullable = false)]
     public class AttributeAuthorityDescriptor : RoleDescriptor {
         
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ELEMENT_NAME = "AttributeAuthorityDescriptor";
+        public new const string ElementName = "AttributeAuthorityDescriptor";
 
-        private Endpoint[] attributeServiceField;
-        
-        private Endpoint[] assertionIDRequestServiceField;
-        
-        private string[] nameIDFormatField;
-        
-        private string[] attributeProfileField;
-        
-        private Attribute[] attributeField;
+        #region Elements
 
+        /// <summary>
+        /// Gets or sets the attribute.
+        /// Zero or more elements that identify the SAML attributes supported by the authority. Specific
+        /// values MAY optionally be included, indicating that only certain values permitted by the attribute's
+        /// definition are supported.
+        /// </summary>
+        /// <value>The attribute.</value>
+        [XmlElement("Attribute", Namespace = Saml20Constants.METADATA)]
+        public Attribute[] Attribute { get; set; }
+
+        /// <summary>
+        /// Gets or sets the attribute profile.
+        /// Zero or more elements of type anyURI that enumerate the attribute profiles supported by this
+        /// authority.
+        /// </summary>
+        /// <value>The attribute profile.</value>
+        [XmlElement("AttributeProfile", DataType = "anyURI")]
+        public string[] AttributeProfile { get; set; }
 
         /// <summary>
         /// Gets or sets the attribute service.
@@ -37,15 +47,7 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The attribute service.</value>
         [XmlElement("AttributeService")]
-        public Endpoint[] AttributeService {
-            get {
-                return attributeServiceField;
-            }
-            set {
-                attributeServiceField = value;
-            }
-        }
-
+        public Endpoint[] AttributeService { get; set; }
 
         /// <summary>
         /// Gets or sets the assertion ID request service.
@@ -55,15 +57,7 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The assertion ID request service.</value>
         [XmlElement("AssertionIDRequestService")]
-        public Endpoint[] AssertionIDRequestService {
-            get {
-                return assertionIDRequestServiceField;
-            }
-            set {
-                assertionIDRequestServiceField = value;
-            }
-        }
-
+        public Endpoint[] AssertionIDRequestService { get; set; }
 
         /// <summary>
         /// Gets or sets the name ID format.
@@ -72,48 +66,8 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The name ID format.</value>
         [XmlElement("NameIDFormat", DataType="anyURI")]
-        public string[] NameIDFormat {
-            get {
-                return nameIDFormatField;
-            }
-            set {
-                nameIDFormatField = value;
-            }
-        }
+        public string[] NameIDFormat { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the attribute profile.
-        /// Zero or more elements of type anyURI that enumerate the attribute profiles supported by this
-        /// authority.
-        /// </summary>
-        /// <value>The attribute profile.</value>
-        [XmlElement("AttributeProfile", DataType="anyURI")]
-        public string[] AttributeProfile {
-            get {
-                return attributeProfileField;
-            }
-            set {
-                attributeProfileField = value;
-            }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the attribute.
-        /// Zero or more elements that identify the SAML attributes supported by the authority. Specific
-        /// values MAY optionally be included, indicating that only certain values permitted by the attribute's
-        /// definition are supported.
-        /// </summary>
-        /// <value>The attribute.</value>
-        [XmlElement("Attribute", Namespace=Saml20Constants.METADATA)]
-        public Attribute[] Attribute {
-            get {
-                return attributeField;
-            }
-            set {
-                attributeField = value;
-            }
-        }
+        #endregion
     }
 }

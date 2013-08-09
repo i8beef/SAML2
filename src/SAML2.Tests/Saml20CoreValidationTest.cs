@@ -410,7 +410,7 @@ namespace SAML2.Tests.Saml20
         public void MissingID()
         {
             Assertion saml20Assertion = AssertionUtil.GetBasicAssertion();
-            saml20Assertion.Id = null;
+            saml20Assertion.ID = null;
 
             CreateSaml20Token(saml20Assertion);
         }
@@ -1147,7 +1147,7 @@ namespace SAML2.Tests.Saml20
             sas.SessionNotOnOrAfter = DateTime.UtcNow.AddHours(1);
             sas.AuthnContext = new AuthnContext();
             sas.AuthnContext.Items = new List<object>().ToArray();
-            sas.AuthnContext.ItemsElementName = new List<ItemsChoiceType5>().ToArray();
+            sas.AuthnContext.ItemsElementName = new List<AuthnContextType>().ToArray();
             statements.Add(sas);
 
             saml20Assertion.Items = statements.ToArray();
@@ -1169,7 +1169,7 @@ namespace SAML2.Tests.Saml20
             sas.SessionNotOnOrAfter = DateTime.UtcNow.AddHours(1);
             sas.AuthnContext = new AuthnContext();
             sas.AuthnContext.Items = new object[] { "urn:a.valid.uri:string", "urn:a.valid.uri:string" };
-            sas.AuthnContext.ItemsElementName = new ItemsChoiceType5[] { ItemsChoiceType5.AuthnContextDeclRef, ItemsChoiceType5.AuthnContextClassRef };
+            sas.AuthnContext.ItemsElementName = new AuthnContextType[] { AuthnContextType.AuthnContextDeclRef, AuthnContextType.AuthnContextClassRef };
             statements.Add(sas);
 
             saml20Assertion.Items = statements.ToArray();
@@ -1191,7 +1191,7 @@ namespace SAML2.Tests.Saml20
             sas.SessionNotOnOrAfter = DateTime.UtcNow.AddHours(1);
             sas.AuthnContext = new AuthnContext();
             sas.AuthnContext.Items = new object[3] { "urn:a.valid.uri:string", "urn:a.valid.uri:string", "urn:a.valid.uri:string" };
-            sas.AuthnContext.ItemsElementName = new ItemsChoiceType5[3] { ItemsChoiceType5.AuthnContextDeclRef, ItemsChoiceType5.AuthnContextDeclRef, ItemsChoiceType5.AuthnContextDeclRef };
+            sas.AuthnContext.ItemsElementName = new AuthnContextType[3] { AuthnContextType.AuthnContextDeclRef, AuthnContextType.AuthnContextDeclRef, AuthnContextType.AuthnContextDeclRef };
             statements.Add(sas);
 
             saml20Assertion.Items = statements.ToArray();
@@ -1214,7 +1214,7 @@ namespace SAML2.Tests.Saml20
             sas.SessionNotOnOrAfter = DateTime.UtcNow.AddHours(1);
             sas.AuthnContext = new AuthnContext();
             sas.AuthnContext.Items = new object[2] { String.Empty, "urn:a.valid.uri:string"};
-            sas.AuthnContext.ItemsElementName = new ItemsChoiceType5[2] { ItemsChoiceType5.AuthnContextClassRef, ItemsChoiceType5.AuthnContextDeclRef };
+            sas.AuthnContext.ItemsElementName = new AuthnContextType[2] { AuthnContextType.AuthnContextClassRef, AuthnContextType.AuthnContextDeclRef };
             statements.Add(sas);
 
             saml20Assertion.Items = statements.ToArray();
@@ -1236,7 +1236,7 @@ namespace SAML2.Tests.Saml20
             sas.SessionNotOnOrAfter = DateTime.UtcNow.AddHours(1);
             sas.AuthnContext = new AuthnContext();
             sas.AuthnContext.Items = new object[2] { "urn:a.valid.uri:string", "an/invalid/uri/string.aspx" };
-            sas.AuthnContext.ItemsElementName = new ItemsChoiceType5[2] { ItemsChoiceType5.AuthnContextClassRef, ItemsChoiceType5.AuthnContextDeclRef };
+            sas.AuthnContext.ItemsElementName = new AuthnContextType[2] { AuthnContextType.AuthnContextClassRef, AuthnContextType.AuthnContextDeclRef };
             statements.Add(sas);
 
             saml20Assertion.Items = statements.ToArray();
@@ -1258,7 +1258,7 @@ namespace SAML2.Tests.Saml20
             sas.SessionNotOnOrAfter = DateTime.UtcNow.AddHours(1);
             sas.AuthnContext = new AuthnContext();
             sas.AuthnContext.Items = new object[1] { new AuthnStatement() };
-            sas.AuthnContext.ItemsElementName = new ItemsChoiceType5[1] { ItemsChoiceType5.AuthnContextDecl };
+            sas.AuthnContext.ItemsElementName = new AuthnContextType[1] { AuthnContextType.AuthnContextDecl };
             statements.Add(sas);
 
             saml20Assertion.Items = statements.ToArray();
@@ -1280,7 +1280,7 @@ namespace SAML2.Tests.Saml20
             sas.SessionNotOnOrAfter = DateTime.UtcNow.AddHours(1);
             sas.AuthnContext = new AuthnContext();
             sas.AuthnContext.Items = new object[2] { "urn:a:valid.uri:string", "http://another/valid/uri.string" };
-            sas.AuthnContext.ItemsElementName = new ItemsChoiceType5[2] { ItemsChoiceType5.AuthnContextClassRef, ItemsChoiceType5.AuthnContextDeclRef };
+            sas.AuthnContext.ItemsElementName = new AuthnContextType[2] { AuthnContextType.AuthnContextClassRef, AuthnContextType.AuthnContextDeclRef };
             sas.AuthnContext.AuthenticatingAuthority = new string[2] { "urn:aksdlfj", "urn/invalid" };
             statements.Add(sas);
 

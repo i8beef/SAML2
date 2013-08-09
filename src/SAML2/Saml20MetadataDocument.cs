@@ -71,11 +71,11 @@ namespace SAML2
         private void ConvertToMetadata(Saml2Section config, KeyInfo keyinfo)
         {
             EntityDescriptor entity = CreateDefaultEntity();
-            entity.entityID = config.ServiceProvider.Id;
-            entity.validUntil = DateTime.Now.AddDays(7);
+            entity.EntityID = config.ServiceProvider.Id;
+            entity.ValidUntil = DateTime.Now.AddDays(7);
 
             SPSSODescriptor spDescriptor = new SPSSODescriptor();
-            spDescriptor.protocolSupportEnumeration = new string[] { Saml20Constants.PROTOCOL };
+            spDescriptor.ProtocolSupportEnumeration = new string[] { Saml20Constants.PROTOCOL };
             spDescriptor.AuthnRequestsSigned = XmlConvert.ToString(true);
             spDescriptor.WantAssertionsSigned = XmlConvert.ToString(true);
 
@@ -101,15 +101,15 @@ namespace SAML2
                 if (endpoint.Type == EndpointType.SignOn)
                 {                    
                     IndexedEndpoint loginEndpoint = new IndexedEndpoint();
-                    loginEndpoint.index = endpoint.Index;
-                    loginEndpoint.isDefault = true;
+                    loginEndpoint.Index = endpoint.Index;
+                    loginEndpoint.IsDefault = true;
                     loginEndpoint.Location = new Uri(baseURL, endpoint.LocalPath).ToString();
                     loginEndpoint.Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HTTP_Post);
                     signonServiceEndpoints.Add(loginEndpoint);
 
                     IndexedEndpoint artifactSignonEndpoint = new IndexedEndpoint();
                     artifactSignonEndpoint.Binding = Saml20Constants.ProtocolBindings.HTTP_SOAP;
-                    artifactSignonEndpoint.index = loginEndpoint.index;
+                    artifactSignonEndpoint.Index = loginEndpoint.Index;
                     artifactSignonEndpoint.Location = loginEndpoint.Location;
                     artifactResolutionEndpoints.Add(artifactSignonEndpoint);
 
@@ -133,7 +133,7 @@ namespace SAML2
 
                     IndexedEndpoint artifactLogoutEndpoint = new IndexedEndpoint();
                     artifactLogoutEndpoint.Binding = Saml20Constants.ProtocolBindings.HTTP_SOAP;
-                    artifactLogoutEndpoint.index = endpoint.Index;
+                    artifactLogoutEndpoint.Index = endpoint.Index;
                     artifactLogoutEndpoint.Location = logoutEndpoint.Location;
                     artifactResolutionEndpoints.Add(artifactLogoutEndpoint);
                     
@@ -149,8 +149,8 @@ namespace SAML2
             {
                 AttributeConsumingService attConsumingService = new AttributeConsumingService();
                 spDescriptor.AttributeConsumingService = new AttributeConsumingService[] { attConsumingService };
-                attConsumingService.index = signonServiceEndpoints[0].index;
-                attConsumingService.isDefault = true;
+                attConsumingService.Index = signonServiceEndpoints[0].Index;
+                attConsumingService.IsDefault = true;
                 attConsumingService.ServiceName = new LocalizedName[] { new LocalizedName("SP", "da") };
 
                 attConsumingService.RequestedAttribute =
@@ -161,7 +161,7 @@ namespace SAML2
                     attConsumingService.RequestedAttribute[i] = new RequestedAttribute();
                     attConsumingService.RequestedAttribute[i].Name = config.RequestedAttributes[i].Name;
                     if (config.RequestedAttributes[i].IsRequired)
-                        attConsumingService.RequestedAttribute[i].isRequired = true;
+                        attConsumingService.RequestedAttribute[i].IsRequired = true;
                     attConsumingService.RequestedAttribute[i].NameFormat = SamlAttribute.NameformatBasic;
                 }
             }
@@ -182,11 +182,11 @@ namespace SAML2
             KeyDescriptor keyEncryption = new KeyDescriptor();
             spDescriptor.KeyDescriptor = new KeyDescriptor[] { keySigning, keyEncryption };
             
-            keySigning.use = KeyTypes.signing;
-            keySigning.useSpecified = true;
+            keySigning.Use = KeyTypes.Signing;
+            keySigning.UseSpecified = true;
 
-            keyEncryption.use = KeyTypes.encryption;
-            keyEncryption.useSpecified = true;
+            keyEncryption.Use = KeyTypes.Encryption;
+            keyEncryption.UseSpecified = true;
                        
             // Ugly conversion between the .Net framework classes and our classes ... avert your eyes!!
             keySigning.KeyInfo = Serialization.DeserializeFromXmlString<Schema.XmlDSig.KeyInfo>(keyinfo.GetXml().OuterXml);            
@@ -207,7 +207,7 @@ namespace SAML2
             {
                 entity.ContactPerson = config.ServiceProvider.Contacts.Select(x => new Contact
                                                                                        {
-                                                                                           contactType = (ContactType)((int)x.Type),
+                                                                                           ContactType = (ContactType)((int)x.Type),
                                                                                            Company = x.Company,
                                                                                            GivenName = x.GivenName,
                                                                                            SurName = x.SurName,
@@ -264,7 +264,7 @@ namespace SAML2
         /// </summary>
         private void ExtractKeyDescriptors(XmlDocument doc)
         {            
-            XmlNodeList list = doc.GetElementsByTagName(KeyDescriptor.ELEMENT_NAME, Saml20Constants.METADATA);
+            XmlNodeList list = doc.GetElementsByTagName(KeyDescriptor.ElementName, Saml20Constants.METADATA);
             _keys = new List<KeyDescriptor>(list.Count);
 
             foreach (XmlNode node in list)            
@@ -436,7 +436,7 @@ namespace SAML2
                         {
                             foreach (IndexedEndpoint ie in descriptor.ArtifactResolutionService)
                             {
-                                _ARSEndpoints.Add(ie.index, ie);
+                                _ARSEndpoints.Add(ie.Index, ie);
                             }
                         }
                     }
@@ -487,7 +487,7 @@ namespace SAML2
         /// <returns>A list containing the keys. If no key is marked with the given usage, the method returns an empty list.</returns>
         public List<KeyDescriptor> GetKeys(KeyTypes usage)
         {
-            return Keys.FindAll(delegate(KeyDescriptor desc) { return desc.use == usage; });
+            return Keys.FindAll(delegate(KeyDescriptor desc) { return desc.Use == usage; });
         }
 
         /// <summary>
@@ -498,7 +498,7 @@ namespace SAML2
             get
             {
                 if (_entity != null)
-                    return _entity.entityID;
+                    return _entity.EntityID;
                 
                 throw new InvalidOperationException("This instance does not contain a metadata document");
             }

@@ -18,6 +18,15 @@ namespace SAML2.Schema.Core
         public const string ElementName = "Action";
 
         /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        /// <value>The value.</value>
+        [XmlText]
+        public string Value { get; set; }
+
+        #region Attributes
+
+        /// <summary>
         /// Gets or sets the namespace.
         /// A URI reference representing the namespace in which the name of the specified action is to be
         /// interpreted. If this element is absent, the namespace
@@ -25,14 +34,9 @@ namespace SAML2.Schema.Core
         /// effect.
         /// </summary>
         /// <value>The namespace.</value>
-        [XmlAttribute(DataType="anyURI")]
+        [XmlAttribute("Namespace", DataType="anyURI")]
         public string Namespace { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>The value.</value>
-        [XmlText]
-        public string Value { get; set; }
+        #endregion
     }
 }

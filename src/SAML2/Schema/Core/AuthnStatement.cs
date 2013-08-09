@@ -20,22 +20,25 @@ namespace SAML2.Schema.Core
         public new const string ElementName = "AuthnStatement";
 
         /// <summary>
-        /// Gets or sets the authn context.
-        /// The context used by the authenticating authority up to and including the authentication event that
-        /// yielded this statement. Contains an authentication context class reference, an authentication context
-        /// declaration or declaration reference, or both. See the Authentication Context specification
-        /// [SAMLAuthnCxt] for a full description of authentication context information.
-        /// </summary>
-        /// <value>The authn context.</value>
-        public AuthnContext AuthnContext { get; set; }
-
-        /// <summary>
         /// Gets or sets the authn instant.
         /// Specifies the time at which the authentication took place. The time value is encoded in UTC
         /// </summary>
         /// <value>The authn instant.</value>
         [XmlIgnore]
         public DateTime? AuthnInstant { get; set; }
+
+        /// <summary>
+        /// Gets or sets the session not on or after.
+        /// Specifies a time instant at which the session between the principal identified by the subject and the
+        /// SAML authority issuing this statement MUST be considered ended. The time value is encoded in
+        /// UTC, as described in Section 1.3.3. There is no required relationship between this attribute and a
+        /// NotOnOrAfter condition attribute that may be present in the assertion.
+        /// </summary>
+        /// <value>The session not on or after.</value>
+        [XmlIgnore]
+        public DateTime? SessionNotOnOrAfter { get; set; }
+
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the authn instant string.
@@ -54,19 +57,8 @@ namespace SAML2.Schema.Core
         /// authenticating authority.
         /// </summary>
         /// <value>The index of the session.</value>
-        [XmlAttribute]
+        [XmlAttribute("SessionIndex")]
         public string SessionIndex { get; set; }
-
-        /// <summary>
-        /// Gets or sets the session not on or after.
-        /// Specifies a time instant at which the session between the principal identified by the subject and the
-        /// SAML authority issuing this statement MUST be considered ended. The time value is encoded in
-        /// UTC, as described in Section 1.3.3. There is no required relationship between this attribute and a
-        /// NotOnOrAfter condition attribute that may be present in the assertion.
-        /// </summary>
-        /// <value>The session not on or after.</value>
-        [XmlIgnore]
-        public DateTime? SessionNotOnOrAfter { get; set; }
 
         /// <summary>
         /// Gets or sets the session not on or after string.
@@ -76,8 +68,23 @@ namespace SAML2.Schema.Core
         public string SessionNotOnOrAfterString
         {
             get { return SessionNotOnOrAfter.HasValue ? Saml20Utils.ToUtcString(SessionNotOnOrAfter.Value) : null; }
-            set { SessionNotOnOrAfter = string.IsNullOrEmpty(value) ? (DateTime?) null : Saml20Utils.FromUtcString(value); }
+            set { SessionNotOnOrAfter = string.IsNullOrEmpty(value) ? (DateTime?)null : Saml20Utils.FromUtcString(value); }
         }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the authn context.
+        /// The context used by the authenticating authority up to and including the authentication event that
+        /// yielded this statement. Contains an authentication context class reference, an authentication context
+        /// declaration or declaration reference, or both. See the Authentication Context specification
+        /// [SAMLAuthnCxt] for a full description of authentication context information.
+        /// </summary>
+        /// <value>The authn context.</value>
+        [XmlElement("AuthnContext")]
+        public AuthnContext AuthnContext { get; set; }
 
         /// <summary>
         /// Gets or sets the subject locality.
@@ -85,6 +92,9 @@ namespace SAML2.Schema.Core
         /// apparently authenticated.
         /// </summary>
         /// <value>The subject locality.</value>
+        [XmlElement("SubjectLocality")]
         public SubjectLocality SubjectLocality { get; set; }
+
+        #endregion
     }
 }

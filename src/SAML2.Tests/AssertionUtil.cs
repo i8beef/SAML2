@@ -69,7 +69,7 @@ namespace SAML2.Tests.Saml20
 
             {
                 assertion.Issuer = new NameID();
-                assertion.Id = "_b8977dc86cda41493fba68b32ae9291d";
+                assertion.ID = "_b8977dc86cda41493fba68b32ae9291d";
                 assertion.IssueInstant = DateTime.UtcNow;
 
                 assertion.Version = "2.0";
@@ -103,7 +103,7 @@ namespace SAML2.Tests.Saml20
                 authnStatement.SessionIndex = "70225885";
                 authnStatement.AuthnContext = new AuthnContext();
                 authnStatement.AuthnContext.Items = new object[] { "urn:oasis:names:tc:SAML:2.0:ac:classes:X509", "http://www.safewhere.net/authncontext/declref" };
-                authnStatement.AuthnContext.ItemsElementName = new ItemsChoiceType5[] { ItemsChoiceType5.AuthnContextClassRef, ItemsChoiceType5.AuthnContextDeclRef};
+                authnStatement.AuthnContext.ItemsElementName = new AuthnContextType[] { AuthnContextType.AuthnContextClassRef, AuthnContextType.AuthnContextDeclRef};
             }
 
             AttributeStatement attributeStatement;

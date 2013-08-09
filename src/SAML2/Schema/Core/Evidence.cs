@@ -18,6 +18,8 @@ namespace SAML2.Schema.Core
         /// </summary>
         public const string ElementName = "Evidence";
 
+        #region Elements
+
         /// <summary>
         /// Gets or sets the items.
         /// Items may be of types Assertion, AssertionIDRef, AssertionURIRef and EncryptedAssertion
@@ -34,7 +36,10 @@ namespace SAML2.Schema.Core
         /// Gets or sets the name of the items element.
         /// </summary>
         /// <value>The name of the items element.</value>
-        [XmlElement("ItemsElementName"), XmlIgnore]
-        public ItemsChoiceType6[] ItemsElementName { get; set; }
+        [XmlElement("ItemsElementName")]
+        [XmlIgnore]
+        public EvidenceType[] ItemsElementName { get; set; }
+
+        #endregion
     }
 }

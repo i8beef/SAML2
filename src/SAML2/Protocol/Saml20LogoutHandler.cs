@@ -218,7 +218,7 @@ namespace SAML2.Protocol
                 }
 
                 var metadata = endpoint.Metadata;
-                if (!parser.VerifySignature(metadata.GetKeys(KeyTypes.signing)))
+                if (!parser.VerifySignature(metadata.GetKeys(KeyTypes.Signing)))
                 {
                     Logger.Error("Invalid signature redirect-binding, msg: " + parser.Message);
                     HandleError(context, Resources.SignatureInvalid);
@@ -249,7 +249,7 @@ namespace SAML2.Protocol
                 var metadata = endpoint.Metadata;
 
                 // handle a logout-request
-                if (!parser.CheckSignature(metadata.GetKeys(KeyTypes.signing)))
+                if (!parser.CheckSignature(metadata.GetKeys(KeyTypes.Signing)))
                 {
                     Logger.Error("Invalid signature post-binding, msg: " + parser.Message);
                     HandleError(context, Resources.SignatureInvalid);

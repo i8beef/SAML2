@@ -24,6 +24,23 @@ namespace SAML2.Schema.Core
         /// </summary>
         public const string ElementName = "SubjectConfirmation";
 
+        #region Attributes
+
+        /// <summary>
+        /// Gets or sets the method.
+        /// A URI reference that identifies a protocol or mechanism to be used to confirm the subject. URI
+        /// references identifying SAML-defined confirmation methods are currently defined in the SAML profiles
+        /// specification [SAMLProf]. Additional methods MAY be added by defining new URIs and profiles or by
+        /// private agreement.
+        /// </summary>
+        /// <value>The method.</value>
+        [XmlAttribute("Method", DataType = "anyURI")]
+        public string Method { get; set; }
+
+        #endregion
+
+        #region Elements
+
         /// <summary>
         /// Gets or sets the item.
         /// Identifies the entity expected to satisfy the enclosing subject confirmation requirements.
@@ -36,17 +53,6 @@ namespace SAML2.Schema.Core
         public object Item { get; set; }
 
         /// <summary>
-        /// Gets or sets the method.
-        /// A URI reference that identifies a protocol or mechanism to be used to confirm the subject. URI
-        /// references identifying SAML-defined confirmation methods are currently defined in the SAML profiles
-        /// specification [SAMLProf]. Additional methods MAY be added by defining new URIs and profiles or by
-        /// private agreement.
-        /// </summary>
-        /// <value>The method.</value>
-        [XmlAttribute(DataType = "anyURI")]
-        public string Method { get; set; }
-
-        /// <summary>
         /// Gets or sets the subject confirmation data.
         /// Additional confirmation information to be used by a specific confirmation method. For example, typical
         /// content of this element might be a &lt;ds:KeyInfo&gt; element as defined in the XML Signature Syntax
@@ -55,6 +61,9 @@ namespace SAML2.Schema.Core
         /// attributes, or content that may appear in the &lt;SubjectConfirmationData&gt; element.
         /// </summary>
         /// <value>The subject confirmation data.</value>
+        [XmlElement("SubjectConfirmationData")]
         public SubjectConfirmationData SubjectConfirmationData { get; set; }
+
+        #endregion
     }
 }

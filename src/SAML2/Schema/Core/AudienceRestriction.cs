@@ -23,6 +23,8 @@ namespace SAML2.Schema.Core
         /// </summary>
         public new const string ElementName = "AudienceRestriction";
 
+        #region Elements
+
         /// <summary>
         /// Gets or sets the audience.
         /// A URI reference that identifies an intended audience. The URI reference MAY identify a document
@@ -32,5 +34,7 @@ namespace SAML2.Schema.Core
         /// <value>The audience.</value>
         [XmlElement("Audience", DataType="anyURI")]
         public List<string> Audience { get; set; }
+
+        #endregion
     }
 }

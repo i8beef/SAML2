@@ -149,6 +149,7 @@
     <Compile Include="Saml20MetadataDocument.cs" />
     <Compile Include="Schema\Core\Action.cs" />
     <Compile Include="Schema\Core\Advice.cs" />
+    <Compile Include="Schema\Core\AdviceType.cs" />
     <Compile Include="Schema\Core\Assertion.cs" />
     <Compile Include="Schema\Core\AttributeStatement.cs" />
     <Compile Include="Schema\Core\AudienceRestriction.cs" />
@@ -158,8 +159,10 @@
     <Compile Include="Schema\Core\BaseIDAbstract.cs" />
     <Compile Include="Schema\Core\ConditionAbstract.cs" />
     <Compile Include="Schema\Core\Conditions.cs" />
-    <Compile Include="Schema\Core\Enums.cs" />
+    <Compile Include="Schema\Core\DecisionType.cs" />
+    <Compile Include="Schema\Core\AuthnContextType.cs" />
     <Compile Include="Schema\Core\Evidence.cs" />
+    <Compile Include="Schema\Core\EvidenceType.cs" />
     <Compile Include="Schema\Core\KeyInfoConfirmationData.cs" />
     <Compile Include="Schema\Core\NameID.cs" />
     <Compile Include="Schema\Core\OneTimeUse.cs" />
@@ -176,10 +179,11 @@
     <Compile Include="Schema\Metadata\AttributeConsumingService.cs" />
     <Compile Include="Schema\Metadata\AuthnAuthorityDescriptor.cs" />
     <Compile Include="Schema\Metadata\Contact.cs" />
+    <Compile Include="Schema\Metadata\ContactType.cs" />
     <Compile Include="Schema\Metadata\Endpoint.cs" />
     <Compile Include="Schema\Metadata\EntitiesDescriptor.cs" />
     <Compile Include="Schema\Metadata\EntityDescriptor.cs" />
-    <Compile Include="Schema\Metadata\Enums.cs" />
+    <Compile Include="Schema\Metadata\KeyTypes.cs" />
     <Compile Include="Schema\Metadata\Extensions.cs" />
     <Compile Include="Schema\Metadata\IDPSSODescriptor.cs" />
     <Compile Include="Schema\Metadata\IndexedEndpoint.cs" />

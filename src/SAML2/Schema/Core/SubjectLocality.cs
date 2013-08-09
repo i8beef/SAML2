@@ -17,6 +17,8 @@ namespace SAML2.Schema.Core
         /// </summary>
         public const string ElementName = "SubjectLocality";
 
+        #region Attributes
+
         /// <summary>
         /// Gets or sets the address.
         /// The network address of the system from which the principal identified by the subject was
@@ -25,7 +27,7 @@ namespace SAML2.Schema.Core
         /// (e.g., "FEDC:BA98:7654:3210:FEDC:BA98:7654:3210").
         /// </summary>
         /// <value>The address.</value>
-        [XmlAttribute]
+        [XmlAttribute("Address")]
         public string Address { get; set; }
 
         /// <summary>
@@ -33,7 +35,9 @@ namespace SAML2.Schema.Core
         /// The DNS name of the system from which the principal identified by the subject was authenticated.
         /// </summary>
         /// <value>The name of the DNS.</value>
-        [XmlAttribute]
+        [XmlAttribute("DNSName")]
         public string DNSName { get; set; }
+
+        #endregion
     }
 }

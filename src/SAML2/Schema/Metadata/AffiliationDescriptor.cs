@@ -15,99 +15,13 @@ namespace SAML2.Schema.Metadata
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.METADATA, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.METADATA, IsNullable=false)]
     public class AffiliationDescriptor
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "AffiliationDescriptor";
-
-        private string[] affiliateMemberField;
-
-        private string affiliationOwnerIDField;
-        private XmlAttribute[] anyAttrField;
-
-        private string cacheDurationField;
-        private ExtensionsType1 extensionsField;
-
-        private string idField;
-        private KeyDescriptor[] keyDescriptorField;
-        private Signature signatureField;
-        private DateTime? validUntilField;
-
-
-        /// <summary>
-        /// Gets or sets the signature.
-        /// An XML signature that authenticates the containing element and its contents
-        /// </summary>
-        /// <value>The signature.</value>
-        [XmlElement(Namespace=Saml20Constants.XMLDSIG)]
-        public Signature Signature
-        {
-            get { return signatureField; }
-            set { signatureField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the extensions.
-        /// This contains optional metadata extensions that are agreed upon between a metadata publisher
-        /// and consumer. Extension elements MUST be namespace-qualified by a non-SAML-defined
-        /// namespace.
-        /// </summary>
-        /// <value>The extensions.</value>
-        public ExtensionsType1 Extensions
-        {
-            get { return extensionsField; }
-            set { extensionsField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the affiliate member.
-        /// One or more elements enumerating the members of the affiliation by specifying each member's
-        /// unique identifier.
-        /// </summary>
-        /// <value>The affiliate member.</value>
-        [XmlElement("AffiliateMember", DataType="anyURI")]
-        public string[] AffiliateMember
-        {
-            get { return affiliateMemberField; }
-            set { affiliateMemberField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the key descriptor.
-        /// Optional sequence of elements that provides information about the cryptographic keys that the
-        /// affiliation uses as a whole, as distinct from keys used by individual members of the affiliation,
-        /// which are published in the metadata for those entities.
-        /// </summary>
-        /// <value>The key descriptor.</value>
-        [XmlElement("KeyDescriptor")]
-        public KeyDescriptor[] KeyDescriptor
-        {
-            get { return keyDescriptorField; }
-            set { keyDescriptorField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the affiliation owner ID.
-        /// Specifies the unique identifier of the entity responsible for the affiliation. The owner is NOT
-        /// presumed to be a member of the affiliation; if it is a member, its identifier MUST also appear in an
-        /// &lt;AffiliateMember&gt; element.
-        /// </summary>
-        /// <value>The affiliation owner ID.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string affiliationOwnerID
-        {
-            get { return affiliationOwnerIDField; }
-            set { affiliationOwnerIDField = value; }
-        }
-
+        public const string ElementName = "AffiliationDescriptor";
 
         /// <summary>
         /// Gets or sets the valid until.
@@ -116,36 +30,26 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The valid until.</value>
         [XmlIgnore]
-        public DateTime? validUntil
-        {
-            get { return validUntilField; }
-            set { validUntilField = value; }
-        }
+        public DateTime? ValidUntil { get; set; }
 
+        #region Attributes
 
         /// <summary>
-        /// Gets or sets the valid until string.
+        /// Gets or sets the affiliation owner ID.
+        /// Specifies the unique identifier of the entity responsible for the affiliation. The owner is NOT
+        /// presumed to be a member of the affiliation; if it is a member, its identifier MUST also appear in an
+        /// &lt;AffiliateMember&gt; element.
         /// </summary>
-        /// <value>The valid until string.</value>
-        [XmlAttribute("validUntil")]
-        public string validUntilString
-        {
-            get
-            {
-                if (validUntilField.HasValue)
-                    return Saml20Utils.ToUtcString(validUntilField.Value);
-                else
-                    return null;
-            }
-            set 
-            {
-                if (string.IsNullOrEmpty(value))
-                    validUntilField = null;
-                else
-                    validUntilField = Saml20Utils.FromUtcString(value);
+        /// <value>The affiliation owner ID.</value>
+        [XmlAttribute("affiliationOwnerID", DataType = "anyURI")]
+        public string AffiliationOwnerId { get; set; }
 
-            }
-        }
+        /// <summary>
+        /// Gets or sets any attr.
+        /// </summary>
+        /// <value>Any attr.</value>
+        [XmlAnyAttribute]
+        public XmlAttribute[] AnyAttr { get; set; }
 
         /// <summary>
         /// Gets or sets the cache duration.
@@ -153,36 +57,69 @@ namespace SAML2.Schema.Metadata
         /// contained in the element and any contained elements.
         /// </summary>
         /// <value>The cache duration.</value>
-        [XmlAttribute(DataType="duration")]
-        public string cacheDuration
-        {
-            get { return cacheDurationField; }
-            set { cacheDurationField = value; }
-        }
-
+        [XmlAttribute("cacheDuration", DataType = "duration")]
+        public string CacheDuration { get; set; }
 
         /// <summary>
         /// Gets or sets the ID.
         /// A document-unique identifier for the element, typically used as a reference point when signing.
         /// </summary>
         /// <value>The ID.</value>
-        [XmlAttribute(DataType="ID")]
-        public string ID
-        {
-            get { return idField; }
-            set { idField = value; }
-        }
-
+        [XmlAttribute("ID", DataType = "ID")]
+        public string ID { get; set; }
 
         /// <summary>
-        /// Gets or sets any attr.
+        /// Gets or sets the valid until string.
         /// </summary>
-        /// <value>Any attr.</value>
-        [XmlAnyAttribute]
-        public XmlAttribute[] AnyAttr
+        /// <value>The valid until string.</value>
+        [XmlAttribute("validUntil")]
+        public string ValidUntilString
         {
-            get { return anyAttrField; }
-            set { anyAttrField = value; }
+            get { return ValidUntil.HasValue ? Saml20Utils.ToUtcString(ValidUntil.Value) : null; }
+            set { ValidUntil = string.IsNullOrEmpty(value) ? (DateTime?)null : Saml20Utils.FromUtcString(value); }
         }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the affiliate member.
+        /// One or more elements enumerating the members of the affiliation by specifying each member's
+        /// unique identifier.
+        /// </summary>
+        /// <value>The affiliate member.</value>
+        [XmlElement("AffiliateMember", DataType = "anyURI")]
+        public string[] AffiliateMember { get; set; }
+
+        /// <summary>
+        /// Gets or sets the extensions.
+        /// This contains optional metadata extensions that are agreed upon between a metadata publisher
+        /// and consumer. Extension elements MUST be namespace-qualified by a non-SAML-defined
+        /// namespace.
+        /// </summary>
+        /// <value>The extensions.</value>
+        [XmlElement("Extensions")]
+        public ExtensionType Extensions { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the key descriptor.
+        /// Optional sequence of elements that provides information about the cryptographic keys that the
+        /// affiliation uses as a whole, as distinct from keys used by individual members of the affiliation,
+        /// which are published in the metadata for those entities.
+        /// </summary>
+        /// <value>The key descriptor.</value>
+        [XmlElement("KeyDescriptor")]
+        public KeyDescriptor[] KeyDescriptor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the signature.
+        /// An XML signature that authenticates the containing element and its contents
+        /// </summary>
+        /// <value>The signature.</value>
+        [XmlElement("Signature", Namespace=Saml20Constants.XMLDSIG)]
+        public Signature Signature { get; set; }
+
+        #endregion
     }
 }

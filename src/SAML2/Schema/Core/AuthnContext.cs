@@ -18,6 +18,8 @@ namespace SAML2.Schema.Core
         /// </summary>
         public const string ElementName = "AuthnContext";
 
+        #region Elements
+
         /// <summary>
         /// Gets or sets the authenticating authority.
         /// Zero or more unique identifiers of authentication authorities that were involved in the authentication of
@@ -45,6 +47,8 @@ namespace SAML2.Schema.Core
         /// <value>The name of the items element.</value>
         [XmlElement("ItemsElementName")]
         [XmlIgnore]
-        public ItemsChoiceType5[] ItemsElementName { get; set; }
+        public AuthnContextType[] ItemsElementName { get; set; }
+
+        #endregion
     }
 }

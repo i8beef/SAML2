@@ -20,6 +20,15 @@ namespace SAML2.Schema.Core
         public const string ElementName = "NameID";
 
         /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        /// <value>The value.</value>
+        [XmlText]
+        public string Value { get; set; }
+
+        #region Attributes
+
+        /// <summary>
         /// Gets or sets the format.
         /// A URI reference representing the classification of string-based identifier information. See Section
         /// 8.3 for the SAML-defined URI references that MAY be used as the value of the Format attribute
@@ -34,7 +43,7 @@ namespace SAML2.Schema.Core
         /// are implementation-specific.
         /// </summary>
         /// <value>The format.</value>
-        [XmlAttribute(DataType = "anyURI")]
+        [XmlAttribute("Format", DataType = "anyURI")]
         public string Format { get; set; }
 
         /// <summary>
@@ -43,7 +52,7 @@ namespace SAML2.Schema.Core
         /// federate names from disparate user stores without collision.
         /// </summary>
         /// <value>The name qualifier.</value>
-        [XmlAttribute]
+        [XmlAttribute("NameQualifier")]
         public string NameQualifier { get; set; }
 
         /// <summary>
@@ -53,7 +62,7 @@ namespace SAML2.Schema.Core
         /// parties.
         /// </summary>
         /// <value>The SP name qualifier.</value>
-        [XmlAttribute]
+        [XmlAttribute("SPNameQualifier")]
         public string SPNameQualifier { get; set; }
         
         /// <summary>
@@ -65,14 +74,9 @@ namespace SAML2.Schema.Core
         /// Identifier Management protocol defined in Section 3.6.
         /// </summary>
         /// <value>The SP provided ID.</value>
-        [XmlAttribute]
+        [XmlAttribute("SPProvidedID")]
         public string SPProvidedID { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>The value.</value>
-        [XmlText]
-        public string Value { get; set; }
+        #endregion
     }
 }

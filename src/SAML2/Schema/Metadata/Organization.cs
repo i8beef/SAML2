@@ -10,24 +10,26 @@ namespace SAML2.Schema.Metadata
     /// directly map to any core SAML elements or attributes.
     /// </summary>
     [Serializable]
-    [XmlRoot(ELEMENT_NAME, IsNullable=false)]
-    public class Organization {
-        
+    [XmlRoot(ElementName, IsNullable=false)]
+    public class Organization
+    {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Organization";
+        public const string ElementName = "Organization";
 
-        private ExtensionsType1 extensionsField;
-        
-        private LocalizedName[] organizationNameField;
-        
-        private LocalizedName[] organizationDisplayNameField;
-        
-        private LocalizedURI[] organizationURLField;
-        
-        private XmlAttribute[] anyAttrField;
+        #region Attributes
 
+        /// <summary>
+        /// Gets or sets any attr.
+        /// </summary>
+        /// <value>Any attr.</value>
+        [XmlAnyAttribute]
+        public XmlAttribute[] AnyAttr { get; set; }
+
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets the extensions.
@@ -36,31 +38,8 @@ namespace SAML2.Schema.Metadata
         /// elements qualified by a SAML-defined namespace within this element.
         /// </summary>
         /// <value>The extensions.</value>
-        public ExtensionsType1 Extensions {
-            get {
-                return extensionsField;
-            }
-            set {
-                extensionsField = value;
-            }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the name of the organization.
-        /// One or more language-qualified names that may or may not be suitable for human consumption
-        /// </summary>
-        /// <value>The name of the organization.</value>
-        [XmlElement("OrganizationName")]
-        public LocalizedName[] OrganizationName {
-            get {
-                return organizationNameField;
-            }
-            set {
-                organizationNameField = value;
-            }
-        }
-
+        [XmlElement("Extensions")]
+        public ExtensionType Extensions { get; set; }
 
         /// <summary>
         /// Gets or sets the display name of the organization.
@@ -68,16 +47,16 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The display name of the organization.</value>
         [XmlElement("OrganizationDisplayName")]
-        public LocalizedName[] OrganizationDisplayName {
-            get {
-                return organizationDisplayNameField;
-            }
-            set {
-                organizationDisplayNameField = value;
-            }
-        }
-
-
+        public LocalizedName[] OrganizationDisplayName { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the name of the organization.
+        /// One or more language-qualified names that may or may not be suitable for human consumption
+        /// </summary>
+        /// <value>The name of the organization.</value>
+        [XmlElement("OrganizationName")]
+        public LocalizedName[] OrganizationName { get; set; }
+        
         /// <summary>
         /// Gets or sets the organization URL.
         /// One or more language-qualified URIs that specify a location to which to direct a user for additional
@@ -86,28 +65,8 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The organization URL.</value>
         [XmlElement("OrganizationURL")]
-        public LocalizedURI[] OrganizationURL {
-            get {
-                return organizationURLField;
-            }
-            set {
-                organizationURLField = value;
-            }
-        }
+        public LocalizedURI[] OrganizationURL { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets any attr.
-        /// </summary>
-        /// <value>Any attr.</value>
-        [XmlAnyAttributeAttribute]
-        public XmlAttribute[] AnyAttr {
-            get {
-                return anyAttrField;
-            }
-            set {
-                anyAttrField = value;
-            }
-        }
+        #endregion
     }
 }

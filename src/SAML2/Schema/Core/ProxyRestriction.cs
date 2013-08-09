@@ -20,6 +20,19 @@ namespace SAML2.Schema.Core
         /// </summary>
         public new const string ElementName = "ProxyRestriction";
 
+        #region Attributes
+
+        /// <summary>
+        /// Gets or sets the count.
+        /// </summary>
+        /// <value>The count.</value>
+        [XmlAttribute("Count", DataType = "nonNegativeInteger")]
+        public string Count { get; set; }
+
+        #endregion
+
+        #region Elements
+
         /// <summary>
         /// Gets or sets the audience.
         /// </summary>
@@ -27,11 +40,6 @@ namespace SAML2.Schema.Core
         [XmlElement("Audience", DataType="anyURI")]
         public string[] Audience { get; set; }
 
-        /// <summary>
-        /// Gets or sets the count.
-        /// </summary>
-        /// <value>The count.</value>
-        [XmlAttribute(DataType="nonNegativeInteger")]
-        public string Count { get; set; }
+        #endregion
     }
 }

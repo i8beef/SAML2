@@ -17,13 +17,15 @@ namespace SAML2.Schema.Core
         /// </summary>
         public const string ElementName = "BaseID";
 
+        #region Attributes
+
         /// <summary>
         /// Gets or sets the name qualifier.
         /// The security or administrative domain that qualifies the identifier. This attribute provides a means
         /// to federate identifiers from disparate user stores without collision.
         /// </summary>
         /// <value>The name qualifier.</value>
-        [XmlAttribute]
+        [XmlAttribute("NameQualifier")]
         public string NameQualifier { get; set; }
 
         /// <summary>
@@ -33,7 +35,9 @@ namespace SAML2.Schema.Core
         /// parties.
         /// </summary>
         /// <value>The SP name qualifier.</value>
-        [XmlAttribute]
+        [XmlAttribute("SPNameQualifier")]
         public string SPNameQualifier { get; set; }
+
+        #endregion
     }
 }

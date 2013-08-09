@@ -15,16 +15,9 @@ namespace SAML2.Schema.Metadata
     [Serializable]
     [DebuggerStepThrough]
     [XmlTypeAttribute(Namespace=Saml20Constants.METADATA)]
-    public abstract class SSODescriptor : RoleDescriptor {
-        
-        private IndexedEndpoint[] artifactResolutionServiceField;
-        
-        private Endpoint[] singleLogoutServiceField;
-        
-        private Endpoint[] manageNameIDServiceField;
-        
-        private string[] nameIDFormatField;
-
+    public abstract class SSODescriptor : RoleDescriptor
+    {
+        #region Elements
 
         /// <summary>
         /// Gets or sets the artifact resolution service.
@@ -34,32 +27,7 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The artifact resolution service.</value>
         [XmlElement("ArtifactResolutionService")]
-        public IndexedEndpoint[] ArtifactResolutionService {
-            get {
-                return artifactResolutionServiceField;
-            }
-            set {
-                artifactResolutionServiceField = value;
-            }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the single logout service.
-        /// Zero or more elements of type EndpointType that describe endpoints that support the Single
-        /// Logout profiles defined in [SAMLProf].
-        /// </summary>
-        /// <value>The single logout service.</value>
-        [XmlElement("SingleLogoutService")]
-        public Endpoint[] SingleLogoutService {
-            get {
-                return singleLogoutServiceField;
-            }
-            set {
-                singleLogoutServiceField = value;
-            }
-        }
-
+        public IndexedEndpoint[] ArtifactResolutionService { get; set; }
 
         /// <summary>
         /// Gets or sets the manage name ID service.
@@ -68,15 +36,7 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The manage name ID service.</value>
         [XmlElement("ManageNameIDService")]
-        public Endpoint[] ManageNameIDService {
-            get {
-                return manageNameIDServiceField;
-            }
-            set {
-                manageNameIDServiceField = value;
-            }
-        }
-
+        public Endpoint[] ManageNameIDService { get; set; }
 
         /// <summary>
         /// Gets or sets the name ID format.
@@ -86,13 +46,17 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The name ID format.</value>
         [XmlElement("NameIDFormat", DataType="anyURI")]
-        public string[] NameIDFormat {
-            get {
-                return nameIDFormatField;
-            }
-            set {
-                nameIDFormatField = value;
-            }
-        }
+        public string[] NameIDFormat { get; set; }
+
+        /// <summary>
+        /// Gets or sets the single logout service.
+        /// Zero or more elements of type EndpointType that describe endpoints that support the Single
+        /// Logout profiles defined in [SAMLProf].
+        /// </summary>
+        /// <value>The single logout service.</value>
+        [XmlElement("SingleLogoutService")]
+        public Endpoint[] SingleLogoutService { get; set; }
+
+        #endregion
     }
 }

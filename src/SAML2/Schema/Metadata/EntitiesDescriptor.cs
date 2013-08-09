@@ -10,80 +10,13 @@ namespace SAML2.Schema.Metadata
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.METADATA, IsNullable=false)]
-    public class EntitiesDescriptor {
-
+    [XmlRoot(ElementName, Namespace=Saml20Constants.METADATA, IsNullable=false)]
+    public class EntitiesDescriptor
+    {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "EntitiesDescriptor";
-        
-        private Signature signatureField;
-        
-        private ExtensionsType1 extensionsField;
-        
-        private object[] itemsField;
-        
-        private DateTime validUntilField;
-        
-        private bool validUntilFieldSpecified;
-        
-        private string cacheDurationField;
-        
-        private string idField;
-        
-        private string nameField;
-
-
-        /// <summary>
-        /// Gets or sets the signature.
-        /// An XML signature that authenticates the containing element and its contents
-        /// </summary>
-        /// <value>The signature.</value>
-        [XmlElement(Namespace=Saml20Constants.XMLDSIG)]
-        public Signature Signature {
-            get {
-                return signatureField;
-            }
-            set {
-                signatureField = value;
-            }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the extensions.
-        /// This contains optional metadata extensions that are agreed upon between a metadata publisher
-        /// and consumer. Extension elements MUST be namespace-qualified by a non-SAML-defined
-        /// namespace.
-        /// </summary>
-        /// <value>The extensions.</value>
-        public ExtensionsType1 Extensions {
-            get {
-                return extensionsField;
-            }
-            set {
-                extensionsField = value;
-            }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the items.
-        /// Contains the metadata for one or more SAML entities, or a nested group of additional metadata
-        /// </summary>
-        /// <value>The items.</value>
-        [XmlElement("EntitiesDescriptor", typeof(EntitiesDescriptor))]
-        [XmlElement("EntityDescriptor", typeof(EntityDescriptor))]
-        public object[] Items {
-            get {
-                return itemsField;
-            }
-            set {
-                itemsField = value;
-            }
-        }
-
+        public const string ElementName = "EntitiesDescriptor";
 
         /// <summary>
         /// Gets or sets the valid until.
@@ -92,44 +25,16 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The valid until.</value>
         [XmlIgnore]
-        public DateTime validUntil {
-            get {
-                return validUntilField;
-            }
-            set {
-                validUntilField = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the valid until string.
-        /// </summary>
-        /// <value>The valid until string.</value>
-        [XmlAttribute("validUntil")]
-        public string validUntilString {
-            get {
-                return validUntilField.ToUniversalTime().ToString("o");
-            }
-            set {
-                validUntilField = DateTime.Parse(value);
-            }
-        }
-
+        public DateTime ValidUntil { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [valid until specified].
         /// </summary>
         /// <value><c>true</c> if [valid until specified]; otherwise, <c>false</c>.</value>
         [XmlIgnore]
-        public bool validUntilSpecified {
-            get {
-                return validUntilFieldSpecified;
-            }
-            set {
-                validUntilFieldSpecified = value;
-            }
-        }
+        public bool ValidUntilSpecified { get; set; }
 
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the cache duration.
@@ -137,46 +42,67 @@ namespace SAML2.Schema.Metadata
         /// contained in the element and any contained elements.
         /// </summary>
         /// <value>The cache duration.</value>
-        [XmlAttribute(DataType="duration")]
-        public string cacheDuration {
-            get {
-                return cacheDurationField;
-            }
-            set {
-                cacheDurationField = value;
-            }
-        }
-
+        [XmlAttribute("cacheDuration", DataType = "duration")]
+        public string CacheDuration { get; set; }
 
         /// <summary>
         /// Gets or sets the ID.
         /// A document-unique identifier for the element, typically used as a reference point when signing
         /// </summary>
         /// <value>The ID.</value>
-        [XmlAttribute(DataType="ID")]
-        public string ID {
-            get {
-                return idField;
-            }
-            set {
-                idField = value;
-            }
-        }
-
+        [XmlAttribute("ID", DataType = "ID")]
+        public string ID { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
         /// A string name that identifies a group of SAML entities in the context of some deployment.
         /// </summary>
         /// <value>The name.</value>
-        [XmlAttribute]
-        public string Name {
-            get {
-                return nameField;
-            }
-            set {
-                nameField = value;
-            }
+        [XmlAttribute("Name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the valid until string.
+        /// </summary>
+        /// <value>The valid until string.</value>
+        [XmlAttribute("validUntil")]
+        public string ValidUntilString
+        {
+            get { return ValidUntil.ToUniversalTime().ToString("o"); }
+            set { ValidUntil = DateTime.Parse(value); }
         }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the extensions.
+        /// This contains optional metadata extensions that are agreed upon between a metadata publisher
+        /// and consumer. Extension elements MUST be namespace-qualified by a non-SAML-defined
+        /// namespace.
+        /// </summary>
+        /// <value>The extensions.</value>
+        [XmlElement("Extensions")]
+        public ExtensionType Extensions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the items.
+        /// Contains the metadata for one or more SAML entities, or a nested group of additional metadata
+        /// </summary>
+        /// <value>The items.</value>
+        [XmlElement("EntitiesDescriptor", typeof(EntitiesDescriptor))]
+        [XmlElement("EntityDescriptor", typeof(EntityDescriptor))]
+        public object[] Items { get; set; }
+
+        /// <summary>
+        /// Gets or sets the signature.
+        /// An XML signature that authenticates the containing element and its contents
+        /// </summary>
+        /// <value>The signature.</value>
+        [XmlElement("Signature", Namespace = Saml20Constants.XMLDSIG)]
+        public Signature Signature { get; set; }
+
+        #endregion
     }
 }

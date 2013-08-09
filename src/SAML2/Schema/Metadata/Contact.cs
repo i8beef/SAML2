@@ -10,7 +10,7 @@ namespace SAML2.Schema.Metadata
     /// nature and does not directly map to any core SAML elements or attributes.
     /// </summary>
     [Serializable]
-    [XmlRoot(ELEMENT_NAME, IsNullable = false)]
+    [XmlRoot(ElementName, IsNullable = false)]
     public class Contact
     {
         /// <summary>
@@ -24,26 +24,43 @@ namespace SAML2.Schema.Metadata
         /// <param name="contactType">Type of the contact.</param>
         public Contact(ContactType contactType)
         {
-            contactTypeField = contactType;
+            ContactType = contactType;
         }
 
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "ContactPerson";
+        public const string ElementName = "ContactPerson";
 
-        private XmlAttribute[] anyAttrField;
-        private string companyField;
-        private ContactType contactTypeField;
-        private string[] emailAddressField;
-        private ExtensionsType1 extensionsField;
+        #region Attributes
 
-        private string givenNameField;
+        /// <summary>
+        /// Gets or sets any attr.
+        /// </summary>
+        /// <value>Any attr.</value>
+        [XmlAnyAttribute]
+        public XmlAttribute[] AnyAttr { get; set; }
 
-        private string surNameField;
+        /// <summary>
+        /// Gets or sets the type of the contact.
+        /// Specifies the type of contact using the ContactTypeType enumeration. The possible values are
+        /// technical, support, administrative, billing, and other.
+        /// </summary>
+        /// <value>The type of the contact.</value>
+        [XmlAttribute("contactType")]
+        public ContactType ContactType { get; set; }
 
-        private string[] telephoneNumberField;
+        #endregion
 
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the company.
+        /// Optional string element that specifies the name of the company for the contact person.
+        /// </summary>
+        /// <value>The company.</value>
+        [XmlElement("Company")]
+        public string Company { get; set; }
 
         /// <summary>
         /// Gets or sets the extensions.
@@ -52,47 +69,23 @@ namespace SAML2.Schema.Metadata
         /// namespace.
         /// </summary>
         /// <value>The extensions.</value>
-        public ExtensionsType1 Extensions
-        {
-            get { return extensionsField; }
-            set { extensionsField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the company.
-        /// Optional string element that specifies the name of the company for the contact person.
-        /// </summary>
-        /// <value>The company.</value>
-        public string Company
-        {
-            get { return companyField; }
-            set { companyField = value; }
-        }
-
+        [XmlElement("Extensions")]
+        public ExtensionType Extensions { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the given.
         /// Optional string element that specifies the given (first) name of the contact person.
         /// </summary>
         /// <value>The name of the given.</value>
-        public string GivenName
-        {
-            get { return givenNameField; }
-            set { givenNameField = value; }
-        }
-
+        [XmlElement("GivenName")]
+        public string GivenName { get; set; }
 
         /// <summary>
         /// Optional string element that specifies the surname of the contact person.
         /// </summary>
         /// <value>The name of the sur.</value>
-        public string SurName
-        {
-            get { return surNameField; }
-            set { surNameField = value; }
-        }
-
+        [XmlElement("SurName")]
+        public string SurName { get; set; }
 
         /// <summary>
         /// Gets or sets the email address.
@@ -101,12 +94,7 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The email address.</value>
         [XmlElement("EmailAddress", DataType="anyURI")]
-        public string[] EmailAddress
-        {
-            get { return emailAddressField; }
-            set { emailAddressField = value; }
-        }
-
+        public string[] EmailAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the telephone number.
@@ -114,36 +102,8 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The telephone number.</value>
         [XmlElement("TelephoneNumber")]
-        public string[] TelephoneNumber
-        {
-            get { return telephoneNumberField; }
-            set { telephoneNumberField = value; }
-        }
+        public string[] TelephoneNumber { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the type of the contact.
-        /// Specifies the type of contact using the ContactTypeType enumeration. The possible values are
-        /// technical, support, administrative, billing, and other.
-        /// </summary>
-        /// <value>The type of the contact.</value>
-        [XmlAttribute]
-        public ContactType contactType
-        {
-            get { return contactTypeField; }
-            set { contactTypeField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets any attr.
-        /// </summary>
-        /// <value>Any attr.</value>
-        [XmlAnyAttribute]
-        public XmlAttribute[] AnyAttr
-        {
-            get { return anyAttrField; }
-            set { anyAttrField = value; }
-        }
+        #endregion
     }
 }

@@ -10,38 +10,15 @@ namespace SAML2.Schema.Metadata
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.METADATA, IsNullable=false)]
-    public class AuthnAuthorityDescriptor : RoleDescriptor {
-        
+    [XmlRoot(ElementName, Namespace = Saml20Constants.METADATA, IsNullable = false)]
+    public class AuthnAuthorityDescriptor : RoleDescriptor 
+    {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ELEMENT_NAME = "AuthnAuthorityDescriptor";
+        public new const string ElementName = "AuthnAuthorityDescriptor";
 
-        private Endpoint[] authnQueryServiceField;
-        
-        private Endpoint[] assertionIDRequestServiceField;
-        
-        private string[] nameIDFormatField;
-
-
-        /// <summary>
-        /// Gets or sets the authn query service.
-        /// One or more elements of type EndpointType that describe endpoints that support the profile of
-        /// the Authentication Query protocol defined in [SAMLProf]. All authentication authorities support at
-        /// least one such endpoint, by definition.
-        /// </summary>
-        /// <value>The authn query service.</value>
-        [XmlElement("AuthnQueryService")]
-        public Endpoint[] AuthnQueryService {
-            get {
-                return authnQueryServiceField;
-            }
-            set {
-                authnQueryServiceField = value;
-            }
-        }
-
+        #region Elements
 
         /// <summary>
         /// Gets or sets the assertion ID request service.
@@ -51,15 +28,17 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The assertion ID request service.</value>
         [XmlElement("AssertionIDRequestService")]
-        public Endpoint[] AssertionIDRequestService {
-            get {
-                return assertionIDRequestServiceField;
-            }
-            set {
-                assertionIDRequestServiceField = value;
-            }
-        }
+        public Endpoint[] AssertionIDRequestService { get; set; }
 
+        /// <summary>
+        /// Gets or sets the authn query service.
+        /// One or more elements of type EndpointType that describe endpoints that support the profile of
+        /// the Authentication Query protocol defined in [SAMLProf]. All authentication authorities support at
+        /// least one such endpoint, by definition.
+        /// </summary>
+        /// <value>The authn query service.</value>
+        [XmlElement("AuthnQueryService")]
+        public Endpoint[] AuthnQueryService { get; set; }
 
         /// <summary>
         /// Gets or sets the name ID format.
@@ -68,13 +47,8 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The name ID format.</value>
         [XmlElement("NameIDFormat", DataType="anyURI")]
-        public string[] NameIDFormat {
-            get {
-                return nameIDFormatField;
-            }
-            set {
-                nameIDFormatField = value;
-            }
-        }
+        public string[] NameIDFormat { get; set; }
+
+        #endregion
     }
 }

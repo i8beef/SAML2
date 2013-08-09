@@ -10,57 +10,26 @@ namespace SAML2.Schema.Metadata
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.METADATA, IsNullable=false)]
-    public class SPSSODescriptor : SSODescriptor {
-
+    [XmlRoot(ElementName, Namespace = Saml20Constants.METADATA, IsNullable = false)]
+    public class SPSSODescriptor : SSODescriptor
+    {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ELEMENT_NAME = "SPSSODescriptor";
-        
-        private IndexedEndpoint[] assertionConsumerServiceField;
-        
-        private AttributeConsumingService[] attributeConsumingServiceField;
-        
-        private bool? authnRequestsSignedField;
-        
-        private bool? wantAssertionsSignedField;
+        public new const string ElementName = "SPSSODescriptor";
 
         /// <summary>
-        /// Gets or sets the assertion consumer service.
-        /// One or more elements that describe indexed endpoints that support the profiles of the
-        /// Authentication Request protocol defined in [SAMLProf]. All service providers support at least one
-        /// such endpoint, by definition.
+        /// AuthnRequestsSigned backing field.
         /// </summary>
-        /// <value>The assertion consumer service.</value>
-        [XmlElement("AssertionConsumerService")]
-        public IndexedEndpoint[] AssertionConsumerService {
-            get {
-                return assertionConsumerServiceField;
-            }
-            set {
-                assertionConsumerServiceField = value;
-            }
-        }
-
+        private bool? _authnRequestsSignedField;
 
         /// <summary>
-        /// Gets or sets the attribute consuming service.
-        /// Zero or more elements that describe an application or service provided by the service provider
-        /// that requires or desires the use of SAML attributes.
+        /// WantAssertionsSigned backing field.
         /// </summary>
-        /// <value>The attribute consuming service.</value>
-        [XmlElement("AttributeConsumingService")]
-        public AttributeConsumingService[] AttributeConsumingService {
-            get {
-                return attributeConsumingServiceField;
-            }
-            set {
-                attributeConsumingServiceField = value;
-            }
-        }
+        private bool? _wantAssertionsSignedField;
 
-
+        #region Attributes
+        
         /// <summary>
         /// Gets or sets a value indicating whether [authn requests signed].
         /// Optional attribute that indicates whether the &lt;samlp:AuthnRequest&gt; messages sent by this
@@ -68,21 +37,10 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value><c>true</c> if [authn requests signed]; otherwise, <c>false</c>.</value>
         [XmlAttribute]
-        public string AuthnRequestsSigned {
-            get 
-            {
-                if (authnRequestsSignedField == null)
-                    return null;
-                else
-                    return XmlConvert.ToString(authnRequestsSignedField.Value);
-            }
-            set 
-            {
-                if (string.IsNullOrEmpty(value))
-                    authnRequestsSignedField = null;
-                else 
-                    authnRequestsSignedField = XmlConvert.ToBoolean(value);
-            }
+        public string AuthnRequestsSigned
+        {
+            get { return _authnRequestsSignedField == null ? null : XmlConvert.ToString(_authnRequestsSignedField.Value); }
+            set { _authnRequestsSignedField = string.IsNullOrEmpty(value) ? (bool?) null : XmlConvert.ToBoolean(value); }
         }
 
         /// <summary>
@@ -96,21 +54,35 @@ namespace SAML2.Schema.Metadata
         /// 	<c>true</c> if [want assertions signed]; otherwise, <c>false</c>.
         /// </value>
         [XmlAttribute]
-        public string WantAssertionsSigned {
-            get 
-            {
-                if (wantAssertionsSignedField == null)
-                    return null;
-                else
-                    return XmlConvert.ToString(wantAssertionsSignedField.Value);
-            }
-            set 
-            {
-                if (string.IsNullOrEmpty(value))
-                    wantAssertionsSignedField = null;
-                else 
-                    wantAssertionsSignedField = XmlConvert.ToBoolean(value);
-            }
+        public string WantAssertionsSigned
+        {
+            get { return _wantAssertionsSignedField == null ? null : XmlConvert.ToString(_wantAssertionsSignedField.Value); }
+            set { _wantAssertionsSignedField = string.IsNullOrEmpty(value) ? (bool?) null : XmlConvert.ToBoolean(value); }
         }
+
+        #endregion
+
+        #region Elements
+        
+        /// <summary>
+        /// Gets or sets the assertion consumer service.
+        /// One or more elements that describe indexed endpoints that support the profiles of the
+        /// Authentication Request protocol defined in [SAMLProf]. All service providers support at least one
+        /// such endpoint, by definition.
+        /// </summary>
+        /// <value>The assertion consumer service.</value>
+        [XmlElement("AssertionConsumerService")]
+        public IndexedEndpoint[] AssertionConsumerService { get; set; }
+
+        /// <summary>
+        /// Gets or sets the attribute consuming service.
+        /// Zero or more elements that describe an application or service provided by the service provider
+        /// that requires or desires the use of SAML attributes.
+        /// </summary>
+        /// <value>The attribute consuming service.</value>
+        [XmlElement("AttributeConsumingService")]
+        public AttributeConsumingService[] AttributeConsumingService { get; set; }
+
+        #endregion
     }
 }

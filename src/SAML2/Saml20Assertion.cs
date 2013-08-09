@@ -176,7 +176,7 @@ namespace SAML2
         /// </summary>
         public string Id
         {
-            get { return Assertion.Id; }
+            get { return Assertion.ID; }
         }
 
         /// <summary>

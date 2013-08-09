@@ -9,25 +9,23 @@ namespace SAML2.Schema.Metadata
     /// </summary>
     [Serializable]
     [XmlType(TypeName="ExtensionsType", Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.METADATA, IsNullable = false)]
-    public class ExtensionsType1
+    [XmlRoot(ElementName, Namespace = Saml20Constants.METADATA, IsNullable = false)]
+    public class ExtensionType
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Extensions";
-        
-        private XmlElement[] anyField;
+        public const string ElementName = "Extensions";
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets any.
         /// </summary>
         /// <value>Any.</value>
         [XmlAnyElement]
-        public XmlElement[] Any
-        {
-            get { return anyField; }
-            set { anyField = value; }
-        }
+        public XmlElement[] Any { get; set; }
+
+        #endregion
     }
 }

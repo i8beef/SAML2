@@ -30,19 +30,14 @@ namespace SAML2.Schema.Core
         }
 
         /// <summary>
-        /// Gets or sets the advice.
-        /// Additional information related to the assertion that assists processing in certain situations but which
-        /// MAY be ignored by applications that do not understand the advice or do not wish to make use of it.
+        /// Gets or sets the issue instant.
+        /// The time instant of issue in UTC
         /// </summary>
-        /// <value>The advice.</value>
-        public Advice Advice { get; set; }
+        /// <value>The issue instant.</value>
+        [XmlIgnore]
+        public DateTime? IssueInstant { get; set; }
 
-        /// <summary>
-        /// Gets or sets the conditions.
-        /// Conditions that MUST be evaluated when assessing the validity of and/or when using the assertion.
-        /// </summary>
-        /// <value>The conditions.</value>
-        public Conditions Conditions { get; set; }
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the ID.
@@ -50,16 +45,8 @@ namespace SAML2.Schema.Core
         /// Section 1.3.4 for identifier uniqueness.
         /// </summary>
         /// <value>The ID.</value>
-        [XmlAttribute(DataType = "ID")]
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the issue instant.
-        /// The time instant of issue in UTC
-        /// </summary>
-        /// <value>The issue instant.</value>
-        [XmlIgnore]
-        public DateTime? IssueInstant { get; set; }
+        [XmlAttribute("ID", DataType = "ID")]
+        public string ID { get; set; }
 
         /// <summary>
         /// Gets or sets a string representation of the issue instant.
@@ -68,22 +55,38 @@ namespace SAML2.Schema.Core
         [XmlAttribute("IssueInstant")]
         public string IssueInstantString
         {
-            get
-            {
-                return IssueInstant.HasValue ? Saml20Utils.ToUtcString(IssueInstant.Value) : null;
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    IssueInstant = null;
-                }
-                else
-                {
-                    IssueInstant = Saml20Utils.FromUtcString(value);
-                }
-            }
+            get { return IssueInstant.HasValue ? Saml20Utils.ToUtcString(IssueInstant.Value) : null; }
+            set { IssueInstant = string.IsNullOrEmpty(value) ? (DateTime?) null : Saml20Utils.FromUtcString(value); }
         }
+
+        /// <summary>
+        /// Gets or sets the version.
+        /// The version of this assertion. The identifier for the version of SAML defined in this specification is "2.0".
+        /// </summary>
+        /// <value>The version.</value>
+        [XmlAttribute]
+        public string Version { get; set; }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the advice.
+        /// Additional information related to the assertion that assists processing in certain situations but which
+        /// MAY be ignored by applications that do not understand the advice or do not wish to make use of it.
+        /// </summary>
+        /// <value>The advice.</value>
+        [XmlElement("Advice")]
+        public Advice Advice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the conditions.
+        /// Conditions that MUST be evaluated when assessing the validity of and/or when using the assertion.
+        /// </summary>
+        /// <value>The conditions.</value>
+        [XmlElement("Conditions")]
+        public Conditions Conditions { get; set; }
         
         /// <summary>
         /// Gets or sets the issuer.
@@ -93,6 +96,7 @@ namespace SAML2.Schema.Core
         /// and the signer of the assertion (if any). Any such requirements imposed
         /// </summary>
         /// <value>The issuer.</value>
+        [XmlElement("Issuer")]
         public NameID Issuer { get; set; }
 
         /// <summary>
@@ -110,7 +114,7 @@ namespace SAML2.Schema.Core
         /// An XML Signature that protects the integrity of and authenticates the issuer of the assertion
         /// </summary>
         /// <value>The signature.</value>
-        [XmlElement(Namespace=Saml20Constants.XMLDSIG)]
+        [XmlElement("Signature", Namespace=Saml20Constants.XMLDSIG)]
         public Signature Signature { get; set; }
 
         /// <summary>
@@ -118,15 +122,10 @@ namespace SAML2.Schema.Core
         /// The subject of the statement(s) in the assertion
         /// </summary>
         /// <value>The subject.</value>
+        [XmlElement("Subject")]
         public Subject Subject { get; set; }
 
-        /// <summary>
-        /// Gets or sets the version.
-        /// The version of this assertion. The identifier for the version of SAML defined in this specification is "2.0".
-        /// </summary>
-        /// <value>The version.</value>
-        [XmlAttribute]
-        public string Version { get; set; }
+        #endregion
 
         /// <summary>
         /// Get the AttributeStatement elements of the Assertion.
