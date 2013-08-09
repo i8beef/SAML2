@@ -61,8 +61,8 @@ namespace SAML2.Tests.Saml20.Protocol
             doc.Load(@"Protocol\MetadataDocs\metadata-ADLER.xml");
             
             Saml20MetadataDocument metadata = new Saml20MetadataDocument(doc);
-            Assert.AreEqual(2, metadata.SLOEndpoints().Count);
-            Assert.AreEqual(2, metadata.SSOEndpoints().Count);
+            Assert.AreEqual(2, metadata.SLOEndpoints.Count);
+            Assert.AreEqual(2, metadata.SSOEndpoints.Count);
         }
     }
 }

@@ -565,7 +565,7 @@ namespace SAML2.Protocol
             context.Session[IDPTempSessionKey]= identityProvider.Id;
 
             // Determine which endpoint to use from the configuration file or the endpoint metadata.
-            var destination = DetermineEndpointConfiguration(BindingType.Redirect, identityProvider.Endpoints.SignOnEndpoint, identityProvider.Metadata.SSOEndpoints());
+            var destination = DetermineEndpointConfiguration(BindingType.Redirect, identityProvider.Endpoints.SignOnEndpoint, identityProvider.Metadata.SSOEndpoints);
             request.Destination = destination.Url;
 
             if (identityProvider.ForceAuth)

@@ -6,7 +6,6 @@ using System.Text;
 using System.Xml;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
-using SfwEncryptedData = SAML2.Schema.XEnc.EncryptedData;
 
 namespace SAML2
 {
@@ -19,26 +18,24 @@ namespace SAML2
         /// Whether to use OAEP (Optimal Asymmetric Encryption Padding) by default, if no EncryptionMethod is specified 
         /// on the &lt;EncryptedKey&gt; element.
         /// </summary>
-        private const bool USE_OAEP_DEFAULT = false;
-
-        /// <summary>
-        /// The assertion that is stored within the encrypted assertion.
-        /// </summary>
-        private XmlDocument _assertion;
-
-        /// <summary>
-        /// The <code>Assertion</code> element that is embedded within the <code>EncryptedAssertion</code> element.
-        /// </summary>
-        public XmlDocument Assertion
-        {
-            get { return _assertion; }
-            set { _assertion = value; }
-        }
+        private const bool UseOaepDefault = false;
 
         /// <summary>
         /// The <code>EncryptedAssertion</code> element containing an <code>Assertion</code>.
         /// </summary>
         private XmlDocument _encryptedAssertion;
+
+        /// <summary>
+        /// The session key.
+        /// </summary>
+        private SymmetricAlgorithm _sessionKey;
+
+        /// <summary>
+        /// Session key algorithm.
+        /// </summary>
+        private string _sessionKeyAlgorithm = EncryptedXml.XmlEncAES256Url;
+
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of <code>EncryptedAssertion</code>.
@@ -52,7 +49,7 @@ namespace SAML2
         /// <param name="transportKey">The transport key is used for securing the symmetric key that has encrypted the assertion.</param>        
         public Saml20EncryptedAssertion(RSA transportKey) : this()
         {
-            _transportKey = transportKey;
+            TransportKey = transportKey;
         }
 
         /// <summary>
@@ -65,39 +62,14 @@ namespace SAML2
             LoadXml(encryptedAssertion.DocumentElement);
         }
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
-        /// Initializes the instance with a new <code>EncryptedAssertion</code> element.
+        /// The <code>Assertion</code> element that is embedded within the <code>EncryptedAssertion</code> element.
         /// </summary>
-        public void LoadXml(XmlElement element)
-        {
-            CheckEncryptedAssertionElement(element);
-            
-            _encryptedAssertion = new XmlDocument();            
-            _encryptedAssertion.AppendChild(_encryptedAssertion.ImportNode(element, true));
-        }
-
-        /// <summary>
-        /// Verifies that the given <code>XmlElement</code> is actually a SAML 2.0 <code>EncryptedAssertion</code> element.
-        /// </summary>
-        private static void CheckEncryptedAssertionElement(XmlElement element)
-        {
-            if (element.LocalName != EncryptedAssertion.ElementName)
-                throw new ArgumentException("The element must be of type \"EncryptedAssertion\".");
-
-            if (element.NamespaceURI != Saml20Constants.ASSERTION)
-                throw new ArgumentException("The element must be of type \"" + Saml20Constants.ASSERTION + "#EncryptedAssertion\".");            
-        }
-
-
-        /// <summary>
-        /// Returns the XML representation of the encrypted assertion.
-        /// </summary>        
-        public XmlDocument GetXml()
-        {
-            return _encryptedAssertion;
-        }
-
-        private string _sessionKeyAlgorithm = EncryptedXml.XmlEncAES256Url;
+        public XmlDocument Assertion { get; set; }
 
         /// <summary>
         /// Specifiy the algorithm to use for the session key. The algorithm is specified using the identifiers given in the 
@@ -112,64 +84,38 @@ namespace SAML2
             {
                 // Validate that the URI used to identify the algorithm of the session key is probably correct. Not a complete validation, but should catch most obvious mistakes.
                 if (!value.StartsWith(Saml20Constants.XENC))
+                {
                     throw new ArgumentException("The session key algorithm must be specified using the identifying URIs listed in the specification.");
+                }
 
                 _sessionKeyAlgorithm = value;
             }
         }
 
-        private RSA _transportKey;
         /// <summary>
         /// The transport key is used for securing the symmetric key that has encrypted the assertion.
         /// </summary>
-        public RSA TransportKey
-        {
-            set { _transportKey = value; }
-            get { return _transportKey; }
-        }        
+        public RSA TransportKey { get; set; }
 
         /// <summary>
-        /// Encrypts the Assertion in the assertion property and creates an <code>EncryptedAssertion</code> element
-        /// that can be retrieved using the <code>GetXml</code> method.
+        /// The key used for encrypting the <code>Assertion</code>. This key is embedded within a <code>KeyInfo</code> element
+        /// in the <code>EncryptedAssertion</code> element. The session key is encrypted with the <code>TransportKey</code> before
+        /// being embedded.
         /// </summary>
-        public void Encrypt()
+        private SymmetricAlgorithm SessionKey
         {
-            if (_transportKey == null)
-                throw new InvalidOperationException("The \"TransportKey\" property is required to encrypt the assertion.");
-            
-            if (_assertion == null)
-                throw new InvalidOperationException("The \"Assertion\" property is required for this operation.");
+            get
+            {
+                if (_sessionKey == null)
+                {
+                    _sessionKey = GetKeyInstance(_sessionKeyAlgorithm);
+                    _sessionKey.GenerateKey();
+                }
+                return _sessionKey;
+            }
+        }
 
-            EncryptedData encryptedData = new EncryptedData();
-            encryptedData.Type = EncryptedXml.XmlEncElementUrl;
-
-            encryptedData.EncryptionMethod = new EncryptionMethod(_sessionKeyAlgorithm);
-
-            // Encrypt the assertion and add it to the encryptedData instance.
-            EncryptedXml encryptedXml = new EncryptedXml();
-            byte[] encryptedElement = encryptedXml.EncryptData(_assertion.DocumentElement, SessionKey, false);
-            encryptedData.CipherData.CipherValue = encryptedElement;
-
-            // Add an encrypted version of the key used.
-            encryptedData.KeyInfo = new KeyInfo();
-
-            EncryptedKey encryptedKey = new EncryptedKey();            
-            encryptedKey.EncryptionMethod = new EncryptionMethod(EncryptedXml.XmlEncRSA15Url);
-            encryptedKey.CipherData = new CipherData(EncryptedXml.EncryptKey(SessionKey.Key, TransportKey, false));
-            encryptedData.KeyInfo.AddClause(new KeyInfoEncryptedKey(encryptedKey));
-
-            // Create an empty EncryptedAssertion to hook into.
-            EncryptedAssertion encryptedAssertion = new EncryptedAssertion();
-            encryptedAssertion.EncryptedData = new SfwEncryptedData();
-
-            XmlDocument result = new XmlDocument();
-            result.LoadXml(Serialization.SerializeToXmlString(encryptedAssertion));
-
-            XmlElement encryptedDataElement = GetElement(SfwEncryptedData.ElementName, Saml20Constants.XENC, result.DocumentElement);
-            EncryptedXml.ReplaceElement(encryptedDataElement, encryptedData, false);
-
-            _encryptedAssertion = result;
-        }        
+        #endregion
 
         /// <summary>
         /// Decrypts the assertion using the key given as the method parameter. The resulting assertion
@@ -177,22 +123,26 @@ namespace SAML2
         /// </summary>
         /// <exception cref="Saml20FormatException">Thrown if it not possible to decrypt the assertion.</exception>
         public void Decrypt()
-        {                        
+        {
             if (TransportKey == null)
-                throw new InvalidOperationException("The \"TransportKey\" property must contain the asymmetric key to decrypt the assertion.");            
+            {
+                throw new InvalidOperationException("The \"TransportKey\" property must contain the asymmetric key to decrypt the assertion.");
+            }
 
             if (_encryptedAssertion == null)
+            {
                 throw new InvalidOperationException("Unable to find the <EncryptedAssertion> element. Use a constructor or the LoadXml - method to set it.");
+            }
 
-            XmlElement encryptedDataElement = GetElement(SfwEncryptedData.ElementName, Saml20Constants.XENC, _encryptedAssertion.DocumentElement);
-            EncryptedData encryptedData = new EncryptedData();
+            var encryptedDataElement = GetElement(Schema.XEnc.EncryptedData.ElementName, Saml20Constants.XENC, _encryptedAssertion.DocumentElement);
+            var encryptedData = new EncryptedData();
             encryptedData.LoadXml(encryptedDataElement);
 
             SymmetricAlgorithm sessionKey;
             if (encryptedData.EncryptionMethod != null)
             {
                 _sessionKeyAlgorithm = encryptedData.EncryptionMethod.KeyAlgorithm;
-                sessionKey = ExtractSessionKey(_encryptedAssertion, encryptedData.EncryptionMethod.KeyAlgorithm);                
+                sessionKey = ExtractSessionKey(_encryptedAssertion, encryptedData.EncryptionMethod.KeyAlgorithm);
             }
             else
             {
@@ -204,54 +154,201 @@ namespace SAML2
              * The EncryptedXml class can't handle an <EncryptedData> element without an underlying <EncryptionMethod> element,
              * despite the standard dictating that this is ok. 
              * If this becomes a problem with other IDPs, consider adding a default EncryptionMethod instance manually before decrypting.
-             */             
-            EncryptedXml encryptedXml = new EncryptedXml();
+             */
+            var encryptedXml = new EncryptedXml();
             byte[] plaintext = encryptedXml.DecryptData(encryptedData, sessionKey);
 
-            _assertion = new XmlDocument();
-            _assertion.PreserveWhitespace = true;
-
+            Assertion = new XmlDocument { PreserveWhitespace = true };
             try
             {
-                _assertion.Load(new StringReader(Encoding.UTF8.GetString(plaintext)));
-            } catch(XmlException e)
+                Assertion.Load(new StringReader(Encoding.UTF8.GetString(plaintext)));
+            }
+            catch (XmlException e)
             {
-                _assertion = null;
+                Assertion = null;
                 throw new Saml20FormatException("Unable to parse the decrypted assertion.", e);
             }
         }
 
         /// <summary>
+        /// Encrypts the Assertion in the assertion property and creates an <code>EncryptedAssertion</code> element
+        /// that can be retrieved using the <code>GetXml</code> method.
+        /// </summary>
+        public void Encrypt()
+        {
+            if (TransportKey == null)
+            {
+                throw new InvalidOperationException("The \"TransportKey\" property is required to encrypt the assertion.");
+            }
+            
+            if (Assertion == null)
+            {
+                throw new InvalidOperationException("The \"Assertion\" property is required for this operation.");
+            }
+
+            var encryptedData = new EncryptedData
+                                    {
+                                        Type = EncryptedXml.XmlEncElementUrl,
+                                        EncryptionMethod = new EncryptionMethod(_sessionKeyAlgorithm)
+                                    };
+
+
+            // Encrypt the assertion and add it to the encryptedData instance.
+            var encryptedXml = new EncryptedXml();
+            var encryptedElement = encryptedXml.EncryptData(Assertion.DocumentElement, SessionKey, false);
+            encryptedData.CipherData.CipherValue = encryptedElement;
+
+            // Add an encrypted version of the key used.
+            encryptedData.KeyInfo = new KeyInfo();
+
+            var encryptedKey = new EncryptedKey
+                                   {
+                                       EncryptionMethod = new EncryptionMethod(EncryptedXml.XmlEncRSA15Url),
+                                       CipherData = new CipherData(EncryptedXml.EncryptKey(SessionKey.Key, TransportKey, false))
+                                   };
+            encryptedData.KeyInfo.AddClause(new KeyInfoEncryptedKey(encryptedKey));
+
+            // Create an empty EncryptedAssertion to hook into.
+            var encryptedAssertion = new EncryptedAssertion { EncryptedData = new Schema.XEnc.EncryptedData() };
+
+            var result = new XmlDocument();
+            result.LoadXml(Serialization.SerializeToXmlString(encryptedAssertion));
+
+            var encryptedDataElement = GetElement(Schema.XEnc.EncryptedData.ElementName, Saml20Constants.XENC, result.DocumentElement);
+            EncryptedXml.ReplaceElement(encryptedDataElement, encryptedData, false);
+
+            _encryptedAssertion = result;
+        }
+
+        /// <summary>
+        /// Returns the XML representation of the encrypted assertion.
+        /// </summary>
+        /// <returns>The encrypted assertion XML.</returns>
+        public XmlDocument GetXml()
+        {
+            return _encryptedAssertion;
+        }
+
+        /// <summary>
+        /// Initializes the instance with a new <code>EncryptedAssertion</code> element.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        public void LoadXml(XmlElement element)
+        {
+            CheckEncryptedAssertionElement(element);
+
+            _encryptedAssertion = new XmlDocument();
+            _encryptedAssertion.AppendChild(_encryptedAssertion.ImportNode(element, true));
+        }
+
+        /// <summary>
+        /// Writes the assertion to the XmlWriter.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        public void WriteAssertion(XmlWriter writer)
+        {
+            _encryptedAssertion.WriteTo(writer);
+        }
+
+        /// <summary>
+        /// Verifies that the given <code>XmlElement</code> is actually a SAML 2.0 <code>EncryptedAssertion</code> element.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        private static void CheckEncryptedAssertionElement(XmlElement element)
+        {
+            if (element == null)
+            {
+                throw new ArgumentNullException("element");
+            }
+
+            if (element.LocalName != EncryptedAssertion.ElementName)
+            {
+                throw new ArgumentException("The element must be of type \"EncryptedAssertion\".");
+            }
+
+            if (element.NamespaceURI != Saml20Constants.ASSERTION)
+            {
+                throw new ArgumentException("The element must be of type \"" + Saml20Constants.ASSERTION + "#EncryptedAssertion\".");
+            }
+        }
+
+        /// <summary>
+        /// Utility method for retrieving a single element from a document.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="elementNS">The element namespace.</param>
+        /// <param name="doc">The doc.</param>
+        /// <returns>The element.</returns>
+        private static XmlElement GetElement(string element, string elementNS, XmlElement doc)
+        {
+            var list = doc.GetElementsByTagName(element, elementNS);
+            return list.Count == 0 ? null : (XmlElement)list[0];
+        }
+
+        /// <summary>
+        /// Creates an instance of a symmetric key, based on the algorithm identifier found in the Xml Encryption standard.
+        /// see also http://www.w3.org/TR/xmlenc-core/#sec-Algorithms
+        /// </summary>
+        /// <param name="algorithm">A string containing one of the algorithm identifiers found in the XML Encryption standard. The class
+        /// <code>EncryptedXml</code> contains the identifiers as fields.</param>
+        private static SymmetricAlgorithm GetKeyInstance(string algorithm)
+        {
+            SymmetricAlgorithm result;
+            switch (algorithm)
+            {
+                case EncryptedXml.XmlEncTripleDESUrl:
+                    result = TripleDES.Create();
+                    break;
+                case EncryptedXml.XmlEncAES128Url:
+                    result = new RijndaelManaged {KeySize = 128};
+                    break;
+                case EncryptedXml.XmlEncAES192Url:
+                    result = new RijndaelManaged {KeySize = 192};
+                    break;
+                case EncryptedXml.XmlEncAES256Url:
+                    result = new RijndaelManaged {KeySize = 256};
+                    break;
+                default:
+                    result = new RijndaelManaged {KeySize = 256};
+                    break;
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// An overloaded version of ExtractSessionKey that does not require a keyAlgorithm.
         /// </summary>
+        /// <param name="encryptedAssertionDoc">The encrypted assertion doc.</param>
+        /// <returns>The <see cref="SymmetricAlgorithm"/>.</returns>
         private SymmetricAlgorithm ExtractSessionKey(XmlDocument encryptedAssertionDoc)
         {
             return ExtractSessionKey(encryptedAssertionDoc, string.Empty);
         }
 
         /// <summary>
-        /// Locates and deserializes the key used for encrypting the assertion. Searches the list of keys below the &lt;EncryptedAssertion&gt; element and 
+        /// Locates and deserializes the key used for encrypting the assertion. Searches the list of keys below the &lt;EncryptedAssertion&gt; element and
         /// the &lt;KeyInfo&gt; element of the &lt;EncryptedData&gt; element.
         /// </summary>
-        /// <param name="encryptedAssertionDoc"></param>
+        /// <param name="encryptedAssertionDoc">The encrypted assertion doc.</param>
         /// <param name="keyAlgorithm">The XML Encryption standard identifier for the algorithm of the session key.</param>
         /// <returns>A <code>SymmetricAlgorithm</code> containing the key if it was successfully found. Null if the method was unable to locate the key.</returns>
         private SymmetricAlgorithm ExtractSessionKey(XmlDocument encryptedAssertionDoc, string keyAlgorithm)
         {
             // Check if there are any <EncryptedKey> elements immediately below the EncryptedAssertion element.
             foreach (XmlNode node in encryptedAssertionDoc.DocumentElement.ChildNodes)            
+            {
                 if (node.LocalName == Schema.XEnc.EncryptedKey.ElementName && node.NamespaceURI == Saml20Constants.XENC)
                 {
                     return ToSymmetricKey((XmlElement) node, keyAlgorithm);
                 }
+            }
 
             // Check if the key is embedded in the <EncryptedData> element.
-            XmlElement encryptedData = 
-                GetElement(SfwEncryptedData.ElementName, Saml20Constants.XENC, encryptedAssertionDoc.DocumentElement);
+            var encryptedData = GetElement(Schema.XEnc.EncryptedData.ElementName, Saml20Constants.XENC, encryptedAssertionDoc.DocumentElement);
             if (encryptedData != null)
             {
-                XmlElement encryptedKeyElement =
-                    GetElement(Schema.XEnc.EncryptedKey.ElementName, Saml20Constants.XENC, encryptedAssertionDoc.DocumentElement);
+                var encryptedKeyElement = GetElement(Schema.XEnc.EncryptedKey.ElementName, Saml20Constants.XENC, encryptedAssertionDoc.DocumentElement);
                 if (encryptedKeyElement != null)
                 {
                     return ToSymmetricKey(encryptedKeyElement, keyAlgorithm);
@@ -264,108 +361,29 @@ namespace SAML2
         /// <summary>
         /// Extracts the key from a &lt;EncryptedKey&gt; element.
         /// </summary>
-        /// <param name="encryptedKeyElement"></param>
-        /// <param name="keyAlgorithm"></param>
-        /// <returns></returns>
+        /// <param name="encryptedKeyElement">The encrypted key element.</param>
+        /// <param name="keyAlgorithm">The key algorithm.</param>
+        /// <returns>The <see cref="SymmetricAlgorithm"/>.</returns>
         private SymmetricAlgorithm ToSymmetricKey(XmlElement encryptedKeyElement, string keyAlgorithm)
         {
-            EncryptedKey encryptedKey = new EncryptedKey();
+            var encryptedKey = new EncryptedKey();
             encryptedKey.LoadXml(encryptedKeyElement);
 
-            bool useOAEP = USE_OAEP_DEFAULT;
+            var useOaep = UseOaepDefault;
             if (encryptedKey.EncryptionMethod != null)
             {
-                if (encryptedKey.EncryptionMethod.KeyAlgorithm == EncryptedXml.XmlEncRSAOAEPUrl)
-                    useOAEP = true;
-                else
-                    useOAEP = false;
+                useOaep = encryptedKey.EncryptionMethod.KeyAlgorithm == EncryptedXml.XmlEncRSAOAEPUrl;
             }
 
             if (encryptedKey.CipherData.CipherValue != null)
             {
-                SymmetricAlgorithm key = GetKeyInstance(keyAlgorithm);
-                key.Key = EncryptedXml.DecryptKey(encryptedKey.CipherData.CipherValue, TransportKey, useOAEP);
+                var key = GetKeyInstance(keyAlgorithm);
+                key.Key = EncryptedXml.DecryptKey(encryptedKey.CipherData.CipherValue, TransportKey, useOaep);
+
                 return key;
             }
             
             throw new NotImplementedException("Unable to decode CipherData of type \"CipherReference\".");
-        }
-
-        /// <summary>
-        /// Creates an instance of a symmetric key, based on the algorithm identifier found in the Xml Encryption standard.        
-        /// see also http://www.w3.org/TR/xmlenc-core/#sec-Algorithms
-        /// </summary>
-        /// <param name="algorithm">A string containing one of the algorithm identifiers found in the XML Encryption standard. The class
-        /// <code>EncryptedXml</code> contains the identifiers as fields.</param>        
-        private static SymmetricAlgorithm GetKeyInstance(string algorithm)
-        {
-            SymmetricAlgorithm result;
-            switch(algorithm)
-            {                
-                case EncryptedXml.XmlEncTripleDESUrl:                    
-                    result = TripleDES.Create();
-                    break;
-                case EncryptedXml.XmlEncAES128Url :
-                    result = new RijndaelManaged();
-                    result.KeySize = 128;
-                    break;
-                case EncryptedXml.XmlEncAES192Url:
-                    result = new RijndaelManaged();
-                    result.KeySize = 192;
-                    break;
-                case EncryptedXml.XmlEncAES256Url:
-                    result = new RijndaelManaged();
-                    result.KeySize = 256;
-                    break;
-                default :
-                    result = new RijndaelManaged();
-                    result.KeySize = 256;
-                    break;
-            }
-            return result;
-        }
-
-
-        /// <summary>
-        /// Utility method for retrieving a single element from a document.
-        /// </summary>
-        private static XmlElement GetElement(string element, string elementNS, XmlElement doc)
-        {
-            XmlNodeList list = doc.GetElementsByTagName(element, elementNS);            
-            if (list.Count == 0)
-                return null;
-
-            return (XmlElement)list[0];
-        }
-
-
-        private SymmetricAlgorithm _sessionKey;
-        
-        /// <summary>
-        /// The key used for encrypting the <code>Assertion</code>. This key is embedded within a <code>KeyInfo</code> element
-        /// in the <code>EncryptedAssertion</code> element. The session key is encrypted with the <code>TransportKey</code> before
-        /// being embedded.
-        /// </summary>
-        private SymmetricAlgorithm SessionKey
-        {
-            get
-            {
-                if ( _sessionKey == null)
-                {
-                    _sessionKey = GetKeyInstance(_sessionKeyAlgorithm);                    
-                    _sessionKey.GenerateKey();
-                }
-                return _sessionKey;
-            }
-        }
-
-        /// <summary>
-        /// Writes the assertion to the XmlWriter.
-        /// </summary>
-        /// <param name="writer">The writer.</param>
-        public void WriteAssertion(XmlWriter writer)
-        {
-            _encryptedAssertion.WriteTo(writer);
         }
     }
 }

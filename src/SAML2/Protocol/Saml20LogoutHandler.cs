@@ -125,7 +125,7 @@ namespace SAML2.Protocol
                                        };
 
                     var endpoint = RetrieveIDPConfiguration(context.Session[IDPLoginSessionKey].ToString());
-                    var destination = DetermineEndpointConfiguration(BindingType.Redirect, endpoint.Endpoints.LogoutEndpoint, endpoint.Metadata.SLOEndpoints());
+                    var destination = DetermineEndpointConfiguration(BindingType.Redirect, endpoint.Endpoints.LogoutEndpoint, endpoint.Metadata.SLOEndpoints);
 
                     builder.RedirectFromLogout(destination, response);
                 }
@@ -155,7 +155,7 @@ namespace SAML2.Protocol
                 //response.Destination = destination.Url;
 
                 var doc = response.GetXml();
-                XmlSignatureUtils.SignDocument(doc, response.ID);
+                XmlSignatureUtils.SignDocument(doc, response.Id);
                 if (doc.FirstChild is XmlDeclaration)
                 {
                     doc.RemoveChild(doc.FirstChild);
@@ -189,7 +189,7 @@ namespace SAML2.Protocol
 
             //Fetch the endpoint configuration
             var idp = RetrieveIDPConfiguration(context.Session[IDPLoginSessionKey].ToString());
-            var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.Endpoints.LogoutEndpoint, idp.Metadata.SLOEndpoints());
+            var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.Endpoints.LogoutEndpoint, idp.Metadata.SLOEndpoints);
 
             //Fetch config object
             var config = Saml2Config.GetConfig();
@@ -294,7 +294,7 @@ namespace SAML2.Protocol
                 };
 
                 var responseDocument = response.GetXml();
-                XmlSignatureUtils.SignDocument(responseDocument, response.ID);
+                XmlSignatureUtils.SignDocument(responseDocument, response.Id);
                 builder.Response = responseDocument.OuterXml;
                 builder.RelayState = context.Request.Params["RelayState"];
                 builder.GetPage().ProcessRequest(context);
@@ -401,7 +401,7 @@ namespace SAML2.Protocol
             var request = Saml20LogoutRequest.GetDefault();
 
             // Determine which endpoint to use from the configuration file or the endpoint metadata.
-            var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.Endpoints.LogoutEndpoint, idp.Metadata.SLOEndpoints());
+            var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.Endpoints.LogoutEndpoint, idp.Metadata.SLOEndpoints);
             request.Destination = destination.Url;
 
             var nameIdFormat = context.Session[IDPNameIdFormat].ToString();
@@ -416,7 +416,7 @@ namespace SAML2.Protocol
                 request.SubjectToLogOut.Value = context.Session[IDPNameId].ToString();
                 request.SessionIndex = context.Session[IDPSessionIdKey].ToString();
                 var requestDocument = request.GetXml();
-                XmlSignatureUtils.SignDocument(requestDocument, request.ID);
+                XmlSignatureUtils.SignDocument(requestDocument, request.Id);
                 builder.Request = requestDocument.OuterXml;
 
                 Logger.DebugFormat(Tracing.SendLogoutRequest, "POST", idp.Id, requestDocument.OuterXml);

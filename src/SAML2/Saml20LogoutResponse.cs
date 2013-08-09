@@ -11,73 +11,28 @@ namespace SAML2
     /// </summary>
     public class Saml20LogoutResponse
     {
-        private LogoutResponse _response;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20LogoutResponse"/> class.
         /// </summary>
         public Saml20LogoutResponse()
         {
-            _response = new LogoutResponse();
-            _response.Version = Saml20Constants.Version;
-            _response.ID = "id" + Guid.NewGuid().ToString("N");
-            _response.Issuer = new NameID();
-            _response.IssueInstant = DateTime.Now;
-            _response.Status = new Status();
-            _response.Status.StatusCode = new StatusCode();
-        }
-
-        /// <summary>
-        /// Gets LogoutResponse as an XmlDocument
-        /// </summary>
-        /// <returns></returns>
-        public XmlDocument GetXml()
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.PreserveWhitespace = true;
-            doc.LoadXml(Serialization.SerializeToXmlString(_response));
-            return doc;
+            Response = new LogoutResponse
+                            {
+                                Version = Saml20Constants.Version,
+                                ID = "id" + Guid.NewGuid().ToString("N"),
+                                Issuer = new NameID(),
+                                IssueInstant = DateTime.Now,
+                                Status = new Status {StatusCode = new StatusCode()}
+                            };
         }
 
         /// <summary>
         /// Gets the ID.
         /// </summary>
         /// <value>The ID.</value>
-        public string ID
+        public string Id
         {
-            get
-            {
-                return _response.ID;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the status code.
-        /// </summary>
-        /// <value>The status code.</value>
-        public string StatusCode
-        {
-            get { return _response.Status.StatusCode.Value; }
-            set { _response.Status.StatusCode.Value = value;}
-        }
-
-        /// <summary>
-        /// Gets the underlying Response schema class instance.
-        /// </summary>
-        /// <value>The response.</value>
-        public LogoutResponse Response
-        {
-            get { return _response; }
-        }
-
-        /// <summary>
-        /// Gets or sets the issuer.
-        /// </summary>
-        /// <value>The issuer.</value>
-        public string Issuer
-        {
-            get { return _response.Issuer.Value; }
-            set { _response.Issuer.Value = value; }
+            get { return Response.ID; }
         }
 
         /// <summary>
@@ -86,8 +41,8 @@ namespace SAML2
         /// <value>The destination.</value>
         public string Destination
         {
-            get { return _response.Destination; }
-            set { _response.Destination = value; }
+            get { return Response.Destination; }
+            set { Response.Destination = value; }
         }
 
         /// <summary>
@@ -96,9 +51,45 @@ namespace SAML2
         /// <value>InResponseTo.</value>
         public string InResponseTo
         {
-            get { return _response.InResponseTo; }
-            set { _response.InResponseTo = value; }
+            get { return Response.InResponseTo; }
+            set { Response.InResponseTo = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the issuer.
+        /// </summary>
+        /// <value>The issuer.</value>
+        public string Issuer
+        {
+            get { return Response.Issuer.Value; }
+            set { Response.Issuer.Value = value; }
+        }
+
+        /// <summary>
+        /// Gets the underlying Response schema class instance.
+        /// </summary>
+        /// <value>The response.</value>
+        public LogoutResponse Response { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the status code.
+        /// </summary>
+        /// <value>The status code.</value>
+        public string StatusCode
+        {
+            get { return Response.Status.StatusCode.Value; }
+            set { Response.Status.StatusCode.Value = value; }
+        }
+
+        /// <summary>
+        /// Gets LogoutResponse as an XmlDocument
+        /// </summary>
+        /// <returns></returns>
+        public XmlDocument GetXml()
+        {
+            var doc = new XmlDocument { PreserveWhitespace = true };
+            doc.LoadXml(Serialization.SerializeToXmlString(Response));
+            return doc;
+        }
     }
 }

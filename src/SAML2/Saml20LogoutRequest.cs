@@ -13,40 +13,21 @@ namespace SAML2
     /// </summary>
     public class Saml20LogoutRequest
     {
-        #region Private variables
-
-        private LogoutRequest _request;
-
-        #endregion
-
-        #region Constructor functions
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20LogoutRequest"/> class.
         /// </summary>
         public Saml20LogoutRequest()
         {
-            _request = new LogoutRequest();
-            _request.Version = Saml20Constants.Version;
-            _request.ID = "id" + Guid.NewGuid().ToString("N");
-            _request.Issuer = new NameID();
-            _request.IssueInstant = DateTime.Now;
+            Request = new LogoutRequest
+                           {
+                               Version = Saml20Constants.Version,
+                               ID = "id" + Guid.NewGuid().ToString("N"),
+                               Issuer = new NameID(),
+                               IssueInstant = DateTime.Now
+                           };
         }
-
-        #endregion
 
         #region Properties
-
-        /// <summary>
-        /// Gets or sets the reason for this logout request.
-        /// Defined values should be on uri form.
-        /// </summary>
-        /// <value>The reason.</value>
-        public string Reason
-        {
-            get { return _request.Reason; }
-            set { _request.Reason = value; }
-        }
 
         /// <summary>
         /// Gets or sets NotOnOrAfter.
@@ -54,18 +35,8 @@ namespace SAML2
         /// <value>NotOnOrAfter.</value>
         public DateTime? NotOnOrAfter
         {
-            get { return _request.NotOnOrAfter; }
-            set { _request.NotOnOrAfter = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets SubjectToLogOut.
-        /// </summary>
-        /// <value>SubjectToLogOut.</value>
-        public NameID SubjectToLogOut
-        {
-            get { return _request.Item as NameID; }
-            set { _request.Item = value; }
+            get { return Request.NotOnOrAfter; }
+            set { Request.NotOnOrAfter = value; }
         }
 
         /// <summary>
@@ -74,18 +45,16 @@ namespace SAML2
         /// <value>The destination.</value>
         public string Destination
         {
-            get { return _request.Destination; }
-            set { _request.Destination = value; }
+            get { return Request.Destination; }
+            set { Request.Destination = value; }
         }
 
         /// <summary>
-        /// Gets or sets the SessionIndex.
+        /// Returns the id of the logout request.
         /// </summary>
-        /// <value>The SessionIndex.</value>
-        public string SessionIndex
+        public string Id
         {
-            get { return _request.SessionIndex[0]; }
-            set { _request.SessionIndex = new string[]{value};}
+            get { return Request.ID; }
         }
 
         /// <summary>
@@ -94,58 +63,79 @@ namespace SAML2
         /// <value>The issuer value.</value>
         public string Issuer
         {
-            get { return _request.Issuer.Value; }
-            set { _request.Issuer.Value = value; }
+            get { return Request.Issuer.Value; }
+            set { Request.Issuer.Value = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the reason for this logout request.
+        /// Defined values should be on uri form.
+        /// </summary>
+        /// <value>The reason.</value>
+        public string Reason
+        {
+            get { return Request.Reason; }
+            set { Request.Reason = value; }
         }
 
         /// <summary>
         /// Gets the underlying LogoutRequest schema class instance.
         /// </summary>
         /// <value>The request.</value>
-        public LogoutRequest Request
+        public LogoutRequest Request { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the SessionIndex.
+        /// </summary>
+        /// <value>The SessionIndex.</value>
+        public string SessionIndex
         {
-            get { return _request; }
+            get { return Request.SessionIndex[0]; }
+            set { Request.SessionIndex = new[]{value};}
+        }
+
+        /// <summary>
+        /// Gets or sets SubjectToLogOut.
+        /// </summary>
+        /// <value>SubjectToLogOut.</value>
+        public NameID SubjectToLogOut
+        {
+            get { return Request.Item as NameID; }
+            set { Request.Item = value; }
         }
 
         #endregion
 
-        /// <summary>
-        /// Returns the AuthnRequest as an XML document.
-        /// </summary>
-        public XmlDocument GetXml()
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.PreserveWhitespace = true;
-            doc.LoadXml(Serialization.SerializeToXmlString(_request));
-            return doc;
-        }
-
-        /// <summary>
-        /// Returns the id of the logout request.
-        /// </summary>
-        public string ID
-        {
-            get { return _request.ID; }
-        }
-        
+       
         /// <summary>
         /// Returns an instance of the class with meaningful default values set.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The <see cref="Saml20LogoutRequest"/>.</returns>
         public static Saml20LogoutRequest GetDefault()
         {
-            Saml20LogoutRequest result = new Saml20LogoutRequest();
-            result.SubjectToLogOut = new NameID();
-            //format
-            var config = Saml2Config.GetConfig();
+            var result = new Saml20LogoutRequest { SubjectToLogOut = new NameID() };
 
+            var config = Saml2Config.GetConfig();
             if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.Id))
+            {
                 throw new Saml20FormatException(Resources.ServiceProviderNotSet);
+            }
 
             result.Issuer = config.ServiceProvider.Id;
 
             return result;
+        }
 
+        /// <summary>
+        /// Returns the AuthnRequest as an XML document.
+        /// </summary>
+        /// <returns>The request XML.</returns>
+        public XmlDocument GetXml()
+        {
+            var doc = new XmlDocument { PreserveWhitespace = true };
+            doc.LoadXml(Serialization.SerializeToXmlString(Request));
+
+            return doc;
         }
     }
 }

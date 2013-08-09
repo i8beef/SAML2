@@ -10,7 +10,6 @@ using SAML2.Schema.Core;
 using SAML2.Schema.Metadata;
 using SAML2.Utils;
 using System.Configuration;
-using ContactType = SAML2.Schema.Metadata.ContactType;
 
 namespace SAML2
 {
@@ -21,7 +20,42 @@ namespace SAML2
     /// </summary>
     public class Saml20MetadataDocument
     {
+        #region Fields
+
+        /// <summary>
+        /// ARSEndpoints backing field.
+        /// </summary>
+        private Dictionary<int, IndexedEndpoint> _arsEndpoints;
+
+        /// <summary>
+        /// AssertionConsumerServiceEndpoints backing field.
+        /// </summary>
+        private List<IdentityProviderEndpointElement> _assertionConsumerServiceEndpoints;
+
+        /// <summary>
+        /// Attribute query endpoints.
+        /// </summary>
+        private List<Endpoint> _attributeQueryEndpoints;
+
+        /// <summary>
+        /// The keys.
+        /// </summary>
+        private List<KeyDescriptor> _keys;
+
+        /// <summary>
+        /// SLOEndpoints backing field.
+        /// </summary>
+        private List<IdentityProviderEndpointElement> _sloEndpoints;
+
+        /// <summary>
+        /// SSOEndpoints backing field.
+        /// </summary>
+        private List<IdentityProviderEndpointElement> _ssoEndpoints;
+
+        #endregion
+
         #region Constructors.
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20MetadataDocument"/> class.
         /// </summary>
@@ -35,11 +69,15 @@ namespace SAML2
             : this()
         {
             if (XmlSignatureUtils.IsSigned(entityDescriptor))
-                if (!XmlSignatureUtils.CheckSignature(entityDescriptor)) 
+            {
+                if (!XmlSignatureUtils.CheckSignature(entityDescriptor))
+                {
                     throw new Saml20Exception("Metadata signature could not be verified.");
+                }
+            }
 
             ExtractKeyDescriptors(entityDescriptor);
-            _entity = Serialization.DeserializeFromXmlString<EntityDescriptor>(entityDescriptor.OuterXml);
+            Entity = Serialization.DeserializeFromXmlString<EntityDescriptor>(entityDescriptor.OuterXml);
         }
 
         /// <summary>
@@ -65,215 +103,46 @@ namespace SAML2
         }
         #endregion
 
-        /// <summary>
-        /// Takes the Safewhere configuration class and converts it to a SAML2.0 metadata document.
-        /// </summary>        
-        private void ConvertToMetadata(Saml2Section config, KeyInfo keyinfo)
-        {
-            EntityDescriptor entity = CreateDefaultEntity();
-            entity.EntityID = config.ServiceProvider.Id;
-            entity.ValidUntil = DateTime.Now.AddDays(7);
-
-            SPSSODescriptor spDescriptor = new SPSSODescriptor();
-            spDescriptor.ProtocolSupportEnumeration = new string[] { Saml20Constants.PROTOCOL };
-            spDescriptor.AuthnRequestsSigned = XmlConvert.ToString(true);
-            spDescriptor.WantAssertionsSigned = XmlConvert.ToString(true);
-
-            if (config.ServiceProvider.NameIdFormats.Count > 0)
-            {
-                spDescriptor.NameIDFormat = new string[config.ServiceProvider.NameIdFormats.Count];
-                int count = 0;
-                foreach(NameIdFormatElement elem in config.ServiceProvider.NameIdFormats)
-                {
-                    spDescriptor.NameIDFormat[count++] = elem.Format;
-                }
-            }
-            
-            Uri baseURL = new Uri(config.ServiceProvider.Server);
-            List<Endpoint> logoutServiceEndpoints = new List<Endpoint>();
-            List<IndexedEndpoint> signonServiceEndpoints = new List<IndexedEndpoint>();
-
-            List<IndexedEndpoint> artifactResolutionEndpoints = new List<IndexedEndpoint>(2);
-
-            // Include endpoints.
-            foreach (ServiceProviderEndpointElement endpoint in config.ServiceProvider.Endpoints)
-            {
-                if (endpoint.Type == EndpointType.SignOn)
-                {                    
-                    IndexedEndpoint loginEndpoint = new IndexedEndpoint();
-                    loginEndpoint.Index = endpoint.Index;
-                    loginEndpoint.IsDefault = true;
-                    loginEndpoint.Location = new Uri(baseURL, endpoint.LocalPath).ToString();
-                    loginEndpoint.Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HTTP_Post);
-                    signonServiceEndpoints.Add(loginEndpoint);
-
-                    IndexedEndpoint artifactSignonEndpoint = new IndexedEndpoint();
-                    artifactSignonEndpoint.Binding = Saml20Constants.ProtocolBindings.HTTP_SOAP;
-                    artifactSignonEndpoint.Index = loginEndpoint.Index;
-                    artifactSignonEndpoint.Location = loginEndpoint.Location;
-                    artifactResolutionEndpoints.Add(artifactSignonEndpoint);
-
-                    continue;
-                }
-
-                if (endpoint.Type == EndpointType.Logout)
-                {
-                    Endpoint logoutEndpoint = new Endpoint();
-                    logoutEndpoint.Location = new Uri(baseURL, endpoint.LocalPath).ToString();
-                    logoutEndpoint.ResponseLocation = logoutEndpoint.Location;
-                    logoutEndpoint.Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HTTP_Post);
-                    logoutServiceEndpoints.Add(logoutEndpoint);
-
-                    // TODO: Look at this...
-                    logoutEndpoint = new Endpoint();
-                    logoutEndpoint.Location = new Uri(baseURL, endpoint.LocalPath).ToString();
-                    logoutEndpoint.ResponseLocation = logoutEndpoint.Location;
-                    logoutEndpoint.Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HTTP_Redirect);
-                    logoutServiceEndpoints.Add(logoutEndpoint);
-
-                    IndexedEndpoint artifactLogoutEndpoint = new IndexedEndpoint();
-                    artifactLogoutEndpoint.Binding = Saml20Constants.ProtocolBindings.HTTP_SOAP;
-                    artifactLogoutEndpoint.Index = endpoint.Index;
-                    artifactLogoutEndpoint.Location = logoutEndpoint.Location;
-                    artifactResolutionEndpoints.Add(artifactLogoutEndpoint);
-                    
-                    continue;
-                }
-            }           
-
-            spDescriptor.SingleLogoutService = logoutServiceEndpoints.ToArray();
-            spDescriptor.AssertionConsumerService = signonServiceEndpoints.ToArray();
-            
-            // Attribute consuming service. 
-            if (config.RequestedAttributes.Count > 0)
-            {
-                AttributeConsumingService attConsumingService = new AttributeConsumingService();
-                spDescriptor.AttributeConsumingService = new AttributeConsumingService[] { attConsumingService };
-                attConsumingService.Index = signonServiceEndpoints[0].Index;
-                attConsumingService.IsDefault = true;
-                attConsumingService.ServiceName = new LocalizedName[] { new LocalizedName("SP", "da") };
-
-                attConsumingService.RequestedAttribute =
-                    new RequestedAttribute[config.RequestedAttributes.Count];
-
-                for (int i = 0; i < config.RequestedAttributes.Count; i++)
-                {
-                    attConsumingService.RequestedAttribute[i] = new RequestedAttribute();
-                    attConsumingService.RequestedAttribute[i].Name = config.RequestedAttributes[i].Name;
-                    if (config.RequestedAttributes[i].IsRequired)
-                        attConsumingService.RequestedAttribute[i].IsRequired = true;
-                    attConsumingService.RequestedAttribute[i].NameFormat = SamlAttribute.NameformatBasic;
-                }
-            }
-            else
-            {
-                spDescriptor.AttributeConsumingService = new AttributeConsumingService[0];
-            }
-
-            if (config.Metadata == null || !config.Metadata.ExcludeArtifactEndpoints)
-            {
-                spDescriptor.ArtifactResolutionService = artifactResolutionEndpoints.ToArray();
-            }
-
-            entity.Items = new object[] { spDescriptor };
-
-            // Keyinfo
-            KeyDescriptor keySigning = new KeyDescriptor();
-            KeyDescriptor keyEncryption = new KeyDescriptor();
-            spDescriptor.KeyDescriptor = new KeyDescriptor[] { keySigning, keyEncryption };
-            
-            keySigning.Use = KeyTypes.Signing;
-            keySigning.UseSpecified = true;
-
-            keyEncryption.Use = KeyTypes.Encryption;
-            keyEncryption.UseSpecified = true;
-                       
-            // Ugly conversion between the .Net framework classes and our classes ... avert your eyes!!
-            keySigning.KeyInfo = Serialization.DeserializeFromXmlString<Schema.XmlDSig.KeyInfo>(keyinfo.GetXml().OuterXml);            
-            keyEncryption.KeyInfo = keySigning.KeyInfo;
-
-            // apply the <Organization> element
-            if (config.ServiceProvider.Organization != null)
-            {
-                entity.Organization = new Organization
-                                          {
-                                              OrganizationName = new[] { new LocalizedName() { Value = config.ServiceProvider.Organization.Name }},
-                                              OrganizationDisplayName = new[] { new LocalizedName() { Value = config.ServiceProvider.Organization.DisplayName } },
-                                              OrganizationURL = new[] { new LocalizedURI() { Value = config.ServiceProvider.Organization.Url }}
-                                          };
-            }
-
-            if (config.ServiceProvider.Contacts != null && config.ServiceProvider.Contacts.Count > 0)
-            {
-                entity.ContactPerson = config.ServiceProvider.Contacts.Select(x => new Contact
-                                                                                       {
-                                                                                           ContactType = (ContactType)((int)x.Type),
-                                                                                           Company = x.Company,
-                                                                                           GivenName = x.GivenName,
-                                                                                           SurName = x.SurName,
-                                                                                           EmailAddress = new[] { x.Email },
-                                                                                           TelephoneNumber = new[] { x.Phone }
-                                                                                       }).ToArray();
-            }
-        }
-
-        private string GetBinding(BindingType samlBinding, string defaultValue)
-        {
-            switch (samlBinding)
-            {
-                case BindingType.Artifact:
-                    return Saml20Constants.ProtocolBindings.HTTP_Artifact;
-                case BindingType.Post:
-                    return Saml20Constants.ProtocolBindings.HTTP_Post;
-                case BindingType.Redirect:
-                    return Saml20Constants.ProtocolBindings.HTTP_Redirect;
-                case BindingType.Soap:
-                    return Saml20Constants.ProtocolBindings.HTTP_SOAP;
-                case BindingType.NotSet:
-                    return defaultValue;                    
-                default:
-                    throw new ConfigurationErrorsException(String.Format("Unsupported SAML binding {0}", Enum.GetName(typeof(BindingType), samlBinding)));
-            } 
-        }
-
-        /// <summary>
-        /// Extract KeyDescriptors from the metadata document represented by this instance.
-        /// </summary>
-        private void ExtractKeyDescriptors()
-        {            
-            if (_keys != null)
-                return;
-            
-            if (_entity != null)
-            {
-                _keys = new List<KeyDescriptor>();
-                foreach (object item in _entity.Items)
-                {
-                    if (item is RoleDescriptor)
-                    {
-                        RoleDescriptor rd = (RoleDescriptor) item;
-                        foreach (KeyDescriptor keyDescriptor in rd.KeyDescriptor)
-                            _keys.Add(keyDescriptor);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Retrieves the key descriptors contained in the document
-        /// </summary>
-        private void ExtractKeyDescriptors(XmlDocument doc)
-        {            
-            XmlNodeList list = doc.GetElementsByTagName(KeyDescriptor.ElementName, Saml20Constants.METADATA);
-            _keys = new List<KeyDescriptor>(list.Count);
-
-            foreach (XmlNode node in list)            
-                _keys.Add(Serialization.DeserializeFromXmlString<KeyDescriptor>(node.OuterXml));                        
-        }
-
         #region Properties
 
-        private List<KeyDescriptor> _keys;
+        /// <summary>
+        /// Contains the endpoints specified in the &lt;AssertionConsumerService&gt; element in the SPSSODescriptor.
+        /// These endpoints are only applicable if we are reading metadata issued by a service provider.
+        /// </summary>
+        public List<IdentityProviderEndpointElement> AssertionConsumerServiceEndpoints
+        {
+            get
+            {
+                if (_assertionConsumerServiceEndpoints == null)
+                {
+                    ExtractEndpoints();
+                }
+
+                return _assertionConsumerServiceEndpoints;
+            }
+        }
+
+        /// <summary>
+        /// Gets the entity.
+        /// </summary>
+        /// <value>The entity.</value>
+        public EntityDescriptor Entity { get; private set; }
+
+        /// <summary>
+        /// The ID of the entity described in the document.
+        /// </summary>
+        public string EntityId
+        {
+            get
+            {
+                if (Entity != null)
+                {
+                    return Entity.EntityID;
+                }
+
+                throw new InvalidOperationException("This instance does not contain a metadata document");
+            }
+        }
 
         /// <summary>
         /// The keys contained in the metadata document.
@@ -283,253 +152,67 @@ namespace SAML2
             get
             {
                 if (_keys == null)
-                    ExtractKeyDescriptors();
-                
-                return _keys;
-            }
-        }
-
-        private Dictionary<int, IndexedEndpoint> _ARSEndpoints;
-
-        private List<IdentityProviderEndpointElement> _SSOEndpoints;
-        private List<IdentityProviderEndpointElement> _SLOEndpoints;
-        private List<IdentityProviderEndpointElement> _AssertionConsumerServiceEndpoints;
-
-        /// <summary>
-        /// The SSO endpoints
-        /// </summary>
-        /// <returns></returns>
-        public List<IdentityProviderEndpointElement> SSOEndpoints()
-        {
-            if (_SSOEndpoints == null)
-                ExtractEndpoints();
-            
-            return _SSOEndpoints;
-        }
-
-        /// <summary>
-        /// The SLO endpoints.
-        /// </summary>
-        /// <returns></returns>
-        public List<IdentityProviderEndpointElement> SLOEndpoints()
-        {
-            if (_SLOEndpoints == null)
-                ExtractEndpoints();
-
-            return _SLOEndpoints;
-        }
-
-        /// <summary>
-        /// Get the first SLO endpoint that supports the given binding.
-        /// </summary>        
-        /// <returns>The endpoint or <c>null</c> if metadata does not have an SLO endpoint with the given binding.</returns>
-        public IdentityProviderEndpointElement SLOEndpoint(BindingType binding)
-        {
-            return SLOEndpoints().Find(endp => endp.Binding == binding);
-        }
-        
-        /// <summary>
-        /// Get the first SSO endpoint that supports the given binding.
-        /// </summary>        
-        /// <returns>The endpoint or <c>null</c> if metadata does not have an SSO endpoint with the given binding.</returns>
-        public IdentityProviderEndpointElement SSOEndpoint(BindingType binding)
-        {
-            return SSOEndpoints().Find(endp => endp.Binding == binding);
-        }
-
-
-
-        /// <summary>
-        /// Contains the endpoints specified in the &lt;AssertionConsumerService&gt; element in the SPSSODescriptor.
-        /// These endpoints are only applicable if we are reading metadata issued by a service provider.
-        /// </summary>
-        /// <returns>List of <see cref="IdentityProviderEndpointElement"/>.</returns>
-        public List<IdentityProviderEndpointElement> AssertionConsumerServiceEndpoints()
-        {
-            if (_AssertionConsumerServiceEndpoints == null)
-                ExtractEndpoints();
-
-            return _AssertionConsumerServiceEndpoints;
-        }
-
-        /// <summary>
-        /// Extracts the endpoints.
-        /// </summary>
-        private void ExtractEndpoints()
-        {
-            if (_entity != null)
-            {
-                _SSOEndpoints = new List<IdentityProviderEndpointElement>();
-                _SLOEndpoints = new List<IdentityProviderEndpointElement>();
-                _ARSEndpoints = new Dictionary<int, IndexedEndpoint>();
-                _AssertionConsumerServiceEndpoints = new List<IdentityProviderEndpointElement>();
-                _attributeQueryEndpoints = new List<Endpoint>();
-
-                foreach (object item in _entity.Items)
                 {
-                    if (item is IDPSSODescriptor)
-                    {
-                        IDPSSODescriptor descriptor = (IDPSSODescriptor)item;
-                        foreach (Endpoint endpoint in descriptor.SingleSignOnService)
-                        {
-                            var binding = BindingType.NotSet;
-                            switch(endpoint.Binding)
-                            {
-                                case Saml20Constants.ProtocolBindings.HTTP_Post :
-                                    binding = BindingType.Post;
-                                    break;
-                                case Saml20Constants.ProtocolBindings.HTTP_Redirect :
-                                    binding = BindingType.Redirect;
-                                    break;
-                                case Saml20Constants.ProtocolBindings.HTTP_Artifact :
-                                    binding = BindingType.Artifact;
-                                    break;
-                                case Saml20Constants.ProtocolBindings.HTTP_SOAP :
-                                    binding = BindingType.Artifact;
-                                    break;
-                                default:
-                                    throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
-                            }
-                            _SSOEndpoints.Add(new IdentityProviderEndpointElement
-                                                  {
-                                                      Url = endpoint.Location,
-                                                      Binding = binding
-                                                  });
-                        }
-                    }
-
-                    if (item is SSODescriptor)
-                    {
-                        SSODescriptor descriptor = (SSODescriptor) item;
-
-                        if (descriptor.SingleLogoutService != null)
-                        {
-                            foreach (Endpoint endpoint in descriptor.SingleLogoutService)
-                            {
-                                var binding = BindingType.NotSet;
-                                switch (endpoint.Binding)
-                                {
-                                    case Saml20Constants.ProtocolBindings.HTTP_Post:
-                                        binding = BindingType.Post;
-                                        break;
-                                    case Saml20Constants.ProtocolBindings.HTTP_Redirect:
-                                        binding = BindingType.Redirect;
-                                        break;
-                                    case Saml20Constants.ProtocolBindings.HTTP_Artifact:
-                                        binding = BindingType.Artifact;
-                                        break;
-                                    case Saml20Constants.ProtocolBindings.HTTP_SOAP:
-                                        binding = BindingType.Artifact;
-                                        break;
-                                    default:
-                                        throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
-                                }
-                                _SLOEndpoints.Add(new IdentityProviderEndpointElement
-                                                      {
-                                                          Url = endpoint.Location,
-                                                          Binding = binding
-                                                      });
-                            }
-                        }
-
-                        if (descriptor.ArtifactResolutionService != null)
-                        {
-                            foreach (IndexedEndpoint ie in descriptor.ArtifactResolutionService)
-                            {
-                                _ARSEndpoints.Add(ie.Index, ie);
-                            }
-                        }
-                    }
-
-                    if (item is SPSSODescriptor)
-                    {
-                        SPSSODescriptor descriptor = (SPSSODescriptor) item;
-                        foreach (IndexedEndpoint endpoint in descriptor.AssertionConsumerService)
-                        {
-                            var binding = BindingType.NotSet;
-                            switch (endpoint.Binding)
-                            {
-                                case Saml20Constants.ProtocolBindings.HTTP_Post:
-                                    binding = BindingType.Post;
-                                    break;
-                                case Saml20Constants.ProtocolBindings.HTTP_Redirect:
-                                    binding = BindingType.Redirect;
-                                    break;
-                                case Saml20Constants.ProtocolBindings.HTTP_Artifact:
-                                    binding = BindingType.Artifact;
-                                    break;
-                                case Saml20Constants.ProtocolBindings.HTTP_SOAP:
-                                    binding = BindingType.Artifact;
-                                    break;
-                                default:
-                                    throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
-                            }
-                            _AssertionConsumerServiceEndpoints.Add(new IdentityProviderEndpointElement
-                                                                       {
-                                                                           Url = endpoint.Location,
-                                                                           Binding = binding
-                                                                       });
-                        }
-                    }
-
-                    if (item is AttributeAuthorityDescriptor)
-                    {
-                        AttributeAuthorityDescriptor aad = (AttributeAuthorityDescriptor) item;
-                        _attributeQueryEndpoints.AddRange(aad.AttributeService);
-                    }
+                    ExtractKeyDescriptors();
                 }
-            }
-        }
 
-        /// <summary>
-        /// Retrieves the keys marked with the usage given as parameter.
-        /// </summary>
-        /// <returns>A list containing the keys. If no key is marked with the given usage, the method returns an empty list.</returns>
-        public List<KeyDescriptor> GetKeys(KeyTypes usage)
-        {
-            return Keys.FindAll(delegate(KeyDescriptor desc) { return desc.Use == usage; });
-        }
-
-        /// <summary>
-        /// The ID of the entity described in the document.
-        /// </summary>
-        public string EntityId
-        {
-            get
-            {
-                if (_entity != null)
-                    return _entity.EntityID;
-                
-                throw new InvalidOperationException("This instance does not contain a metadata document");
+                return _keys;
             }
         }
 
         /// <summary>
         /// Determines whether the metadata should be signed when the ToXml() method is called.
         /// </summary>
-        public bool Sign;
+        public bool Sign { get; set; }
 
-        private EntityDescriptor _entity;
         /// <summary>
-        /// Gets the entity.
+        /// Gets the SLO endpoints.
         /// </summary>
-        /// <value>The entity.</value>
-        public EntityDescriptor Entity
+        public List<IdentityProviderEndpointElement> SLOEndpoints
         {
-            get { return _entity; }
+            get
+            {
+                if (_sloEndpoints == null)
+                    ExtractEndpoints();
+
+                return _sloEndpoints;
+            }
+        }
+
+        /// <summary>
+        /// Gets the SSO endpoints.
+        /// </summary>
+        public List<IdentityProviderEndpointElement> SSOEndpoints
+        {
+            get
+            {
+                if (_ssoEndpoints == null)
+                {
+                    ExtractEndpoints();
+                }
+
+                return _ssoEndpoints;
+            }
         }
 
         #endregion
 
+        #region Public methods
+
         /// <summary>
-        /// Return a string containing the metadata XML based on the settings added to this instance.
-        /// The resulting XML will be signed, if the AsymmetricAlgoritm property has been set.
-        /// The default encoding (UTF-8) will be used for the resulting XML.
+        /// Creates a default entity in the 
         /// </summary>
         /// <returns></returns>
-        public string ToXml()
+        public EntityDescriptor CreateDefaultEntity()
         {
-            return ToXml(Encoding.UTF8);
+            if (Entity != null)
+            {
+                throw new InvalidOperationException("An entity is already created in this document.");
+            }
+
+            Entity = GetDefaultEntityInstance();
+
+            return Entity;
         }
 
         /// <summary>
@@ -539,29 +222,8 @@ namespace SAML2
         /// <returns></returns>
         public string GetARSEndpoint(ushort index)
         {
-            IndexedEndpoint ep = _ARSEndpoints[index];
-            if (ep != null)
-            {
-                return ep.Location;
-            }
-
-            return string.Empty;
-        }
-
-        private List<Endpoint> _attributeQueryEndpoints;
-
-        /// <summary>
-        /// Gets the location of the first AttributeQuery endpoint.
-        /// </summary>
-        /// <returns></returns>
-        public string GetAttributeQueryEndpointLocation()
-        {
-            List<Endpoint> endpoints = GetAttributeQueryEndpoints();
-            
-            if (endpoints.Count == 0)            
-                throw new Saml20Exception("The identity provider does not support attribute queries.");
-            
-            return endpoints[0].Location;
+            var ep = _arsEndpoints[index];
+            return ep != null ? ep.Location : string.Empty;
         }
 
         /// <summary>
@@ -579,41 +241,148 @@ namespace SAML2
         }
 
         /// <summary>
+        /// Gets the location of the first AttributeQuery endpoint.
+        /// </summary>
+        /// <returns></returns>
+        public string GetAttributeQueryEndpointLocation()
+        {
+            var endpoints = GetAttributeQueryEndpoints();
+            if (endpoints.Count == 0)
+            {
+                throw new Saml20Exception("The identity provider does not support attribute queries.");
+            }
+
+            return endpoints[0].Location;
+        }
+
+        /// <summary>
+        /// Retrieves the keys marked with the usage given as parameter.
+        /// </summary>
+        /// <returns>A list containing the keys. If no key is marked with the given usage, the method returns an empty list.</returns>
+        public List<KeyDescriptor> GetKeys(KeyTypes usage)
+        {
+            return Keys.FindAll(desc => desc.Use == usage);
+        }
+
+        /// <summary>
+        /// Get the first SLO endpoint that supports the given binding.
+        /// </summary>        
+        /// <returns>The endpoint or <c>null</c> if metadata does not have an SLO endpoint with the given binding.</returns>
+        public IdentityProviderEndpointElement SLOEndpoint(BindingType binding)
+        {
+            return SLOEndpoints.Find(endp => endp.Binding == binding);
+        }
+
+        /// <summary>
+        /// Get the first SSO endpoint that supports the given binding.
+        /// </summary>        
+        /// <returns>The endpoint or <c>null</c> if metadata does not have an SSO endpoint with the given binding.</returns>
+        public IdentityProviderEndpointElement SSOEndpoint(BindingType binding)
+        {
+            return SSOEndpoints.Find(endp => endp.Binding == binding);
+        }
+
+        /// <summary>
+        /// Return a string containing the metadata XML based on the settings added to this instance.
+        /// The resulting XML will be signed, if the AsymmetricAlgoritm property has been set.
+        /// The default encoding (UTF-8) will be used for the resulting XML.
+        /// </summary>
+        /// <returns>The XML.</returns>
+        public string ToXml()
+        {
+            return ToXml(Encoding.UTF8);
+        }
+
+        /// <summary>
         /// Return a string containing the metadata XML based on the settings added to this instance.
         /// The resulting XML will be signed, if the AsymmetricAlgoritm property has been set.
         /// </summary>
+        /// <param name="enc">The enc.</param>
+        /// <returns>The XML.</returns>
         public string ToXml(Encoding enc)
         {
-            XmlDocument doc = new XmlDocument();            
-            doc.PreserveWhitespace = true;            
-            
-            doc.LoadXml( Serialization.SerializeToXmlString(_entity));
-            
+            var doc = new XmlDocument { PreserveWhitespace = true };
+            doc.LoadXml(Serialization.SerializeToXmlString(Entity));
+
             // Add the correct encoding to the head element.
-            if (doc.FirstChild is XmlDeclaration)            
-                ((XmlDeclaration) doc.FirstChild).Encoding = enc.WebName;
-            else            
+            if (doc.FirstChild is XmlDeclaration)
+            {
+                ((XmlDeclaration)doc.FirstChild).Encoding = enc.WebName;
+            }
+            else
+            {
                 doc.PrependChild(doc.CreateXmlDeclaration("1.0", enc.WebName, null));
-            
+            }
+
             if (Sign)
+            {
                 SignDocument(doc);
+            }
 
             return doc.OuterXml;
-        }        
+        }
 
+        #endregion
+
+        #region Private methods
+
+        /// <summary>
+        /// Gets the binding.
+        /// </summary>
+        /// <param name="samlBinding">The saml binding.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns>The binding.</returns>
+        private static string GetBinding(BindingType samlBinding, string defaultValue)
+        {
+            switch (samlBinding)
+            {
+                case BindingType.Artifact:
+                    return Saml20Constants.ProtocolBindings.HTTP_Artifact;
+                case BindingType.Post:
+                    return Saml20Constants.ProtocolBindings.HTTP_Post;
+                case BindingType.Redirect:
+                    return Saml20Constants.ProtocolBindings.HTTP_Redirect;
+                case BindingType.Soap:
+                    return Saml20Constants.ProtocolBindings.HTTP_SOAP;
+                case BindingType.NotSet:
+                    return defaultValue;
+                default:
+                    throw new ConfigurationErrorsException(String.Format("Unsupported SAML binding {0}", Enum.GetName(typeof(BindingType), samlBinding)));
+            }
+        }
+
+        /// <summary>
+        /// Gets the default entity instance.
+        /// </summary>
+        /// <returns>The default <see cref="EntityDescriptor"/>.</returns>
+        private static EntityDescriptor GetDefaultEntityInstance()
+        {
+            var result = new EntityDescriptor
+            {
+                ID = "id" + Guid.NewGuid().ToString("N")
+            };
+
+            return result;
+        }
+
+        /// <summary>
+        /// Signs the document.
+        /// </summary>
+        /// <param name="doc">The doc.</param>
         private static void SignDocument(XmlDocument doc)
         {
-            X509Certificate2 cert = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate();
-            
+            var cert = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate();
             if (!cert.HasPrivateKey)
+            {
                 throw new InvalidOperationException("Private key access to the signing certificate is required.");
+            }
 
-            SignedXml signedXml = new SignedXml(doc);
+            var signedXml = new SignedXml(doc);
             signedXml.SignedInfo.CanonicalizationMethod = SignedXml.XmlDsigExcC14NTransformUrl;
             signedXml.SigningKey = cert.PrivateKey;
 
-            // Retrieve the value of the "ID" attribute on the root assertion element.                        
-            Reference reference = new Reference("#" + doc.DocumentElement.GetAttribute("ID"));
+            // Retrieve the value of the "ID" attribute on the root assertion element.
+            var reference = new Reference("#" + doc.DocumentElement.GetAttribute("ID"));
 
             reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());
             reference.AddTransform(new XmlDsigExcC14NTransform());
@@ -625,28 +394,339 @@ namespace SAML2
             signedXml.KeyInfo.AddClause(new KeyInfoX509Data(cert, X509IncludeOption.WholeChain));
 
             signedXml.ComputeSignature();
-            // Append the computed signature. The signature must be placed as the sibling of the Issuer element.            
+            // Append the computed signature. The signature must be placed as the sibling of the Issuer element.
             doc.DocumentElement.InsertBefore(doc.ImportNode(signedXml.GetXml(), true), doc.DocumentElement.FirstChild);
         }    
-        
+
         /// <summary>
-        /// Creates a default entity in the 
+        /// Takes the Safewhere configuration class and converts it to a SAML2.0 metadata document.
         /// </summary>
-        /// <returns></returns>
-        public EntityDescriptor CreateDefaultEntity()
+        private void ConvertToMetadata(Saml2Section config, KeyInfo keyinfo)
         {
-            if (_entity != null)
-                throw new InvalidOperationException("An entity is already created in this document.");
-            _entity = GetDefaultEntityInstance();            
-            return _entity;
+            var entity = CreateDefaultEntity();
+            entity.EntityID = config.ServiceProvider.Id;
+            entity.ValidUntil = DateTime.Now.AddDays(7);
+
+            var spDescriptor = new SPSSODescriptor
+                                   {
+                                       ProtocolSupportEnumeration = new[] {Saml20Constants.PROTOCOL},
+                                       AuthnRequestsSigned = XmlConvert.ToString(true),
+                                       WantAssertionsSigned = XmlConvert.ToString(true)
+                                   };
+
+            if (config.ServiceProvider.NameIdFormats.Count > 0)
+            {
+                spDescriptor.NameIDFormat = new string[config.ServiceProvider.NameIdFormats.Count];
+                var count = 0;
+                foreach(var elem in config.ServiceProvider.NameIdFormats)
+                {
+                    spDescriptor.NameIDFormat[count++] = elem.Format;
+                }
+            }
+            
+            var baseUrl = new Uri(config.ServiceProvider.Server);
+            var logoutServiceEndpoints = new List<Endpoint>();
+            var signonServiceEndpoints = new List<IndexedEndpoint>();
+
+            var artifactResolutionEndpoints = new List<IndexedEndpoint>(2);
+
+            // Include endpoints.
+            foreach (var endpoint in config.ServiceProvider.Endpoints)
+            {
+                if (endpoint.Type == EndpointType.SignOn)
+                {
+                    var loginEndpoint = new IndexedEndpoint
+                                            {
+                                                Index = endpoint.Index,
+                                                IsDefault = true,
+                                                Location = new Uri(baseUrl, endpoint.LocalPath).ToString(),
+                                                Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HTTP_Post)
+                                            };
+                    signonServiceEndpoints.Add(loginEndpoint);
+
+                    var artifactSignonEndpoint = new IndexedEndpoint
+                                                     {
+                                                         Binding = Saml20Constants.ProtocolBindings.HTTP_SOAP,
+                                                         Index = loginEndpoint.Index,
+                                                         Location = loginEndpoint.Location
+                                                     };
+                    artifactResolutionEndpoints.Add(artifactSignonEndpoint);
+
+                    continue;
+                }
+
+                if (endpoint.Type == EndpointType.Logout)
+                {
+                    var logoutEndpoint = new Endpoint
+                                             {
+                                                 Location = new Uri(baseUrl, endpoint.LocalPath).ToString()
+                                             };
+                    logoutEndpoint.ResponseLocation = logoutEndpoint.Location;
+                    logoutEndpoint.Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HTTP_Post);
+                    logoutServiceEndpoints.Add(logoutEndpoint);
+
+                    // TODO: Look at this...
+                    logoutEndpoint = new Endpoint
+                                         {
+                                             Location = new Uri(baseUrl, endpoint.LocalPath).ToString()
+                                         };
+                    logoutEndpoint.ResponseLocation = logoutEndpoint.Location;
+                    logoutEndpoint.Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HTTP_Redirect);
+                    logoutServiceEndpoints.Add(logoutEndpoint);
+
+                    var artifactLogoutEndpoint = new IndexedEndpoint
+                                                     {
+                                                         Binding = Saml20Constants.ProtocolBindings.HTTP_SOAP,
+                                                         Index = endpoint.Index,
+                                                         Location = logoutEndpoint.Location
+                                                     };
+                    artifactResolutionEndpoints.Add(artifactLogoutEndpoint);
+                    
+                    continue;
+                }
+            }           
+
+            spDescriptor.SingleLogoutService = logoutServiceEndpoints.ToArray();
+            spDescriptor.AssertionConsumerService = signonServiceEndpoints.ToArray();
+            
+            // Attribute consuming service. 
+            if (config.RequestedAttributes.Count > 0)
+            {
+                var attConsumingService = new AttributeConsumingService();
+                spDescriptor.AttributeConsumingService = new[] { attConsumingService };
+                attConsumingService.Index = signonServiceEndpoints[0].Index;
+                attConsumingService.IsDefault = true;
+                attConsumingService.ServiceName = new[] { new LocalizedName("SP", "da") };
+
+                attConsumingService.RequestedAttribute = new RequestedAttribute[config.RequestedAttributes.Count];
+
+                for (var i = 0; i < config.RequestedAttributes.Count; i++)
+                {
+                    attConsumingService.RequestedAttribute[i] = new RequestedAttribute
+                                                                    {
+                                                                        Name = config.RequestedAttributes[i].Name
+                                                                    };
+                    if (config.RequestedAttributes[i].IsRequired)
+                    {
+                        attConsumingService.RequestedAttribute[i].IsRequired = true;
+                    }
+                    attConsumingService.RequestedAttribute[i].NameFormat = SamlAttribute.NameformatBasic;
+                }
+            }
+            else
+            {
+                spDescriptor.AttributeConsumingService = new AttributeConsumingService[0];
+            }
+
+            if (config.Metadata == null || !config.Metadata.ExcludeArtifactEndpoints)
+            {
+                spDescriptor.ArtifactResolutionService = artifactResolutionEndpoints.ToArray();
+            }
+
+            entity.Items = new object[] { spDescriptor };
+
+            // Keyinfo
+            var keySigning = new KeyDescriptor();
+            var keyEncryption = new KeyDescriptor();
+            spDescriptor.KeyDescriptor = new[] { keySigning, keyEncryption };
+            
+            keySigning.Use = KeyTypes.Signing;
+            keySigning.UseSpecified = true;
+
+            keyEncryption.Use = KeyTypes.Encryption;
+            keyEncryption.UseSpecified = true;
+                       
+            // Ugly conversion between the .Net framework classes and our classes ... avert your eyes!!
+            keySigning.KeyInfo = Serialization.DeserializeFromXmlString<Schema.XmlDSig.KeyInfo>(keyinfo.GetXml().OuterXml);            
+            keyEncryption.KeyInfo = keySigning.KeyInfo;
+
+            // apply the <Organization> element
+            if (config.ServiceProvider.Organization != null)
+            {
+                entity.Organization = new Organization
+                                          {
+                                              OrganizationName = new[] { new LocalizedName { Value = config.ServiceProvider.Organization.Name }},
+                                              OrganizationDisplayName = new[] { new LocalizedName { Value = config.ServiceProvider.Organization.DisplayName } },
+                                              OrganizationURL = new[] { new LocalizedURI { Value = config.ServiceProvider.Organization.Url }}
+                                          };
+            }
+
+            if (config.ServiceProvider.Contacts != null && config.ServiceProvider.Contacts.Count > 0)
+            {
+                entity.ContactPerson = config.ServiceProvider.Contacts.Select(x => new Contact
+                                                                                       {
+                                                                                           ContactType = (Schema.Metadata.ContactType)((int)x.Type),
+                                                                                           Company = x.Company,
+                                                                                           GivenName = x.GivenName,
+                                                                                           SurName = x.SurName,
+                                                                                           EmailAddress = new[] { x.Email },
+                                                                                           TelephoneNumber = new[] { x.Phone }
+                                                                                       }).ToArray();
+            }
         }
 
-        private static EntityDescriptor GetDefaultEntityInstance()
+        /// <summary>
+        /// Extracts the endpoints.
+        /// </summary>
+        private void ExtractEndpoints()
         {
-            EntityDescriptor result = new EntityDescriptor();
-            result.ID = "id" + Guid.NewGuid().ToString("N");
-            return result;
+            if (Entity != null)
+            {
+                _ssoEndpoints = new List<IdentityProviderEndpointElement>();
+                _sloEndpoints = new List<IdentityProviderEndpointElement>();
+                _arsEndpoints = new Dictionary<int, IndexedEndpoint>();
+                _assertionConsumerServiceEndpoints = new List<IdentityProviderEndpointElement>();
+                _attributeQueryEndpoints = new List<Endpoint>();
+
+                foreach (var item in Entity.Items)
+                {
+                    if (item is IDPSSODescriptor)
+                    {
+                        var descriptor = (IDPSSODescriptor)item;
+                        foreach (var endpoint in descriptor.SingleSignOnService)
+                        {
+                            BindingType binding;
+                            switch (endpoint.Binding)
+                            {
+                                case Saml20Constants.ProtocolBindings.HTTP_Post:
+                                    binding = BindingType.Post;
+                                    break;
+                                case Saml20Constants.ProtocolBindings.HTTP_Redirect:
+                                    binding = BindingType.Redirect;
+                                    break;
+                                case Saml20Constants.ProtocolBindings.HTTP_Artifact:
+                                    binding = BindingType.Artifact;
+                                    break;
+                                case Saml20Constants.ProtocolBindings.HTTP_SOAP:
+                                    binding = BindingType.Artifact;
+                                    break;
+                                default:
+                                    throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                            }
+                            _ssoEndpoints.Add(new IdentityProviderEndpointElement
+                            {
+                                Url = endpoint.Location,
+                                Binding = binding
+                            });
+                        }
+                    }
+
+                    if (item is SSODescriptor)
+                    {
+                        var descriptor = (SSODescriptor)item;
+
+                        if (descriptor.SingleLogoutService != null)
+                        {
+                            foreach (var endpoint in descriptor.SingleLogoutService)
+                            {
+                                BindingType binding;
+                                switch (endpoint.Binding)
+                                {
+                                    case Saml20Constants.ProtocolBindings.HTTP_Post:
+                                        binding = BindingType.Post;
+                                        break;
+                                    case Saml20Constants.ProtocolBindings.HTTP_Redirect:
+                                        binding = BindingType.Redirect;
+                                        break;
+                                    case Saml20Constants.ProtocolBindings.HTTP_Artifact:
+                                        binding = BindingType.Artifact;
+                                        break;
+                                    case Saml20Constants.ProtocolBindings.HTTP_SOAP:
+                                        binding = BindingType.Artifact;
+                                        break;
+                                    default:
+                                        throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                                }
+                                _sloEndpoints.Add(new IdentityProviderEndpointElement
+                                {
+                                    Url = endpoint.Location,
+                                    Binding = binding
+                                });
+                            }
+                        }
+
+                        if (descriptor.ArtifactResolutionService != null)
+                        {
+                            foreach (var ie in descriptor.ArtifactResolutionService)
+                            {
+                                _arsEndpoints.Add(ie.Index, ie);
+                            }
+                        }
+                    }
+
+                    if (item is SPSSODescriptor)
+                    {
+                        var descriptor = (SPSSODescriptor)item;
+                        foreach (var endpoint in descriptor.AssertionConsumerService)
+                        {
+                            BindingType binding;
+                            switch (endpoint.Binding)
+                            {
+                                case Saml20Constants.ProtocolBindings.HTTP_Post:
+                                    binding = BindingType.Post;
+                                    break;
+                                case Saml20Constants.ProtocolBindings.HTTP_Redirect:
+                                    binding = BindingType.Redirect;
+                                    break;
+                                case Saml20Constants.ProtocolBindings.HTTP_Artifact:
+                                    binding = BindingType.Artifact;
+                                    break;
+                                case Saml20Constants.ProtocolBindings.HTTP_SOAP:
+                                    binding = BindingType.Artifact;
+                                    break;
+                                default:
+                                    throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                            }
+                            _assertionConsumerServiceEndpoints.Add(new IdentityProviderEndpointElement
+                            {
+                                Url = endpoint.Location,
+                                Binding = binding
+                            });
+                        }
+                    }
+
+                    if (item is AttributeAuthorityDescriptor)
+                    {
+                        var aad = (AttributeAuthorityDescriptor)item;
+                        _attributeQueryEndpoints.AddRange(aad.AttributeService);
+                    }
+                }
+            }
         }
+
+
+        /// <summary>
+        /// Extract KeyDescriptors from the metadata document represented by this instance.
+        /// </summary>
+        private void ExtractKeyDescriptors()
+        {            
+            if (_keys != null || Entity == null)
+            {
+                return;
+            }
+
+            _keys = new List<KeyDescriptor>();
+            foreach (var keyDescriptor in Entity.Items.OfType<RoleDescriptor>().SelectMany(rd => rd.KeyDescriptor))
+            {
+                _keys.Add(keyDescriptor);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the key descriptors contained in the document
+        /// </summary>
+        /// <param name="doc">The doc.</param>
+        private void ExtractKeyDescriptors(XmlDocument doc)
+        {            
+            var list = doc.GetElementsByTagName(KeyDescriptor.ElementName, Saml20Constants.METADATA);
+            _keys = new List<KeyDescriptor>(list.Count);
+
+            foreach (XmlNode node in list)
+            {
+                _keys.Add(Serialization.DeserializeFromXmlString<KeyDescriptor>(node.OuterXml));
+            }                        
+        }
+
+        #endregion
     }
 }
- 
