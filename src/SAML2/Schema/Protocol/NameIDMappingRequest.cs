@@ -10,18 +10,15 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
     public class NameIDMappingRequest : RequestAbstract
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "NameIDMappingRequest";
+        public const string ElementName = "NameIDMappingRequest";
 
-        private object itemField;
-
-        private NameIDPolicy nameIDPolicyField;
-
+        #region Elements
 
         /// <summary>
         /// Gets or sets the item.
@@ -29,25 +26,19 @@ namespace SAML2.Schema.Protocol
         /// requester and the responder.
         /// </summary>
         /// <value>The item.</value>
-        [XmlElement("BaseID", typeof (BaseIDAbstract), Namespace=Saml20Constants.ASSERTION)]
-        [XmlElement("EncryptedID", typeof (EncryptedElement), Namespace=Saml20Constants.ASSERTION)]
-        [XmlElement("NameID", typeof (NameID), Namespace=Saml20Constants.ASSERTION)]
-        public object Item
-        {
-            get { return itemField; }
-            set { itemField = value; }
-        }
-
-
+        [XmlElement("BaseID", typeof (BaseIDAbstract), Namespace = Saml20Constants.ASSERTION)]
+        [XmlElement("EncryptedID", typeof (EncryptedElement), Namespace = Saml20Constants.ASSERTION)]
+        [XmlElement("NameID", typeof (NameID), Namespace = Saml20Constants.ASSERTION)]
+        public object Item { get; set; }
+        
         /// <summary>
         /// Gets or sets the name ID policy.
         /// The requirements regarding the format and optional name qualifier for the identifier to be returned
         /// </summary>
         /// <value>The name ID policy.</value>
-        public NameIDPolicy NameIDPolicy
-        {
-            get { return nameIDPolicyField; }
-            set { nameIDPolicyField = value; }
-        }
+        [XmlElement("NameIDPolicy")]
+        public NameIDPolicy NameIDPolicy { get; set; }
+
+        #endregion
     }
 }

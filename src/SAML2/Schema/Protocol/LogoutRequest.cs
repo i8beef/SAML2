@@ -11,83 +11,33 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
     public class LogoutRequest : RequestAbstract
     {
         /// <summary>
+        /// The XML Element name of this class
+        /// </summary>
+        public const string ElementName = "LogoutRequest";
+
+        /// <summary>
         /// Specifies that the message is being sent because the principal wishes to terminate the indicated session.
         /// </summary>
-        public const string REASON_USER = "urn:oasis:names:tc:SAML:2.0:logout:user";
+        public const string ReasonUser = "urn:oasis:names:tc:SAML:2.0:logout:user";
 
         /// <summary>
         /// Specifies that the message is being sent because an administrator wishes to terminate the indicated session for 
         /// the principal.
         /// </summary>
-        public const string REASON_ADMIN = "urn:oasis:names:tc:SAML:2.0:logout:admin";
-
-        /// <summary>
-        /// The XML Element name of this class
-        /// </summary>
-        public const string ELEMENT_NAME = "LogoutRequest";
-
-        private object itemField;
-
-        private DateTime? notOnOrAfterField;
-                
-        private string reasonField;
-        private string[] sessionIndexField;
-
-
-        /// <summary>
-        /// Gets or sets the item.
-        /// The identifier and associated attributes (in plaintext or encrypted form) that specify the principal as
-        /// currently recognized by the identity and service providers prior to this request.
-        /// </summary>
-        /// <value>The item.</value>
-        [XmlElement("BaseID", typeof (BaseIDAbstract), Namespace=Saml20Constants.ASSERTION)]
-        [XmlElement("EncryptedID", typeof (EncryptedElement), Namespace=Saml20Constants.ASSERTION)]
-        [XmlElement("NameID", typeof (NameID), Namespace=Saml20Constants.ASSERTION)]
-        public object Item
-        {
-            get { return itemField; }
-            set { itemField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the index of the session.
-        /// </summary>
-        /// <value>The index of the session.</value>
-        [XmlElement("SessionIndex")]
-        public string[] SessionIndex
-        {
-            get { return sessionIndexField; }
-            set { sessionIndexField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the reason.
-        /// </summary>
-        /// <value>The reason.</value>
-        [XmlAttribute]
-        public string Reason
-        {
-            get { return reasonField; }
-            set { reasonField = value; }
-        }
-
+        public const string ReasonAdmin = "urn:oasis:names:tc:SAML:2.0:logout:admin";
 
         /// <summary>
         /// Gets or sets NotOnOrAfter.
         /// </summary>
         /// <value>The not on or after.</value>
         [XmlIgnore]
-        public DateTime? NotOnOrAfter
-        {
-            get { return notOnOrAfterField; }
-            set { notOnOrAfterField = value; }
-        }
+        public DateTime? NotOnOrAfter { get; set; }
+
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the issue instant string.
@@ -96,22 +46,39 @@ namespace SAML2.Schema.Protocol
         [XmlAttribute("NotOnOrAfter")]
         public string NotOnOrAfterString
         {
-            get
-            {
-                if (notOnOrAfterField.HasValue)
-                    return Saml20Utils.ToUtcString(notOnOrAfterField.Value);
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                    notOnOrAfterField = null;
-                else
-                    notOnOrAfterField = Saml20Utils.FromUtcString(value);
-            }
+            get { return NotOnOrAfter.HasValue ? Saml20Utils.ToUtcString(NotOnOrAfter.Value) : null; }
+            set { NotOnOrAfter = string.IsNullOrEmpty(value) ? (DateTime?)null : Saml20Utils.FromUtcString(value); }
         }
+
+        /// <summary>
+        /// Gets or sets the reason.
+        /// </summary>
+        /// <value>The reason.</value>
+        [XmlAttribute("Reason")]
+        public string Reason { get; set; }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the item.
+        /// The identifier and associated attributes (in plaintext or encrypted form) that specify the principal as
+        /// currently recognized by the identity and service providers prior to this request.
+        /// </summary>
+        /// <value>The item.</value>
+        [XmlElement("BaseID", typeof (BaseIDAbstract), Namespace = Saml20Constants.ASSERTION)]
+        [XmlElement("EncryptedID", typeof (EncryptedElement), Namespace = Saml20Constants.ASSERTION)]
+        [XmlElement("NameID", typeof (NameID), Namespace = Saml20Constants.ASSERTION)]
+        public object Item { get; set; }
+
+        /// <summary>
+        /// Gets or sets the index of the session.
+        /// </summary>
+        /// <value>The index of the session.</value>
+        [XmlElement("SessionIndex")]
+        public string[] SessionIndex { get; set; }
+
+        #endregion
     }
 }

@@ -9,51 +9,22 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
     public class RequestedAuthnContext
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "RequestedAuthnContext";
-
-        private AuthnContextComparisonType comparisonField;
-
-        private bool comparisonFieldSpecified;
-        private ItemsChoiceType7[] itemsElementNameField;
-        private string[] itemsField;
-
+        public const string ElementName = "RequestedAuthnContext";
 
         /// <summary>
-        /// Gets or sets the items.
-        /// Specifies one or more URI references identifying authentication context classes or declarations.
+        /// Gets or sets a value indicating whether [comparison specified].
         /// </summary>
-        /// <value>The items.</value>
-        [XmlElement("AuthnContextClassRef", typeof (string), Namespace=Saml20Constants.ASSERTION,
-            DataType="anyURI")]
-        [XmlElement("AuthnContextDeclRef", typeof (string), Namespace=Saml20Constants.ASSERTION,
-            DataType="anyURI")]
-        [XmlChoiceIdentifier("ItemsElementName")]
-        public string[] Items
-        {
-            get { return itemsField; }
-            set { itemsField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the name of the items element.
-        /// </summary>
-        /// <value>The name of the items element.</value>
-        [XmlElement("ItemsElementName")]
+        /// <value><c>true</c> if [comparison specified]; otherwise, <c>false</c>.</value>
         [XmlIgnore]
-        public ItemsChoiceType7[] ItemsElementName
-        {
-            get { return itemsElementNameField; }
-            set { itemsElementNameField = value; }
-        }
+        public bool ComparisonSpecified { get; set; }
 
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the comparison.
@@ -72,23 +43,31 @@ namespace SAML2.Schema.Protocol
         /// of at least one of the authentication contexts specified.
         /// </summary>
         /// <value>The comparison.</value>
-        [XmlAttribute]
-        public AuthnContextComparisonType Comparison
-        {
-            get { return comparisonField; }
-            set { comparisonField = value; }
-        }
+        [XmlAttribute("Comparison")]
+        public AuthnContextComparisonType Comparison { get; set; }
 
+        #endregion
+
+        #region Elements
 
         /// <summary>
-        /// Gets or sets a value indicating whether [comparison specified].
+        /// Gets or sets the items.
+        /// Specifies one or more URI references identifying authentication context classes or declarations.
         /// </summary>
-        /// <value><c>true</c> if [comparison specified]; otherwise, <c>false</c>.</value>
+        /// <value>The items.</value>
+        [XmlElement("AuthnContextClassRef", typeof (string), Namespace = Saml20Constants.ASSERTION, DataType = "anyURI")]
+        [XmlElement("AuthnContextDeclRef", typeof (string), Namespace = Saml20Constants.ASSERTION, DataType = "anyURI")]
+        [XmlChoiceIdentifier("ItemsElementName")]
+        public string[] Items { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the items element.
+        /// </summary>
+        /// <value>The name of the items element.</value>
+        [XmlElement("ItemsElementName")]
         [XmlIgnore]
-        public bool ComparisonSpecified
-        {
-            get { return comparisonFieldSpecified; }
-            set { comparisonFieldSpecified = value; }
-        }
+        public AuthnContextType[] ItemsElementName { get; set; }
+
+        #endregion
     }
 }

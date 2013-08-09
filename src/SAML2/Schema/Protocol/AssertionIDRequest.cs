@@ -11,25 +11,23 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
     public class AssertionIDRequest : RequestAbstract
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "AssertionIDRequest";
+        public const string ElementName = "AssertionIDRequest";
 
-        private string[] assertionIDRefField;
+        #region Elements
 
         /// <summary>
         /// Gets or sets the assertion ID ref.
         /// </summary>
         /// <value>The assertion ID ref.</value>
         [XmlElement("AssertionIDRef", Namespace=Saml20Constants.ASSERTION, DataType="NCName")]
-        public string[] AssertionIDRef
-        {
-            get { return assertionIDRefField; }
-            set { assertionIDRefField = value; }
-        }
+        public string[] AssertionIDRef { get; set; }
+
+        #endregion
     }
 }

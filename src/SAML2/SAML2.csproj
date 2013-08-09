@@ -200,12 +200,13 @@
     <Compile Include="Schema\Protocol\ArtifactResponse.cs" />
     <Compile Include="Schema\Protocol\AssertionIDRequest.cs" />
     <Compile Include="Schema\Protocol\AttributeQuery.cs" />
+    <Compile Include="Schema\Protocol\AuthnContextComparisonType.cs" />
     <Compile Include="Schema\Protocol\AuthnQuery.cs" />
     <Compile Include="Schema\Protocol\AuthnRequest.cs" />
     <Compile Include="Schema\Protocol\AuthzDecisionQuery.cs" />
     <Compile Include="Schema\Protocol\EncryptedAssertion.cs" />
     <Compile Include="Schema\Protocol\EncryptedElement.cs" />
-    <Compile Include="Schema\Protocol\Enums.cs" />
+    <Compile Include="Schema\Protocol\AuthnContextType.cs" />
     <Compile Include="Schema\Protocol\Extensions.cs" />
     <Compile Include="Schema\Protocol\IDPEntry.cs" />
     <Compile Include="Schema\Protocol\IDPList.cs" />

@@ -11,16 +11,15 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
     public class ArtifactResolve : RequestAbstract
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "ArtifactResolve";
+        public const string ElementName = "ArtifactResolve";
 
-        private string artifactField;
+        #region Elements
 
         /// <summary>
         /// Gets or sets the artifact.
@@ -28,10 +27,9 @@ namespace SAML2.Schema.Protocol
         /// represents. See [SAMLBind] for specific artifact format information.
         /// </summary>
         /// <value>The artifact.</value>
-        public string Artifact
-        {
-            get { return artifactField; }
-            set { artifactField = value; }
-        }
+        [XmlElement("Artifact")]
+        public string Artifact { get; set; }
+
+        #endregion
     }
 }

@@ -2,6 +2,7 @@ using System;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
+using AuthnContextType = SAML2.Schema.Core.AuthnContextType;
 using my = SAML2.Schema.Core;
 
 namespace SAML2.Validation

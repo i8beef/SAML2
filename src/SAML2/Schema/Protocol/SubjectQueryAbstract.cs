@@ -13,26 +13,23 @@ namespace SAML2.Schema.Protocol
     [XmlInclude(typeof (AuthnQuery))]
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.PROTOCOL, IsNullable = false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.PROTOCOL, IsNullable = false)]
     public abstract class SubjectQueryAbstract : RequestAbstract
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "SubjectQuery";
+        public const string ElementName = "SubjectQuery";
 
-        private Subject subjectField;
-        
+        #region Elements
+
         /// <summary>
         /// Gets or sets the subject.
         /// </summary>
         /// <value>The subject.</value>
-        [XmlElement(Namespace=Saml20Constants.ASSERTION)]
-        public Subject Subject
-        {
-            get { return subjectField; }
-            set { subjectField = value; }
-        }
+        [XmlElement("Subject", Namespace=Saml20Constants.ASSERTION)]
+        public Subject Subject { get; set; }
+
+        #endregion
     }
 }

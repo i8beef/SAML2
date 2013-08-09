@@ -14,6 +14,7 @@ using SAML2.Validation;
 using NUnit.Framework;
 using Action = SAML2.Schema.Core.Action;
 using Assertion=SAML2.Schema.Core.Assertion;
+using AuthnContextType = SAML2.Schema.Core.AuthnContextType;
 
 namespace SAML2.Tests.Saml20
 {
@@ -1426,8 +1427,8 @@ namespace SAML2.Tests.Saml20
                 (AttributeStatement)statements.Find(delegate(StatementAbstract ssa) { return ssa is AttributeStatement; });
             List<object> attributes = new List<object>(sas.Items);
             EncryptedElement ee = new EncryptedElement();
-            ee.encryptedData = new EncryptedData();
-            ee.encryptedData.Type = "SomeWrongType";
+            ee.EncryptedData = new EncryptedData();
+            ee.EncryptedData.Type = "SomeWrongType";
             attributes.Add(ee);
             sas.Items = attributes.ToArray();
             saml20Assertion.Items = statements.ToArray();

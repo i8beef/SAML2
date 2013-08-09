@@ -17,128 +17,13 @@ namespace SAML2.Schema.Protocol
     [XmlInclude(typeof (Response))]
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.PROTOCOL, IsNullable = false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.PROTOCOL, IsNullable = false)]
     public class StatusResponse
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "ManageNameIDResponse";
-
-        private string consentField;
-        private string destinationField;
-        private Extensions extensionsField;
-
-        private string idField;
-
-        private string inResponseToField;
-
-        private DateTime? issueInstantField;
-        private NameID issuerField;
-
-        private Signature signatureField;
-        private Status statusField;
-        private string versionField;
-
-
-        /// <summary>
-        /// Gets or sets the issuer.
-        /// Identifies the entity that generated the response message.
-        /// </summary>
-        /// <value>The issuer.</value>
-        [XmlElement(Namespace=Saml20Constants.ASSERTION, Form = XmlSchemaForm.Qualified)]
-        public NameID Issuer
-        {
-            get { return issuerField; }
-            set { issuerField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the signature.
-        /// An XML Signature that authenticates the responder and provides message integrity
-        /// </summary>
-        /// <value>The signature.</value>
-        [XmlElement(Namespace="http://www.w3.org/2000/09/xmldsig#")]
-        public Signature Signature
-        {
-            get { return signatureField; }
-            set { signatureField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the extensions.
-        /// This extension point contains optional protocol message extension elements that are agreed on
-        /// between the communicating parties. . No extension schema is required in order to make use of this
-        /// extension point, and even if one is provided, the lax validation setting does not impose a requirement
-        /// for the extension to be valid. SAML extension elements MUST be namespace-qualified in a non-
-        /// SAML-defined namespace.
-        /// </summary>
-        /// <value>The extensions.</value>
-        public Extensions Extensions
-        {
-            get { return extensionsField; }
-            set { extensionsField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the status.
-        /// A code representing the status of the corresponding request
-        /// </summary>
-        /// <value>The status.</value>
-        public Status Status
-        {
-            get { return statusField; }
-            set { statusField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the ID.
-        /// An identifier for the response. It is of type xs:ID, and MUST follow the requirements specified in
-        /// Section 1.3.4 for identifier uniqueness.
-        /// </summary>
-        /// <value>The ID.</value>
-        [XmlAttribute(DataType="ID")]
-        public string ID
-        {
-            get { return idField; }
-            set { idField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the in response to.
-        /// A reference to the identifier of the request to which the response corresponds, if any. If the response
-        /// is not generated in response to a request, or if the ID attribute value of a request cannot be
-        /// determined (for example, the request is malformed), then this attribute MUST NOT be present.
-        /// Otherwise, it MUST be present and its value MUST match the value of the corresponding request's
-        /// ID attribute.
-        /// </summary>
-        /// <value>The in response to.</value>
-        [XmlAttribute(DataType="NCName")]
-        public string InResponseTo
-        {
-            get { return inResponseToField; }
-            set { inResponseToField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the version.
-        /// The version of this response. The identifier for the version of SAML defined in this specification is "2.0".
-        /// </summary>
-        /// <value>The version.</value>
-        [XmlAttribute]
-        public string Version
-        {
-            get { return versionField; }
-            set { versionField = value; }
-        }
-
+        public const string ElementName = "ManageNameIDResponse";
 
         /// <summary>
         /// Gets or sets the issue instant.
@@ -146,53 +31,9 @@ namespace SAML2.Schema.Protocol
         /// </summary>
         /// <value>The issue instant.</value>
         [XmlIgnore]
-        public DateTime? IssueInstant
-        {
-            get { return issueInstantField; }
-            set { issueInstantField = value; }
-        }
+        public DateTime? IssueInstant { get; set; }
 
-        /// <summary>
-        /// Gets or sets the issue instant string.
-        /// </summary>
-        /// <value>The issue instant string.</value>
-        [XmlAttribute("IssueInstant")]
-        public string IssueInstantString
-        {
-            get 
-            {
-                if (issueInstantField.HasValue)
-                    return Saml20Utils.ToUtcString(issueInstantField.Value);
-                else
-                    return null;
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                    issueInstantField = null;
-                else
-                    issueInstantField = Saml20Utils.FromUtcString(value);
-                
-            }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the destination.
-        /// A URI reference indicating the address to which this response has been sent. This is useful to prevent
-        /// malicious forwarding of responses to unintended recipients, a protection that is required by some
-        /// protocol bindings. If it is present, the actual recipient MUST check that the URI reference identifies the
-        /// location at which the message was received. If it does not, the response MUST be discarded. Some
-        /// protocol bindings may require the use of this attribute (see [SAMLBind]).
-        /// </summary>
-        /// <value>The destination.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Destination
-        {
-            get { return destinationField; }
-            set { destinationField = value; }
-        }
-
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the consent.
@@ -203,11 +44,101 @@ namespace SAML2.Schema.Protocol
         /// effect.
         /// </summary>
         /// <value>The consent.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Consent
+        [XmlAttribute("Consent", DataType = "anyURI")]
+        public string Consent { get; set; }
+
+        /// <summary>
+        /// Gets or sets the destination.
+        /// A URI reference indicating the address to which this response has been sent. This is useful to prevent
+        /// malicious forwarding of responses to unintended recipients, a protection that is required by some
+        /// protocol bindings. If it is present, the actual recipient MUST check that the URI reference identifies the
+        /// location at which the message was received. If it does not, the response MUST be discarded. Some
+        /// protocol bindings may require the use of this attribute (see [SAMLBind]).
+        /// </summary>
+        /// <value>The destination.</value>
+        [XmlAttribute("Destination", DataType = "anyURI")]
+        public string Destination { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ID.
+        /// An identifier for the response. It is of type xs:ID, and MUST follow the requirements specified in
+        /// Section 1.3.4 for identifier uniqueness.
+        /// </summary>
+        /// <value>The ID.</value>
+        [XmlAttribute("ID", DataType = "ID")]
+        public string ID { get; set; }
+
+        /// <summary>
+        /// Gets or sets the in response to.
+        /// A reference to the identifier of the request to which the response corresponds, if any. If the response
+        /// is not generated in response to a request, or if the ID attribute value of a request cannot be
+        /// determined (for example, the request is malformed), then this attribute MUST NOT be present.
+        /// Otherwise, it MUST be present and its value MUST match the value of the corresponding request's
+        /// ID attribute.
+        /// </summary>
+        /// <value>The in response to.</value>
+        [XmlAttribute("InResponseTo", DataType = "NCName")]
+        public string InResponseTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets the issue instant string.
+        /// </summary>
+        /// <value>The issue instant string.</value>
+        [XmlAttribute("IssueInstant")]
+        public string IssueInstantString
         {
-            get { return consentField; }
-            set { consentField = value; }
+            get { return IssueInstant.HasValue ? Saml20Utils.ToUtcString(IssueInstant.Value) : null; }
+            set { IssueInstant = string.IsNullOrEmpty(value) ? (DateTime?)null : Saml20Utils.FromUtcString(value); }
         }
+
+        /// <summary>
+        /// Gets or sets the version.
+        /// The version of this response. The identifier for the version of SAML defined in this specification is "2.0".
+        /// </summary>
+        /// <value>The version.</value>
+        [XmlAttribute]
+        public string Version { get; set; }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the extensions.
+        /// This extension point contains optional protocol message extension elements that are agreed on
+        /// between the communicating parties. . No extension schema is required in order to make use of this
+        /// extension point, and even if one is provided, the lax validation setting does not impose a requirement
+        /// for the extension to be valid. SAML extension elements MUST be namespace-qualified in a non-
+        /// SAML-defined namespace.
+        /// </summary>
+        /// <value>The extensions.</value>
+        [XmlElement("Extensions")]
+        public Extensions Extensions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the issuer.
+        /// Identifies the entity that generated the response message.
+        /// </summary>
+        /// <value>The issuer.</value>
+        [XmlElement("Issuer", Namespace = Saml20Constants.ASSERTION, Form = XmlSchemaForm.Qualified)]
+        public NameID Issuer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the signature.
+        /// An XML Signature that authenticates the responder and provides message integrity
+        /// </summary>
+        /// <value>The signature.</value>
+        [XmlElement("Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#")]
+        public Signature Signature { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status.
+        /// A code representing the status of the corresponding request
+        /// </summary>
+        /// <value>The status.</value>
+        [XmlElement("Status")]
+        public Status Status { get; set; }
+
+        #endregion
     }
 }

@@ -10,32 +10,15 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.PROTOCOL, IsNullable = false)]
     public class AuthnQuery : SubjectQueryAbstract
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ELEMENT_NAME = "AuthnQuery";
+        public new const string ElementName = "AuthnQuery";
 
-        private RequestedAuthnContext requestedAuthnContextField;
-
-        private string sessionIndexField;
-
-
-        /// <summary>
-        /// Gets or sets the requested authn context.
-        /// If present, specifies a filter for possible responses. Such a query asks the question "What assertions
-        /// containing authentication statements do you have for this subject that satisfy the authentication
-        /// context requirements in this element?"
-        /// </summary>
-        /// <value>The requested authn context.</value>
-        public RequestedAuthnContext RequestedAuthnContext
-        {
-            get { return requestedAuthnContextField; }
-            set { requestedAuthnContextField = value; }
-        }
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the index of the session.
@@ -45,10 +28,22 @@ namespace SAML2.Schema.Protocol
         /// </summary>
         /// <value>The index of the session.</value>
         [XmlAttribute]
-        public string SessionIndex
-        {
-            get { return sessionIndexField; }
-            set { sessionIndexField = value; }
-        }
+        public string SessionIndex { get; set; }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the requested authn context.
+        /// If present, specifies a filter for possible responses. Such a query asks the question "What assertions
+        /// containing authentication statements do you have for this subject that satisfy the authentication
+        /// context requirements in this element?"
+        /// </summary>
+        /// <value>The requested authn context.</value>
+        [XmlElement("RequestedAuthnContext")]
+        public RequestedAuthnContext RequestedAuthnContext { get; set; }
+
+        #endregion
     }
 }

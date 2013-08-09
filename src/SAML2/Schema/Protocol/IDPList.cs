@@ -11,17 +11,15 @@ namespace SAML2.Schema.Protocol
     [GeneratedCode("xsd", "2.0.50727.42")]
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
     public class IDPList
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "IDPList";
+        public const string ElementName = "IDPList";
 
-        private string getCompleteField;
-        private IDPEntry[] iDPEntryField;
+        #region Elements
 
         /// <summary>
         /// Gets or sets the IDP entry.
@@ -29,11 +27,7 @@ namespace SAML2.Schema.Protocol
         /// </summary>
         /// <value>The IDP entry.</value>
         [XmlElement("IDPEntry")]
-        public IDPEntry[] IDPEntry
-        {
-            get { return iDPEntryField; }
-            set { iDPEntryField = value; }
-        }
+        public IDPEntry[] IDPEntry { get; set; }
 
         /// <summary>
         /// Gets or sets the get complete.
@@ -43,11 +37,9 @@ namespace SAML2.Schema.Protocol
         /// element.
         /// </summary>
         /// <value>The get complete.</value>
-        [XmlElement(DataType="anyURI")]
-        public string GetComplete
-        {
-            get { return getCompleteField; }
-            set { getCompleteField = value; }
-        }
+        [XmlElement("GetComplete", DataType="anyURI")]
+        public string GetComplete { get; set; }
+
+        #endregion
     }
 }

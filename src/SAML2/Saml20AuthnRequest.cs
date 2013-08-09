@@ -6,6 +6,7 @@ using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
 using Saml2.Properties;
+using AuthnContextType = SAML2.Schema.Protocol.AuthnContextType;
 
 namespace SAML2
 {
@@ -224,19 +225,19 @@ namespace SAML2
                 switch (config.ServiceProvider.AuthenticationContexts.Comparison)
                 {
                     case AuthenticationContextComparison.Better:
-                        result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.better;
+                        result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.Better;
                         result.RequestedAuthnContext.ComparisonSpecified = true;
                         break;
                     case AuthenticationContextComparison.Minimum:
-                        result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.minimum;
+                        result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.Minimum;
                         result.RequestedAuthnContext.ComparisonSpecified = true;
                         break;
                     case AuthenticationContextComparison.Maximum:
-                        result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.maximum;
+                        result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.Maximum;
                         result.RequestedAuthnContext.ComparisonSpecified = true;
                         break;
                     case AuthenticationContextComparison.Exact:
-                        result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.exact;
+                        result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.Exact;
                         result.RequestedAuthnContext.ComparisonSpecified = true;
                         break;
                     default:
@@ -245,7 +246,7 @@ namespace SAML2
                 }
 
                 result.RequestedAuthnContext.Items = new string[config.ServiceProvider.AuthenticationContexts.Count];
-                result.RequestedAuthnContext.ItemsElementName = new ItemsChoiceType7[config.ServiceProvider.AuthenticationContexts.Count];
+                result.RequestedAuthnContext.ItemsElementName = new AuthnContextType[config.ServiceProvider.AuthenticationContexts.Count];
                 int count = 0;
                 foreach (var authenticationContext in config.ServiceProvider.AuthenticationContexts)
                 {
@@ -254,10 +255,10 @@ namespace SAML2
                     switch (authenticationContext.ReferenceType)
                     {
                         case "AuthnContextDeclRef":
-                            result.RequestedAuthnContext.ItemsElementName[count] = ItemsChoiceType7.AuthnContextDeclRef;
+                            result.RequestedAuthnContext.ItemsElementName[count] = AuthnContextType.AuthnContextDeclRef;
                             break;
                         default:
-                            result.RequestedAuthnContext.ItemsElementName[count] = ItemsChoiceType7.AuthnContextClassRef;
+                            result.RequestedAuthnContext.ItemsElementName[count] = AuthnContextType.AuthnContextClassRef;
                             break;
                     }
                     count++;

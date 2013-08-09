@@ -9,12 +9,12 @@ namespace SAML2.Validation
         {
             if (encryptedElement == null) throw new ArgumentNullException("encryptedElement");
 
-            if (encryptedElement.encryptedData == null)
+            if (encryptedElement.EncryptedData == null)
                 throw new Saml20FormatException(String.Format("An {0} MUST contain an xenc:EncryptedData element", parentNodeName));
 
-            if (encryptedElement.encryptedData.Type != null
-                && !String.IsNullOrEmpty(encryptedElement.encryptedData.Type)
-                && encryptedElement.encryptedData.Type != Saml20Constants.XENC + "Element")
+            if (encryptedElement.EncryptedData.Type != null
+                && !String.IsNullOrEmpty(encryptedElement.EncryptedData.Type)
+                && encryptedElement.EncryptedData.Type != Saml20Constants.XENC + "Element")
                 throw new Saml20FormatException(String.Format("Type attribute of EncryptedData MUST have value {0} if it is present", Saml20Constants.XENC + "Element"));
             
         }

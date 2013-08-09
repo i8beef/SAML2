@@ -10,16 +10,15 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.PROTOCOL, IsNullable = false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.PROTOCOL, IsNullable = false)]
     public class NameIDMappingResponse : StatusResponse
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ELEMENT_NAME = "NameIDMappingResponse";
+        public new const string ElementName = "NameIDMappingResponse";
 
-        private object itemField;
-
+        #region Elements
 
         /// <summary>
         /// Gets or sets the item.
@@ -27,12 +26,10 @@ namespace SAML2.Schema.Protocol
         /// encrypted form
         /// </summary>
         /// <value>The item.</value>
-        [XmlElement("EncryptedID", typeof (EncryptedElement), Namespace=Saml20Constants.ASSERTION)]
-        [XmlElement("NameID", typeof (NameID), Namespace=Saml20Constants.ASSERTION)]
-        public object Item
-        {
-            get { return itemField; }
-            set { itemField = value; }
-        }
+        [XmlElement("EncryptedID", typeof (EncryptedElement), Namespace = Saml20Constants.ASSERTION)]
+        [XmlElement("NameID", typeof (NameID), Namespace = Saml20Constants.ASSERTION)]
+        public object Item { get; set; }
+
+        #endregion
     }
 }

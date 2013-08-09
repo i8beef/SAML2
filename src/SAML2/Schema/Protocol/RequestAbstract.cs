@@ -24,126 +24,24 @@ namespace SAML2.Schema.Protocol
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
     public abstract class RequestAbstract
     {
-        private string consentField;
-        private string destinationField;
-        private Extensions extensionsField;
-
-        private string idField;
-
-        private DateTime? issueInstantField;
-        private NameID issuerField;
-
-        private Signature signatureField;
-        private string versionField;
-
-
-        /// <summary>
-        /// Gets or sets the issuer.
-        /// Identifies the entity that generated the request message.
-        /// </summary>
-        /// <value>The issuer.</value>
-        [XmlElement(Namespace=Saml20Constants.ASSERTION)]
-        public NameID Issuer
-        {
-            get { return issuerField; }
-            set { issuerField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the signature.
-        /// An XML Signature that authenticates the requester and provides message integrity
-        /// </summary>
-        /// <value>The signature.</value>
-        [XmlElement(Namespace="http://www.w3.org/2000/09/xmldsig#")]
-        public Signature Signature
-        {
-            get { return signatureField; }
-            set { signatureField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the extensions.
-        /// This extension point contains optional protocol message extension elements that are agreed on
-        /// between the communicating parties. No extension schema is required in order to make use of this
-        /// extension point, and even if one is provided, the lax validation setting does not impose a requirement
-        /// for the extension to be valid. SAML extension elements MUST be namespace-qualified in a non-
-        /// SAML-defined namespace
-        /// </summary>
-        /// <value>The extensions.</value>
-        public Extensions Extensions
-        {
-            get { return extensionsField; }
-            set { extensionsField = value; }
-        }
-
-
-        /// <summary>
-        /// An identifier for the request. It is of type xs:ID and MUST follow the requirements specified in Section
-        /// 1.3.4 for identifier uniqueness. The values of the ID attribute in a request and the InResponseTo
-        /// attribute in the corresponding response MUST match.
-        /// Gets or sets the ID.
-        /// </summary>
-        /// <value>The ID.</value>
-        [XmlAttribute(DataType="ID")]
-        public string ID
-        {
-            get { return idField; }
-            set { idField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the version.
-        /// The version of this request. The identifier for the version of SAML defined in this specification is "2.0".
-        /// </summary>
-        /// <value>The version.</value>
-        [XmlAttribute]
-        public string Version
-        {
-            get { return versionField; }
-            set { versionField = value; }
-        }
-
-
         /// <summary>
         /// Gets or sets the issue instant.
         /// The time instant of issue of the request.
         /// </summary>
         /// <value>The issue instant.</value>
         [XmlIgnore]
-        public DateTime? IssueInstant
-        {
-            get { return issueInstantField; }
-            set { issueInstantField = value; }
-        }
+        public DateTime? IssueInstant { get; set; }
 
+        #region Attributes
+        
         /// <summary>
-        /// Gets or sets the issue instant string.
+        /// Gets or sets the consent.
+        /// Indicates whether or not (and under what conditions) consent has been obtained from a principal in
+        /// the sending of this request.
         /// </summary>
-        /// <value>The issue instant string.</value>
-        [XmlAttribute("IssueInstant")]
-        public string IssueInstantString
-        {
-            get 
-            {
-                if (issueInstantField.HasValue)
-                    return Saml20Utils.ToUtcString(issueInstantField.Value);
-                else
-                {
-                    return null;
-                }
-            }
-            set 
-            {
-                if (string.IsNullOrEmpty(value))
-                    issueInstantField = null;
-                else
-                    issueInstantField = Saml20Utils.FromUtcString(value);
-            }
-        }
-
+        /// <value>The consent.</value>
+        [XmlAttribute("Consent", DataType = "anyURI")]
+        public string Consent { get; set; }
 
         /// <summary>
         /// Gets or sets the destination.
@@ -154,25 +52,70 @@ namespace SAML2.Schema.Protocol
         /// protocol bindings may require the use of this attribute (see [SAMLBind]).
         /// </summary>
         /// <value>The destination.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Destination
-        {
-            get { return destinationField; }
-            set { destinationField = value; }
-        }
-
+        [XmlAttribute("Destination", DataType = "anyURI")]
+        public string Destination { get; set; }
 
         /// <summary>
-        /// Gets or sets the consent.
-        /// Indicates whether or not (and under what conditions) consent has been obtained from a principal in
-        /// the sending of this request.
+        /// An identifier for the request. It is of type xs:ID and MUST follow the requirements specified in Section
+        /// 1.3.4 for identifier uniqueness. The values of the ID attribute in a request and the InResponseTo
+        /// attribute in the corresponding response MUST match.
+        /// Gets or sets the ID.
         /// </summary>
-        /// <value>The consent.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Consent
+        /// <value>The ID.</value>
+        [XmlAttribute("ID", DataType = "ID")]
+        public string ID { get; set; }
+
+        /// <summary>
+        /// Gets or sets the issue instant string.
+        /// </summary>
+        /// <value>The issue instant string.</value>
+        [XmlAttribute("IssueInstant")]
+        public string IssueInstantString
         {
-            get { return consentField; }
-            set { consentField = value; }
+            get { return IssueInstant.HasValue ? Saml20Utils.ToUtcString(IssueInstant.Value) : null; }
+            set { IssueInstant = string.IsNullOrEmpty(value) ? (DateTime?)null : Saml20Utils.FromUtcString(value); }
         }
+
+        /// <summary>
+        /// Gets or sets the version.
+        /// The version of this request. The identifier for the version of SAML defined in this specification is "2.0".
+        /// </summary>
+        /// <value>The version.</value>
+        [XmlAttribute("Version")]
+        public string Version { get; set; }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the extensions.
+        /// This extension point contains optional protocol message extension elements that are agreed on
+        /// between the communicating parties. No extension schema is required in order to make use of this
+        /// extension point, and even if one is provided, the lax validation setting does not impose a requirement
+        /// for the extension to be valid. SAML extension elements MUST be namespace-qualified in a non-
+        /// SAML-defined namespace
+        /// </summary>
+        /// <value>The extensions.</value>
+        [XmlElement("Extensions")]
+        public Extensions Extensions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the issuer.
+        /// Identifies the entity that generated the request message.
+        /// </summary>
+        /// <value>The issuer.</value>
+        [XmlElement("Issuer", Namespace=Saml20Constants.ASSERTION)]
+        public NameID Issuer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the signature.
+        /// An XML Signature that authenticates the requester and provides message integrity
+        /// </summary>
+        /// <value>The signature.</value>
+        [XmlElement("Signature", Namespace="http://www.w3.org/2000/09/xmldsig#")]
+        public Signature Signature { get; set; }
+
+        #endregion
     }
 }

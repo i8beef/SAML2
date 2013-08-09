@@ -20,113 +20,32 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
     public class AuthnRequest : RequestAbstract
     {
 
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "AuthnRequest";
-
-        private ushort assertionConsumerServiceIndexField;
-
-        private bool assertionConsumerServiceIndexFieldSpecified;
-
-        private string assertionConsumerServiceURLField;
-
-        private ushort attributeConsumingServiceIndexField;
-
-        private bool attributeConsumingServiceIndexFieldSpecified;
-        private Conditions conditionsField;
-
-        private bool? forceAuthnField;
-
-        private bool? isPassiveField;
-
-        private NameIDPolicy nameIDPolicyField;
-
-        private string protocolBindingField;
-
-        private string providerNameField;
-        private RequestedAuthnContext requestedAuthnContextField;
-
-        private Scoping scopingField;
-        private Subject subjectField;
-
+        public const string ElementName = "AuthnRequest";
 
         /// <summary>
-        /// Gets or sets the subject.
-        /// Specifies the requested subject of the resulting assertion(s). This may include one or more
-        /// &lt;saml:SubjectConfirmation&gt; elements to indicate how and/or by whom the resulting assertions
-        /// can be confirmed.
+        /// Gets or sets a value indicating whether [assertion consumer service index specified].
         /// </summary>
-        /// <value>The subject.</value>
-        [XmlElement(Namespace=Saml20Constants.ASSERTION)]
-        public Subject Subject
-        {
-            get { return subjectField; }
-            set { subjectField = value; }
-        }
-
+        /// <value>
+        /// 	<c>true</c> if [assertion consumer service index specified]; otherwise, <c>false</c>.
+        /// </value>
+        [XmlIgnore]
+        public bool AssertionConsumerServiceIndexSpecified { get; set; }
 
         /// <summary>
-        /// Gets or sets the name ID policy.
-        /// Specifies constraints on the name identifier to be used to represent the requested subject. If omitted,
-        /// then any type of identifier supported by the identity provider for the requested subject can be used,
-        /// constrained by any relevant deployment-specific policies, with respect to privacy, for example
+        /// Gets or sets a value indicating whether [attribute consuming service index specified].
         /// </summary>
-        /// <value>The name ID policy.</value>
-        public NameIDPolicy NameIDPolicy
-        {
-            get { return nameIDPolicyField; }
-            set { nameIDPolicyField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the conditions.
-        /// Specifies the SAML conditions the requester expects to limit the validity and/or use of the resulting
-        /// assertion(s). The responder MAY modify or supplement this set as it deems necessary. The
-        /// information in this element is used as input to the process of constructing the assertion, rather than as
-        /// conditions on the use of the request itself.
-        /// </summary>
-        /// <value>The conditions.</value>
-        [XmlElement(Namespace=Saml20Constants.ASSERTION)]
-        public Conditions Conditions
-        {
-            get { return conditionsField; }
-            set { conditionsField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the requested authn context.
-        /// Specifies the requirements, if any, that the requester places on the authentication context that applies
-        /// to the responding provider's authentication of the presenter. See Section 3.3.2.2.1 for processing rules
-        /// regarding this element.
-        /// </summary>
-        /// <value>The requested authn context.</value>
-        public RequestedAuthnContext RequestedAuthnContext
-        {
-            get { return requestedAuthnContextField; }
-            set { requestedAuthnContextField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the scoping.
-        /// Specifies a set of identity providers trusted by the requester to authenticate the presenter, as well as
-        /// limitations and context related to proxying of the &lt;AuthnRequest&gt; message to subsequent identity
-        /// providers by the responder
-        /// </summary>
-        /// <value>The scoping.</value>
-        public Scoping Scoping
-        {
-            get { return scopingField; }
-            set { scopingField = value; }
-        }
-
+        /// <value>
+        /// 	<c>true</c> if [attribute consuming service index specified]; otherwise, <c>false</c>.
+        /// </value>
+        [XmlIgnore]
+        public bool AttributeConsumingServiceIndexSpecified { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [force authn].
@@ -137,36 +56,7 @@ namespace SAML2.Schema.Protocol
         /// </summary>
         /// <value><c>true</c> if [force authn]; otherwise, <c>false</c>.</value>
         [XmlIgnore]
-        public bool? ForceAuthn
-        {
-            get { return forceAuthnField; }
-            set { forceAuthnField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [force authn specified].
-        /// </summary>
-        /// <value><c>true</c> if [force authn specified]; otherwise, <c>false</c>.</value>
-        [XmlAttribute(AttributeName = "ForceAuthn")]
-        public string ForceAuthnString
-        {
-            get
-            {
-                if (forceAuthnField.HasValue)
-                    return forceAuthnField.Value.ToString().ToLower();
-                return null;
-            }
-            set
-            {
-                bool val;
-                if (bool.TryParse(value, out val))
-                {
-                    forceAuthnField = val;
-                }
-            }
-        }
-
+        public bool? ForceAuthn { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is passive.
@@ -178,54 +68,9 @@ namespace SAML2.Schema.Protocol
         /// 	<c>true</c> if this instance is passive; otherwise, <c>false</c>.
         /// </value>
         [XmlIgnore]
-        public bool? IsPassive
-        {
-            get { return isPassiveField; }
-            set { isPassiveField = value; }
-        }
+        public bool? IsPassive { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is passive specified.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is passive specified; otherwise, <c>false</c>.
-        /// </value>
-        [XmlAttribute(AttributeName="IsPassive")]
-        public string IsPassiveString
-        {
-            get
-            {
-                if (isPassiveField.HasValue)
-                    return isPassiveField.Value.ToString().ToLower();
-                return "false";
-            }
-            set
-            {
-                bool val;
-                if (bool.TryParse(value, out val))
-                {
-                    isPassiveField = val;
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the protocol binding.
-        /// A URI reference that identifies a SAML protocol binding to be used when returning the &lt;Response&gt;
-        /// message. See [SAMLBind] for more information about protocol bindings and URI references defined
-        /// for them. This attribute is mutually exclusive with the AssertionConsumerServiceIndex attribute
-        /// and is typically accompanied by the AssertionConsumerServiceURL attribute.
-        /// </summary>
-        /// <value>The protocol binding.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string ProtocolBinding
-        {
-            get { return protocolBindingField; }
-            set { protocolBindingField = value; }
-        }
-
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the index of the assertion consumer service.
@@ -240,27 +85,8 @@ namespace SAML2.Schema.Protocol
         /// attributes.
         /// </summary>
         /// <value>The index of the assertion consumer service.</value>
-        [XmlAttribute]
-        public ushort AssertionConsumerServiceIndex
-        {
-            get { return assertionConsumerServiceIndexField; }
-            set { assertionConsumerServiceIndexField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [assertion consumer service index specified].
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if [assertion consumer service index specified]; otherwise, <c>false</c>.
-        /// </value>
-        [XmlIgnore]
-        public bool AssertionConsumerServiceIndexSpecified
-        {
-            get { return assertionConsumerServiceIndexFieldSpecified; }
-            set { assertionConsumerServiceIndexFieldSpecified = value; }
-        }
-
+        [XmlAttribute("AssertionConsumerServiceIndex")]
+        public ushort AssertionConsumerServiceIndex { get; set; }
 
         /// <summary>
         /// Gets or sets the assertion consumer service URL.
@@ -272,13 +98,8 @@ namespace SAML2.Schema.Protocol
         /// ProtocolBinding attribute.
         /// </summary>
         /// <value>The assertion consumer service URL.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string AssertionConsumerServiceURL
-        {
-            get { return assertionConsumerServiceURLField; }
-            set { assertionConsumerServiceURLField = value; }
-        }
-
+        [XmlAttribute("AssertionConsumerServiceURL", DataType = "anyURI")]
+        public string AssertionConsumerServiceURL { get; set; }
 
         /// <summary>
         /// Gets or sets the index of the attribute consuming service.
@@ -290,27 +111,53 @@ namespace SAML2.Schema.Protocol
         /// assertion(s) it returns.
         /// </summary>
         /// <value>The index of the attribute consuming service.</value>
-        [XmlAttribute]
-        public ushort AttributeConsumingServiceIndex
-        {
-            get { return attributeConsumingServiceIndexField; }
-            set { attributeConsumingServiceIndexField = value; }
-        }
-
+        [XmlAttribute("AttributeConsumingServiceIndex")]
+        public ushort AttributeConsumingServiceIndex { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [attribute consuming service index specified].
+        /// Gets or sets a value indicating whether [force authn specified].
         /// </summary>
-        /// <value>
-        /// 	<c>true</c> if [attribute consuming service index specified]; otherwise, <c>false</c>.
-        /// </value>
-        [XmlIgnore]
-        public bool AttributeConsumingServiceIndexSpecified
+        /// <value><c>true</c> if [force authn specified]; otherwise, <c>false</c>.</value>
+        [XmlAttribute("ForceAuthn")]
+        public string ForceAuthnString
         {
-            get { return attributeConsumingServiceIndexFieldSpecified; }
-            set { attributeConsumingServiceIndexFieldSpecified = value; }
+            get { return ForceAuthn.HasValue ? ForceAuthn.Value.ToString().ToLower() : null; }
+            set
+            {
+                bool val;
+                if (!bool.TryParse(value, out val)) return;
+                ForceAuthn = val;
+            }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is passive specified.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is passive specified; otherwise, <c>false</c>.
+        /// </value>
+        [XmlAttribute("IsPassive")]
+        public string IsPassiveString
+        {
+            get { return IsPassive.HasValue ? IsPassive.Value.ToString().ToLower() : "false"; }
+            set
+            {
+                bool val;
+                if (!bool.TryParse(value, out val)) return;
+                IsPassive = val;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the protocol binding.
+        /// A URI reference that identifies a SAML protocol binding to be used when returning the &lt;Response&gt;
+        /// message. See [SAMLBind] for more information about protocol bindings and URI references defined
+        /// for them. This attribute is mutually exclusive with the AssertionConsumerServiceIndex attribute
+        /// and is typically accompanied by the AssertionConsumerServiceURL attribute.
+        /// </summary>
+        /// <value>The protocol binding.</value>
+        [XmlAttribute("ProtocolBinding", DataType = "anyURI")]
+        public string ProtocolBinding { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the provider.
@@ -318,11 +165,64 @@ namespace SAML2.Schema.Protocol
         /// identity provider.
         /// </summary>
         /// <value>The name of the provider.</value>
-        [XmlAttribute]
-        public string ProviderName
-        {
-            get { return providerNameField; }
-            set { providerNameField = value; }
-        }
+        [XmlAttribute("ProviderName")]
+        public string ProviderName { get; set; }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the conditions.
+        /// Specifies the SAML conditions the requester expects to limit the validity and/or use of the resulting
+        /// assertion(s). The responder MAY modify or supplement this set as it deems necessary. The
+        /// information in this element is used as input to the process of constructing the assertion, rather than as
+        /// conditions on the use of the request itself.
+        /// </summary>
+        /// <value>The conditions.</value>
+        [XmlElement("Conditions", Namespace = Saml20Constants.ASSERTION)]
+        public Conditions Conditions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name ID policy.
+        /// Specifies constraints on the name identifier to be used to represent the requested subject. If omitted,
+        /// then any type of identifier supported by the identity provider for the requested subject can be used,
+        /// constrained by any relevant deployment-specific policies, with respect to privacy, for example
+        /// </summary>
+        /// <value>The name ID policy.</value>
+        [XmlElement("NameIDPolicy")]
+        public NameIDPolicy NameIDPolicy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the requested authn context.
+        /// Specifies the requirements, if any, that the requester places on the authentication context that applies
+        /// to the responding provider's authentication of the presenter. See Section 3.3.2.2.1 for processing rules
+        /// regarding this element.
+        /// </summary>
+        /// <value>The requested authn context.</value>
+        [XmlElement("RequestedAuthnContext")]
+        public RequestedAuthnContext RequestedAuthnContext { get; set; }
+
+        /// <summary>
+        /// Gets or sets the scoping.
+        /// Specifies a set of identity providers trusted by the requester to authenticate the presenter, as well as
+        /// limitations and context related to proxying of the &lt;AuthnRequest&gt; message to subsequent identity
+        /// providers by the responder
+        /// </summary>
+        /// <value>The scoping.</value>
+        [XmlElement("Scoping")]
+        public Scoping Scoping { get; set; }
+
+        /// <summary>
+        /// Gets or sets the subject.
+        /// Specifies the requested subject of the resulting assertion(s). This may include one or more
+        /// &lt;saml:SubjectConfirmation&gt; elements to indicate how and/or by whom the resulting assertions
+        /// can be confirmed.
+        /// </summary>
+        /// <value>The subject.</value>
+        [XmlElement("Subject", Namespace = Saml20Constants.ASSERTION)]
+        public Subject Subject { get; set; }
+
+        #endregion
     }
 }

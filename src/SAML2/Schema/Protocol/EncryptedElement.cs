@@ -7,41 +7,36 @@ namespace SAML2.Schema.Protocol
     /// <summary>
     /// Represents an encrypted element
     /// </summary>
+    /// <remarks>
+    /// NOTE: XmlRoot parameter manually changed from "NewEncryptedID" to "EncryptedElementType".
+    /// </remarks>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
-    // NOTE: XmlRoot parameter manually changed from "NewEncryptedID" to "EncryptedElementType".    
+    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
     [XmlInclude(typeof(EncryptedAssertion))]
     public class EncryptedElement
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "EncryptedElement";
+        public const string ElementName = "EncryptedElement";
 
-        private EncryptedData encryptedDataField;
-        private EncryptedKey[] encryptedKeyField;
+        #region Elements
 
         /// <summary>
         /// Gets or sets the encrypted data.
         /// </summary>
         /// <value>The encrypted data.</value>
         [XmlElement("EncryptedData", Namespace=Saml20Constants.XENC)]
-        public EncryptedData encryptedData
-        {
-            get { return encryptedDataField; }
-            set { encryptedDataField = value; }
-        }
+        public EncryptedData EncryptedData { get; set; }
 
         /// <summary>
         /// Gets or sets the encrypted key.
         /// </summary>
         /// <value>The encrypted key.</value>
         [XmlElement("EncryptedKey", Namespace=Saml20Constants.XENC)]
-        public EncryptedKey[] encryptedKey
-        {
-            get { return encryptedKeyField; }
-            set { encryptedKeyField = value; }
-        }        
+        public EncryptedKey[] EncryptedKey { get; set; }
+
+        #endregion
     }
 }

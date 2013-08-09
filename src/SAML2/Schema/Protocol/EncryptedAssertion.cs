@@ -9,12 +9,12 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.ASSERTION)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
     public class EncryptedAssertion : EncryptedElement
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ELEMENT_NAME = "EncryptedAssertion";
+        public new const string ElementName = "EncryptedAssertion";
     }
 }

@@ -10,12 +10,12 @@ namespace SAML2.Schema.Protocol
     [Serializable]
     [DebuggerStepThrough]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
     public class Terminate
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Terminate";
+        public const string ElementName = "Terminate";
     }
 }

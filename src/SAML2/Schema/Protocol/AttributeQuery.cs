@@ -11,16 +11,15 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.PROTOCOL, IsNullable = false)]
     public class AttributeQuery : SubjectQueryAbstract
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ELEMENT_NAME = "AttributeQuery";
+        public new const string ElementName = "AttributeQuery";
 
-        private SamlAttribute[] samlAttributeField;
-
+        #region Elements
 
         /// <summary>
         /// Gets or sets the attribute.
@@ -33,10 +32,8 @@ namespace SAML2.Schema.Protocol
         /// </summary>
         /// <value>The attribute.</value>
         [XmlElement("Attribute", Namespace=Saml20Constants.ASSERTION)]
-        public SamlAttribute[] SamlAttribute
-        {
-            get { return samlAttributeField; }
-            set { samlAttributeField = value; }
-        }
+        public SamlAttribute[] SamlAttribute { get; set; }
+
+        #endregion
     }
 }

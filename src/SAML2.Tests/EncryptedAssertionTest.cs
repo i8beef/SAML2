@@ -48,7 +48,7 @@ namespace SAML2.Tests.Saml20
             doc.Load( new MemoryStream(assertionBytes) );
 
             XmlNodeList encryptedList =
-                doc.GetElementsByTagName(EncryptedAssertion.ELEMENT_NAME, Saml20Constants.ASSERTION);
+                doc.GetElementsByTagName(EncryptedAssertion.ElementName, Saml20Constants.ASSERTION);
 
             Assert.That(encryptedList.Count == 1);
 
@@ -194,9 +194,9 @@ namespace SAML2.Tests.Saml20
 
             // Create the resulting Xml-document to hook into.
             EncryptedAssertion encryptedAssertion = new EncryptedAssertion();
-            encryptedAssertion.encryptedData = new SAML2.Schema.XEnc.EncryptedData();
-            encryptedAssertion.encryptedKey = new SAML2.Schema.XEnc.EncryptedKey[1];
-            encryptedAssertion.encryptedKey[0] = new SAML2.Schema.XEnc.EncryptedKey();
+            encryptedAssertion.EncryptedData = new SAML2.Schema.XEnc.EncryptedData();
+            encryptedAssertion.EncryptedKey = new SAML2.Schema.XEnc.EncryptedKey[1];
+            encryptedAssertion.EncryptedKey[0] = new SAML2.Schema.XEnc.EncryptedKey();
 
             XmlDocument result;
             result = Serialization.Serialize(encryptedAssertion);            
@@ -336,7 +336,7 @@ namespace SAML2.Tests.Saml20
 
             // A number of simple tests until we get some better way to verify the generated encrypted assertion.
             XmlNodeList list;
-            list = encryptedAssertionXML.GetElementsByTagName(EncryptedAssertion.ELEMENT_NAME, Saml20Constants.ASSERTION);
+            list = encryptedAssertionXML.GetElementsByTagName(EncryptedAssertion.ElementName, Saml20Constants.ASSERTION);
             Assert.AreEqual(1, list.Count);
 
             list = encryptedAssertionXML.GetElementsByTagName(SAML2.Schema.XEnc.EncryptedKey.ELEMENT_NAME, Saml20Constants.XENC);

@@ -5,22 +5,19 @@ using SAML2.Schema.Core;
 namespace SAML2.Schema.Protocol
 {
     /// <summary>
-    /// 
+    /// Managed NameIDRequest.
     /// </summary>
     [Serializable]    
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
     public class ManageNameIDRequest : RequestAbstract
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "ManageNameIDRequest";
+        public const string ElementName = "ManageNameIDRequest";
 
-        private object item1Field;
-        private object itemField;
-
+        #region Elements
 
         /// <summary>
         /// Gets or sets the item.
@@ -28,14 +25,9 @@ namespace SAML2.Schema.Protocol
         /// principal as currently recognized by the identity and service providers prior to this request.
         /// </summary>
         /// <value>The item.</value>
-        [XmlElement("EncryptedID", typeof (EncryptedElement), Namespace=Saml20Constants.ASSERTION)]
-        [XmlElement("NameID", typeof (NameID), Namespace=Saml20Constants.ASSERTION)]
-        public object Item
-        {
-            get { return itemField; }
-            set { itemField = value; }
-        }
-
+        [XmlElement("EncryptedID", typeof (EncryptedElement), Namespace = Saml20Constants.ASSERTION)]
+        [XmlElement("NameID", typeof (NameID), Namespace = Saml20Constants.ASSERTION)]
+        public object Item { get; set; }
 
         /// <summary>
         /// Gets or sets the item1.
@@ -50,10 +42,8 @@ namespace SAML2.Schema.Protocol
         [XmlElement("NewEncryptedID", typeof (EncryptedElement))]
         [XmlElement("NewID", typeof (string))]
         [XmlElement("Terminate", typeof (Terminate))]
-        public object Item1
-        {
-            get { return item1Field; }
-            set { item1Field = value; }
-        }
+        public object Item1 { get; set; }
+
+        #endregion
     }
 }

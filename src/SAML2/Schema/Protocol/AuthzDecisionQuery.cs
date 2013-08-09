@@ -2,6 +2,8 @@ using System;
 using System.Xml.Serialization;
 using my=SAML2.Schema.Core;
 using SAML2.Schema.Core;
+using Action = SAML2.Schema.Core.Action;
+
 namespace SAML2.Schema.Protocol
 {
     /// <summary>
@@ -15,20 +17,27 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.PROTOCOL, IsNullable = false)]
     public class AuthzDecisionQuery : SubjectQueryAbstract
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ELEMENT_NAME = "AuthzDecisionQuery";
+        public new const string ElementName = "AuthzDecisionQuery";
 
-        private my.Action[] actionField;
+        #region Attributes
 
-        private Evidence evidenceField;
+        /// <summary>
+        /// Gets or sets the resource.
+        /// A URI reference indicating the resource for which authorization is requested.
+        /// </summary>
+        /// <value>The resource.</value>
+        [XmlAttribute("Resource", DataType="anyURI")]
+        public string Resource { get; set; }
+        
+        #endregion
 
-        private string resourceField;
-
+        #region Elements
 
         /// <summary>
         /// Gets or sets the action.
@@ -36,11 +45,7 @@ namespace SAML2.Schema.Protocol
         /// </summary>
         /// <value>The action.</value>
         [XmlElement("Action", Namespace=Saml20Constants.ASSERTION)]
-        public my.Action[] Action
-        {
-            get { return actionField; }
-            set { actionField = value; }
-        }
+        public Action[] Action { get; set; }
 
 
         /// <summary>
@@ -48,24 +53,9 @@ namespace SAML2.Schema.Protocol
         /// A set of assertions that the SAML authority MAY rely on in making its authorization decision
         /// </summary>
         /// <value>The evidence.</value>
-        [XmlElement(Namespace=Saml20Constants.ASSERTION)]
-        public Evidence Evidence
-        {
-            get { return evidenceField; }
-            set { evidenceField = value; }
-        }
+        [XmlElement("Evidence", Namespace=Saml20Constants.ASSERTION)]
+        public Evidence Evidence { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the resource.
-        /// A URI reference indicating the resource for which authorization is requested.
-        /// </summary>
-        /// <value>The resource.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Resource
-        {
-            get { return resourceField; }
-            set { resourceField = value; }
-        }
+        #endregion
     }
 }

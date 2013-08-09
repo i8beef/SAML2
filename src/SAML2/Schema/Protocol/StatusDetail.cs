@@ -11,26 +11,23 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
     public class StatusDetail
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "StatusDetail";
+        public const string ElementName = "StatusDetail";
 
-        private XmlElement[] anyField;
-
+        #region Elements
 
         /// <summary>
         /// Gets or sets any.
         /// </summary>
         /// <value>Any.</value>
         [XmlAnyElement]
-        public XmlElement[] Any
-        {
-            get { return anyField; }
-            set { anyField = value; }
-        }
+        public XmlElement[] Any { get; set; }
+
+        #endregion
     }
 }

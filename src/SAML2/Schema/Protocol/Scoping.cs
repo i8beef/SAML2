@@ -12,19 +12,29 @@ namespace SAML2.Schema.Protocol
     [GeneratedCode("xsd", "2.0.50727.42")]
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
     public class Scoping
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Scoping";
+        public const string ElementName = "Scoping";
 
-        private IDPList iDPListField;
+        #region Attributes
 
-        private string proxyCountField;
-        private string[] requesterIDField;
+        /// <summary>
+        /// Gets or sets the proxy count.
+        /// Specifies the number of proxying indirections permissible between the identity provider that receives
+        /// this &lt;AuthnRequest&gt; and the identity provider who ultimately authenticates the principal. A count of
+        /// zero permits no proxying, while omitting this attribute expresses no such restriction.
+        /// </summary>
+        /// <value>The proxy count.</value>
+        [XmlAttribute("ProxyCount", DataType = "nonNegativeInteger")]
+        public string ProxyCount { get; set; }
 
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets the IDP list.
@@ -32,12 +42,8 @@ namespace SAML2.Schema.Protocol
         /// to respond to the request.
         /// </summary>
         /// <value>The IDP list.</value>
-        public IDPList IDPList
-        {
-            get { return iDPListField; }
-            set { iDPListField = value; }
-        }
-
+        [XmlElement("IDPList")]
+        public IDPList IDPList { get; set; }
 
         /// <summary>
         /// Gets or sets the requester ID.
@@ -47,25 +53,8 @@ namespace SAML2.Schema.Protocol
         /// </summary>
         /// <value>The requester ID.</value>
         [XmlElement("RequesterID", DataType="anyURI")]
-        public string[] RequesterID
-        {
-            get { return requesterIDField; }
-            set { requesterIDField = value; }
-        }
+        public string[] RequesterID { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the proxy count.
-        /// Specifies the number of proxying indirections permissible between the identity provider that receives
-        /// this &lt;AuthnRequest&gt; and the identity provider who ultimately authenticates the principal. A count of
-        /// zero permits no proxying, while omitting this attribute expresses no such restriction.
-        /// </summary>
-        /// <value>The proxy count.</value>
-        [XmlAttribute(DataType="nonNegativeInteger")]
-        public string ProxyCount
-        {
-            get { return proxyCountField; }
-            set { proxyCountField = value; }
-        }
+        #endregion
     }
 }

@@ -9,17 +9,28 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [Serializable]
     [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
     public class StatusCode
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "StatusCode";
+        public const string ElementName = "StatusCode";
 
-        private StatusCode statusCodeField;
+        #region Attributes
 
-        private string valueField;
+        /// <summary>
+        /// Gets or sets the value.
+        /// The status code value. This attribute contains a URI reference. The value of the topmost
+        /// &lt;StatusCode&gt; element MUST be from the top-level list provided in this section.
+        /// </summary>
+        /// <value>The value.</value>
+        [XmlAttribute("Value", DataType = "anyURI")]
+        public string Value { get; set; }
+
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets the sub status code.
@@ -29,24 +40,8 @@ namespace SAML2.Schema.Protocol
         /// </summary>
         /// <value>The sub status code.</value>
         [XmlElement("StatusCode", Namespace = Saml20Constants.PROTOCOL)]
-        public StatusCode SubStatusCode
-        {
-            get { return statusCodeField; }
-            set { statusCodeField = value; }
-        }
+        public StatusCode SubStatusCode { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the value.
-        /// The status code value. This attribute contains a URI reference. The value of the topmost
-        /// &lt;StatusCode&gt; element MUST be from the top-level list provided in this section.
-        /// </summary>
-        /// <value>The value.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Value
-        {
-            get { return valueField; }
-            set { valueField = value; }
-        }
+        #endregion
     }
 }

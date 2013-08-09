@@ -52,7 +52,7 @@ namespace SAML2.Bindings
         /// </returns>
         public bool IsLogoutReqest
         {
-            get { return SamlMessageName == LogoutRequest.ELEMENT_NAME; }
+            get { return SamlMessageName == LogoutRequest.ElementName; }
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace SAML2.Bindings
         /// <returns></returns>
         public Status GetStatus()
         {
-            var status = (XmlElement)SamlMessage.GetElementsByTagName(Status.ELEMENT_NAME, Saml20Constants.PROTOCOL)[0];
+            var status = (XmlElement)SamlMessage.GetElementsByTagName(Status.ElementName, Saml20Constants.PROTOCOL)[0];
             return status != null ? Serialization.Deserialize<Status>(new XmlNodeReader(status)) : null;
         }
 

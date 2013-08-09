@@ -110,7 +110,7 @@ namespace SAML2.Protocol
                     return;
                 }
 
-                if (parser.ArtifactResponse.Any.LocalName == LogoutRequest.ELEMENT_NAME)
+                if (parser.ArtifactResponse.Any.LocalName == LogoutRequest.ElementName)
                 {
                     Logger.DebugFormat(Tracing.LogoutRequest, parser.ArtifactResponse.Any.OuterXml);
 
@@ -129,7 +129,7 @@ namespace SAML2.Protocol
 
                     builder.RedirectFromLogout(destination, response);
                 }
-                else if (parser.ArtifactResponse.Any.LocalName == LogoutResponse.ELEMENT_NAME)
+                else if (parser.ArtifactResponse.Any.LocalName == LogoutResponse.ElementName)
                 {
                     DoLogout(context);
                 }
@@ -376,7 +376,7 @@ namespace SAML2.Protocol
             var doc = new XmlDocument { PreserveWhitespace = true };
             doc.LoadXml(message);
 
-            var statElem = (XmlElement)doc.GetElementsByTagName(Status.ELEMENT_NAME, Saml20Constants.PROTOCOL)[0];
+            var statElem = (XmlElement)doc.GetElementsByTagName(Status.ElementName, Saml20Constants.PROTOCOL)[0];
             var status = Serialization.DeserializeFromXmlString<Status>(statElem.OuterXml);
             if (status.StatusCode.Value != Saml20Constants.StatusCodes.Success)
             {

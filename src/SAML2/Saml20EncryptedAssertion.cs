@@ -81,7 +81,7 @@ namespace SAML2
         /// </summary>
         private static void CheckEncryptedAssertionElement(XmlElement element)
         {
-            if (element.LocalName != EncryptedAssertion.ELEMENT_NAME)
+            if (element.LocalName != EncryptedAssertion.ElementName)
                 throw new ArgumentException("The element must be of type \"EncryptedAssertion\".");
 
             if (element.NamespaceURI != Saml20Constants.ASSERTION)
@@ -160,7 +160,7 @@ namespace SAML2
 
             // Create an empty EncryptedAssertion to hook into.
             EncryptedAssertion encryptedAssertion = new EncryptedAssertion();
-            encryptedAssertion.encryptedData = new SfwEncryptedData();
+            encryptedAssertion.EncryptedData = new SfwEncryptedData();
 
             XmlDocument result = new XmlDocument();
             result.LoadXml(Serialization.SerializeToXmlString(encryptedAssertion));

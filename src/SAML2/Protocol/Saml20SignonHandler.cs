@@ -101,7 +101,7 @@ namespace SAML2.Protocol
         /// <returns>The assertion XML.</returns>
         internal static XmlElement GetAssertion(XmlElement el, out bool isEncrypted)
         {
-            var encryptedList = el.GetElementsByTagName(EncryptedAssertion.ELEMENT_NAME, Saml20Constants.ASSERTION);
+            var encryptedList = el.GetElementsByTagName(EncryptedAssertion.ElementName, Saml20Constants.ASSERTION);
             if (encryptedList.Count == 1)
             {
                 isEncrypted = true;
@@ -248,7 +248,7 @@ namespace SAML2.Protocol
         /// <returns>The <see cref="Status"/> element.</returns>
         private static Status GetStatusElement(XmlDocument doc)
         {
-            var statElem = (XmlElement)doc.GetElementsByTagName(Status.ELEMENT_NAME, Saml20Constants.PROTOCOL)[0];
+            var statElem = (XmlElement)doc.GetElementsByTagName(Status.ElementName, Saml20Constants.PROTOCOL)[0];
             return Serialization.DeserializeFromXmlString<Status>(statElem.OuterXml);
         }
 
@@ -485,7 +485,7 @@ namespace SAML2.Protocol
                     return;
                 }
 
-                if (parser.ArtifactResponse.Any.LocalName == Response.ELEMENT_NAME)
+                if (parser.ArtifactResponse.Any.LocalName == Response.ElementName)
                 {
                     bool isEncrypted;
                     var assertion = GetAssertion(parser.ArtifactResponse.Any, out isEncrypted);
