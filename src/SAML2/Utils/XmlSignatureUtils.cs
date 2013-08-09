@@ -1,66 +1,12 @@
 using System;
-using System.Collections;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
 using SAML2.Config;
-using Signature=SAML2.Schema.XmlDSig.Signature;
 
 namespace SAML2.Utils
 {
-    ///<summary>
-    ///</summary>
-    public class SignedXMLWithIdResolvement : SignedXml
-    {
-        ///<summary>
-        ///</summary>
-        ///<param name="document"></param>
-        public SignedXMLWithIdResolvement(XmlDocument document) : base(document)
-        {
-            
-        }
-        ///<summary>
-        ///</summary>
-        ///<param name="elem"></param>
-        public SignedXMLWithIdResolvement(XmlElement elem)
-            : base(elem)
-        {
-
-        }
-        ///<summary>
-        ///</summary>
-        public SignedXMLWithIdResolvement() : base()
-        {
-            
-        }
-
-        /// <summary>
-        /// </summary>
-        public override XmlElement GetIdElement(XmlDocument document, string idValue)
-        {
-            XmlElement elem = null;
-            if ((elem = base.GetIdElement(document, idValue)) == null)
-            {
-                XmlNodeList nl = document.GetElementsByTagName("*");
-                IEnumerator enumerator = nl.GetEnumerator();
-                while (enumerator.MoveNext())
-                {
-                    var node = (XmlNode)enumerator.Current;
-                    var nodeEnum = node.Attributes.GetEnumerator();
-                    while (nodeEnum.MoveNext())
-                    {
-                        var attr = (XmlAttribute) nodeEnum.Current;
-                        if (attr.LocalName.ToLower() == "id" && attr.Value == idValue && node is XmlElement)
-                        {
-                            return (XmlElement)node;
-                        }
-                    }
-                }
-            }
-            return elem;
-        }
-    }
     /// <summary>
     /// This class contains methods that creates and validates signatures on XmlDocuments.
     /// </summary>
@@ -75,7 +21,8 @@ namespace SAML2.Utils
         public static bool CheckSignature(XmlDocument doc)
         {
             CheckDocument(doc);
-            SignedXml signedXml = RetrieveSignature(doc);
+            var signedXml = RetrieveSignature(doc);
+
             return signedXml.CheckSignature();
         }
 
@@ -88,7 +35,8 @@ namespace SAML2.Utils
         public static bool CheckSignature(XmlDocument doc, AsymmetricAlgorithm alg)
         {
             CheckDocument(doc);
-            SignedXml signedXml = RetrieveSignature(doc);            
+            var signedXml = RetrieveSignature(doc);
+
             return signedXml.CheckSignature(alg);
         }
 
@@ -101,7 +49,8 @@ namespace SAML2.Utils
         public static bool CheckSignature(XmlElement el, AsymmetricAlgorithm alg)
         {
             //CheckDocument(el);
-            SignedXml signedXml = RetrieveSignature(el);
+            var signedXml = RetrieveSignature(el);
+
             return signedXml.CheckSignature(alg);
         }
 
@@ -112,7 +61,7 @@ namespace SAML2.Utils
         public static bool CheckSignature(XmlDocument doc, KeyInfo keyinfo)
         {
             CheckDocument(doc);
-            SignedXml signedXml = RetrieveSignature(doc);            
+            var signedXml = RetrieveSignature(doc);            
 
             AsymmetricAlgorithm alg = null;
             X509Certificate2 cert = null;
@@ -120,29 +69,31 @@ namespace SAML2.Utils
             {
                 if (clause is RSAKeyValue)
                 {
-                    RSAKeyValue key = (RSAKeyValue) clause;
+                    var key = (RSAKeyValue) clause;
                     alg = key.Key;
                     break;
-                } else if (clause is KeyInfoX509Data)
+                }
+                
+                if (clause is KeyInfoX509Data)
                 {
-                    KeyInfoX509Data x509data = (KeyInfoX509Data) clause;
-                    int count = x509data.Certificates.Count;
-                    cert = (X509Certificate2) x509data.Certificates[count - 1];                    
-                } else if (clause is DSAKeyValue)
+                    var x509Data = (KeyInfoX509Data) clause;
+                    var count = x509Data.Certificates.Count;
+                    cert = (X509Certificate2) x509Data.Certificates[count - 1];                    
+                } 
+                else if (clause is DSAKeyValue)
                 {
-                    DSAKeyValue key = (DSAKeyValue) clause;
+                    var key = (DSAKeyValue) clause;
                     alg = key.Key;
                     break;
                 }                
             }
 
             if (alg == null && cert == null)
+            {
                 throw new InvalidOperationException("Unable to locate the key or certificate to verify the signature.");
+            }
 
-            if (alg != null)
-                return signedXml.CheckSignature(alg);
-            else
-                return signedXml.CheckSignature(cert, true);
+            return alg != null ? signedXml.CheckSignature(alg) : signedXml.CheckSignature(cert, true);
         }
 
         /// <summary>
@@ -154,22 +105,72 @@ namespace SAML2.Utils
         {
             if (keyInfoClause is RSAKeyValue)
             {
-                RSAKeyValue key = (RSAKeyValue) keyInfoClause;
+                var key = (RSAKeyValue) keyInfoClause;
                 return key.Key;                
             }
-            else if (keyInfoClause is KeyInfoX509Data)
+            
+            if (keyInfoClause is KeyInfoX509Data)
             {
-                X509Certificate2 cert = GetCertificateFromKeyInfo((KeyInfoX509Data)keyInfoClause);
-
+                var cert = GetCertificateFromKeyInfo((KeyInfoX509Data)keyInfoClause);
                 return cert != null ? cert.PublicKey.Key : null;
             }
-            else if (keyInfoClause is DSAKeyValue)
+            
+            if (keyInfoClause is DSAKeyValue)
             {
-                DSAKeyValue key = (DSAKeyValue) keyInfoClause;
+                var key = (DSAKeyValue) keyInfoClause;
                 return key.Key;                
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Returns the KeyInfo element that is included with the signature in the document.
+        /// </summary>
+        /// <param name="doc">The doc.</param>
+        /// <returns>The signature <see cref="KeyInfo"/>.</returns>
+        /// <exception cref="InvalidOperationException">if the document is not signed.</exception>
+        public static KeyInfo ExtractSignatureKeys(XmlDocument doc)
+        {
+            CheckDocument(doc);
+            if (doc.DocumentElement != null)
+            {
+                var signedXml = new SignedXml(doc.DocumentElement);
+
+                var nodeList = doc.GetElementsByTagName(Schema.XmlDSig.Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
+                if (nodeList.Count == 0)
+                {
+                    throw new InvalidOperationException("The XmlDocument does not contain a signature.");
+                }
+
+                signedXml.LoadXml((XmlElement)nodeList[0]);
+
+                return signedXml.KeyInfo;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the KeyInfo element that is included with the signature in the element.
+        /// </summary>
+        /// <param name="el">The el.</param>
+        /// <returns>The signature <see cref="KeyInfo"/>.</returns>
+        /// <exception cref="InvalidOperationException">if the document is not signed.</exception>
+        public static KeyInfo ExtractSignatureKeys(XmlElement el)
+        {
+            CheckDocument(el);
+            var signedXml = new SignedXml(el);
+
+            var nodeList = el.GetElementsByTagName(Schema.XmlDSig.Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
+            if (nodeList.Count == 0)
+            {
+                throw new InvalidOperationException("The XmlDocument does not contain a signature.");
+            }
+
+            signedXml.LoadXml((XmlElement)nodeList[0]);
+
+            return signedXml.KeyInfo;
         }
 
         /// <summary>
@@ -179,44 +180,26 @@ namespace SAML2.Utils
         /// <returns>The last certificate in the chain</returns>
         public static X509Certificate2 GetCertificateFromKeyInfo(KeyInfoX509Data keyInfo)
         {
-            int count = keyInfo.Certificates.Count;
+            var count = keyInfo.Certificates.Count;
             if (count == 0)
+            {
                 return null;
+            }
             
-            X509Certificate2 cert = (X509Certificate2)keyInfo.Certificates[count - 1];
+            var cert = (X509Certificate2)keyInfo.Certificates[count - 1];
+
             return cert;
-        }
-
-        /// <summary>
-        /// Do checks on the document given. Every public method accepting a XmlDocument instance as parameter should 
-        /// call this method before continuing.
-        /// </summary>        
-        private static void CheckDocument(XmlDocument doc)
-        {
-            if (!doc.PreserveWhitespace)
-                throw new InvalidOperationException(
-                    "The XmlDocument must have its \"PreserveWhitespace\" property set to true when a signed document is loaded.");
-        }
-
-        /// <summary>
-        /// Do checks on the element given. Every public method accepting a XmlElement instance as parameter should 
-        /// call this method before continuing.
-        /// </summary>        
-        private static void CheckDocument(XmlElement el)
-        {
-            if (!el.OwnerDocument.PreserveWhitespace)
-                throw new InvalidOperationException(
-                    "The XmlDocument must have its \"PreserveWhitespace\" property set to true when a signed document is loaded.");
         }
 
         /// <summary>
         /// Checks if a document contains a signature.
         /// </summary>
+        /// <param name="doc">The doc.</param>
+        /// <returns><c>true</c> if the specified doc is signed; otherwise, <c>false</c>.</returns>
         public static bool IsSigned(XmlDocument doc)
         {
             CheckDocument(doc);
-            XmlNodeList nodeList = 
-                doc.GetElementsByTagName(Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
+            var nodeList = doc.GetElementsByTagName(Schema.XmlDSig.Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
 
             return nodeList.Count > 0;
         }
@@ -224,52 +207,57 @@ namespace SAML2.Utils
         /// <summary>
         /// Checks if an element contains a signature.
         /// </summary>
+        /// <param name="el">The el.</param>
+        /// <returns><c>true</c> if the specified el is signed; otherwise, <c>false</c>.</returns>
         public static bool IsSigned(XmlElement el)
         {
             CheckDocument(el);
-            XmlNodeList nodeList =
-                el.GetElementsByTagName(Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
+            var nodeList = el.GetElementsByTagName(Schema.XmlDSig.Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
 
             return nodeList.Count > 0;
         }
 
         /// <summary>
-        /// Returns the KeyInfo element that is included with the signature in the document.
+        /// Do checks on the document given. Every public method accepting a XmlDocument instance as parameter should
+        /// call this method before continuing.
         /// </summary>
-        /// <exception cref="InvalidOperationException">if the document is not signed.</exception>
-        public static KeyInfo ExtractSignatureKeys(XmlDocument doc)
+        /// <param name="doc">The doc.</param>
+        private static void CheckDocument(XmlDocument doc)
         {
-            CheckDocument(doc);
-            SignedXml signedXml = new SignedXml(doc.DocumentElement);
+            if (doc == null)
+            {
+                throw new ArgumentNullException("doc");
+            }
 
-            XmlNodeList nodeList = doc.GetElementsByTagName(Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
-            if (nodeList.Count == 0)
-                throw new InvalidOperationException("The XmlDocument does not contain a signature.");
-
-            signedXml.LoadXml((XmlElement) nodeList[0]);
-            return signedXml.KeyInfo;
+            if (!doc.PreserveWhitespace)
+            {
+                throw new InvalidOperationException("The XmlDocument must have its \"PreserveWhitespace\" property set to true when a signed document is loaded.");
+            }
         }
 
         /// <summary>
-        /// Returns the KeyInfo element that is included with the signature in the element.
+        /// Do checks on the element given. Every public method accepting a XmlElement instance as parameter should
+        /// call this method before continuing.
         /// </summary>
-        /// <exception cref="InvalidOperationException">if the document is not signed.</exception>
-        public static KeyInfo ExtractSignatureKeys(XmlElement el)
+        /// <param name="el">The el.</param>
+        private static void CheckDocument(XmlElement el)
         {
-            CheckDocument(el);
-            SignedXml signedXml = new SignedXml(el);
+            if (el == null)
+            {
+                throw new ArgumentNullException("el");
+            }
 
-            XmlNodeList nodeList = el.GetElementsByTagName(Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
-            if (nodeList.Count == 0)
-                throw new InvalidOperationException("The XmlDocument does not contain a signature.");
-
-            signedXml.LoadXml((XmlElement)nodeList[0]);
-            return signedXml.KeyInfo;
+            if (el.OwnerDocument != null && !el.OwnerDocument.PreserveWhitespace)
+            {
+                throw new InvalidOperationException("The XmlDocument must have its \"PreserveWhitespace\" property set to true when a signed document is loaded.");
+            }
         }
 
         /// <summary>
         /// Digs the &lt;Signature&gt; element out of the document.
         /// </summary>
+        /// <param name="doc">The doc.</param>
+        /// <returns>The <see cref="SignedXml"/>.</returns>
         /// <exception cref="InvalidOperationException">if the document does not contain a signature.</exception>
         private static SignedXml RetrieveSignature(XmlDocument doc)
         {
@@ -279,56 +267,22 @@ namespace SAML2.Utils
         /// <summary>
         /// Digs the &lt;Signature&gt; element out of the document.
         /// </summary>
+        /// <param name="el">The el.</param>
+        /// <returns>The <see cref="SignedXml"/>.</returns>
         /// <exception cref="InvalidOperationException">if the document does not contain a signature.</exception>
         private static SignedXml RetrieveSignature(XmlElement el)
         {
-            SignedXml signedXml = new SignedXMLWithIdResolvement(el);
-            XmlNodeList nodeList = el.GetElementsByTagName(Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
+            SignedXml signedXml = new SignedXmlWithIdResolvement(el);
+            XmlNodeList nodeList = el.GetElementsByTagName(Schema.XmlDSig.Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
             if (nodeList.Count == 0)
                 throw new InvalidOperationException("Document does not contain a signature to verify.");
 
             signedXml.LoadXml((XmlElement)nodeList[0]);
 
             // verify that the inlined signature has a valid reference uri
-            VerifyRererenceURI(signedXml, el.GetAttribute("ID"));
+            VerifyRererenceUri(signedXml, el.GetAttribute("ID"));
 
             return signedXml;
-        }
-
-        /// <summary>
-        /// Verifies that the reference uri (if any) points to the correct element.
-        /// </summary>
-        /// <param name="signedXml">the ds:signature element</param>
-        /// <param name="id">the expected id referenced by the ds:signature element</param>
-        private static void VerifyRererenceURI(SignedXml signedXml, string id)
-        {
-            if (id == null)
-            {
-                throw new InvalidOperationException("Cannot match null id");
-            }
-
-            if (signedXml.SignedInfo.References.Count > 0)
-            {
-                Reference reference = (Reference)signedXml.SignedInfo.References[0];
-                string uri = reference.Uri;
-
-                // empty uri is okay - indicates that everything is signed
-                if (uri != null && uri.Length > 0)
-                {
-                    if (!uri.StartsWith("#"))
-                    {
-                        throw new InvalidOperationException("Signature reference URI is not a document fragment reference. Uri = '" + uri + "'");
-                    }
-                    else if (uri.Length < 2 || !id.Equals(uri.Substring(1)))
-                    {
-                        throw new InvalidOperationException("Rererence URI = '" + uri.Substring(1) + "' does not match expected id = '" + id + "'");
-                    }
-                }
-            }
-            else
-            {
-                throw new InvalidOperationException("No references in Signature element");
-            }
         }
 
         /// <summary>
@@ -339,12 +293,12 @@ namespace SAML2.Utils
         /// <param name="cert">The certificate used to sign the document</param>
         public static void SignDocument(XmlDocument doc, string id, X509Certificate2 cert)
         {
-            SignedXml signedXml = new SignedXml(doc);
+            var signedXml = new SignedXml(doc);
             signedXml.SignedInfo.CanonicalizationMethod = SignedXml.XmlDsigExcC14NTransformUrl;
             signedXml.SigningKey = cert.PrivateKey;
 
             // Retrieve the value of the "ID" attribute on the root assertion element.
-            Reference reference = new Reference("#" + id);
+            var reference = new Reference("#" + id);
 
             reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());
             reference.AddTransform(new XmlDsigExcC14NTransform());
@@ -357,9 +311,16 @@ namespace SAML2.Utils
 
             signedXml.ComputeSignature();
             // Append the computed signature. The signature must be placed as the sibling of the Issuer element.
-            XmlNodeList nodes = doc.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.ASSERTION);
-            // doc.DocumentElement.InsertAfter(doc.ImportNode(signedXml.GetXml(), true), nodes[0]);            
-            nodes[0].ParentNode.InsertAfter(doc.ImportNode(signedXml.GetXml(), true), nodes[0]);
+            if (doc.DocumentElement != null)
+            {
+                var nodes = doc.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.ASSERTION);
+                // doc.DocumentElement.InsertAfter(doc.ImportNode(signedXml.GetXml(), true), nodes[0]);
+                var parentNode = nodes[0].ParentNode;
+                if (parentNode != null)
+                {
+                    parentNode.InsertAfter(doc.ImportNode(signedXml.GetXml(), true), nodes[0]);
+                }
+            }
         }
 
         /// <summary>
@@ -370,9 +331,112 @@ namespace SAML2.Utils
         /// <param name="id">The is of the topmost element in the xmldocument</param>
         public static void SignDocument(XmlDocument doc, string id)
         {
-            X509Certificate2 cert = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate();
-            SignDocument(doc, id, cert);
+            SignDocument(doc, id, Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate());
         }
 
+        /// <summary>
+        /// Verifies that the reference uri (if any) points to the correct element.
+        /// </summary>
+        /// <param name="signedXml">the ds:signature element</param>
+        /// <param name="id">the expected id referenced by the ds:signature element</param>
+        private static void VerifyRererenceUri(SignedXml signedXml, string id)
+        {
+            if (id == null)
+            {
+                throw new InvalidOperationException("Cannot match null id");
+            }
+
+            if (signedXml.SignedInfo.References.Count <= 0)
+            {
+                throw new InvalidOperationException("No references in Signature element");
+            }
+
+            var reference = (Reference)signedXml.SignedInfo.References[0];
+            var uri = reference.Uri;
+
+            // empty uri is okay - indicates that everything is signed
+            if (!string.IsNullOrEmpty(uri))
+            {
+                if (!uri.StartsWith("#"))
+                {
+                    throw new InvalidOperationException("Signature reference URI is not a document fragment reference. Uri = '" + uri + "'");
+                }
+                
+                if (uri.Length < 2 || !id.Equals(uri.Substring(1)))
+                {
+                    throw new InvalidOperationException("Rererence URI = '" + uri.Substring(1) + "' does not match expected id = '" + id + "'");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Signed XML with Id Resolvement class.
+        /// </summary>
+        public class SignedXmlWithIdResolvement : SignedXml
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SignedXmlWithIdResolvement"/> class.
+            /// </summary>
+            /// <param name="document">The document.</param>
+            public SignedXmlWithIdResolvement(XmlDocument document)
+                : base(document)
+            {
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.SignedXml"/> class from the specified <see cref="T:System.Xml.XmlElement"/> object.
+            /// </summary>
+            /// <param name="elem">The <see cref="T:System.Xml.XmlElement"/> object to use to initialize the new instance of <see cref="T:System.Security.Cryptography.Xml.SignedXml"/>.</param>
+            /// <exception cref="T:System.ArgumentNullException">
+            /// The <paramref name="elem"/> parameter is null.
+            ///   </exception>
+            public SignedXmlWithIdResolvement(XmlElement elem)
+                : base(elem)
+            {
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SignedXmlWithIdResolvement"/> class.
+            /// </summary>
+            public SignedXmlWithIdResolvement()
+            {
+            }
+
+            /// <summary>
+            /// Returns the <see cref="T:System.Xml.XmlElement"/> object with the specified ID from the specified <see cref="T:System.Xml.XmlDocument"/> object.
+            /// </summary>
+            /// <param name="document">The <see cref="T:System.Xml.XmlDocument"/> object to retrieve the <see cref="T:System.Xml.XmlElement"/> object from.</param>
+            /// <param name="idValue">The ID of the <see cref="T:System.Xml.XmlElement"/> object to retrieve from the <see cref="T:System.Xml.XmlDocument"/> object.</param>
+            /// <returns>The <see cref="T:System.Xml.XmlElement"/> object with the specified ID from the specified <see cref="T:System.Xml.XmlDocument"/> object, or null if it could not be found.</returns>
+            public override XmlElement GetIdElement(XmlDocument document, string idValue)
+            {
+                var elem = base.GetIdElement(document, idValue);
+                if (elem == null)
+                {
+                    var nl = document.GetElementsByTagName("*");
+                    var enumerator = nl.GetEnumerator();
+                    while (enumerator != null && enumerator.MoveNext())
+                    {
+                        var node = (XmlNode)enumerator.Current;
+                        if (node == null || node.Attributes == null)
+                        {
+                            continue;
+                        }
+
+                        var nodeEnum = node.Attributes.GetEnumerator();
+                        while (nodeEnum != null && nodeEnum.MoveNext())
+                        {
+                            var attr = (XmlAttribute)nodeEnum.Current;
+                            if (attr != null && (attr.LocalName.ToLower() == "id" && attr.Value == idValue && node is XmlElement))
+                            {
+                                return (XmlElement)node;
+                            }
+                        }
+                    }
+                }
+
+                return elem;
+            }
+        }
     }
 }

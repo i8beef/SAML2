@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using SAML2.Config;
 
 namespace SAML2.Specification
 {
     ///<summary>
-    /// 
+    /// Specification factory for getting certificate specification.
     ///</summary>
     public class SpecificationFactory
     {
@@ -17,17 +16,17 @@ namespace SAML2.Specification
         /// <returns>A list of certificate validation specifications for this endpoint</returns>
         public static List<ICertificateSpecification> GetCertificateSpecifications(IdentityProviderElement endpoint)
         {
-            List<ICertificateSpecification> specs = new List<ICertificateSpecification>();
-
+            var specs = new List<ICertificateSpecification>();
             if (endpoint.CertificateValidations != null && endpoint.CertificateValidations.Count > 0)
             {
-                foreach(CertificateValidationElement elem in endpoint.CertificateValidations)
+                foreach(var elem in endpoint.CertificateValidations)
                 {
                     try
                     {
-                        ICertificateSpecification val = (ICertificateSpecification) Activator.CreateInstance(Type.GetType(elem.Type));
+                        var val = (ICertificateSpecification) Activator.CreateInstance(Type.GetType(elem.Type));
                         specs.Add(val);
-                    }catch(Exception e)
+                    }
+                    catch(Exception e)
                     {
                         Logging.LoggerProvider.LoggerFor(typeof(SpecificationFactory)).Error(e.Message, e);
                     }
@@ -43,5 +42,5 @@ namespace SAML2.Specification
             return specs;
         }
     }
-    
 }
+

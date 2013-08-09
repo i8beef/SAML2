@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IdentityModel.Selectors;
 using System.Security.Cryptography.X509Certificates;
 using SAML2.Properties;
@@ -21,10 +20,12 @@ namespace SAML2.Specification
         /// </returns>
         public bool IsSatisfiedBy(X509Certificate2 certificate)
         {
-            X509ChainPolicy chainPolicy = new X509ChainPolicy();
-            chainPolicy.RevocationMode = X509RevocationMode.NoCheck;
-            chainPolicy.VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority;
-            X509CertificateValidator defaultCertificateValidator = X509CertificateValidator.CreateChainTrustValidator(false, chainPolicy);
+            var chainPolicy = new X509ChainPolicy
+                                  {
+                                      RevocationMode = X509RevocationMode.NoCheck,
+                                      VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority
+                                  };
+            var defaultCertificateValidator = X509CertificateValidator.CreateChainTrustValidator(false, chainPolicy);
 
             try
             {

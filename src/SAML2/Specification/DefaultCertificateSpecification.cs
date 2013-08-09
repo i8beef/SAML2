@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IdentityModel.Selectors;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using SAML2.Properties;
 
 namespace SAML2.Specification
@@ -17,18 +13,16 @@ namespace SAML2.Specification
     {
         /// <summary>
         /// Determines whether the specified certificate is considered valid according to the RFC3280 specification.
-        /// 
         /// </summary>
         /// <param name="certificate">The certificate to validate.</param>
         /// <returns>
-        /// 	<c>true</c> if valid; otherwise, <c>false</c>.
+        /// <c>true</c> if valid; otherwise, <c>false</c>.
         /// </returns>
         public bool IsSatisfiedBy(X509Certificate2 certificate)
         {
-            bool useMachineContext = false;
-            X509ChainPolicy chainPolicy = new X509ChainPolicy();
-            chainPolicy.RevocationMode = X509RevocationMode.Online;
-            X509CertificateValidator defaultCertificateValidator = X509CertificateValidator.CreateChainTrustValidator(useMachineContext, chainPolicy);
+            const bool useMachineContext = false;
+            var chainPolicy = new X509ChainPolicy { RevocationMode = X509RevocationMode.Online };
+            var defaultCertificateValidator = X509CertificateValidator.CreateChainTrustValidator(useMachineContext, chainPolicy);
 
             try
             {
