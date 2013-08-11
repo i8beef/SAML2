@@ -17,40 +17,31 @@ namespace SAML2.Schema.XmlDSig
     /// Arbitrary-length integers (e.g. "bignums" such as RSA moduli) are represented in XML as octet strings as defined by the ds:CryptoBinary type. 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
     public class RSAKeyValue
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "RSAKeyValue";
+        public const string ElementName = "RSAKeyValue";
 
-        private byte[] exponentField;
-        private byte[] modulusField;
-
-
-        /// <summary>
-        /// Gets or sets the modulus.
-        /// </summary>
-        /// <value>The modulus.</value>
-        [XmlElement(DataType="base64Binary")]
-        public byte[] Modulus
-        {
-            get { return modulusField; }
-            set { modulusField = value; }
-        }
-
+        #region Elements
 
         /// <summary>
         /// Gets or sets the exponent.
         /// </summary>
         /// <value>The exponent.</value>
-        [XmlElement(DataType="base64Binary")]
-        public byte[] Exponent
-        {
-            get { return exponentField; }
-            set { exponentField = value; }
-        }
+        [XmlElement("Exponent", DataType = "base64Binary")]
+        public byte[] Exponent { get; set; }
+
+        /// <summary>
+        /// Gets or sets the modulus.
+        /// </summary>
+        /// <value>The modulus.</value>
+        [XmlElement("Modulus", DataType = "base64Binary")]
+        public byte[] Modulus { get; set; }
+
+        #endregion
     }
 }

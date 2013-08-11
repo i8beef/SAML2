@@ -10,8 +10,8 @@ namespace SAML2.Schema.Metadata
     /// attribute, optionally including specific values.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = Saml20Constants.METADATA)]
-    [XmlRoot(ElementName, Namespace = Saml20Constants.METADATA, IsNullable = false)]
+    [XmlType(Namespace = Saml20Constants.Metadata)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class RequestedAttribute : SamlAttribute
     {
         /// <summary>

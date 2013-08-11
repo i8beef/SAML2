@@ -12,8 +12,8 @@ namespace SAML2.Schema.Protocol
     /// SAML-defined namespace.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Protocol, IsNullable=false)]
     public class Extensions
     {
         /// <summary>

@@ -451,7 +451,7 @@ namespace SAML2
             // Remove existing signatures when resigning the assertion
             var signatureParentNode = XmlAssertion; //FIX.DocumentElement;
             XmlNode sigNode;
-            while ( (sigNode = signatureParentNode.GetElementsByTagName(Schema.XmlDSig.Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG)[0]) != null )
+            while ( (sigNode = signatureParentNode.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig)[0]) != null )
             {
                 signatureParentNode.RemoveChild(sigNode);
             }
@@ -485,7 +485,7 @@ namespace SAML2
             signedXml.SigningKey = cert.PrivateKey;
 
             // Retrieve the value of the "ID" attribute on the root assertion element.
-            var list = assertionDocument.GetElementsByTagName(Assertion.ElementName, Saml20Constants.ASSERTION);
+            var list = assertionDocument.GetElementsByTagName(Assertion.ElementName, Saml20Constants.Assertion);
             var el = (XmlElement)list[0];            
             var reference = new Reference("#" + el.GetAttribute("ID"));
 
@@ -500,7 +500,7 @@ namespace SAML2
 
             signedXml.ComputeSignature();
             // Append the computed signature. The signature must be placed as the sibling of the Issuer element.
-            var nodes = assertionDocument.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.ASSERTION);            
+            var nodes = assertionDocument.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.Assertion);            
             if (nodes.Count != 1)
             {
                 throw new Saml20Exception("Assertion MUST contain one <Issuer> element.");
@@ -535,7 +535,7 @@ namespace SAML2
             _assertionAttributes = new List<SamlAttribute>(0);
             _encryptedAssertionAttributes = new List<EncryptedElement>(0);
 
-            var list = XmlAssertion.GetElementsByTagName(AttributeStatement.ElementName, Saml20Constants.ASSERTION);
+            var list = XmlAssertion.GetElementsByTagName(AttributeStatement.ElementName, Saml20Constants.Assertion);
             if (list.Count == 0)
             {
                 return;
@@ -583,7 +583,7 @@ namespace SAML2
             statements.AddRange(_encryptedAssertionAttributes.ToArray());
             attributeStatement.Items = statements.ToArray();
 
-            var list = XmlAssertion.GetElementsByTagName(AttributeStatement.ElementName, Saml20Constants.ASSERTION);
+            var list = XmlAssertion.GetElementsByTagName(AttributeStatement.ElementName, Saml20Constants.Assertion);
 
             if (list.Count > 0) // Remove the old AttributeStatement.
             {

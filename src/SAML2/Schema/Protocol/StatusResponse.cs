@@ -16,8 +16,8 @@ namespace SAML2.Schema.Protocol
     [XmlInclude(typeof (LogoutResponse))]
     [XmlInclude(typeof (Response))]
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ElementName, Namespace = Saml20Constants.PROTOCOL, IsNullable = false)]
+    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class StatusResponse
     {
         /// <summary>
@@ -120,7 +120,7 @@ namespace SAML2.Schema.Protocol
         /// Identifies the entity that generated the response message.
         /// </summary>
         /// <value>The issuer.</value>
-        [XmlElement("Issuer", Namespace = Saml20Constants.ASSERTION, Form = XmlSchemaForm.Qualified)]
+        [XmlElement("Issuer", Namespace = Saml20Constants.Assertion, Form = XmlSchemaForm.Qualified)]
         public NameID Issuer { get; set; }
 
         /// <summary>

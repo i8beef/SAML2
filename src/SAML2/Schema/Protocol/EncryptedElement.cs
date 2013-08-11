@@ -11,8 +11,8 @@ namespace SAML2.Schema.Protocol
     /// NOTE: XmlRoot parameter manually changed from "NewEncryptedID" to "EncryptedElementType".
     /// </remarks>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
+    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     [XmlInclude(typeof(EncryptedAssertion))]
     public class EncryptedElement
     {
@@ -27,14 +27,14 @@ namespace SAML2.Schema.Protocol
         /// Gets or sets the encrypted data.
         /// </summary>
         /// <value>The encrypted data.</value>
-        [XmlElement("EncryptedData", Namespace=Saml20Constants.XENC)]
+        [XmlElement("EncryptedData", Namespace=Saml20Constants.Xenc)]
         public EncryptedData EncryptedData { get; set; }
 
         /// <summary>
         /// Gets or sets the encrypted key.
         /// </summary>
         /// <value>The encrypted key.</value>
-        [XmlElement("EncryptedKey", Namespace=Saml20Constants.XENC)]
+        [XmlElement("EncryptedKey", Namespace=Saml20Constants.Xenc)]
         public EncryptedKey[] EncryptedKey { get; set; }
 
         #endregion

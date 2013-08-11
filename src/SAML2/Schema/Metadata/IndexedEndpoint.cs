@@ -9,8 +9,8 @@ namespace SAML2.Schema.Metadata
     /// indexing of otherwise identical endpoints so that they can be referenced by protocol messages.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ElementName, Namespace = Saml20Constants.METADATA, IsNullable = false)]
+    [XmlType(Namespace=Saml20Constants.Metadata)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class IndexedEndpoint : Endpoint {
         
         /// <summary>

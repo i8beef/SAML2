@@ -10,8 +10,8 @@ namespace SAML2.Schema.Protocol
     /// has been terminated.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Protocol, IsNullable=false)]
     public class LogoutRequest : RequestAbstract
     {
         /// <summary>
@@ -67,9 +67,9 @@ namespace SAML2.Schema.Protocol
         /// currently recognized by the identity and service providers prior to this request.
         /// </summary>
         /// <value>The item.</value>
-        [XmlElement("BaseID", typeof (BaseIDAbstract), Namespace = Saml20Constants.ASSERTION)]
-        [XmlElement("EncryptedID", typeof (EncryptedElement), Namespace = Saml20Constants.ASSERTION)]
-        [XmlElement("NameID", typeof (NameID), Namespace = Saml20Constants.ASSERTION)]
+        [XmlElement("BaseID", typeof (BaseIDAbstract), Namespace = Saml20Constants.Assertion)]
+        [XmlElement("EncryptedID", typeof (EncryptedElement), Namespace = Saml20Constants.Assertion)]
+        [XmlElement("NameID", typeof (NameID), Namespace = Saml20Constants.Assertion)]
         public object Item { get; set; }
 
         /// <summary>

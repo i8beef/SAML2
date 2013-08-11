@@ -83,7 +83,7 @@ namespace SAML2
             set
             {
                 // Validate that the URI used to identify the algorithm of the session key is probably correct. Not a complete validation, but should catch most obvious mistakes.
-                if (!value.StartsWith(Saml20Constants.XENC))
+                if (!value.StartsWith(Saml20Constants.Xenc))
                 {
                     throw new ArgumentException("The session key algorithm must be specified using the identifying URIs listed in the specification.");
                 }
@@ -134,7 +134,7 @@ namespace SAML2
                 throw new InvalidOperationException("Unable to find the <EncryptedAssertion> element. Use a constructor or the LoadXml - method to set it.");
             }
 
-            var encryptedDataElement = GetElement(Schema.XEnc.EncryptedData.ElementName, Saml20Constants.XENC, _encryptedAssertion.DocumentElement);
+            var encryptedDataElement = GetElement(Schema.XEnc.EncryptedData.ElementName, Saml20Constants.Xenc, _encryptedAssertion.DocumentElement);
             var encryptedData = new EncryptedData();
             encryptedData.LoadXml(encryptedDataElement);
 
@@ -214,7 +214,7 @@ namespace SAML2
             var result = new XmlDocument();
             result.LoadXml(Serialization.SerializeToXmlString(encryptedAssertion));
 
-            var encryptedDataElement = GetElement(Schema.XEnc.EncryptedData.ElementName, Saml20Constants.XENC, result.DocumentElement);
+            var encryptedDataElement = GetElement(Schema.XEnc.EncryptedData.ElementName, Saml20Constants.Xenc, result.DocumentElement);
             EncryptedXml.ReplaceElement(encryptedDataElement, encryptedData, false);
 
             _encryptedAssertion = result;
@@ -266,9 +266,9 @@ namespace SAML2
                 throw new ArgumentException("The element must be of type \"EncryptedAssertion\".");
             }
 
-            if (element.NamespaceURI != Saml20Constants.ASSERTION)
+            if (element.NamespaceURI != Saml20Constants.Assertion)
             {
-                throw new ArgumentException("The element must be of type \"" + Saml20Constants.ASSERTION + "#EncryptedAssertion\".");
+                throw new ArgumentException("The element must be of type \"" + Saml20Constants.Assertion + "#EncryptedAssertion\".");
             }
         }
 
@@ -338,17 +338,17 @@ namespace SAML2
             // Check if there are any <EncryptedKey> elements immediately below the EncryptedAssertion element.
             foreach (XmlNode node in encryptedAssertionDoc.DocumentElement.ChildNodes)            
             {
-                if (node.LocalName == Schema.XEnc.EncryptedKey.ElementName && node.NamespaceURI == Saml20Constants.XENC)
+                if (node.LocalName == Schema.XEnc.EncryptedKey.ElementName && node.NamespaceURI == Saml20Constants.Xenc)
                 {
                     return ToSymmetricKey((XmlElement) node, keyAlgorithm);
                 }
             }
 
             // Check if the key is embedded in the <EncryptedData> element.
-            var encryptedData = GetElement(Schema.XEnc.EncryptedData.ElementName, Saml20Constants.XENC, encryptedAssertionDoc.DocumentElement);
+            var encryptedData = GetElement(Schema.XEnc.EncryptedData.ElementName, Saml20Constants.Xenc, encryptedAssertionDoc.DocumentElement);
             if (encryptedData != null)
             {
-                var encryptedKeyElement = GetElement(Schema.XEnc.EncryptedKey.ElementName, Saml20Constants.XENC, encryptedAssertionDoc.DocumentElement);
+                var encryptedKeyElement = GetElement(Schema.XEnc.EncryptedKey.ElementName, Saml20Constants.Xenc, encryptedAssertionDoc.DocumentElement);
                 if (encryptedKeyElement != null)
                 {
                     return ToSymmetricKey(encryptedKeyElement, keyAlgorithm);

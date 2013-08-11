@@ -29,111 +29,69 @@ namespace SAML2.Schema.XmlDSig
     /// known from application context. As such, they are optional but P and Q must either both appear or both 
     /// be absent. If all of P, Q, seed, and pgenCounter are present, implementations are not required to check 
     /// if they are consistent and are free to use either P and Q or seed and pgenCounter. All parameters are 
-    /// encoded as base64 [MIME] values. 
-    /// 
+    /// encoded as base64 [MIME] values.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
     public class DSAKeyValue
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "DSAKeyValue";
+        public const string ElementName = "DSAKeyValue";
 
-        private byte[] gField;
-
-        private byte[] jField;
-        private byte[] pField;
-
-        private byte[] pgenCounterField;
-        private byte[] qField;
-        private byte[] seedField;
-        private byte[] yField;
-
-
-        /// <summary>
-        /// Gets or sets the P.
-        /// </summary>
-        /// <value>The P.</value>
-        [XmlElement(DataType="base64Binary")]
-        public byte[] P
-        {
-            get { return pField; }
-            set { pField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the Q.
-        /// </summary>
-        /// <value>The Q.</value>
-        [XmlElement(DataType="base64Binary")]
-        public byte[] Q
-        {
-            get { return qField; }
-            set { qField = value; }
-        }
-
+        #region Elements
 
         /// <summary>
         /// Gets or sets the G.
         /// </summary>
         /// <value>The G.</value>
-        [XmlElement(DataType="base64Binary")]
-        public byte[] G
-        {
-            get { return gField; }
-            set { gField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the Y.
-        /// </summary>
-        /// <value>The Y.</value>
-        [XmlElement(DataType="base64Binary")]
-        public byte[] Y
-        {
-            get { return yField; }
-            set { yField = value; }
-        }
-
-
+        [XmlElement(DataType = "base64Binary")]
+        public byte[] G { get; set; }
+        
         /// <summary>
         /// Gets or sets the J.
         /// </summary>
         /// <value>The J.</value>
-        [XmlElement(DataType="base64Binary")]
-        public byte[] J
-        {
-            get { return jField; }
-            set { jField = value; }
-        }
-
+        [XmlElement(DataType = "base64Binary")]
+        public byte[] J { get; set; }
 
         /// <summary>
-        /// Gets or sets the seed.
+        /// Gets or sets the P.
         /// </summary>
-        /// <value>The seed.</value>
-        [XmlElement(DataType="base64Binary")]
-        public byte[] Seed
-        {
-            get { return seedField; }
-            set { seedField = value; }
-        }
-
+        /// <value>The P.</value>
+        [XmlElement(DataType = "base64Binary")]
+        public byte[] P { get; set; }
 
         /// <summary>
         /// Gets or sets the pgen counter.
         /// </summary>
         /// <value>The pgen counter.</value>
-        [XmlElement(DataType="base64Binary")]
-        public byte[] PgenCounter
-        {
-            get { return pgenCounterField; }
-            set { pgenCounterField = value; }
-        }
+        [XmlElement("PgenCounter", DataType = "base64Binary")]
+        public byte[] PgenCounter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Q.
+        /// </summary>
+        /// <value>The Q.</value>
+        [XmlElement(DataType = "base64Binary")]
+        public byte[] Q { get; set; }
+
+        /// <summary>
+        /// Gets or sets the seed.
+        /// </summary>
+        /// <value>The seed.</value>
+        [XmlElement("Seed", DataType = "base64Binary")]
+        public byte[] Seed { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Y.
+        /// </summary>
+        /// <value>The Y.</value>
+        [XmlElement(DataType = "base64Binary")]
+        public byte[] Y { get; set; }
+
+        #endregion
     }
 }

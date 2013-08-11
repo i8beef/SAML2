@@ -168,16 +168,16 @@ namespace SAML2
             switch (config.ServiceProvider.Endpoints.SignOnEndpoint.Binding)
             {
                 case BindingType.Artifact:
-                    result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_Artifact;
+                    result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HttpArtifact;
                     break;
                 case BindingType.Post:
-                    result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_Post;
+                    result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HttpPost;
                     break;
                 case BindingType.Redirect:
-                    result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_Redirect;
+                    result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HttpRedirect;
                     break;
                 case BindingType.Soap:
-                    result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_SOAP;
+                    result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HttpSoap;
                     break;
             }
 

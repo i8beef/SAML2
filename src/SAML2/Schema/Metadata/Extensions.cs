@@ -8,8 +8,8 @@ namespace SAML2.Schema.Metadata
     /// Extension type
     /// </summary>
     [Serializable]
-    [XmlType(TypeName="ExtensionsType", Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ElementName, Namespace = Saml20Constants.METADATA, IsNullable = false)]
+    [XmlType(TypeName="ExtensionsType", Namespace=Saml20Constants.Metadata)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class ExtensionType
     {
         /// <summary>

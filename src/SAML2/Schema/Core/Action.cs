@@ -8,8 +8,8 @@ namespace SAML2.Schema.Core
     /// string-data content provides the label for an action sought to be performed on the specified resource,
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Assertion, IsNullable=false)]
     public class Action
     {
         /// <summary>

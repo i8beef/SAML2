@@ -7,7 +7,7 @@ namespace SAML2.Schema.Core
     /// Item Choices
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = Saml20Constants.ASSERTION, IncludeInSchema = false)]
+    [XmlType(Namespace = Saml20Constants.Assertion, IncludeInSchema = false)]
     public enum EvidenceType
     {
         /// <summary>

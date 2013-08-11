@@ -125,7 +125,7 @@ namespace SAML2.Bindings
         /// <returns></returns>
         public Status GetStatus()
         {
-            var status = (XmlElement)SamlMessage.GetElementsByTagName(Status.ElementName, Saml20Constants.PROTOCOL)[0];
+            var status = (XmlElement)SamlMessage.GetElementsByTagName(Status.ElementName, Saml20Constants.Protocol)[0];
             return status != null ? Serialization.Deserialize<Status>(new XmlNodeReader(status)) : null;
         }
 

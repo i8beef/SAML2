@@ -209,7 +209,7 @@ namespace SAML2.Config
 
             try
             {
-                foreach (XmlNode child in doc.ChildNodes.Cast<XmlNode>().Where(child => child.NamespaceURI == Saml20Constants.METADATA))
+                foreach (XmlNode child in doc.ChildNodes.Cast<XmlNode>().Where(child => child.NamespaceURI == Saml20Constants.Metadata))
                 {
                     if (child.LocalName == EntityDescriptor.ElementName)
                     {

@@ -48,7 +48,7 @@ namespace SAML2.Tests.Saml20
             doc.Load( new MemoryStream(assertionBytes) );
 
             XmlNodeList encryptedList =
-                doc.GetElementsByTagName(EncryptedAssertion.ElementName, Saml20Constants.ASSERTION);
+                doc.GetElementsByTagName(EncryptedAssertion.ElementName, Saml20Constants.Assertion);
 
             Assert.That(encryptedList.Count == 1);
 
@@ -102,13 +102,13 @@ namespace SAML2.Tests.Saml20
         {            
             XmlDocument doc = new XmlDocument();
             doc.Load(file);            
-            XmlElement encryptedDataElement = GetElement(SAML2.Schema.XEnc.EncryptedData.ElementName, Saml20Constants.XENC, doc);                        
+            XmlElement encryptedDataElement = GetElement(SAML2.Schema.XEnc.EncryptedData.ElementName, Saml20Constants.Xenc, doc);                        
 
             
             EncryptedData encryptedData = new EncryptedData();
             encryptedData.LoadXml(encryptedDataElement);
 
-            XmlNodeList nodelist = doc.GetElementsByTagName(SAML2.Schema.XmlDSig.KeyInfo.ELEMENT_NAME, Saml20Constants.XMLDSIG);
+            XmlNodeList nodelist = doc.GetElementsByTagName(SAML2.Schema.XmlDSig.KeyInfo.ElementName, Saml20Constants.Xmldsig);
             Assert.That(nodelist.Count > 0);
 
             KeyInfo key = new KeyInfo();
@@ -151,7 +151,7 @@ namespace SAML2.Tests.Saml20
 
             // A very simple test to ensure that there is indeed an assertion in the plaintext.
             Assert.AreEqual(Assertion.ElementName, assertion.DocumentElement.LocalName);
-            Assert.AreEqual(Saml20Constants.ASSERTION, assertion.DocumentElement.NamespaceURI);
+            Assert.AreEqual(Saml20Constants.Assertion, assertion.DocumentElement.NamespaceURI);
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace SAML2.Tests.Saml20
             XmlDocument result;
             result = Serialization.Serialize(encryptedAssertion);            
 
-            XmlElement encryptedDataElement = GetElement(SAML2.Schema.XEnc.EncryptedData.ElementName, Saml20Constants.XENC, result);
+            XmlElement encryptedDataElement = GetElement(SAML2.Schema.XEnc.EncryptedData.ElementName, Saml20Constants.Xenc, result);
             EncryptedXml.ReplaceElement(encryptedDataElement, encryptedData, false);
         }        
 
@@ -287,7 +287,7 @@ namespace SAML2.Tests.Saml20
             XmlNodeList list;
 
             // Perform some rudimentary tests on the output.
-            list = encryptedAssertion.Assertion.GetElementsByTagName(Assertion.ElementName, Saml20Constants.ASSERTION);
+            list = encryptedAssertion.Assertion.GetElementsByTagName(Assertion.ElementName, Saml20Constants.Assertion);
             Assert.AreEqual(1, list.Count);
         }
 
@@ -312,7 +312,7 @@ namespace SAML2.Tests.Saml20
             XmlNodeList list;
 
             // Perform some rudimentary tests on the output.
-            list = encryptedAssertion.Assertion.GetElementsByTagName(Assertion.ElementName, Saml20Constants.ASSERTION);
+            list = encryptedAssertion.Assertion.GetElementsByTagName(Assertion.ElementName, Saml20Constants.Assertion);
             Assert.AreEqual(1, list.Count);
         }
 
@@ -336,10 +336,10 @@ namespace SAML2.Tests.Saml20
 
             // A number of simple tests until we get some better way to verify the generated encrypted assertion.
             XmlNodeList list;
-            list = encryptedAssertionXML.GetElementsByTagName(EncryptedAssertion.ElementName, Saml20Constants.ASSERTION);
+            list = encryptedAssertionXML.GetElementsByTagName(EncryptedAssertion.ElementName, Saml20Constants.Assertion);
             Assert.AreEqual(1, list.Count);
 
-            list = encryptedAssertionXML.GetElementsByTagName(SAML2.Schema.XEnc.EncryptedKey.ElementName, Saml20Constants.XENC);
+            list = encryptedAssertionXML.GetElementsByTagName(SAML2.Schema.XEnc.EncryptedKey.ElementName, Saml20Constants.Xenc);
             Assert.AreEqual(1, list.Count);
         }
 
@@ -379,7 +379,7 @@ namespace SAML2.Tests.Saml20
             // Verify that the EncryptionMethod element is set correctly.
             XmlNodeList list = 
                 encryptedAssertionXML.GetElementsByTagName(SAML2.Schema.XEnc.EncryptedData.ElementName,
-                                                           Saml20Constants.XENC);
+                                                           Saml20Constants.Xenc);
             Assert.AreEqual(1, list.Count);
             XmlElement el = (XmlElement) list[0];
 
@@ -388,7 +388,7 @@ namespace SAML2.Tests.Saml20
             foreach (XmlNode node in el.ChildNodes)
             {
                 if (node.LocalName == SAML2.Schema.XEnc.EncryptionMethod.ElementName &&
-                    node.NamespaceURI == Saml20Constants.XENC)
+                    node.NamespaceURI == Saml20Constants.Xenc)
                 {
                     el = (XmlElement) node;
                     Assert.AreEqual(EncryptedXml.XmlEncAES128Url, el.GetAttribute("Algorithm"));

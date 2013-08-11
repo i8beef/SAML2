@@ -8,7 +8,7 @@ namespace SAML2.Schema.XEnc
     /// The Transforms type
     /// </summary>
     [Serializable]
-    [XmlType(TypeName="TransformsType", Namespace=Saml20Constants.XENC)]
+    [XmlType(TypeName="TransformsType", Namespace=Saml20Constants.Xenc)]
     public class TransformsType
     {
         /// <summary>
@@ -22,7 +22,7 @@ namespace SAML2.Schema.XEnc
         /// Gets or sets the transform.
         /// </summary>
         /// <value>The transform.</value>
-        [XmlElement("Transform", Namespace=Saml20Constants.XMLDSIG)]
+        [XmlElement("Transform", Namespace=Saml20Constants.Xmldsig)]
         public Transform[] Transform { get; set; }
 
         #endregion

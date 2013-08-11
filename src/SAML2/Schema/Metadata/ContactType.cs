@@ -7,7 +7,7 @@ namespace SAML2.Schema.Metadata
     /// Contact type enum
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = Saml20Constants.METADATA)]
+    [XmlType(Namespace = Saml20Constants.Metadata)]
     public enum ContactType
     {
         /// <summary>

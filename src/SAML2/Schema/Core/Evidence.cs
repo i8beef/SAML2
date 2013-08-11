@@ -9,8 +9,8 @@ namespace SAML2.Schema.Core
     /// authority relied on in issuing the authorization decision.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Assertion, IsNullable=false)]
     public class Evidence
     {
         /// <summary>

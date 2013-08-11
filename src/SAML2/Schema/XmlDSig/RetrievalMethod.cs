@@ -21,55 +21,42 @@ namespace SAML2.Schema.XmlDSig
     /// 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
     public class RetrievalMethod
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "RetrievalMethod";
+        public const string ElementName = "RetrievalMethod";
 
-        private Transform[] transformsField;
+        #region Attributes
 
-        private string typeField;
-        private string uRIField;
+        /// <summary>
+        /// Gets or sets the URI.
+        /// </summary>
+        /// <value>The URI.</value>
+        [XmlAttribute("URI", DataType = "anyURI")]
+        public string URI { get; set; }
 
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>The type.</value>
+        [XmlAttribute("Type", DataType = "anyURI")]
+        public string Type { get; set; }
+
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets the transforms.
         /// </summary>
         /// <value>The transforms.</value>
         [XmlArrayItem("Transform", IsNullable=false)]
-        public Transform[] Transforms
-        {
-            get { return transformsField; }
-            set { transformsField = value; }
-        }
+        public Transform[] Transforms { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the URI.
-        /// </summary>
-        /// <value>The URI.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string URI
-        {
-            get { return uRIField; }
-            set { uRIField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the type.
-        /// </summary>
-        /// <value>The type.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Type
-        {
-            get { return typeField; }
-            set { typeField = value; }
-        }
+        #endregion
     }
 }

@@ -337,13 +337,13 @@ namespace SAML2
             switch (samlBinding)
             {
                 case BindingType.Artifact:
-                    return Saml20Constants.ProtocolBindings.HTTP_Artifact;
+                    return Saml20Constants.ProtocolBindings.HttpArtifact;
                 case BindingType.Post:
-                    return Saml20Constants.ProtocolBindings.HTTP_Post;
+                    return Saml20Constants.ProtocolBindings.HttpPost;
                 case BindingType.Redirect:
-                    return Saml20Constants.ProtocolBindings.HTTP_Redirect;
+                    return Saml20Constants.ProtocolBindings.HttpRedirect;
                 case BindingType.Soap:
-                    return Saml20Constants.ProtocolBindings.HTTP_SOAP;
+                    return Saml20Constants.ProtocolBindings.HttpSoap;
                 case BindingType.NotSet:
                     return defaultValue;
                 default:
@@ -409,7 +409,7 @@ namespace SAML2
 
             var spDescriptor = new SPSSODescriptor
                                    {
-                                       ProtocolSupportEnumeration = new[] {Saml20Constants.PROTOCOL},
+                                       ProtocolSupportEnumeration = new[] {Saml20Constants.Protocol},
                                        AuthnRequestsSigned = XmlConvert.ToString(true),
                                        WantAssertionsSigned = XmlConvert.ToString(true)
                                    };
@@ -440,13 +440,13 @@ namespace SAML2
                                                 Index = endpoint.Index,
                                                 IsDefault = true,
                                                 Location = new Uri(baseUrl, endpoint.LocalPath).ToString(),
-                                                Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HTTP_Post)
+                                                Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HttpPost)
                                             };
                     signonServiceEndpoints.Add(loginEndpoint);
 
                     var artifactSignonEndpoint = new IndexedEndpoint
                                                      {
-                                                         Binding = Saml20Constants.ProtocolBindings.HTTP_SOAP,
+                                                         Binding = Saml20Constants.ProtocolBindings.HttpSoap,
                                                          Index = loginEndpoint.Index,
                                                          Location = loginEndpoint.Location
                                                      };
@@ -462,7 +462,7 @@ namespace SAML2
                                                  Location = new Uri(baseUrl, endpoint.LocalPath).ToString()
                                              };
                     logoutEndpoint.ResponseLocation = logoutEndpoint.Location;
-                    logoutEndpoint.Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HTTP_Post);
+                    logoutEndpoint.Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HttpPost);
                     logoutServiceEndpoints.Add(logoutEndpoint);
 
                     // TODO: Look at this...
@@ -471,12 +471,12 @@ namespace SAML2
                                              Location = new Uri(baseUrl, endpoint.LocalPath).ToString()
                                          };
                     logoutEndpoint.ResponseLocation = logoutEndpoint.Location;
-                    logoutEndpoint.Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HTTP_Redirect);
+                    logoutEndpoint.Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HttpRedirect);
                     logoutServiceEndpoints.Add(logoutEndpoint);
 
                     var artifactLogoutEndpoint = new IndexedEndpoint
                                                      {
-                                                         Binding = Saml20Constants.ProtocolBindings.HTTP_SOAP,
+                                                         Binding = Saml20Constants.ProtocolBindings.HttpSoap,
                                                          Index = endpoint.Index,
                                                          Location = logoutEndpoint.Location
                                                      };
@@ -588,16 +588,16 @@ namespace SAML2
                             BindingType binding;
                             switch (endpoint.Binding)
                             {
-                                case Saml20Constants.ProtocolBindings.HTTP_Post:
+                                case Saml20Constants.ProtocolBindings.HttpPost:
                                     binding = BindingType.Post;
                                     break;
-                                case Saml20Constants.ProtocolBindings.HTTP_Redirect:
+                                case Saml20Constants.ProtocolBindings.HttpRedirect:
                                     binding = BindingType.Redirect;
                                     break;
-                                case Saml20Constants.ProtocolBindings.HTTP_Artifact:
+                                case Saml20Constants.ProtocolBindings.HttpArtifact:
                                     binding = BindingType.Artifact;
                                     break;
-                                case Saml20Constants.ProtocolBindings.HTTP_SOAP:
+                                case Saml20Constants.ProtocolBindings.HttpSoap:
                                     binding = BindingType.Artifact;
                                     break;
                                 default:
@@ -622,16 +622,16 @@ namespace SAML2
                                 BindingType binding;
                                 switch (endpoint.Binding)
                                 {
-                                    case Saml20Constants.ProtocolBindings.HTTP_Post:
+                                    case Saml20Constants.ProtocolBindings.HttpPost:
                                         binding = BindingType.Post;
                                         break;
-                                    case Saml20Constants.ProtocolBindings.HTTP_Redirect:
+                                    case Saml20Constants.ProtocolBindings.HttpRedirect:
                                         binding = BindingType.Redirect;
                                         break;
-                                    case Saml20Constants.ProtocolBindings.HTTP_Artifact:
+                                    case Saml20Constants.ProtocolBindings.HttpArtifact:
                                         binding = BindingType.Artifact;
                                         break;
-                                    case Saml20Constants.ProtocolBindings.HTTP_SOAP:
+                                    case Saml20Constants.ProtocolBindings.HttpSoap:
                                         binding = BindingType.Artifact;
                                         break;
                                     default:
@@ -662,16 +662,16 @@ namespace SAML2
                             BindingType binding;
                             switch (endpoint.Binding)
                             {
-                                case Saml20Constants.ProtocolBindings.HTTP_Post:
+                                case Saml20Constants.ProtocolBindings.HttpPost:
                                     binding = BindingType.Post;
                                     break;
-                                case Saml20Constants.ProtocolBindings.HTTP_Redirect:
+                                case Saml20Constants.ProtocolBindings.HttpRedirect:
                                     binding = BindingType.Redirect;
                                     break;
-                                case Saml20Constants.ProtocolBindings.HTTP_Artifact:
+                                case Saml20Constants.ProtocolBindings.HttpArtifact:
                                     binding = BindingType.Artifact;
                                     break;
-                                case Saml20Constants.ProtocolBindings.HTTP_SOAP:
+                                case Saml20Constants.ProtocolBindings.HttpSoap:
                                     binding = BindingType.Artifact;
                                     break;
                                 default:
@@ -718,7 +718,7 @@ namespace SAML2
         /// <param name="doc">The doc.</param>
         private void ExtractKeyDescriptors(XmlDocument doc)
         {            
-            var list = doc.GetElementsByTagName(KeyDescriptor.ElementName, Saml20Constants.METADATA);
+            var list = doc.GetElementsByTagName(KeyDescriptor.ElementName, Saml20Constants.Metadata);
             _keys = new List<KeyDescriptor>(list.Count);
 
             foreach (XmlNode node in list)

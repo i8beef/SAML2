@@ -10,8 +10,8 @@ namespace SAML2.Schema.Protocol
     /// requirement for a schema to be present or for schema validation of the &lt;StatusDetail&gt; contents.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Protocol, IsNullable=false)]
     public class StatusDetail
     {
         /// <summary>

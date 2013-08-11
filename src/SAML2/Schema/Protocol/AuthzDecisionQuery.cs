@@ -16,8 +16,8 @@ namespace SAML2.Schema.Protocol
     /// enhanced authorization decision features.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ElementName, Namespace = Saml20Constants.PROTOCOL, IsNullable = false)]
+    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class AuthzDecisionQuery : SubjectQueryAbstract
     {
         /// <summary>
@@ -44,7 +44,7 @@ namespace SAML2.Schema.Protocol
         /// The actions for which authorization is requested.
         /// </summary>
         /// <value>The action.</value>
-        [XmlElement("Action", Namespace=Saml20Constants.ASSERTION)]
+        [XmlElement("Action", Namespace=Saml20Constants.Assertion)]
         public Action[] Action { get; set; }
 
 
@@ -53,7 +53,7 @@ namespace SAML2.Schema.Protocol
         /// A set of assertions that the SAML authority MAY rely on in making its authorization decision
         /// </summary>
         /// <value>The evidence.</value>
-        [XmlElement("Evidence", Namespace=Saml20Constants.ASSERTION)]
+        [XmlElement("Evidence", Namespace=Saml20Constants.Assertion)]
         public Evidence Evidence { get; set; }
 
         #endregion

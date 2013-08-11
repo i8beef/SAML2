@@ -12,8 +12,8 @@ namespace SAML2.Schema.Protocol
     [XmlInclude(typeof (AttributeQuery))]
     [XmlInclude(typeof (AuthnQuery))]
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ElementName, Namespace = Saml20Constants.PROTOCOL, IsNullable = false)]
+    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public abstract class SubjectQueryAbstract : RequestAbstract
     {
         /// <summary>
@@ -27,7 +27,7 @@ namespace SAML2.Schema.Protocol
         /// Gets or sets the subject.
         /// </summary>
         /// <value>The subject.</value>
-        [XmlElement("Subject", Namespace=Saml20Constants.ASSERTION)]
+        [XmlElement("Subject", Namespace=Saml20Constants.Assertion)]
         public Subject Subject { get; set; }
 
         #endregion

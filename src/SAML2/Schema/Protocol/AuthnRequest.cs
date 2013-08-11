@@ -19,8 +19,8 @@ namespace SAML2.Schema.Protocol
     /// by the protocol binding used to deliver the message.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Protocol, IsNullable=false)]
     public class AuthnRequest : RequestAbstract
     {
 
@@ -180,7 +180,7 @@ namespace SAML2.Schema.Protocol
         /// conditions on the use of the request itself.
         /// </summary>
         /// <value>The conditions.</value>
-        [XmlElement("Conditions", Namespace = Saml20Constants.ASSERTION)]
+        [XmlElement("Conditions", Namespace = Saml20Constants.Assertion)]
         public Conditions Conditions { get; set; }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace SAML2.Schema.Protocol
         /// can be confirmed.
         /// </summary>
         /// <value>The subject.</value>
-        [XmlElement("Subject", Namespace = Saml20Constants.ASSERTION)]
+        [XmlElement("Subject", Namespace = Saml20Constants.Assertion)]
         public Subject Subject { get; set; }
 
         #endregion

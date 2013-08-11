@@ -8,8 +8,8 @@ namespace SAML2.Schema.Core
     /// BaseIDAbstractType complex type is abstract and is thus usable only as the base of a derived type.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
+    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public abstract class BaseIDAbstract
     {
         /// <summary>

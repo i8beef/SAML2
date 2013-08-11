@@ -10,19 +10,23 @@ namespace SAML2.Schema.XmlDSig
     /// represented as PCDATA or element types from an external namespace. 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
     public class KeyValue
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "KeyValue";
+        public const string ElementName = "KeyValue";
 
-        private object itemField;
+        /// <summary>
+        /// Gets or sets the text.
+        /// </summary>
+        /// <value>The text.</value>
+        [XmlText]
+        public string[] Text { get; set; }
 
-        private string[] textField;
-
+        #region Elements
 
         /// <summary>
         /// Gets or sets the item.
@@ -32,22 +36,8 @@ namespace SAML2.Schema.XmlDSig
         [XmlAnyElement]
         [XmlElement("DSAKeyValue", typeof (DSAKeyValue))]
         [XmlElement("RSAKeyValue", typeof (RSAKeyValue))]
-        public object Item
-        {
-            get { return itemField; }
-            set { itemField = value; }
-        }
+        public object Item { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the text.
-        /// </summary>
-        /// <value>The text.</value>
-        [XmlText]
-        public string[] Text
-        {
-            get { return textField; }
-            set { textField = value; }
-        }
+        #endregion
     }
 }

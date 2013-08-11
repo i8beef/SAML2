@@ -5,37 +5,28 @@ using SAML2.Utils;
 
 namespace SAML2.Validation
 {
+    /// <summary>
+    /// SAML2 Attribute validator.
+    /// </summary>
     public class Saml20AttributeValidator : ISaml20AttributeValidator
     {
-        private Saml20XmlAnyAttributeValidator _anyAttrValidator;
-        public Saml20XmlAnyAttributeValidator AnyAttrValidator
-        {
-            get
-            {
-                if (_anyAttrValidator != null)
-                    return _anyAttrValidator;
-
-                _anyAttrValidator = new Saml20XmlAnyAttributeValidator();
-                return _anyAttrValidator;
-            }
-        }
-
-        private Saml20EncryptedElementValidator _encElemValidator = new Saml20EncryptedElementValidator();
-        public Saml20EncryptedElementValidator EncElemValidator
-        {
-            get
-            {
-                if (_encElemValidator != null)
-                    return _encElemValidator;
-
-                _encElemValidator = new Saml20EncryptedElementValidator();
-                return _encElemValidator;
-            }
-        }
+        /// <summary>
+        /// AnyAttributeValidator backing field.
+        /// </summary>
+        private readonly Saml20XmlAnyAttributeValidator _anyAttributeValidator = new Saml20XmlAnyAttributeValidator();
 
         /// <summary>
-        /// [SAML2.0std] section 2.7.3.1
+        /// EncryptedElementValidator backing field.
         /// </summary>
+        private readonly Saml20EncryptedElementValidator _encryptedElementValidator = new Saml20EncryptedElementValidator();
+
+        /// <summary>
+        /// Validates the attribute.
+        /// </summary>
+        /// <remarks>
+        /// [SAML2.0std] section 2.7.3.1
+        /// </remarks>
+        /// <param name="samlAttribute">The saml attribute.</param>
         public void ValidateAttribute(SamlAttribute samlAttribute)
         {
             if (samlAttribute == null) throw new ArgumentNullException("samlAttribute");
@@ -48,20 +39,28 @@ namespace SAML2.Validation
                 foreach (object o in samlAttribute.AttributeValue)
                 {
                     if (o == null)
+                    {
                         throw new Saml20FormatException("null-AttributeValue elements are not supported");
+                    }
                 }
             }
 
             if (samlAttribute.AnyAttr != null)
-                AnyAttrValidator.ValidateXmlAnyAttributes(samlAttribute.AnyAttr);
+            {
+                _anyAttributeValidator.ValidateXmlAnyAttributes(samlAttribute.AnyAttr);
+            }
         }
 
         /// <summary>
-        /// [SAML2.0std] section 2.7.3.2
+        /// Validates the encrypted attribute.
         /// </summary>
+        /// <remarks>
+        /// [SAML2.0std] section 2.7.3.2
+        /// </remarks>
+        /// <param name="encryptedElement">The encrypted element.</param>
         public void ValidateEncryptedAttribute(EncryptedElement encryptedElement)
         {
-            EncElemValidator.ValidateEncryptedElement(encryptedElement, "EncryptedAttribute");
+            _encryptedElementValidator.ValidateEncryptedElement(encryptedElement, "EncryptedAttribute");
         }
     }
 }

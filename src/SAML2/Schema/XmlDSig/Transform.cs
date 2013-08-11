@@ -33,24 +33,37 @@ namespace SAML2.Schema.XmlDSig
     /// given by a Java class appearing as a base64 encoded parameter to a Java Transform algorithm. However, 
     /// applications should refrain from using application-specific transforms if they wish their signatures to 
     /// be verifiable outside of their application domain. Transform Algorithms (section 6.6) defines the list 
-    /// of standard transformations. 
-    /// 
+    /// of standard transformations.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
     public class Transform
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Transform";
+        public const string ElementName = "Transform";
 
-        private string algorithmField;
-        private object[] itemsField;
+        /// <summary>
+        /// Gets or sets the text.
+        /// </summary>
+        /// <value>The text.</value>
+        [XmlText]
+        public string[] Text { get; set; }
 
-        private string[] textField;
+        #region Attributes
 
+        /// <summary>
+        /// Gets or sets the algorithm.
+        /// </summary>
+        /// <value>The algorithm.</value>
+        [XmlAttribute("Algorithm", DataType = "anyURI")]
+        public string Algorithm { get; set; }
+
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets the items.
@@ -58,34 +71,8 @@ namespace SAML2.Schema.XmlDSig
         /// <value>The items.</value>
         [XmlAnyElement]
         [XmlElement("XPath", typeof (string))]
-        public object[] Items
-        {
-            get { return itemsField; }
-            set { itemsField = value; }
-        }
+        public object[] Items { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the text.
-        /// </summary>
-        /// <value>The text.</value>
-        [XmlText]
-        public string[] Text
-        {
-            get { return textField; }
-            set { textField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the algorithm.
-        /// </summary>
-        /// <value>The algorithm.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Algorithm
-        {
-            get { return algorithmField; }
-            set { algorithmField = value; }
-        }
+        #endregion
     }
 }

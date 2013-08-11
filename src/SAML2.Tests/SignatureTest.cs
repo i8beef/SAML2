@@ -226,7 +226,7 @@ namespace SAML2.Tests.Saml20
             // Do it!
             signedXml.ComputeSignature();
 
-            XmlNodeList nodes = doc.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.ASSERTION);
+            XmlNodeList nodes = doc.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.Assertion);
             Assert.That(nodes.Count == 1);
             XmlNode node = nodes[0];
             doc.DocumentElement.InsertAfter(doc.ImportNode(signedXml.GetXml(), true), node); 
@@ -244,7 +244,7 @@ namespace SAML2.Tests.Saml20
             document.Load(fs);
             fs.Close();
             
-            XmlNodeList nodes = document.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.ASSERTION);
+            XmlNodeList nodes = document.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.Assertion);
             Saml20Assertion assertion = new Saml20Assertion(document.DocumentElement, AssertionUtil.GetTrustedSigners(nodes[0].Value), false);
             
             return assertion;
@@ -273,7 +273,7 @@ namespace SAML2.Tests.Saml20
         {
             SignedXml signedXml = new SignedXml(assertion.DocumentElement);
 
-            XmlNodeList nodeList = assertion.GetElementsByTagName(Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
+            XmlNodeList nodeList = assertion.GetElementsByTagName(Signature.ElementName, Saml20Constants.Xmldsig);
             signedXml.LoadXml((XmlElement)nodeList[0]);
 
             Assert.IsNotNull(signedXml.Signature);

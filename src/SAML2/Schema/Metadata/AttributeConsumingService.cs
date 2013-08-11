@@ -9,8 +9,8 @@ namespace SAML2.Schema.Metadata
     /// provider in terms of the attributes the service requires or desires.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.METADATA, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Metadata)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Metadata, IsNullable=false)]
     public class AttributeConsumingService
     {
         /// <summary>

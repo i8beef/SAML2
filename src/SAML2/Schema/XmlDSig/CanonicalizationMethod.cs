@@ -46,48 +46,36 @@ namespace SAML2.Schema.XmlDSig
     /// 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace = Saml20Constants.XMLDSIG, IsNullable = false)]
-    public class CanonicalizationMethod {
-
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
+    public class CanonicalizationMethod
+    {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "CanonicalizationMethod";
-        
-        private XmlNode[] anyField;
-        
-        private string algorithmField;
+        public const string ElementName = "CanonicalizationMethod";
 
-
-        /// <summary>
-        /// Gets or sets any.
-        /// </summary>
-        /// <value>Any.</value>
-        [XmlTextAttribute]
-        [XmlAnyElementAttribute]
-        public XmlNode[] Any {
-            get {
-                return anyField;
-            }
-            set {
-                anyField = value;
-            }
-        }
-
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the algorithm.
         /// </summary>
         /// <value>The algorithm.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Algorithm {
-            get {
-                return algorithmField;
-            }
-            set {
-                algorithmField = value;
-            }
-        }
+        [XmlAttribute("Algorithm", DataType = "anyURI")]
+        public string Algorithm { get; set; }
+
+        #endregion
+        
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets any.
+        /// </summary>
+        /// <value>Any.</value>
+        [XmlText]
+        [XmlAnyElement]
+        public XmlNode[] Any { get; set; }
+
+        #endregion
     }
 }

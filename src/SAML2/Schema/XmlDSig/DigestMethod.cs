@@ -15,22 +15,29 @@ namespace SAML2.Schema.XmlDSig
     /// transforms is an octet stream, then no conversion occurs (comments might be present if the Canonical 
     /// XML with Comments was specified in the Transforms). The digest algorithm is applied to the data octets 
     /// of the resulting octet stream
-    /// 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
     public class DigestMethod
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "DigestMethod";
+        public const string ElementName = "DigestMethod";
 
-        private string algorithmField;
-        private XmlNode[] anyField;
+        #region Attributes
 
+        /// <summary>
+        /// Gets or sets the algorithm.
+        /// </summary>
+        /// <value>The algorithm.</value>
+        [XmlAttribute("Algorithm", DataType="anyURI")]
+        public string Algorithm { get; set; }
+
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets any.
@@ -38,22 +45,8 @@ namespace SAML2.Schema.XmlDSig
         /// <value>Any.</value>
         [XmlText]
         [XmlAnyElement]
-        public XmlNode[] Any
-        {
-            get { return anyField; }
-            set { anyField = value; }
-        }
+        public XmlNode[] Any { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the algorithm.
-        /// </summary>
-        /// <value>The algorithm.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Algorithm
-        {
-            get { return algorithmField; }
-            set { algorithmField = value; }
-        }
+        #endregion
     }
 }

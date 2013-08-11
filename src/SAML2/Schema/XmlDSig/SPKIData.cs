@@ -12,40 +12,35 @@ namespace SAML2.Schema.XmlDSig
     /// structure as a child of KeyInfo. 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
     public class SPKIData
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "SPKIData";
+        public const string ElementName = "SPKIData";
 
-        private XmlElement anyField;
-        private byte[][] sPKISexpField;
-
-
-        /// <summary>
-        /// Gets or sets the SPKI sexp.
-        /// </summary>
-        /// <value>The SPKI sexp.</value>
-        [XmlElement("SPKISexp", DataType="base64Binary")]
-        public byte[][] SPKISexp
-        {
-            get { return sPKISexpField; }
-            set { sPKISexpField = value; }
-        }
-
+        #region Attributes
 
         /// <summary>
         /// Gets or sets any.
         /// </summary>
         /// <value>Any.</value>
         [XmlAnyElement]
-        public XmlElement Any
-        {
-            get { return anyField; }
-            set { anyField = value; }
-        }
+        public XmlElement Any { get; set; }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the SPKI sexp.
+        /// </summary>
+        /// <value>The SPKI sexp.</value>
+        [XmlElement("SPKISexp", DataType="base64Binary")]
+        public byte[][] SPKISexp { get; set; }
+
+        #endregion
     }
 }

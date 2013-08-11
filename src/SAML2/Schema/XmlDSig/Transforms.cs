@@ -7,26 +7,24 @@ namespace SAML2.Schema.XmlDSig
     /// Holds a list of transform classes
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
     public class Transforms
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Transforms";
+        public const string ElementName = "Transforms";
 
-        private Transform[] transformField;
+        #region Elements
 
         /// <summary>
         /// Gets or sets the transform.
         /// </summary>
         /// <value>The transform.</value>
         [XmlElement("Transform")]
-        public Transform[] Transform
-        {
-            get { return transformField; }
-            set { transformField = value; }
-        }
+        public Transform[] Transform { get; set; }
+
+        #endregion
     }
 }

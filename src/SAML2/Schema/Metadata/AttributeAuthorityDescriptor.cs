@@ -9,8 +9,8 @@ namespace SAML2.Schema.Metadata
     /// &lt;samlp:AttributeQuery&gt; messages.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ElementName, Namespace = Saml20Constants.METADATA, IsNullable = false)]
+    [XmlType(Namespace=Saml20Constants.Metadata)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class AttributeAuthorityDescriptor : RoleDescriptor {
         
         /// <summary>
@@ -27,7 +27,7 @@ namespace SAML2.Schema.Metadata
         /// definition are supported.
         /// </summary>
         /// <value>The attribute.</value>
-        [XmlElement("Attribute", Namespace = Saml20Constants.METADATA)]
+        [XmlElement("Attribute", Namespace = Saml20Constants.Metadata)]
         public Attribute[] Attribute { get; set; }
 
         /// <summary>

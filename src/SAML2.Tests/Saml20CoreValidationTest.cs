@@ -54,8 +54,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Email;
             nameID.Value = " ";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace SAML2.Tests.Saml20
         {
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Email;
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
 
             string[] invalidEmails =
                 new string[]
@@ -96,7 +96,7 @@ namespace SAML2.Tests.Saml20
 
                 try
                 {
-                    validator.ValidateNameID(nameID);
+                    validator.ValidateNameId(nameID);
                     Assert.Fail("Email address " + email + " is not supposed to be valid");
                 }
                 catch (Saml20FormatException sfe)
@@ -112,8 +112,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Email;
             nameID.Value = "my.address@yours.com";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -123,8 +123,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.X509SubjectName;
             nameID.Value = "";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -134,8 +134,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.X509SubjectName;
             nameID.Value = " ";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -145,8 +145,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Windows;
             nameID.Value = " ";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -154,13 +154,13 @@ namespace SAML2.Tests.Saml20
         {
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Windows;
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
 
             nameID.Value = "a";
-            validator.ValidateNameID(nameID);
+            validator.ValidateNameId(nameID);
 
             nameID.Value = "b\a";
-            validator.ValidateNameID(nameID);
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -170,8 +170,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Kerberos;
             nameID.Value = "";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -181,8 +181,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Kerberos;
             nameID.Value = " ";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
         [Test]
         [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Kerberos Format attribute MUST contain a Value with at least 3 characters")]
@@ -191,8 +191,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Kerberos;
             nameID.Value = @"b";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -202,8 +202,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Kerberos;
             nameID.Value = @"a\b";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -212,8 +212,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Kerberos;
             nameID.Value = "a@b";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -223,8 +223,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Entity;
             nameID.Value = "";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -234,8 +234,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Entity;
             nameID.Value = " ";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -245,8 +245,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Entity;
             nameID.Value = new string('f', 1025);
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -255,8 +255,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Entity;
             nameID.Value = new string('f', 1024);
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -267,8 +267,8 @@ namespace SAML2.Tests.Saml20
             nameID.Format = Saml20Constants.NameIdentifierFormats.Entity;
             nameID.Value = new string('f', 1024);
             nameID.NameQualifier = "ksljdf";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -279,8 +279,8 @@ namespace SAML2.Tests.Saml20
             nameID.Format = Saml20Constants.NameIdentifierFormats.Entity;
             nameID.Value = new string('f', 1024);
             nameID.SPNameQualifier = "ksljdf";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -291,8 +291,8 @@ namespace SAML2.Tests.Saml20
             nameID.Format = Saml20Constants.NameIdentifierFormats.Entity;
             nameID.Value = new string('f', 1024);
             nameID.SPProvidedID = "ksljdf";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -302,8 +302,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Persistent;
             nameID.Value = "";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -313,8 +313,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Persistent;
             nameID.Value = " ";
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -324,8 +324,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Persistent;
             nameID.Value = new string('f', 257);
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -334,8 +334,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Persistent;
             nameID.Value = new string('f', 256);
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -345,8 +345,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Transient;
             nameID.Value = new string('f', 15);
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -356,8 +356,8 @@ namespace SAML2.Tests.Saml20
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Transient;
             nameID.Value = new string('f', 257);
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
-            validator.ValidateNameID(nameID);
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
+            validator.ValidateNameId(nameID);
         }
 
         [Test]
@@ -365,13 +365,13 @@ namespace SAML2.Tests.Saml20
         {
             NameID nameID = new NameID();
             nameID.Format = Saml20Constants.NameIdentifierFormats.Transient;
-            Saml20NameIDValidator validator = new Saml20NameIDValidator();
+            Saml20NameIdValidator validator = new Saml20NameIdValidator();
 
             nameID.Value = new string('f', 256);
-            validator.ValidateNameID(nameID);
+            validator.ValidateNameId(nameID);
 
             nameID.Value = new string('f', 16);
-            validator.ValidateNameID(nameID);
+            validator.ValidateNameId(nameID);
         }
         #endregion
 
@@ -960,7 +960,7 @@ namespace SAML2.Tests.Saml20
         }
 
         [Test]
-        [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "SubjectConfirmationData element MUST have at least one " + KeyInfo.ELEMENT_NAME + " subelement")]
+        [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "SubjectConfirmationData element MUST have at least one " + KeyInfo.ElementName + " subelement")]
         public void SubjectConfirmationData_Invalid_KeyInfoConfirmationData_NoAnyElement()
         {
             KeyInfoConfirmationData subjectConfirmationData = new KeyInfoConfirmationData();
@@ -971,7 +971,7 @@ namespace SAML2.Tests.Saml20
         }
 
         [Test]
-        [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "SubjectConfirmationData element MUST contain at least one " + KeyInfo.ELEMENT_NAME + " in namespace " + Saml20Constants.XMLDSIG)]
+        [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "SubjectConfirmationData element MUST contain at least one " + KeyInfo.ElementName + " in namespace " + Saml20Constants.Xmldsig)]
         public void SubjectConfirmationData_Invalid_KeyInfoConfirmationData_IncompleteAnyElement()
         {
             KeyInfoConfirmationData subjectConfirmationData = new KeyInfoConfirmationData();
@@ -991,21 +991,21 @@ namespace SAML2.Tests.Saml20
             KeyInfoConfirmationData subjectConfirmationData = new KeyInfoConfirmationData();
             subjectConfirmationData.Recipient = "urn:wellformed.uri:ok";
             XmlDocument doc = new XmlDocument();
-            subjectConfirmationData.AnyElements = new XmlElement[] { doc.CreateElement("ds", "KeyInfo", Saml20Constants.XMLDSIG) };
+            subjectConfirmationData.AnyElements = new XmlElement[] { doc.CreateElement("ds", "KeyInfo", Saml20Constants.Xmldsig) };
 
             Saml20SubjectConfirmationDataValidator validator = new Saml20SubjectConfirmationDataValidator();
             validator.ValidateSubjectConfirmationData(subjectConfirmationData);
         }
 
         [Test]
-        [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "SubjectConfirmationData element MUST contain at least one " + KeyInfo.ELEMENT_NAME + " in namespace " + Saml20Constants.XMLDSIG)]
+        [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "SubjectConfirmationData element MUST contain at least one " + KeyInfo.ElementName + " in namespace " + Saml20Constants.Xmldsig)]
         public void SubjectConfirmationData_Invalid_KeyInfoConfirmationData_WrongAnyElement()
         {
             KeyInfoConfirmationData subjectConfirmationData = new KeyInfoConfirmationData();
             subjectConfirmationData.Recipient = "urn:wellformed.uri:ok";
             XmlDocument doc = new XmlDocument();
             XmlElement elem = doc.CreateElement("ds", "KeyInfo", "http://wrongNameSpace.uri");
-            elem.AppendChild((doc.CreateElement("ds", "KeyName", Saml20Constants.XMLDSIG)));
+            elem.AppendChild((doc.CreateElement("ds", "KeyName", Saml20Constants.Xmldsig)));
 
             subjectConfirmationData.AnyElements = new XmlElement[] { elem };
 
@@ -1019,7 +1019,7 @@ namespace SAML2.Tests.Saml20
             KeyInfoConfirmationData subjectConfirmationData = new KeyInfoConfirmationData();
             subjectConfirmationData.Recipient = "urn:wellformed.uri:ok";
             XmlDocument doc = new XmlDocument();
-            XmlElement elem = doc.CreateElement("ds", "KeyInfo", Saml20Constants.XMLDSIG);
+            XmlElement elem = doc.CreateElement("ds", "KeyInfo", Saml20Constants.Xmldsig);
             elem.AppendChild((doc.CreateElement("lalala")));
 
             subjectConfirmationData.AnyElements = new XmlElement[] { elem };
@@ -1029,7 +1029,7 @@ namespace SAML2.Tests.Saml20
         }
 
         [Test]
-        [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "SubjectConfirmationData element MUST have at least one " + KeyInfo.ELEMENT_NAME + " subelement")]
+        [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "SubjectConfirmationData element MUST have at least one " + KeyInfo.ElementName + " subelement")]
         public void SubjectConfirmationData_Method_HolderOfKey_Invalid_NoKeyInfo()
         {
             SubjectConfirmation subjectConfirmation = new SubjectConfirmation();
@@ -1047,7 +1047,7 @@ namespace SAML2.Tests.Saml20
             subjectConfirmation.Method = Saml20Constants.SubjectConfirmationMethods.HolderOfKey;
             subjectConfirmation.SubjectConfirmationData = new SubjectConfirmationData();
             XmlDocument doc = new XmlDocument();
-            XmlElement elem = doc.CreateElement("ds", "KeyInfo", Saml20Constants.XMLDSIG);
+            XmlElement elem = doc.CreateElement("ds", "KeyInfo", Saml20Constants.Xmldsig);
             elem.AppendChild((doc.CreateElement("lalala")));
 
             subjectConfirmation.SubjectConfirmationData.AnyElements = new XmlElement[] { elem };
@@ -1378,7 +1378,7 @@ namespace SAML2.Tests.Saml20
             XmlDocument doc = new XmlDocument();
             saml20Assertion.Items = statements.ToArray();
 
-            foreach (string samlns in Saml20Constants.SAML_NAMESPACES)
+            foreach (string samlns in Saml20Constants.SamlNamespaces)
             {
                 sab.AnyAttr = new XmlAttribute[1] { doc.CreateAttribute("someprefix", "SamlQualified", samlns) };
 
@@ -1418,7 +1418,7 @@ namespace SAML2.Tests.Saml20
         /// Test that EncryptedData element must have the correct Type value
         /// </summary>
         [Test]
-        [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Type attribute of EncryptedData MUST have value " + Saml20Constants.XENC + "Element" + " if it is present")]
+        [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Type attribute of EncryptedData MUST have value " + Saml20Constants.Xenc + "Element" + " if it is present")]
         public void AttributeStatement_Invalid_EncryptedAttribute_WrongType()
         {
             Assertion saml20Assertion = AssertionUtil.GetBasicAssertion();

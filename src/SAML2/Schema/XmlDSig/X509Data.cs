@@ -29,19 +29,16 @@ namespace SAML2.Schema.XmlDSig
     /// it or being part of a certification chain that terminates in a certificate containing the validation key. 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
     public class X509Data
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "X509Data";
+        public const string ElementName = "X509Data";
 
-        private ItemsChoiceType[] itemsElementNameField;
-        private object[] itemsField;
-
+        #region Elements
 
         /// <summary>
         /// Gets or sets the items.
@@ -49,18 +46,13 @@ namespace SAML2.Schema.XmlDSig
         /// </summary>
         /// <value>The items.</value>
         [XmlAnyElement]
-        [XmlElement("X509CRL", typeof (byte[]), DataType="base64Binary")]
-        [XmlElement("X509Certificate", typeof (byte[]), DataType="base64Binary")]
+        [XmlElement("X509CRL", typeof (byte[]), DataType = "base64Binary")]
+        [XmlElement("X509Certificate", typeof (byte[]), DataType = "base64Binary")]
         [XmlElement("X509IssuerSerial", typeof (X509IssuerSerial))]
-        [XmlElement("X509SKI", typeof (byte[]), DataType="base64Binary")]
+        [XmlElement("X509SKI", typeof (byte[]), DataType = "base64Binary")]
         [XmlElement("X509SubjectName", typeof (string))]
         [XmlChoiceIdentifier("ItemsElementName")]
-        public object[] Items
-        {
-            get { return itemsField; }
-            set { itemsField = value; }
-        }
-
+        public object[] Items { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the items element.
@@ -68,10 +60,8 @@ namespace SAML2.Schema.XmlDSig
         /// <value>The name of the items element.</value>
         [XmlElement("ItemsElementName")]
         [XmlIgnore]
-        public ItemsChoiceType[] ItemsElementName
-        {
-            get { return itemsElementNameField; }
-            set { itemsElementNameField = value; }
-        }
+        public ItemsChoiceType[] ItemsElementName { get; set; }
+
+        #endregion
     }
 }

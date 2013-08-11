@@ -11,47 +11,31 @@ namespace SAML2.Schema.XmlDSig
     /// </summary>
     [Serializable]
     [DebuggerStepThrough]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
-    public class SignatureValue {
-        
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
+    public class SignatureValue
+    {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "SignatureValue";
+        public const string ElementName = "SignatureValue";
 
-        private string idField;
-        
-        private byte[] valueField;
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        /// <value>The value.</value>
+        [XmlText(DataType = "base64Binary")]
+        public byte[] Value { get; set; }
 
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
         /// <value>The id.</value>
         [XmlAttribute(DataType="ID")]
-        public string Id {
-            get {
-                return idField;
-            }
-            set {
-                idField = value;
-            }
-        }
+        public string Id { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>The value.</value>
-        [XmlTextAttribute(DataType="base64Binary")]
-        public byte[] Value {
-            get {
-                return valueField;
-            }
-            set {
-                valueField = value;
-            }
-        }
+        #endregion
     }
 }

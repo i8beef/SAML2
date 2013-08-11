@@ -7,22 +7,27 @@ namespace SAML2.Schema.XmlDSig
     /// The Signature element is the root element of an XML Signature
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
     public class Signature 
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Signature";
+        public const string ElementName = "Signature";
 
-        private string idField;
-        private KeyInfo keyInfoField;
+        #region Attributes
 
-        private ObjectType[] objectField;
-        private SignatureValue signatureValueField;
-        private SignedInfo signedInfoField;
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        /// <value>The id.</value>
+        [XmlAttribute("Id", DataType = "ID")]
+        public string Id { get; set; }
+
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets the signed info.
@@ -31,53 +36,30 @@ namespace SAML2.Schema.XmlDSig
         /// referenced by other signatures and objects. 
         /// </summary>
         /// <value>The signed info.</value>
-        public SignedInfo SignedInfo
-        {
-            get { return signedInfoField; }
-            set { signedInfoField = value; }
-        }
+        [XmlElement("SignedInfo")]
+        public SignedInfo SignedInfo { get; set; }
 
         /// <summary>
         /// Gets or sets the signature value.
         /// </summary>
         /// <value>The signature value.</value>
-        public SignatureValue SignatureValue
-        {
-            get { return signatureValueField; }
-            set { signatureValueField = value; }
-        }
+        [XmlElement("SignatureValue")]
+        public SignatureValue SignatureValue { get; set; }
 
         /// <summary>
         /// Gets or sets the key info.
         /// </summary>
         /// <value>The key info.</value>
-        public KeyInfo KeyInfo
-        {
-            get { return keyInfoField; }
-            set { keyInfoField = value; }
-        }
+        [XmlElement("KeyInfo")]
+        public KeyInfo KeyInfo { get; set; }
 
         /// <summary>
         /// Gets or sets the object.
         /// </summary>
         /// <value>The object.</value>
         [XmlElement("Object")]
-        public ObjectType[] Object
-        {
-            get { return objectField; }
-            set { objectField = value; }
-        }
+        public ObjectType[] Object { get; set; }
 
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>The id.</value>
-        [XmlAttribute(DataType="ID")]
-        public string Id
-        {
-            get { return idField; }
-            set { idField = value; }
-        }
-               
+        #endregion
     }
 }

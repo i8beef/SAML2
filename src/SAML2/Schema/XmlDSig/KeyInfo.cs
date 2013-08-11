@@ -29,32 +29,34 @@ namespace SAML2.Schema.XmlDSig
     /// 
     /// </summary>
     [Serializable]    
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
     public class KeyInfo
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "KeyInfo";
+        public const string ElementName = "KeyInfo";
 
         /// <summary>
-        /// An implicit conversion between our Xml Serialization class, and the .NET framework's built-in version of KeyInfo.
+        /// Gets or sets the text.
         /// </summary>
-        public static explicit operator System.Security.Cryptography.Xml.KeyInfo(KeyInfo ki)
-        {
-            System.Security.Cryptography.Xml.KeyInfo result = new System.Security.Cryptography.Xml.KeyInfo();
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(Serialization.SerializeToXmlString(ki));
-            result.LoadXml(doc.DocumentElement);
-            return result;
-        }
+        /// <value>The text.</value>
+        [XmlText]
+        public string[] Text { get; set; }
 
-        private string idField;
-        private ItemsChoiceType2[] itemsElementNameField;
-        private object[] itemsField;
+        #region Attributes
 
-        private string[] textField;
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        /// <value>The id.</value>
+        [XmlAttribute(DataType = "ID")]
+        public string Id { get; set; }
+
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets the items.
@@ -71,11 +73,7 @@ namespace SAML2.Schema.XmlDSig
         [XmlElement("SPKIData", typeof (SPKIData))]
         [XmlElement("X509Data", typeof (X509Data))]
         [XmlChoiceIdentifier("ItemsElementName")]
-        public object[] Items
-        {
-            get { return itemsField; }
-            set { itemsField = value; }
-        }
+        public object[] Items { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the items element.
@@ -83,32 +81,24 @@ namespace SAML2.Schema.XmlDSig
         /// <value>The name of the items element.</value>
         [XmlElement("ItemsElementName")]
         [XmlIgnore]
-        public ItemsChoiceType2[] ItemsElementName
-        {
-            get { return itemsElementNameField; }
-            set { itemsElementNameField = value; }
-        }
+        public ItemsChoiceType2[] ItemsElementName { get; set; }
+
+        #endregion
 
         /// <summary>
-        /// Gets or sets the text.
+        /// An implicit conversion between our Xml Serialization class, and the .NET framework's built-in version of KeyInfo.
         /// </summary>
-        /// <value>The text.</value>
-        [XmlText]
-        public string[] Text
+        public static explicit operator System.Security.Cryptography.Xml.KeyInfo(KeyInfo ki)
         {
-            get { return textField; }
-            set { textField = value; }
-        }
+            var result = new System.Security.Cryptography.Xml.KeyInfo();
+            var doc = new XmlDocument();
+            doc.LoadXml(Serialization.SerializeToXmlString(ki));
+            if (doc.DocumentElement != null)
+            {
+                result.LoadXml(doc.DocumentElement);
+            }
 
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>The id.</value>
-        [XmlAttribute(DataType="ID")]
-        public string Id
-        {
-            get { return idField; }
-            set { idField = value; }
+            return result;
         }
     }
 }

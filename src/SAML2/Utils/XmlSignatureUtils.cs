@@ -137,7 +137,7 @@ namespace SAML2.Utils
             {
                 var signedXml = new SignedXml(doc.DocumentElement);
 
-                var nodeList = doc.GetElementsByTagName(Schema.XmlDSig.Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
+                var nodeList = doc.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig);
                 if (nodeList.Count == 0)
                 {
                     throw new InvalidOperationException("The XmlDocument does not contain a signature.");
@@ -162,7 +162,7 @@ namespace SAML2.Utils
             CheckDocument(el);
             var signedXml = new SignedXml(el);
 
-            var nodeList = el.GetElementsByTagName(Schema.XmlDSig.Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
+            var nodeList = el.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig);
             if (nodeList.Count == 0)
             {
                 throw new InvalidOperationException("The XmlDocument does not contain a signature.");
@@ -199,7 +199,7 @@ namespace SAML2.Utils
         public static bool IsSigned(XmlDocument doc)
         {
             CheckDocument(doc);
-            var nodeList = doc.GetElementsByTagName(Schema.XmlDSig.Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
+            var nodeList = doc.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig);
 
             return nodeList.Count > 0;
         }
@@ -212,7 +212,7 @@ namespace SAML2.Utils
         public static bool IsSigned(XmlElement el)
         {
             CheckDocument(el);
-            var nodeList = el.GetElementsByTagName(Schema.XmlDSig.Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
+            var nodeList = el.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig);
 
             return nodeList.Count > 0;
         }
@@ -273,7 +273,7 @@ namespace SAML2.Utils
         private static SignedXml RetrieveSignature(XmlElement el)
         {
             SignedXml signedXml = new SignedXmlWithIdResolvement(el);
-            XmlNodeList nodeList = el.GetElementsByTagName(Schema.XmlDSig.Signature.ELEMENT_NAME, Saml20Constants.XMLDSIG);
+            XmlNodeList nodeList = el.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig);
             if (nodeList.Count == 0)
                 throw new InvalidOperationException("Document does not contain a signature to verify.");
 
@@ -313,7 +313,7 @@ namespace SAML2.Utils
             // Append the computed signature. The signature must be placed as the sibling of the Issuer element.
             if (doc.DocumentElement != null)
             {
-                var nodes = doc.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.ASSERTION);
+                var nodes = doc.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.Assertion);
                 // doc.DocumentElement.InsertAfter(doc.ImportNode(signedXml.GetXml(), true), nodes[0]);
                 var parentNode = nodes[0].ParentNode;
                 if (parentNode != null)

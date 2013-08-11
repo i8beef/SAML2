@@ -7,7 +7,7 @@ namespace SAML2.Schema.Core
     /// AdviceType enumeration.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = Saml20Constants.ASSERTION, IncludeInSchema = false)]
+    [XmlType(Namespace = Saml20Constants.Assertion, IncludeInSchema = false)]
     public enum AdviceType
     {
         /// <summary>

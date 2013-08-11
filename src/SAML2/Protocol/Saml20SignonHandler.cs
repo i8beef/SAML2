@@ -101,14 +101,14 @@ namespace SAML2.Protocol
         /// <returns>The assertion XML.</returns>
         internal static XmlElement GetAssertion(XmlElement el, out bool isEncrypted)
         {
-            var encryptedList = el.GetElementsByTagName(EncryptedAssertion.ElementName, Saml20Constants.ASSERTION);
+            var encryptedList = el.GetElementsByTagName(EncryptedAssertion.ElementName, Saml20Constants.Assertion);
             if (encryptedList.Count == 1)
             {
                 isEncrypted = true;
                 return (XmlElement)encryptedList[0];
             }
 
-            var assertionList = el.GetElementsByTagName(Assertion.ElementName, Saml20Constants.ASSERTION);
+            var assertionList = el.GetElementsByTagName(Assertion.ElementName, Saml20Constants.Assertion);
             if (assertionList.Count == 1)
             {
                 isEncrypted = false;
@@ -231,7 +231,7 @@ namespace SAML2.Protocol
         private static string GetIssuer(XmlElement assertion)
         {
             var result = string.Empty;
-            var list = assertion.GetElementsByTagName("Issuer", Saml20Constants.ASSERTION);
+            var list = assertion.GetElementsByTagName("Issuer", Saml20Constants.Assertion);
             if (list.Count > 0)
             {
                 var issuer = (XmlElement)list[0];
@@ -248,7 +248,7 @@ namespace SAML2.Protocol
         /// <returns>The <see cref="Status"/> element.</returns>
         private static Status GetStatusElement(XmlDocument doc)
         {
-            var statElem = (XmlElement)doc.GetElementsByTagName(Status.ElementName, Saml20Constants.PROTOCOL)[0];
+            var statElem = (XmlElement)doc.GetElementsByTagName(Status.ElementName, Saml20Constants.Protocol)[0];
             return Serialization.DeserializeFromXmlString<Status>(statElem.OuterXml);
         }
 
@@ -609,7 +609,7 @@ namespace SAML2.Protocol
             // Handle Redirect binding
             if (destination.Binding == BindingType.Redirect)
             {
-                Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HTTP_Redirect, identityProvider.Id);
+                Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HttpRedirect, identityProvider.Id);
 
                 var builder = new HttpRedirectBindingBuilder
                                   {
@@ -625,13 +625,13 @@ namespace SAML2.Protocol
             // Handle Post binding
             if (destination.Binding == BindingType.Post)
             {
-                Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HTTP_Post, identityProvider.Id);
+                Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HttpPost, identityProvider.Id);
 
                 var builder = new HttpPostBindingBuilder(destination);
                 //Honor the ForceProtocolBinding and only set this if it's not already set
                 if (string.IsNullOrEmpty(request.ProtocolBinding))
                 {
-                    request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_Post;
+                    request.ProtocolBinding = Saml20Constants.ProtocolBindings.HttpPost;
                 }
                 var req = request.GetXml();
                 XmlSignatureUtils.SignDocument(req, request.Id);
@@ -644,13 +644,13 @@ namespace SAML2.Protocol
             // Handle Artifact binding
             if (destination.Binding == BindingType.Artifact)
             {
-                Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HTTP_Artifact, identityProvider.Id);
+                Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HttpArtifact, identityProvider.Id);
 
                 var builder = new HttpArtifactBindingBuilder(context);
                 //Honor the ForceProtocolBinding and only set this if it's not already set
                 if (string.IsNullOrEmpty(request.ProtocolBinding))
                 {
-                    request.ProtocolBinding = Saml20Constants.ProtocolBindings.HTTP_Artifact;
+                    request.ProtocolBinding = Saml20Constants.ProtocolBindings.HttpArtifact;
                 }
 
                 builder.RedirectFromLogin(destination, request);

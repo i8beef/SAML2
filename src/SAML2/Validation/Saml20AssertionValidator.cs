@@ -1,68 +1,64 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using SAML2.Schema.Core;
 using SAML2.Utils;
-using SAML2.Validation;
 
 namespace SAML2.Validation
 {
+    /// <summary>
+    /// SAML2 Assertion validator.
+    /// </summary>
     public class Saml20AssertionValidator : ISaml20AssertionValidator
     {
-        private readonly List<string> _allowedAudienceUris;
-        protected bool _quirksMode;
+        /// <summary>
+        /// Use quirksMode.
+        /// </summary>
+        protected bool QuirksMode;
 
+        /// <summary>
+        /// The allowed audience URIs.
+        /// </summary>
+        private readonly List<string> _allowedAudienceUris;
+
+        /// <summary>
+        /// NameIDValidator backing field.
+        /// </summary>
+        private readonly ISaml20NameIdValidator _nameIdValidator = new Saml20NameIdValidator();
+
+        /// <summary>
+        /// StatementValidator backing field.
+        /// </summary>
+        private readonly ISaml20StatementValidator _statementValidator = new Saml20StatementValidator();
+
+        /// <summary>
+        /// SubjectValidator backing field.
+        /// </summary>
+        private readonly ISaml20SubjectValidator _subjectValidator = new Saml20SubjectValidator();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Saml20AssertionValidator"/> class.
+        /// </summary>
+        /// <param name="allowedAudienceUris">The allowed audience uris.</param>
+        /// <param name="quirksMode">if set to <c>true</c> [quirks mode].</param>
         public Saml20AssertionValidator(List<string> allowedAudienceUris, bool quirksMode)
         {
             _allowedAudienceUris = allowedAudienceUris;
-            _quirksMode = quirksMode;
+            QuirksMode = quirksMode;
         }
-
-        #region Properties
-
-        private ISaml20NameIDValidator _nameIDValidator;
-
-        private ISaml20NameIDValidator NameIDValidator
-        {
-            get
-            {
-                if (_nameIDValidator == null)
-                    _nameIDValidator = new Saml20NameIDValidator();
-                return _nameIDValidator;
-            }
-        }
-
-        private ISaml20SubjectValidator _subjectValidator;
-
-        private ISaml20SubjectValidator SubjectValidator
-        {
-            get
-            {
-                if (_subjectValidator == null)
-                    _subjectValidator = new Saml20SubjectValidator();
-                return _subjectValidator;
-            }
-        }
-
-        private ISaml20StatementValidator StatementValidator
-        {
-            get
-            {
-                if (_statementValidator == null)
-                    _statementValidator = new Saml20StatementValidator();
-
-                return _statementValidator;
-            }
-        }
-
-        private ISaml20StatementValidator _statementValidator;
-        #endregion
 
         #region ISaml20AssertionValidator interface
 
+        /// <summary>
+        /// Validates the assertion.
+        /// </summary>
+        /// <param name="assertion">The assertion.</param>
         public virtual void ValidateAssertion(Assertion assertion)
         {
-            if (assertion == null) throw new ArgumentNullException("assertion");
+            if (assertion == null)
+            {
+                throw new ArgumentNullException("assertion");
+            }
 
             ValidateAssertionAttributes(assertion);
             ValidateSubject(assertion);
@@ -70,52 +66,41 @@ namespace SAML2.Validation
             ValidateStatements(assertion);
         }
 
-        #region ISaml20AssertionValidator Members
-
         /// <summary>
-        /// Null fields are considered to be valid
+        /// Validates the time restrictions.
         /// </summary>
-        private static bool ValidateNotBefore(DateTime? notBefore, DateTime now, TimeSpan allowedClockSkew)
-        {
-            if (notBefore == null)
-                return true;
-
-            return TimeRestrictionValidation.NotBeforeValid(notBefore.Value, now, allowedClockSkew);
-        }
-
-        /// <summary>
-        /// Handle allowed clock skew by increasing notOnOrAfter with allowedClockSkew
-        /// </summary>
-        private static bool ValidateNotOnOrAfter(DateTime? notOnOrAfter, DateTime now, TimeSpan allowedClockSkew)
-        {
-            if (notOnOrAfter == null)
-                return true;
-
-            return TimeRestrictionValidation.NotOnOrAfterValid(notOnOrAfter.Value, now, allowedClockSkew);
-        }
-
+        /// <param name="assertion">The assertion.</param>
+        /// <param name="allowedClockSkew">The allowed clock skew.</param>
         public void ValidateTimeRestrictions(Assertion assertion, TimeSpan allowedClockSkew)
         {
             // Conditions are not required
             if (assertion.Conditions == null)
+            {
                 return;
+            }
 
-            Conditions conditions = assertion.Conditions;
-            DateTime now = DateTime.UtcNow;
+            var conditions = assertion.Conditions;
+            var now = DateTime.UtcNow;
             // Negative allowed clock skew does not make sense - we are trying to relax the restriction interval, not restrict it any further
             if (allowedClockSkew < TimeSpan.Zero)
+            {
                 allowedClockSkew = allowedClockSkew.Negate();
-            
+            }
+
             // NotBefore must not be in the future
             if (!ValidateNotBefore(conditions.NotBefore, now, allowedClockSkew))
+            {
                 throw new Saml20FormatException("Conditions.NotBefore must not be in the future");
+            }
 
             // NotOnOrAfter must not be in the past
             if (!ValidateNotOnOrAfter(conditions.NotOnOrAfter, now, allowedClockSkew))
+            {
                 throw new Saml20FormatException("Conditions.NotOnOrAfter must not be in the past");
+            }
 
-            foreach (AuthnStatement statement in assertion.GetAuthnStatements())
-            {                
+            foreach (var statement in assertion.GetAuthnStatements())
+            {
                 if (statement.SessionNotOnOrAfter != null
                     && statement.SessionNotOnOrAfter <= now)
                     throw new Saml20FormatException("AuthnStatement attribute SessionNotOnOrAfter MUST be in the future");
@@ -125,22 +110,19 @@ namespace SAML2.Validation
 
             if (assertion.Subject != null)
             {
-                foreach (object o in assertion.Subject.Items)
+                foreach (var subjectConfirmation in assertion.Subject.Items.OfType<SubjectConfirmation>().Where(subjectConfirmation => subjectConfirmation.SubjectConfirmationData != null))
                 {
-                    if (!(o is SubjectConfirmation))
-                        continue;
-
-                    SubjectConfirmation subjectConfirmation = (SubjectConfirmation) o;
-                    if (subjectConfirmation.SubjectConfirmationData == null)
-                        continue;
-
                     if (!ValidateNotBefore(subjectConfirmation.SubjectConfirmationData.NotBefore, now, allowedClockSkew))
+                    {
                         throw new Saml20FormatException("SubjectConfirmationData.NotBefore must not be in the future");
+                    }
 
                     if (!ValidateNotOnOrAfter(subjectConfirmation.SubjectConfirmationData.NotOnOrAfter, now, allowedClockSkew))
+                    {
                         throw new Saml20FormatException("SubjectConfirmationData.NotOnOrAfter must not be in the past");
+                    }
                 }
-                
+
             }
         }
 
@@ -150,62 +132,47 @@ namespace SAML2.Validation
         /// Validates that all the required attributes are present on the assertion.
         /// Furthermore it validates validity of the Issuer element.
         /// </summary>
-        /// <param name="assertion"></param>
+        /// <param name="assertion">The assertion.</param>
         private void ValidateAssertionAttributes(Assertion assertion)
         {
             //There must be a Version
             if (!Saml20Utils.ValidateRequiredString(assertion.Version))
+            {
                 throw new Saml20FormatException("Assertion element must have the Version attribute set.");
+            }
 
             //Version must be 2.0
             if (assertion.Version != Saml20Constants.Version)
+            {
                 throw new Saml20FormatException("Wrong value of version attribute on Assertion element");
+            }
 
             //Assertion must have an ID
             if (!Saml20Utils.ValidateRequiredString(assertion.ID))
+            {
                 throw new Saml20FormatException("Assertion element must have the ID attribute set.");
+            }
 
             // Make sure that the ID elements is at least 128 bits in length (SAML2.0 std section 1.3.4)
             if (!Saml20Utils.ValidateIdString(assertion.ID))
+            {
                 throw new Saml20FormatException("Assertion element must have an ID attribute with at least 16 characters (the equivalent of 128 bits)");
+            }
 
             //IssueInstant must be set.
             if (!assertion.IssueInstant.HasValue)
+            {
                 throw new Saml20FormatException("Assertion element must have the IssueInstant attribute set.");
+            }
 
             //There must be an Issuer
             if (assertion.Issuer == null)
+            {
                 throw new Saml20FormatException("Assertion element must have an issuer element.");
+            }
 
             //The Issuer element must be valid
-            NameIDValidator.ValidateNameID(assertion.Issuer);
-        }
-
-        /// <summary>
-        /// Validates the subject of an Asssertion
-        /// </summary>
-        /// <param name="assertion"></param>
-        private void ValidateSubject(Assertion assertion)
-        {
-            if (assertion.Subject == null)
-            {
-                //If there is no statements there must be a subject
-                // as specified in [SAML2.0std] section 2.3.3
-                if (assertion.Items == null || assertion.Items.Length == 0)
-                    throw new Saml20FormatException("Assertion with no Statements must have a subject.");
-
-                foreach (StatementAbstract o in assertion.Items)
-                {
-                    //If any of the below types are present there must be a subject.
-                    if (o is AuthnStatement || o is AuthzDecisionStatement || o is AttributeStatement)
-                        throw new Saml20FormatException("AuthnStatement, AuthzDecisionStatement and AttributeStatement require a subject.");
-                }
-            }
-            else
-            {
-                //If a subject is present, validate it
-                SubjectValidator.ValidateSubject(assertion.Subject);
-            }
+            _nameIdValidator.ValidateNameId(assertion.Issuer);
         }
 
         /// <summary>
@@ -220,14 +187,16 @@ namespace SAML2.Validation
         {
             // Conditions are not required
             if (assertion.Conditions == null)
+            {
                 return;
+            }
 
-            bool oneTimeUseSeen = false;
-            bool proxyRestrictionsSeen = false;
+            var oneTimeUseSeen = false;
+            var proxyRestrictionsSeen = false;
             
             ValidateConditionsInterval(assertion.Conditions);
 
-            foreach (ConditionAbstract cat in assertion.Conditions.Items)
+            foreach (var cat in assertion.Conditions.Items)
             {
                 if (cat is OneTimeUse)
                 {
@@ -247,20 +216,24 @@ namespace SAML2.Validation
                     }
                     proxyRestrictionsSeen = true;
 
-                    ProxyRestriction proxyRestriction = (ProxyRestriction) cat;
+                    var proxyRestriction = (ProxyRestriction) cat;
                     if (!String.IsNullOrEmpty(proxyRestriction.Count))
                     {
                         uint res;
                         if (!UInt32.TryParse(proxyRestriction.Count, out res))
+                        {
                             throw new Saml20FormatException("Count attribute of ProxyRestriction MUST BE a non-negative integer");
+                        }
                     }
 
                     if (proxyRestriction.Audience != null)
                     {
-                        foreach(string audience in proxyRestriction.Audience)
+                        foreach(var audience in proxyRestriction.Audience)
                         {
                             if (!Uri.IsWellFormedUriString(audience, UriKind.Absolute))
+                            {
                                 throw new Saml20FormatException("ProxyRestriction Audience MUST BE a wellformed uri");
+                            }
                         }
                     }
                 }
@@ -269,47 +242,55 @@ namespace SAML2.Validation
                 if (cat is AudienceRestriction)
                 {
                     // No audience restrictions? No problems...
-                    AudienceRestriction audienceRestriction = (AudienceRestriction)cat;
+                    var audienceRestriction = (AudienceRestriction)cat;
                     if (audienceRestriction.Audience == null || audienceRestriction.Audience.Count == 0)
+                    {
                         continue;
+                    }
 
                     // If there are no allowed audience uris configured for the service, the assertion is not
                     // valid for this service
                     if (_allowedAudienceUris == null || _allowedAudienceUris.Count < 1)
+                    {
                         throw new Saml20FormatException("The service is not configured to meet any audience restrictions");
+                    }
 
                     string match = null;
-                    foreach (string audience in audienceRestriction.Audience)
+                    foreach (var audience in audienceRestriction.Audience)
                     {
                         //In QuirksMode this validation is omitted
-                        if (!_quirksMode)
+                        if (!QuirksMode)
                         {
                             // The given audience value MUST BE a valid URI
                             if (!Uri.IsWellFormedUriString(audience, UriKind.Absolute))
+                            {
                                 throw new Saml20FormatException("Audience element has value which is not a wellformed absolute uri");
+                            }
                         }
 
-                        match =
-                            _allowedAudienceUris.Find(
-                                delegate(string allowedUri) { return allowedUri.Equals(audience); });
+                        match = _allowedAudienceUris.Find(allowedUri => allowedUri.Equals(audience));
                         if (match != null)
+                        {
                             break;
+                        }
                     }
 
-                    var logger = Logging.LoggerProvider.LoggerFor(this.GetType());
+                    var logger = Logging.LoggerProvider.LoggerFor(GetType());
                     if (logger.IsDebugEnabled)
                     {
-                        string intended = "Intended uris: " + Environment.NewLine + String.Join(Environment.NewLine, audienceRestriction.Audience.ToArray());
-                        string allowed = "Allowed uris: " + Environment.NewLine + String.Join(Environment.NewLine, _allowedAudienceUris.ToArray());
+                        var intended = "Intended uris: " + Environment.NewLine + String.Join(Environment.NewLine, audienceRestriction.Audience.ToArray());
+                        var allowed = "Allowed uris: " + Environment.NewLine + String.Join(Environment.NewLine, _allowedAudienceUris.ToArray());
                         logger.DebugFormat("{0}.{1} {2}", GetType(), "ValidateConditions", intended + allowed);
                     }
 
                     if (match == null)
+                    {
                         throw new Saml20FormatException("The service is not configured to meet the given audience restrictions");
+                    }
                 }
             }
         }
-        
+
         /// <summary>
         /// If both conditions.NotBefore and conditions.NotOnOrAfter are specified, NotBefore 
         /// MUST BE less than NotOnOrAfter 
@@ -319,10 +300,38 @@ namespace SAML2.Validation
         {
             // No settings? No restrictions
             if (conditions.NotBefore == null && conditions.NotOnOrAfter == null)
+            {
                 return;
-            
+            }
+
             if (conditions.NotBefore != null && conditions.NotOnOrAfter != null && conditions.NotBefore.Value >= conditions.NotOnOrAfter.Value)
+            {
                 throw new Saml20FormatException(String.Format("NotBefore {0} MUST BE less than NotOnOrAfter {1} on Conditions", Saml20Utils.ToUtcString(conditions.NotBefore.Value), Saml20Utils.ToUtcString(conditions.NotOnOrAfter.Value)));
+            }
+        }
+
+        /// <summary>
+        /// Null fields are considered to be valid
+        /// </summary>
+        /// <param name="notBefore">The not before.</param>
+        /// <param name="now">The now.</param>
+        /// <param name="allowedClockSkew">The allowed clock skew.</param>
+        /// <returns></returns>
+        private static bool ValidateNotBefore(DateTime? notBefore, DateTime now, TimeSpan allowedClockSkew)
+        {
+            return notBefore == null || TimeRestrictionValidation.NotBeforeValid(notBefore.Value, now, allowedClockSkew);
+        }
+
+        /// <summary>
+        /// Handle allowed clock skew by increasing notOnOrAfter with allowedClockSkew
+        /// </summary>
+        /// <param name="notOnOrAfter">The not on or after.</param>
+        /// <param name="now">The now.</param>
+        /// <param name="allowedClockSkew">The allowed clock skew.</param>
+        /// <returns></returns>
+        private static bool ValidateNotOnOrAfter(DateTime? notOnOrAfter, DateTime now, TimeSpan allowedClockSkew)
+        {
+            return notOnOrAfter == null || TimeRestrictionValidation.NotOnOrAfterValid(notOnOrAfter.Value, now, allowedClockSkew);
         }
 
         /// <summary>
@@ -333,13 +342,45 @@ namespace SAML2.Validation
         {
             // Statements are not required
             if (assertion.Items == null)
-                return;
-
-            foreach (StatementAbstract o in assertion.Items)
             {
-                StatementValidator.ValidateStatement(o);
+                return;
+            }
+
+            foreach (var o in assertion.Items)
+            {
+                _statementValidator.ValidateStatement(o);
             }
         }
-        #endregion
+
+        /// <summary>
+        /// Validates the subject of an Asssertion
+        /// </summary>
+        /// <param name="assertion"></param>
+        private void ValidateSubject(Assertion assertion)
+        {
+            if (assertion.Subject == null)
+            {
+                //If there is no statements there must be a subject
+                // as specified in [SAML2.0std] section 2.3.3
+                if (assertion.Items == null || assertion.Items.Length == 0)
+                {
+                    throw new Saml20FormatException("Assertion with no Statements must have a subject.");
+                }
+
+                foreach (var o in assertion.Items)
+                {
+                    //If any of the below types are present there must be a subject.
+                    if (o is AuthnStatement || o is AuthzDecisionStatement || o is AttributeStatement)
+                    {
+                        throw new Saml20FormatException("AuthnStatement, AuthzDecisionStatement and AttributeStatement require a subject.");
+                    }
+                }
+            }
+            else
+            {
+                //If a subject is present, validate it
+                _subjectValidator.ValidateSubject(assertion.Subject);
+            }
+        }
     }
 }

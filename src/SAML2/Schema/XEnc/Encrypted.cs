@@ -10,7 +10,7 @@ namespace SAML2.Schema.XEnc
     [XmlInclude(typeof (EncryptedKey))]
     [XmlInclude(typeof (EncryptedData))]
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XENC)]
+    [XmlType(Namespace=Saml20Constants.Xenc)]
     public abstract class Encrypted
     {
         #region Attributes
@@ -59,7 +59,7 @@ namespace SAML2.Schema.XEnc
         /// Gets or sets the key info.
         /// </summary>
         /// <value>The key info.</value>
-        [XmlElement("KeyInfo", Namespace=Saml20Constants.XMLDSIG)]
+        [XmlElement("KeyInfo", Namespace=Saml20Constants.Xmldsig)]
         public KeyInfo KeyInfo { get; set; }
 
         /// <summary>

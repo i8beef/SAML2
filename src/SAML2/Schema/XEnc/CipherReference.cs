@@ -9,8 +9,8 @@ namespace SAML2.Schema.XEnc
     /// an external location containing the encrypted octet sequence via the CipherReference element.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XENC)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.XENC, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xenc)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xenc, IsNullable=false)]
     public class CipherReference
     {
         /// <summary>

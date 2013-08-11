@@ -33,7 +33,7 @@ namespace SAML2.Bindings
         public HttpPostBindingBuilder(IdentityProviderEndpointElement endpoint) 
         {
             _destinationEndpoint = endpoint;
-            Action = SAMLAction.SAMLRequest;
+            Action = SamlActionType.SamlRequest;
             RelayState = string.Empty;
         }
 
@@ -41,7 +41,7 @@ namespace SAML2.Bindings
         /// Gets or sets the action.
         /// </summary>
         /// <value>The action.</value>
-        public SAMLAction Action { get; set; }
+        public SamlActionType Action { get; set; }
 
         /// <summary>
         /// Gets or sets the relaystate
@@ -129,8 +129,8 @@ namespace SAML2.Bindings
 
             var action = new HtmlInputHidden
                              {
-                                 Name = Enum.GetName(typeof (SAMLAction), Action),
-                                 ID = Enum.GetName(typeof (SAMLAction), Action),
+                                 Name = Enum.GetName(typeof (SamlActionType), Action),
+                                 ID = Enum.GetName(typeof (SamlActionType), Action),
                                  Value = Convert.ToBase64String(Encoding.UTF8.GetBytes(msg))
                              };
             p.Controls.Add(action);

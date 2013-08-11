@@ -12,41 +12,35 @@ namespace SAML2.Schema.XmlDSig
     /// from another Manifest, even the overall digest of this two level deep Manifest might not be checked. 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
     public class Manifest
     {
-
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Manifest";
+        public const string ElementName = "Manifest";
 
-        private string idField;
-        private Reference[] referenceField;
-
-
-        /// <summary>
-        /// Gets or sets the reference.
-        /// </summary>
-        /// <value>The reference.</value>
-        [XmlElement("Reference")]
-        public Reference[] Reference
-        {
-            get { return referenceField; }
-            set { referenceField = value; }
-        }
-
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
         /// <value>The id.</value>
         [XmlAttribute(DataType="ID")]
-        public string Id
-        {
-            get { return idField; }
-            set { idField = value; }
-        }
+        public string Id { get; set; }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the reference.
+        /// </summary>
+        /// <value>The reference.</value>
+        [XmlElement("Reference")]
+        public Reference[] Reference { get; set; }
+
+        #endregion
     }
 }

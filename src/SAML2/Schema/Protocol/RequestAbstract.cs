@@ -21,7 +21,7 @@ namespace SAML2.Schema.Protocol
     [XmlInclude(typeof (AuthnQuery))]
     [XmlInclude(typeof (AssertionIDRequest))]
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.PROTOCOL)]
+    [XmlType(Namespace=Saml20Constants.Protocol)]
     public abstract class RequestAbstract
     {
         /// <summary>
@@ -105,7 +105,7 @@ namespace SAML2.Schema.Protocol
         /// Identifies the entity that generated the request message.
         /// </summary>
         /// <value>The issuer.</value>
-        [XmlElement("Issuer", Namespace=Saml20Constants.ASSERTION)]
+        [XmlElement("Issuer", Namespace=Saml20Constants.Assertion)]
         public NameID Issuer { get; set; }
 
         /// <summary>

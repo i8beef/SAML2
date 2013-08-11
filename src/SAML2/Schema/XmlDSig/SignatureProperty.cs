@@ -14,67 +14,49 @@ namespace SAML2.Schema.XmlDSig
     /// references the Signature element to which the property applies. 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
     public class SignatureProperty
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "SignatureProperty";
-
-        private string idField;
-        private XmlElement[] itemsField;
-
-        private string targetField;
-        private string[] textField;
-
-
-        /// <summary>
-        /// Gets or sets the items.
-        /// </summary>
-        /// <value>The items.</value>
-        [XmlAnyElement]
-        public XmlElement[] Items
-        {
-            get { return itemsField; }
-            set { itemsField = value; }
-        }
-
+        public const string ElementName = "SignatureProperty";
 
         /// <summary>
         /// Gets or sets the text.
         /// </summary>
         /// <value>The text.</value>
         [XmlText]
-        public string[] Text
-        {
-            get { return textField; }
-            set { textField = value; }
-        }
+        public string[] Text { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the target.
-        /// </summary>
-        /// <value>The target.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Target
-        {
-            get { return targetField; }
-            set { targetField = value; }
-        }
-
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
         /// <value>The id.</value>
-        [XmlAttribute(DataType="ID")]
-        public string Id
-        {
-            get { return idField; }
-            set { idField = value; }
-        }
+        [XmlAttribute("Id", DataType = "ID")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the target.
+        /// </summary>
+        /// <value>The target.</value>
+        [XmlAttribute("Target", DataType = "anyURI")]
+        public string Target { get; set; }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets the items.
+        /// </summary>
+        /// <value>The items.</value>
+        [XmlAnyElement]
+        public XmlElement[] Items { get; set; }
+
+        #endregion
     }
 }

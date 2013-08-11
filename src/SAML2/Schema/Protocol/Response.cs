@@ -9,8 +9,8 @@ namespace SAML2.Schema.Protocol
     /// that satisfy the request. It has the complex type ResponseType, which extends StatusResponseType
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ElementName, Namespace = Saml20Constants.PROTOCOL, IsNullable = false)]
+    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class Response : StatusResponse
     {
         /// <summary>
@@ -25,8 +25,8 @@ namespace SAML2.Schema.Protocol
         /// Specifies an assertion by value, or optionally an encrypted assertion by value.
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("Assertion", typeof (Assertion), Namespace = Saml20Constants.ASSERTION)]
-        [XmlElement("EncryptedAssertion", typeof (EncryptedElement), Namespace = Saml20Constants.ASSERTION)]
+        [XmlElement("Assertion", typeof (Assertion), Namespace = Saml20Constants.Assertion)]
+        [XmlElement("EncryptedAssertion", typeof (EncryptedElement), Namespace = Saml20Constants.Assertion)]
         public object[] Items { get; set; }
 
         #endregion

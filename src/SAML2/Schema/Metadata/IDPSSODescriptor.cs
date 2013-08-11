@@ -9,8 +9,8 @@ namespace SAML2.Schema.Metadata
     /// specific to identity providers supporting SSO.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = Saml20Constants.METADATA)]
-    [XmlRoot(ElementName, Namespace = Saml20Constants.METADATA, IsNullable = false)]
+    [XmlType(Namespace = Saml20Constants.Metadata)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class IDPSSODescriptor : SSODescriptor
     {
         /// <summary>
@@ -53,7 +53,7 @@ namespace SAML2.Schema.Metadata
         /// provider has the capability to include it when delivering assertions during single sign-on.
         /// </summary>
         /// <value>The attribute.</value>
-        [XmlElement("Attribute", Namespace = Saml20Constants.ASSERTION)]
+        [XmlElement("Attribute", Namespace = Saml20Constants.Assertion)]
         public SamlAttribute[] Attributes { get; set; }
 
         /// <summary>

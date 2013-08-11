@@ -13,18 +13,16 @@ namespace SAML2.Schema.XmlDSig
     /// PGPKeyPacket and 0 or more elements from an external namespace. 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
     public class PGPData
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "PGPData";
+        public const string ElementName = "PGPData";
 
-        private ItemsChoiceType1[] itemsElementNameField;
-        private object[] itemsField;
-
+        #region Elements
 
         /// <summary>
         /// Gets or sets the items.
@@ -32,15 +30,10 @@ namespace SAML2.Schema.XmlDSig
         /// </summary>
         /// <value>The items.</value>
         [XmlAnyElement]
-        [XmlElement("PGPKeyID", typeof (byte[]), DataType="base64Binary")]
-        [XmlElement("PGPKeyPacket", typeof (byte[]), DataType="base64Binary")]
+        [XmlElement("PGPKeyID", typeof (byte[]), DataType = "base64Binary")]
+        [XmlElement("PGPKeyPacket", typeof (byte[]), DataType = "base64Binary")]
         [XmlChoiceIdentifier("ItemsElementName")]
-        public object[] Items
-        {
-            get { return itemsField; }
-            set { itemsField = value; }
-        }
-
+        public object[] Items { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the items element.
@@ -48,10 +41,8 @@ namespace SAML2.Schema.XmlDSig
         /// <value>The name of the items element.</value>
         [XmlElement("ItemsElementName")]
         [XmlIgnore]
-        public ItemsChoiceType1[] ItemsElementName
-        {
-            get { return itemsElementNameField; }
-            set { itemsElementNameField = value; }
-        }
+        public ItemsChoiceType1[] ItemsElementName { get; set; }
+
+        #endregion
     }
 }

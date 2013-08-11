@@ -9,8 +9,8 @@ namespace SAML2.Schema.Core
     /// The Saml20 Conditions class
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Assertion, IsNullable=false)]
     public class Conditions
     {
         /// <summary>

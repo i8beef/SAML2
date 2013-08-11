@@ -7,7 +7,7 @@ namespace SAML2.Schema.Protocol
     /// AuthContext type enum.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.PROTOCOL, IncludeInSchema=false)]
+    [XmlType(Namespace=Saml20Constants.Protocol, IncludeInSchema=false)]
     public enum AuthnContextType
     {
         /// <summary>

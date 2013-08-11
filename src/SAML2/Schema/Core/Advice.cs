@@ -14,8 +14,8 @@ namespace SAML2.Schema.Core
     /// We do not use it (yet) and let it pass unvalidated.
     /// </remarks>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.ASSERTION, IsNullable=false)]    
+    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Assertion, IsNullable=false)]    
     public class Advice
     {
         /// <summary>

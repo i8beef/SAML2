@@ -33,7 +33,7 @@ namespace SAML2.Identity
         /// <param name="attributes">The attributes.</param>
         /// <param name="persistentPseudonym">The persistent pseudonym.</param>
         public Saml20Identity(string name, ICollection<SamlAttribute> attributes, string persistentPseudonym) 
-            : base(name, Saml20Constants.ASSERTION)
+            : base(name, Saml20Constants.Assertion)
         {
             PersistentPseudonym = persistentPseudonym;
 

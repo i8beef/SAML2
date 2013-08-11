@@ -27,86 +27,53 @@ namespace SAML2.Schema.XmlDSig
     /// Object tags (likely where the data object is non-XML). Exclusion of the object tags may be desired for 
     /// cases where one wants the signature to remain valid if the data object is moved from inside a signature 
     /// to outside the signature (or vice versa), or where the content of the Object is an encoding of an original
-    /// binary document and it is desired to extract and decode so as to sign the original bitwise representation. 
-    /// 
+    /// binary document and it is desired to extract and decode so as to sign the original bitwise representation.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
-    public class ObjectType {
-
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
+    public class ObjectType
+    {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Object";
-        
-        private XmlNode[] anyField;
-        
-        private string idField;
-        
-        private string mimeTypeField;
-        
-        private string encodingField;
+        public const string ElementName = "Object";
 
-
-        /// <summary>
-        /// Gets or sets any.
-        /// </summary>
-        /// <value>Any.</value>
-        [XmlTextAttribute]
-        [XmlAnyElementAttribute]
-        public XmlNode[] Any {
-            get {
-                return anyField;
-            }
-            set {
-                anyField = value;
-            }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>The id.</value>
-        [XmlAttribute(DataType="ID")]
-        public string Id {
-            get {
-                return idField;
-            }
-            set {
-                idField = value;
-            }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the type of the MIME.
-        /// </summary>
-        /// <value>The type of the MIME.</value>
-        [XmlAttribute]
-        public string MimeType {
-            get {
-                return mimeTypeField;
-            }
-            set {
-                mimeTypeField = value;
-            }
-        }
-
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the encoding.
         /// </summary>
         /// <value>The encoding.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Encoding {
-            get {
-                return encodingField;
-            }
-            set {
-                encodingField = value;
-            }
-        }
+        [XmlAttribute("Encoding", DataType = "anyURI")]
+        public string Encoding { get; set; }
+
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        /// <value>The id.</value>
+        [XmlAttribute("Id", DataType="ID")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the MIME.
+        /// </summary>
+        /// <value>The type of the MIME.</value>
+        [XmlAttribute("MimeType")]
+        public string MimeType { get; set; }
+
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets any.
+        /// </summary>
+        /// <value>Any.</value>
+        [XmlText]
+        [XmlAnyElement]
+        public XmlNode[] Any { get; set; }
+
+        #endregion
     }
 }

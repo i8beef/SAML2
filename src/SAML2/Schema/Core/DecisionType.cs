@@ -7,7 +7,7 @@ namespace SAML2.Schema.Core
     /// Decision types
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = Saml20Constants.ASSERTION)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
     public enum DecisionType
     {
         /// <summary>

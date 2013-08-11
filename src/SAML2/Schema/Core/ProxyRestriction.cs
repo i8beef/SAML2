@@ -11,8 +11,8 @@ namespace SAML2.Schema.Core
     /// be at most one instance of this element.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
+    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class ProxyRestriction : ConditionAbstract
     {
         /// <summary>

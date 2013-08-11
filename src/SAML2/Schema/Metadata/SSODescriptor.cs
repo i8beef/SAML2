@@ -14,7 +14,7 @@ namespace SAML2.Schema.Metadata
     [XmlIncludeAttribute(typeof(IDPSSODescriptor))]
     [Serializable]
     [DebuggerStepThrough]
-    [XmlTypeAttribute(Namespace=Saml20Constants.METADATA)]
+    [XmlTypeAttribute(Namespace=Saml20Constants.Metadata)]
     public abstract class SSODescriptor : RoleDescriptor
     {
         #region Elements

@@ -7,7 +7,7 @@ namespace SAML2.Schema.XmlDSig
     /// ItemsChoice
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG, IncludeInSchema=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig, IncludeInSchema=false)]
     public enum ItemsChoiceType1
     {
         /// <summary>
@@ -32,7 +32,7 @@ namespace SAML2.Schema.XmlDSig
     /// 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG, IncludeInSchema=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig, IncludeInSchema=false)]
     public enum ItemsChoiceType
     {
         /// <summary>
@@ -75,7 +75,7 @@ namespace SAML2.Schema.XmlDSig
     /// 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG, IncludeInSchema=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig, IncludeInSchema=false)]
     public enum ItemsChoiceType2
     {
         /// <summary>

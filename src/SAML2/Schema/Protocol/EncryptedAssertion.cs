@@ -8,8 +8,8 @@ namespace SAML2.Schema.Protocol
     /// XML Encryption Syntax and Processing specification [XMLEnc].
     /// </summary>
     [Serializable]
-    [XmlType(Namespace = Saml20Constants.ASSERTION)]
-    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class EncryptedAssertion : EncryptedElement
     {
         /// <summary>

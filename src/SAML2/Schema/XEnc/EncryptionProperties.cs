@@ -7,8 +7,8 @@ namespace SAML2.Schema.XEnc
     /// Holds list of EncryptionProperty elements
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XENC)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.XENC, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xenc)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xenc, IsNullable=false)]
     public class EncryptionProperties
     {
         /// <summary>

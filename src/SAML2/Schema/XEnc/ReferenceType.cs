@@ -10,7 +10,7 @@ namespace SAML2.Schema.XEnc
     /// can occur if multiple EncryptedData elements exist that are encrypted by the same key.
     /// </summary>
     [Serializable]
-    [XmlType(TypeName="ReferenceType", Namespace=Saml20Constants.XENC)]
+    [XmlType(TypeName="ReferenceType", Namespace=Saml20Constants.Xenc)]
     public class ReferenceType
     {
         /// <summary>

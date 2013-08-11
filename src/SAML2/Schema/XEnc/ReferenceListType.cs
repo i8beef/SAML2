@@ -7,7 +7,7 @@ namespace SAML2.Schema.XEnc
     /// ItemsChoice for Referencelists
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XENC, IncludeInSchema=false)]
+    [XmlType(Namespace=Saml20Constants.Xenc, IncludeInSchema=false)]
     public enum ReferenceListType
     {
         /// <summary>

@@ -9,8 +9,8 @@ namespace SAML2.Schema.XEnc
     /// If the element is absent, the encryption algorithm must be known by the recipient or the decryption will fail.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XENC)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.METADATA, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xenc)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Metadata, IsNullable=false)]
     public class EncryptionMethod
     {
         /// <summary>

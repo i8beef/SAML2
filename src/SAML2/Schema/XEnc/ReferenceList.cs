@@ -8,8 +8,8 @@ namespace SAML2.Schema.XEnc
     /// encrypted by that key value (EncryptedData or EncryptedKey elements).
     /// </summary>
     [Serializable]
-    [XmlType(AnonymousType=true, Namespace=Saml20Constants.XENC)]
-    [XmlRoot(Namespace=Saml20Constants.XENC, IsNullable=false)]
+    [XmlType(AnonymousType=true, Namespace=Saml20Constants.Xenc)]
+    [XmlRoot(Namespace=Saml20Constants.Xenc, IsNullable=false)]
     public class ReferenceList
     {
         #region Elements

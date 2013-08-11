@@ -13,94 +13,63 @@ namespace SAML2.Schema.XmlDSig
     /// a Reference to be referenced from elsewhere. 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
     public class Reference
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "Reference";
+        public const string ElementName = "Reference";
 
-        private DigestMethod digestMethodField;
+        #region Attributes
 
-        private byte[] digestValueField;
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        /// <value>The id.</value>
+        [XmlAttribute("Id", DataType = "ID")]
+        public string Id { get; set; }
 
-        private string idField;
-        private Transform[] transformsField;
+        /// <summary>
+        /// Gets or sets the URI.
+        /// </summary>
+        /// <value>The URI.</value>
+        [XmlAttribute("URI", DataType = "anyURI")]
+        public string URI { get; set; }
 
-        private string typeField;
-        private string uRIField;
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>The type.</value>
+        [XmlAttribute("Type", DataType = "anyURI")]
+        public string Type { get; set; }
 
+        #endregion
+
+        #region Elements
 
         /// <summary>
         /// Gets or sets the transforms.
         /// </summary>
         /// <value>The transforms.</value>
         [XmlArrayItem("Transform", IsNullable=false)]
-        public Transform[] Transforms
-        {
-            get { return transformsField; }
-            set { transformsField = value; }
-        }
-
+        public Transform[] Transforms { get; set; }
 
         /// <summary>
         /// Gets or sets the digest method.
         /// </summary>
         /// <value>The digest method.</value>
-        public DigestMethod DigestMethod
-        {
-            get { return digestMethodField; }
-            set { digestMethodField = value; }
-        }
-
+        [XmlElement("DigestMethod")]
+        public DigestMethod DigestMethod { get; set; }
 
         /// <summary>
         /// Gets or sets the digest value.
         /// </summary>
         /// <value>The digest value.</value>
-        [XmlElement(DataType="base64Binary")]
-        public byte[] DigestValue
-        {
-            get { return digestValueField; }
-            set { digestValueField = value; }
-        }
+        [XmlElement("DigestValue", DataType = "base64Binary")]
+        public byte[] DigestValue { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        /// <value>The id.</value>
-        [XmlAttribute(DataType="ID")]
-        public string Id
-        {
-            get { return idField; }
-            set { idField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the URI.
-        /// </summary>
-        /// <value>The URI.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string URI
-        {
-            get { return uRIField; }
-            set { uRIField = value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the type.
-        /// </summary>
-        /// <value>The type.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Type
-        {
-            get { return typeField; }
-            set { typeField = value; }
-        }
+        #endregion
     }
 }

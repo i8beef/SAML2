@@ -8,8 +8,8 @@ namespace SAML2.Schema.Protocol
     /// corresponding request.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.PROTOCOL)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.PROTOCOL, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Protocol, IsNullable=false)]
     public class StatusCode
     {
         /// <summary>
@@ -39,7 +39,7 @@ namespace SAML2.Schema.Protocol
         /// additional information by intentionally presenting erroneous requests.
         /// </summary>
         /// <value>The sub status code.</value>
-        [XmlElement("StatusCode", Namespace = Saml20Constants.PROTOCOL)]
+        [XmlElement("StatusCode", Namespace = Saml20Constants.Protocol)]
         public StatusCode SubStatusCode { get; set; }
 
         #endregion

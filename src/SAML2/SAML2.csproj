@@ -148,6 +148,7 @@
     <Compile Include="Saml20LogoutResponse.cs" />
     <Compile Include="Saml20MetadataDocument.cs" />
     <Compile Include="Saml20NameFormat.cs" />
+    <Compile Include="SamlActionType.cs" />
     <Compile Include="Schema\Core\Action.cs" />
     <Compile Include="Schema\Core\Advice.cs" />
     <Compile Include="Schema\Core\AdviceType.cs" />
@@ -275,7 +276,7 @@
     <Compile Include="Utils\XmlSignatureUtils.cs" />
     <Compile Include="Validation\ISaml20AssertionValidator.cs" />
     <Compile Include="Validation\ISaml20AttributeValidator.cs" />
-    <Compile Include="Validation\ISaml20NameIDValidator.cs" />
+    <Compile Include="Validation\ISaml20NameIdValidator.cs" />
     <Compile Include="Validation\ISaml20StatementValidator.cs" />
     <Compile Include="Validation\ISaml20SubjectConfirmationDataValidator.cs" />
     <Compile Include="Validation\ISaml20SubjectConfirmationValidator.cs" />
@@ -284,7 +285,7 @@
     <Compile Include="Validation\Saml20AttributeValidator.cs" />
     <Compile Include="Validation\Saml20EncryptedElementValidator.cs" />
     <Compile Include="Validation\Saml20KeyInfoValidator.cs" />
-    <Compile Include="Validation\Saml20NameIDValidator.cs" />
+    <Compile Include="Validation\Saml20NameIdValidator.cs" />
     <Compile Include="Validation\Saml20StatementValidator.cs" />
     <Compile Include="Validation\Saml20SubjectConfirmationDataValidator.cs" />
     <Compile Include="Validation\Saml20SubjectConfirmationValidator.cs" />

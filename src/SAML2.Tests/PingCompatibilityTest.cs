@@ -25,7 +25,7 @@ namespace SAML2.Tests.Saml20
             XmlDocument doc = new XmlDocument();
             doc.Load(File.OpenRead(@"c:\tmp\pingassertion.txt"));
 
-            XmlElement xe = GetElement(EncryptedAssertion.ElementName, Saml20Constants.ASSERTION, doc);
+            XmlElement xe = GetElement(EncryptedAssertion.ElementName, Saml20Constants.Assertion, doc);
 
             XmlDocument doc2 = new XmlDocument();
             doc2.AppendChild(doc2.ImportNode(xe, true));

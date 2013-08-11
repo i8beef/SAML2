@@ -7,7 +7,7 @@ namespace SAML2.Schema.Core
     /// Item Choices
     /// </summary>
     [Serializable]
-    [XmlTypeAttribute(Namespace = Saml20Constants.ASSERTION, IncludeInSchema = false)]
+    [XmlTypeAttribute(Namespace = Saml20Constants.Assertion, IncludeInSchema = false)]
     public enum AuthnContextType
     {
         /// <summary>

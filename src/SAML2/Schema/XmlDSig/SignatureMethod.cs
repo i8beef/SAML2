@@ -13,65 +13,43 @@ namespace SAML2.Schema.XmlDSig
     /// signature values. 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.XMLDSIG)]
-    [XmlRoot(ELEMENT_NAME, Namespace=Saml20Constants.XMLDSIG, IsNullable=false)]
-    public class SignatureMethod {
-        
+    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
+    public class SignatureMethod
+    {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public const string ELEMENT_NAME = "SignatureMethod";
+        public const string ElementName = "SignatureMethod";
 
-        private string hMACOutputLengthField;
-        
-        private XmlNode[] anyField;
-        
-        private string algorithmField;
-
-
-        /// <summary>
-        /// Gets or sets the length of the HMAC output.
-        /// </summary>
-        /// <value>The length of the HMAC output.</value>
-        [XmlElement(DataType="integer")]
-        public string HMACOutputLength {
-            get {
-                return hMACOutputLengthField;
-            }
-            set {
-                hMACOutputLengthField = value;
-            }
-        }
-
-
-        /// <summary>
-        /// Gets or sets any.
-        /// </summary>
-        /// <value>Any.</value>
-        [XmlTextAttribute]
-        [XmlAnyElementAttribute]
-        public XmlNode[] Any {
-            get {
-                return anyField;
-            }
-            set {
-                anyField = value;
-            }
-        }
-
+        #region Attributes
 
         /// <summary>
         /// Gets or sets the algorithm.
         /// </summary>
         /// <value>The algorithm.</value>
-        [XmlAttribute(DataType="anyURI")]
-        public string Algorithm {
-            get {
-                return algorithmField;
-            }
-            set {
-                algorithmField = value;
-            }
-        }
+        [XmlAttribute("v", DataType = "anyURI")]
+        public string Algorithm { get; set; }
+        
+        #endregion
+
+        #region Elements
+
+        /// <summary>
+        /// Gets or sets any.
+        /// </summary>
+        /// <value>Any.</value>
+        [XmlText]
+        [XmlAnyElement]
+        public XmlNode[] Any { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the length of the HMAC output.
+        /// </summary>
+        /// <value>The length of the HMAC output.</value>
+        [XmlElement("HMACOutputLength", DataType="integer")]
+        public string HMACOutputLength { get; set; }
+
+        #endregion
     }
 }

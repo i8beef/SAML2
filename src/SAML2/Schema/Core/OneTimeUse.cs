@@ -29,8 +29,8 @@ namespace SAML2.Schema.Core
     /// considered to always be valid. That is, this condition does not affect validity but is a condition on use.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.ASSERTION)]
-    [XmlRoot(ElementName, Namespace = Saml20Constants.ASSERTION, IsNullable = false)]
+    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class OneTimeUse : ConditionAbstract
     {
         /// <summary>

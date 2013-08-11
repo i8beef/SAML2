@@ -3,9 +3,21 @@ using SAML2.Schema.Protocol;
 
 namespace SAML2.Validation
 {
-    public interface ISaml20NameIDValidator
+    /// <summary>
+    /// SAML2 NameID validator interface.
+    /// </summary>
+    public interface ISaml20NameIdValidator
     {
-        void ValidateNameID(NameID nameID);
-        void ValidateEncryptedID(EncryptedElement encryptedID);
+        /// <summary>
+        /// Validates the name ID.
+        /// </summary>
+        /// <param name="nameId">The name ID.</param>
+        void ValidateNameId(NameID nameId);
+
+        /// <summary>
+        /// Validates the encrypted ID.
+        /// </summary>
+        /// <param name="encryptedId">The encrypted ID.</param>
+        void ValidateEncryptedId(EncryptedElement encryptedId);
     }
 }

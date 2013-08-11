@@ -18,8 +18,8 @@ namespace SAML2.Schema.Metadata
     [XmlInclude(typeof(SPSSODescriptor))]
     [XmlInclude(typeof(IDPSSODescriptor))]    
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.METADATA)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.METADATA, IsNullable=false)]
+    [XmlType(Namespace=Saml20Constants.Metadata)]
+    [XmlRoot(ElementName, Namespace=Saml20Constants.Metadata, IsNullable=false)]
     public abstract class RoleDescriptor {
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace SAML2.Schema.Metadata
         /// An XML signature that authenticates the containing element and its contents
         /// </summary>
         /// <value>The signature.</value>
-        [XmlElement("Signature", Namespace = Saml20Constants.XMLDSIG)]
+        [XmlElement("Signature", Namespace = Saml20Constants.Xmldsig)]
         public Signature Signature { get; set; }
 
         #endregion

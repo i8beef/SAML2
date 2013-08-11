@@ -290,7 +290,7 @@ namespace SAML2.Protocol
             {
                 var builder = new HttpPostBindingBuilder(destination)
                 {
-                    Action = SAMLAction.SAMLResponse
+                    Action = SamlActionType.SamlResponse
                 };
 
                 var responseDocument = response.GetXml();
@@ -376,7 +376,7 @@ namespace SAML2.Protocol
             var doc = new XmlDocument { PreserveWhitespace = true };
             doc.LoadXml(message);
 
-            var statElem = (XmlElement)doc.GetElementsByTagName(Status.ElementName, Saml20Constants.PROTOCOL)[0];
+            var statElem = (XmlElement)doc.GetElementsByTagName(Status.ElementName, Saml20Constants.Protocol)[0];
             var status = Serialization.DeserializeFromXmlString<Status>(statElem.OuterXml);
             if (status.StatusCode.Value != Saml20Constants.StatusCodes.Success)
             {
