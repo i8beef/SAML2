@@ -5,17 +5,15 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
+using SAML2.Schema.Core;
 using SAML2.Schema.Metadata;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
 using NUnit.Framework;
 using SAML2.Config;
-using SAML2;
 using SAML2.Protocol;
-using Assertion=SAML2.Schema.Core.Assertion;
-using Saml20Assertion=SAML2.Saml20Assertion;
 
-namespace SAML2.Tests.Saml20
+namespace SAML2.Tests
 {
     /// <summary>
     /// Unit tests related to the handling and functionality of encrypted assertions.

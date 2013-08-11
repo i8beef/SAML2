@@ -6,10 +6,8 @@ using System.Xml;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
 using NUnit.Framework;
-using SAML2;
-using Saml20Assertion=SAML2.Saml20Assertion;
 
-namespace SAML2.Tests.Saml20
+namespace SAML2.Tests
 {
     /// <summary>
     /// This class contains tests that can only be used when a Ping Identity server is running. 

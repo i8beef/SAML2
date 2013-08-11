@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using SAML2;
 using SAML2.Config;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
@@ -13,10 +12,9 @@ using SAML2.Utils;
 using SAML2.Validation;
 using NUnit.Framework;
 using Action = SAML2.Schema.Core.Action;
-using Assertion=SAML2.Schema.Core.Assertion;
 using AuthnContextType = SAML2.Schema.Core.AuthnContextType;
 
-namespace SAML2.Tests.Saml20
+namespace SAML2.Tests
 {
     ///<summary>
     /// Tests Saml20 core validation 

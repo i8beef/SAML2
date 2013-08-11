@@ -3,13 +3,11 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
-using System.Text;
 using System.Xml;
 using NUnit.Framework;
-using SAML2;
-using Signature=SAML2.Schema.XmlDSig.Signature;
+using Signature = SAML2.Schema.XmlDSig.Signature;
 
-namespace SAML2.Tests.Saml20
+namespace SAML2.Tests
 {
     /// <summary>
     /// Contains tests that verify the signatures of the sample assertions in the Assertions directory. 

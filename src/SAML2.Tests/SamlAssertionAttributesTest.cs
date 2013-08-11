@@ -3,11 +3,10 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
-using SAML2;
 using SAML2.Schema.Core;
 using NUnit.Framework;
 
-namespace SAML2.Tests.Saml20
+namespace SAML2.Tests
 {
     /// <summary>
     /// Tests related to the handling of attributes on Saml Assertions.

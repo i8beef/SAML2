@@ -2,7 +2,7 @@
 using SAML2.Utils;
 using NUnit.Framework;
 
-namespace SAML2.Tests.Saml20
+namespace SAML2.Tests
 {
     [TestFixture]
     public class ArtifactTest

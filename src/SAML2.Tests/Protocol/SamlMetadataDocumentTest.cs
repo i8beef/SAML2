@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.Xml;
 using System.Xml;
-using SAML2;
 using SAML2.Schema.Metadata;
 using SAML2.Utils;
 using NUnit.Framework;
 
-namespace SAML2.Tests.Saml20.Protocol
+namespace SAML2.Tests.Protocol
 {
     [TestFixture]
     public class SamlMetadataDocumentTest
