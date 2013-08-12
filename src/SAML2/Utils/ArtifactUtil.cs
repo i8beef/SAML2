@@ -11,16 +11,6 @@ namespace SAML2.Utils
     public class ArtifactUtil
     {
         /// <summary>
-        /// Length of message handle
-        /// </summary>
-        public const int MessageHandleLength = 20;
-
-        /// <summary>
-        /// Length of source id
-        /// </summary>
-        public const int SourceIdLength = 20;
-
-        /// <summary>
         /// Argument length error format.
         /// </summary>
         private const string ArgumentLengthErrorFmt = "Unexpected length of byte[] parameter: {0}. Should be {1}";
@@ -31,6 +21,16 @@ namespace SAML2.Utils
         private const int ArtifactLength = 44;
 
         /// <summary>
+        /// Length of message handle
+        /// </summary>
+        private const int MessageHandleLength = 20;
+
+        /// <summary>
+        /// Length of source id
+        /// </summary>
+        private const int SourceIdLength = 20;
+
+        /// <summary>
         /// Creates the artifact.
         /// </summary>
         /// <param name="typeCodeValue">The type code value.</param>
@@ -38,7 +38,7 @@ namespace SAML2.Utils
         /// <param name="sourceIdHash">The source id hash.</param>
         /// <param name="messageHandle">The message handle.</param>
         /// <returns>A Base64 encoded string containing the artifact</returns>
-        public static string CreateArtifact(Int16 typeCodeValue, Int16 endpointIndexValue, byte[] sourceIdHash, byte[] messageHandle)
+        public static string CreateArtifact(short typeCodeValue, short endpointIndexValue, byte[] sourceIdHash, byte[] messageHandle)
         {
             if (sourceIdHash.Length != SourceIdLength)
             {
@@ -103,7 +103,7 @@ namespace SAML2.Utils
         /// <param name="endpointIndex">Index of the endpoint.</param>
         /// <param name="sourceIdHash">The source id hash.</param>
         /// <param name="messageHandle">The message handle.</param>
-        public static void ParseArtifact(string artifact, ref Int16 typeCodeValue, ref Int16 endpointIndex, ref byte[] sourceIdHash, ref byte[] messageHandle)
+        public static void ParseArtifact(string artifact, ref short typeCodeValue, ref short endpointIndex, ref byte[] sourceIdHash, ref byte[] messageHandle)
         {
             if (sourceIdHash.Length != SourceIdLength)
             {
@@ -121,8 +121,8 @@ namespace SAML2.Utils
                 throw new ArgumentException("Unexpected artifact length", "artifact");
             }
 
-            typeCodeValue = (Int16)(bytes[0] << 8 | bytes[1]);
-            endpointIndex = (Int16)(bytes[2] << 8 | bytes[3]);
+            typeCodeValue = (short)(bytes[0] << 8 | bytes[1]);
+            endpointIndex = (short)(bytes[2] << 8 | bytes[3]);
 
             var index = 4;
             for (var i = 0; i < SourceIdLength; i++)
@@ -146,7 +146,7 @@ namespace SAML2.Utils
         /// <param name="sourceIdHash">The source id hash.</param>
         /// <param name="messageHandle">The message handle.</param>
         /// <returns>True of parsing was successful, else false.</returns>
-        public static bool TryParseArtifact(string artifact, ref Int16 typeCodeValue, ref Int16 endpointIndex, ref byte[] sourceIdHash, ref byte[] messageHandle)
+        public static bool TryParseArtifact(string artifact, ref short typeCodeValue, ref short endpointIndex, ref byte[] sourceIdHash, ref byte[] messageHandle)
         {
             try
             {
@@ -167,8 +167,8 @@ namespace SAML2.Utils
         /// <returns>The endpoint index.</returns>
         public static ushort GetEndpointIndex(string artifact)
         {
-            Int16 parsedTypeCode = -1;
-            Int16 parsedEndpointIndex = -1;
+            short parsedTypeCode = -1;
+            short parsedEndpointIndex = -1;
             var parsedSourceIdHash = new byte[20];
             var parsedMessageHandle = new byte[20];
 
@@ -179,7 +179,5 @@ namespace SAML2.Utils
 
             throw new ArgumentException("Malformed artifact", "artifact");
         }
-
-        
     }
 }

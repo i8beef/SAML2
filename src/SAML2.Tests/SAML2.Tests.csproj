@@ -46,18 +46,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArtifactTest.cs" />
+    <Compile Include="Saml20EncryptedAssertionTests.cs" />
+    <Compile Include="Utils\ArtifactUtilTests.cs" />
     <Compile Include="AssertionUtil.cs" />
-    <Compile Include="EncryptedAssertionTest.cs" />
+    <Compile Include="Bindings\HttpRedirectBindingBuilderTests.cs" />
+    <Compile Include="EncryptedAssertionUtil.cs" />
     <Compile Include="PingCompatibilityTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Protocol\HttpRedirectBindingTest.cs" />
-    <Compile Include="Protocol\SamlMetadataDocumentTest.cs" />
-    <Compile Include="Protocol\XmlSignatureUtilsTest.cs" />
-    <Compile Include="Saml20CoreValidationTest.cs" />
-    <Compile Include="SamlAssertionAttributesTest.cs" />
+    <Compile Include="Bindings\HttpRedirectBindingParserTests.cs" />
+    <Compile Include="Saml20AssertionTests.cs" />
+    <Compile Include="Saml20MetadataDocumentTests.cs" />
+    <Compile Include="Utils\Saml20UtilsTests.cs" />
+    <Compile Include="Utils\XmlSignatureUtilsTest.cs" />
+    <Compile Include="Validation\Saml20CoreValidationTest.cs" />
     <Compile Include="SignatureTest.cs" />
-    <Compile Include="TempTest.cs" />
+    <Compile Include="Validation\Saml20NameIdValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

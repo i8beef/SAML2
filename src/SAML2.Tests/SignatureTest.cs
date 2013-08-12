@@ -1,27 +1,25 @@
-using System;
 using System.IO;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
 using NUnit.Framework;
-using Signature = SAML2.Schema.XmlDSig.Signature;
 
 namespace SAML2.Tests
 {
     /// <summary>
     /// Contains tests that verify the signatures of the sample assertions in the Assertions directory. 
-    /// 
     /// One tests performs a "bare-bone" verification, while another verifies using the <code>Assertion</code> class.
     /// </summary>
     [TestFixture]
     public class SignatureTest
     {
+        #region Assertion verification
+
         /// <summary>
         /// Verifies the signature in the "Saml2Assertion_01" file. The assertion in the file is valid.
         /// </summary>
         [Test]
-        public void VerifyValidSignatures()
+        public void VerifyValidSignaturesAreValid()
         {
             Assert.That(VerifySignature(@"Assertions\Saml2Assertion_01"));
             Assert.That(VerifySignature(@"Assertions\Saml2Assertion_02"));
@@ -32,7 +30,7 @@ namespace SAML2.Tests
         /// Verifies that SignedXml will detect assertions that have been tampered with.
         /// </summary>
         [Test]
-        public void VerifyManipulatedSignature()
+        public void VerifyManipulatedSignatureAreInvalid()
         {
             Assert.IsFalse(VerifySignature(@"Assertions\EvilSaml2Assertion_01"));
             Assert.IsFalse(VerifySignature(@"Assertions\EvilSaml2Assertion_02"));
@@ -80,49 +78,47 @@ namespace SAML2.Tests
             AssertionUtil.DeserializeToken(@"Assertions\EvilSaml2Assertion_03");
         }
 
+        #endregion
+
+        #region Assertion signing verification
+
         /// <summary>
         /// Tests the signing and verification of an assertion.
         /// </summary>
         [Test]
-        public void TestSigning_01()
+        public void AssertionCanBeSignedAndVerified()
         {
-            XmlDocument token = AssertionUtil.GetTestAssertion_01();
+            // Arrange
+            var token = AssertionUtil.GetTestAssertion();
             SignDocument(token);
-            bool verified = VerifySignature(token);
+
+            // Act
+            var verified = VerifySignature(token);
+            
+            // Assert
             Assert.That(verified);
         }
 
         /// <summary>
-        /// Writes the given XmlDocument to a file. 
-        /// </summary>
-        public static void WriteToFile(string file, XmlElement el)
-        {
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Encoding = System.Text.Encoding.UTF8;
-            settings.CloseOutput = true;
-            XmlWriter writer = XmlWriter.Create(File.Open(file, FileMode.Create), settings);
-            el.OwnerDocument.WriteContentTo(writer);
-            writer.Close();            
-        }
-        
-        /// <summary>
         /// Tests that the manipulation of an assertion is detected by the signature.
         /// </summary>
         [Test]
-        public void TestSigning_02()
+        public void ManipulatingAssertionMakesSignatureInvalid()
         {
-            XmlDocument token = AssertionUtil.GetTestAssertion_01();
+            // Arrange
+            var token = AssertionUtil.GetTestAssertion();
             SignDocument(token);
 
             // Manipulate the #%!;er: Attempt to remove the <AudienceRestriction> from the list of conditions.
-            XmlElement conditions = 
-                (XmlElement) token.GetElementsByTagName("Conditions", "urn:oasis:names:tc:SAML:2.0:assertion")[0];
-            XmlElement audienceRestriction = 
-                (XmlElement) conditions.GetElementsByTagName("AudienceRestriction", "urn:oasis:names:tc:SAML:2.0:assertion")[0];
+            var conditions = (XmlElement) token.GetElementsByTagName("Conditions", "urn:oasis:names:tc:SAML:2.0:assertion")[0];
+            var audienceRestriction = (XmlElement) conditions.GetElementsByTagName("AudienceRestriction", "urn:oasis:names:tc:SAML:2.0:assertion")[0];
 
             conditions.RemoveChild(audienceRestriction);
             
-            bool verified = VerifySignature(token);
+            // Act
+            var verified = VerifySignature(token);
+
+            // Assert
             Assert.IsFalse(verified);
         }
 
@@ -135,53 +131,43 @@ namespace SAML2.Tests
         public void TestSigning_03()
         {
             // Load an unsigned assertion. 
-            Saml20Assertion assertion = new Saml20Assertion(AssertionUtil.GetTestAssertion_01().DocumentElement, null, false);
+            var assertion = new Saml20Assertion(AssertionUtil.GetTestAssertion().DocumentElement, null, false);
             
             // Check that the assertion is not considered valid in any way.
             try
             {
                 assertion.CheckValid(AssertionUtil.GetTrustedSigners(assertion.Issuer));
                 Assert.Fail("Unsigned assertion was passed off as valid.");
-            } catch
+            }
+            catch
             {
                 //Added to make resharper happy
                 Assert.That(true);
             }
 
-            X509Certificate2 cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
+            var cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
             Assert.That(cert.HasPrivateKey, "Certificate no longer contains a private key. Modify test.");
             assertion.Sign(cert);
 
-            // Check that the signature is now valid         
-            assertion.CheckValid(new AsymmetricAlgorithm[] {cert.PublicKey.Key});
+            // Check that the signature is now valid
+            assertion.CheckValid(new[] {cert.PublicKey.Key});
         }
 
-        /// <summary>
-        /// Test that the Assertion class verifies the signature of an assertion by default.
-        /// </summary>
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Document does not contain a signature to verify.")]
-        public void TestSigning_04()
-        {
-            // Any key-containing algorithm will do - the basic assertion is NOT signed anyway
-            X509Certificate2 cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
+        #endregion
 
-            new Saml20Assertion(AssertionUtil.GetTestAssertion_01().DocumentElement, new AsymmetricAlgorithm[] { cert.PublicKey.Key }, false);
-
-        }
+        #region Private methods
 
         /// <summary>
         /// Signs the document given as an argument.
         /// </summary>
         private static void SignDocument(XmlDocument doc)
         {
-            SignedXml signedXml = new SignedXml(doc);
+            var signedXml = new SignedXml(doc);
             signedXml.SignedInfo.CanonicalizationMethod = SignedXml.XmlDsigExcC14NTransformUrl;
             // TODO Dynamically dig out the correct ID attribute from the XmlDocument.
-            Reference reference = new Reference("#_b8977dc86cda41493fba68b32ae9291d"); 
-            // Assert.That(reference.Uri == string.Empty);
+            var reference = new Reference("#_b8977dc86cda41493fba68b32ae9291d"); 
 
-            XmlDsigEnvelopedSignatureTransform envelope = new XmlDsigEnvelopedSignatureTransform();                        
+            var envelope = new XmlDsigEnvelopedSignatureTransform();                        
             reference.AddTransform(envelope);
 
             // NOTE: C14n may require the following list of namespace prefixes. Seems to work without it, though.
@@ -192,31 +178,26 @@ namespace SAML2.Tests
             //prefixes.Add(doc.DocumentElement.GetPrefixOfNamespace("urn:oasis:names:tc:SAML:2.0:assertion"));
 
             //XmlDsigExcC14NTransform C14NTransformer = new XmlDsigExcC14NTransform(string.Join(" ", prefixes.ToArray()).Trim());
-            XmlDsigExcC14NTransform C14NTransformer = new XmlDsigExcC14NTransform();
+            var c14NTransformer = new XmlDsigExcC14NTransform();
 
-            reference.AddTransform(C14NTransformer);            
-
+            reference.AddTransform(c14NTransformer);            
             signedXml.AddReference(reference);
 
             // Add the key to the signature, so the assertion can be verified by itself.
             signedXml.KeyInfo = new KeyInfo();
 
             // Use RSA key for signing.
-            //{
             //    CspParameters parameters = new CspParameters();
             //    parameters.KeyContainerName = "XML_DSIG_RSA_KEY";
             //    RSACryptoServiceProvider rsaKey = new RSACryptoServiceProvider(parameters);
             //    signedXml.SigningKey = rsaKey;
             //    signedXml.KeyInfo.AddClause(new RSAKeyValue(rsaKey));
-            //}
 
             // Use X509 Certificate for signing.
-            {
-                X509Certificate2 cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
-                Assert.That(cert.HasPrivateKey);
-                signedXml.SigningKey = cert.PrivateKey;
-                signedXml.KeyInfo.AddClause(new KeyInfoX509Data(cert,X509IncludeOption.EndCertOnly));
-            }
+            var cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
+            Assert.That(cert.HasPrivateKey);
+            signedXml.SigningKey = cert.PrivateKey;
+            signedXml.KeyInfo.AddClause(new KeyInfoX509Data(cert,X509IncludeOption.EndCertOnly));
 
             // Information on the these and other "key info clause" types can be found at:
             // ms-help://MS.MSDNQTR.v80.en/MS.MSDN.v80/MS.NETDEVFX.v20.en/CPref18/html/T_System_Security_Cryptography_Xml_KeyInfoClause_DerivedTypes.htm
@@ -224,69 +205,56 @@ namespace SAML2.Tests
             // Do it!
             signedXml.ComputeSignature();
 
-            XmlNodeList nodes = doc.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.Assertion);
+            var nodes = doc.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.Assertion);
             Assert.That(nodes.Count == 1);
-            XmlNode node = nodes[0];
+            var node = nodes[0];
             doc.DocumentElement.InsertAfter(doc.ImportNode(signedXml.GetXml(), true), node); 
         }
 
         /// <summary>
-        /// Loads an assertion and tries to deserialize it using the <code>Assertion</code> class.
+        /// Loads the document.
         /// </summary>
-        public static Saml20Assertion DeserializeToken(string assertionFile)
+        /// <param name="assertionFile">The assertion file.</param>
+        /// <returns>The XML document.</returns>
+        private static XmlDocument LoadDocument(string assertionFile)
         {
-            FileStream fs = File.OpenRead(assertionFile);
+            using (var fs = File.OpenRead(assertionFile))
+            {
+                var document = new XmlDocument { PreserveWhitespace = true };
+                document.Load(fs);
+                fs.Close();
 
-            XmlDocument document = new XmlDocument();
-            document.PreserveWhitespace = true;
-            document.Load(fs);
-            fs.Close();
-            
-            XmlNodeList nodes = document.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.Assertion);
-            Saml20Assertion assertion = new Saml20Assertion(document.DocumentElement, AssertionUtil.GetTrustedSigners(nodes[0].Value), false);
-            
-            return assertion;
+                return document;
+            }
         }
-
 
         /// <summary>
         /// Loads an assertion and tries to verify it using the key embedded in the assertion.
         /// </summary>
         /// <param name="assertionFile">Path to the file containing the assertion to verify.</param>
+        /// <returns>True if the signature is valid, else false.</returns>
         private static bool VerifySignature(string assertionFile)
         {
-            FileStream fs = File.OpenRead(assertionFile);
-
-            XmlDocument document = new XmlDocument();
-            document.PreserveWhitespace = true;
-            document.Load(fs);
-
-            return VerifySignature(document);
+            return VerifySignature(LoadDocument(assertionFile));
         }
 
         /// <summary>
         /// Verifies the signature of the assertion contained in the document given as parameter.
         /// </summary>
+        /// <param name="assertion">The assertion.</param>
+        /// <returns>True if the signature is valid, else false.</returns>
         private static bool VerifySignature(XmlDocument assertion)
         {
-            SignedXml signedXml = new SignedXml(assertion.DocumentElement);
+            var signedXml = new SignedXml(assertion.DocumentElement);
 
-            XmlNodeList nodeList = assertion.GetElementsByTagName(Signature.ElementName, Saml20Constants.Xmldsig);
+            var nodeList = assertion.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig);
             signedXml.LoadXml((XmlElement)nodeList[0]);
 
             Assert.IsNotNull(signedXml.Signature);
 
-            // Check the signature and return the result.
-            /* 
-            AsymmetricAlgorithm key;
-            bool useEmbeddedKey = signedXml.CheckSignatureReturningKey(out key);
-            if (!useEmbeddedKey)
-                return false;            
-
-            return signedXml.CheckSignature(key);
-            */
-
-            return signedXml.CheckSignature();            
+            return signedXml.CheckSignature();
         }
+
+        #endregion
     }
 }

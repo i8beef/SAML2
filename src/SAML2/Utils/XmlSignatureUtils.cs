@@ -12,6 +12,8 @@ namespace SAML2.Utils
     /// </summary>
     public class XmlSignatureUtils
     {
+        #region Public methods
+
         /// <summary>
         /// Verifies the signature of the XmlDocument instance using the key enclosed with the signature.
         /// </summary>
@@ -218,6 +220,21 @@ namespace SAML2.Utils
         }
 
         /// <summary>
+        /// Signs an XmlDocument with an xml signature using the signing certificate specified in the
+        /// configuration file.
+        /// </summary>
+        /// <param name="doc">The XmlDocument to be signed</param>
+        /// <param name="id">The is of the topmost element in the xmldocument</param>
+        public static void SignDocument(XmlDocument doc, string id)
+        {
+            SignDocument(doc, id, Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate());
+        }
+
+        #endregion
+
+        #region Private methods
+
+        /// <summary>
         /// Do checks on the document given. Every public method accepting a XmlDocument instance as parameter should
         /// call this method before continuing.
         /// </summary>
@@ -273,9 +290,11 @@ namespace SAML2.Utils
         private static SignedXml RetrieveSignature(XmlElement el)
         {
             SignedXml signedXml = new SignedXmlWithIdResolvement(el);
-            XmlNodeList nodeList = el.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig);
+            var nodeList = el.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig);
             if (nodeList.Count == 0)
+            {
                 throw new InvalidOperationException("Document does not contain a signature to verify.");
+            }
 
             signedXml.LoadXml((XmlElement)nodeList[0]);
 
@@ -324,17 +343,6 @@ namespace SAML2.Utils
         }
 
         /// <summary>
-        /// Signs an XmlDocument with an xml signature using the signing certificate specified in the
-        /// configuration file.
-        /// </summary>
-        /// <param name="doc">The XmlDocument to be signed</param>
-        /// <param name="id">The is of the topmost element in the xmldocument</param>
-        public static void SignDocument(XmlDocument doc, string id)
-        {
-            SignDocument(doc, id, Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate());
-        }
-
-        /// <summary>
         /// Verifies that the reference uri (if any) points to the correct element.
         /// </summary>
         /// <param name="signedXml">the ds:signature element</param>
@@ -368,6 +376,8 @@ namespace SAML2.Utils
                 }
             }
         }
+
+        #endregion
 
         /// <summary>
         /// Signed XML with Id Resolvement class.

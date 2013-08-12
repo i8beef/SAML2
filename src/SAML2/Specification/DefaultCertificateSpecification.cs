@@ -28,7 +28,8 @@ namespace SAML2.Specification
             {
                 defaultCertificateValidator.Validate(certificate);
                 return true;
-            }catch(Exception e)
+            }
+            catch(Exception e)
             {
                 Logging.LoggerProvider.LoggerFor(GetType()).Warn(string.Format(Tracing.CertificateIsNotRFC3280Valid, certificate.SubjectName.Name, certificate.Thumbprint), e);
             }

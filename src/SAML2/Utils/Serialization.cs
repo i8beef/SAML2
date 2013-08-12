@@ -9,23 +9,46 @@ namespace SAML2.Utils
     /// </summary>
     public static class Serialization
     {
-        private static readonly XmlSerializerNamespaces _xmlNamespaces = null;
-
+        /// <summary>
+        /// Initializes the <see cref="Serialization"/> class.
+        /// </summary>
         static Serialization()
         {
-            _xmlNamespaces = new XmlSerializerNamespaces();
-            _xmlNamespaces.Add("", "");
+            XmlNamespaces = new XmlSerializerNamespaces();
+            XmlNamespaces.Add("", "");
         }
 
+        /// <summary>
+        /// Reads and deserializes an item from the reader
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="reader">The reader.</param>
+        /// <returns></returns>
+        public static T Deserialize<T>(XmlReader reader)
+        {
+            var serializer = new XmlSerializer(typeof(T));
+            var item = (T)serializer.Deserialize(reader);
+
+            return item;
+        }
+
+        /// <summary>
+        /// Deserializes an item from an XML string.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xml">The XML.</param>
+        /// <returns></returns>
+        public static T DeserializeFromXmlString<T>(string xml)
+        {
+            var reader = new XmlTextReader(new StringReader(xml));
+            return Deserialize<T>(reader);
+        }
 
         /// <summary>
         /// Gets the instance of XmlSerializerNamespaces that is used by this class.
         /// </summary>
         /// <value>The XmlSerializerNamespaces instance.</value>
-        public static XmlSerializerNamespaces XmlNamespaces
-        {
-            get { return _xmlNamespaces; }
-        }
+        public static XmlSerializerNamespaces XmlNamespaces { get; private set; }
 
         /// <summary>
         /// Serializes the specified item to a stream.
@@ -35,8 +58,8 @@ namespace SAML2.Utils
         /// <param name="stream">The stream to serialize to.</param>
         public static void Serialize<T>(T item, Stream stream)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            serializer.Serialize(stream, item, _xmlNamespaces);
+            var serializer = new XmlSerializer(typeof(T));
+            serializer.Serialize(stream, item, XmlNamespaces);
             stream.Flush();
         }
 
@@ -48,11 +71,11 @@ namespace SAML2.Utils
         /// <returns>An XmlDocument containing the serialized form of the item</returns>
         public static XmlDocument Serialize<T>(T item)
         {
-            MemoryStream stream = new MemoryStream();
+            var stream = new MemoryStream();
             Serialize(item, stream);
 
             // create the XmlDocument to return
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             stream.Seek(0, SeekOrigin.Begin);
             doc.Load(stream);
 
@@ -69,38 +92,12 @@ namespace SAML2.Utils
         /// <returns></returns>
         public static string SerializeToXmlString<T>(T item)
         {
-            MemoryStream stream = new MemoryStream();
+            var stream = new MemoryStream();
             Serialize(item, stream);
 
-            StreamReader reader = new StreamReader(stream);
+            var reader = new StreamReader(stream);
             stream.Seek(0, SeekOrigin.Begin);
             return reader.ReadToEnd();
-        }
-
-        /// <summary>
-        /// Deserializes an item from an XML string.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="xml">The XML.</param>
-        /// <returns></returns>
-        public static T DeserializeFromXmlString<T>(string xml)
-        {
-            XmlTextReader reader = new XmlTextReader(new StringReader(xml));
-            return Deserialize<T>(reader);
-        }
-
-        /// <summary>
-        /// Reads and deserializes an item from the reader
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="reader">The reader.</param>
-        /// <returns></returns>
-        public static T Deserialize<T>(XmlReader reader)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            T item = (T)serializer.Deserialize(reader);
-
-            return item;
         }
     }
 }

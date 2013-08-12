@@ -142,7 +142,7 @@ namespace SAML2
             if (encryptedData.EncryptionMethod != null)
             {
                 _sessionKeyAlgorithm = encryptedData.EncryptionMethod.KeyAlgorithm;
-                sessionKey = ExtractSessionKey(_encryptedAssertion, encryptedData.EncryptionMethod.KeyAlgorithm);
+                sessionKey = ExtractSessionKey(_encryptedAssertion, _sessionKeyAlgorithm);
             }
             else
             {
@@ -156,7 +156,7 @@ namespace SAML2
              * If this becomes a problem with other IDPs, consider adding a default EncryptionMethod instance manually before decrypting.
              */
             var encryptedXml = new EncryptedXml();
-            byte[] plaintext = encryptedXml.DecryptData(encryptedData, sessionKey);
+            var plaintext = encryptedXml.DecryptData(encryptedData, sessionKey);
 
             Assertion = new XmlDocument { PreserveWhitespace = true };
             try
@@ -300,16 +300,14 @@ namespace SAML2
                     result = TripleDES.Create();
                     break;
                 case EncryptedXml.XmlEncAES128Url:
-                    result = new RijndaelManaged {KeySize = 128};
+                    result = new RijndaelManaged { KeySize = 128 };
                     break;
                 case EncryptedXml.XmlEncAES192Url:
-                    result = new RijndaelManaged {KeySize = 192};
+                    result = new RijndaelManaged { KeySize = 192 };
                     break;
                 case EncryptedXml.XmlEncAES256Url:
-                    result = new RijndaelManaged {KeySize = 256};
-                    break;
                 default:
-                    result = new RijndaelManaged {KeySize = 256};
+                    result = new RijndaelManaged { KeySize = 256 };
                     break;
             }
 
