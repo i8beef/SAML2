@@ -183,7 +183,7 @@ namespace SAML2.Tests.Bindings
             /// </summary>
             [Test]
             [ExpectedException(typeof(InvalidOperationException))]
-            public void ParserThrowsExceptionOnTryingToVerifySignatureOfUnsignedRequest()
+            public void ParserThrowsExceptionWhenTryingToVerifySignatureOfUnsignedRequest()
             {
                 // Arrange
                 var request = string.Empty.PadLeft(350, 'A') + "ÆØÅæøå";

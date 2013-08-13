@@ -23,7 +23,7 @@ namespace SAML2.Tests.Validation
             /// which explains the large number of tested addresses
             /// </summary>
             [Test]
-            public void ThrowsExceptionOnEmailInvalidForm()
+            public void ThrowsExceptionWhenEmailInvalidForm()
             {
                 // Arrange
                 var nameId = new NameID
@@ -76,7 +76,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Email Format attribute MUST contain a Value that contains more than whitespace characters")]
-            public void ThrowsExceptionOnEmailValueContainsOnlyWhitespace()
+            public void ThrowsExceptionWhenEmailValueContainsOnlyWhitespace()
             {
                 // Arrange
                 var nameId = new NameID
@@ -117,7 +117,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with X509SubjectName Format attribute MUST contain a Value that contains more than whitespace characters")]
-            public void ThrowsExceptionOnX509SubjecNameValueContainsOnlyWhirespace()
+            public void ThrowsExceptionWhenX509SubjecNameValueContainsOnlyWhirespace()
             {
                 // Arrange
                 var nameId = new NameID
@@ -136,7 +136,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with X509SubjectName Format attribute MUST contain a Value that contains more than whitespace characters")]
-            public void ThrowsExceptionOnX509SubjecNameValueEmpty()
+            public void ThrowsExceptionWhenX509SubjecNameValueEmpty()
             {
                 // Arrange
                 var nameId = new NameID
@@ -159,7 +159,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Windows Format attribute MUST contain a Value that contains more than whitespace characters")]
-            public void ThrowsExceptionOnWindowsDomainQualifiedNameValueContainsOnlyWhitespace()
+            public void ThrowsExceptionWhenWindowsDomainQualifiedNameValueContainsOnlyWhitespace()
             {
                 // Arrange
                 var nameId = new NameID
@@ -203,7 +203,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Kerberos Format attribute MUST contain a Value that contains more than whitespace characters")]
-            public void ThrowsExceptionOnKerberosValueContainsOnlyWhitespace()
+            public void ThrowsExceptionWhenKerberosValueContainsOnlyWhitespace()
             {
                 // Arrange
                 var nameId = new NameID
@@ -222,7 +222,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Kerberos Format attribute MUST contain a Value that contains more than whitespace characters")]
-            public void ThrowsExceptionOnKerberosValueEmpty()
+            public void ThrowsExceptionWhenKerberosValueEmpty()
             {
                 // Arrange
                 var nameId = new NameID
@@ -241,7 +241,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Kerberos Format attribute MUST contain a Value that contains a '@'")]
-            public void ThrowsExceptionOnKerberosInvalidFormat()
+            public void ThrowsExceptionWhenKerberosInvalidFormat()
             {
                 // Arrange
                 var nameId = new NameID
@@ -260,7 +260,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Kerberos Format attribute MUST contain a Value with at least 3 characters")]
-            public void ThrowsExceptionOnKerberosLessThanThreeCharacters()
+            public void ThrowsExceptionWhenKerberosLessThanThreeCharacters()
             {
                 // Arrange
                 var nameId = new NameID
@@ -302,7 +302,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Entity Format attribute MUST contain a Value that contains more than whitespace characters")]
-            public void ThrowsExceptionOnEntityValueContainsOnlyWhitespace()
+            public void ThrowsExceptionWhenEntityValueContainsOnlyWhitespace()
             {
                 // Arrange
                 var nameId = new NameID
@@ -321,7 +321,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Entity Format attribute MUST contain a Value that contains more than whitespace characters")]
-            public void ThrowsExceptionOnEntityValueEmpty()
+            public void ThrowsExceptionWhenEntityValueEmpty()
             {
                 // Arrange
                 var nameId = new NameID
@@ -340,7 +340,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Entity Format attribute MUST have a Value that contains no more than 1024 characters")]
-            public void ThrowsExceptionOnEntityLengthTooLong()
+            public void ThrowsExceptionWhenEntityLengthTooLong()
             {
                 // Arrange
                 var nameId = new NameID
@@ -359,7 +359,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Entity Format attribute MUST NOT set the NameQualifier attribute")]
-            public void ThrowsExceptionOnEntityNameQualifierSet()
+            public void ThrowsExceptionWhenEntityNameQualifierSet()
             {
                 // Arrange
                 var nameId = new NameID
@@ -379,7 +379,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Entity Format attribute MUST NOT set the SPNameQualifier attribute")]
-            public void ThrowsExceptionOnEntitySPNameQualifierSet()
+            public void ThrowsExceptionWhenEntitySPNameQualifierSet()
             {
                 // Arrange
                 var nameId = new NameID
@@ -399,7 +399,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Entity Format attribute MUST NOT set the SPProvidedID attribute")]
-            public void ThrowsExceptionOnEntitySPProvidedId()
+            public void ThrowsExceptionWhenEntitySPProvidedId()
             {
                 // Arrange
                 var nameId = new NameID
@@ -441,7 +441,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Persistent Format attribute MUST contain a Value that contains more than whitespace characters")]
-            public void ThrowsExceptionOnPersistentContainsOnlyWhitespace()
+            public void ThrowsExceptionWhenPersistentContainsOnlyWhitespace()
             {
                 // Arrange
                 var nameId = new NameID
@@ -460,7 +460,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Persistent Format attribute MUST contain a Value that contains more than whitespace characters")]
-            public void ThrowsExceptionOnPersistentValueEmpty()
+            public void ThrowsExceptionWhenPersistentValueEmpty()
             {
                 // Arrange
                 var nameId = new NameID
@@ -479,7 +479,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Persistent Format attribute MUST have a Value that contains no more than 256 characters")]
-            public void ThrowsExceptionOnPersistentLengthTooLong()
+            public void ThrowsExceptionWhenPersistentLengthTooLong()
             {
                 // Arrange
                 var nameId = new NameID
@@ -517,7 +517,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Transient Format attribute MUST have a Value that contains no more than 256 characters")]
-            public void ThrowsExceptionOnTransientValueTooLong()
+            public void ThrowsExceptionWhenTransientValueTooLong()
             {
                 // Arrange
                 var nameId = new NameID
@@ -536,7 +536,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Transient Format attribute MUST have a Value with at least 16 characters (the equivalent of 128 bits)")]
-            public void ThrowsExceptionOnTransientValueTooShort()
+            public void ThrowsExceptionWhenTransientValueTooShort()
             {
                 // Arrange
                 var nameId = new NameID

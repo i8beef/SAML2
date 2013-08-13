@@ -68,7 +68,7 @@ namespace SAML2.Tests.Utils
             /// </summary>
             [Test]
             [ExpectedException(typeof (ArgumentException))]
-            public void ThrowsExceptionOnMessageHandleLengthMismatch()
+            public void ThrowsExceptionWhenMessageHandleLengthMismatch()
             {
                 // Arrange
                 const short typeCode = 4;
@@ -85,7 +85,7 @@ namespace SAML2.Tests.Utils
             /// </summary>
             [Test]
             [ExpectedException(typeof (ArgumentException))]
-            public void ThrowsExceptionOnSourceIdHashLengthMismatch()
+            public void ThrowsExceptionWhenSourceIdHashLengthMismatch()
             {
                 // Arrange
                 const short typeCode = 4;
@@ -109,7 +109,7 @@ namespace SAML2.Tests.Utils
             /// </summary>
             [Test]
             [ExpectedException(typeof (ArgumentException))]
-            public void ThrowsExceptionOnSourceIdHashLengthMismatch()
+            public void ThrowsExceptionWhenSourceIdHashLengthMismatch()
             {
                 // Arrange
                 short parsedTypeCode = -1;
@@ -127,7 +127,7 @@ namespace SAML2.Tests.Utils
             /// </summary>
             [Test]
             [ExpectedException(typeof (ArgumentException))]
-            public void ThrowsExceptionOnMessageHandleLengthMismatch()
+            public void ThrowsExceptionWhenMessageHandleLengthMismatch()
             {
                 // Arrange
                 short parsedTypeCode = -1;
@@ -145,7 +145,7 @@ namespace SAML2.Tests.Utils
             /// </summary>
             [Test]
             [ExpectedException(typeof (ArgumentException))]
-            public void ThrowsExceptionOnArtifactLengthMismatch()
+            public void ThrowsExceptionWhenArtifactLengthMismatch()
             {
                 // Arrange
                 short parsedTypeCode = -1;

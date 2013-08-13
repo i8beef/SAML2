@@ -101,9 +101,10 @@ namespace SAML2.Validation
 
             foreach (var statement in assertion.GetAuthnStatements())
             {
-                if (statement.SessionNotOnOrAfter != null
-                    && statement.SessionNotOnOrAfter <= now)
+                if (statement.SessionNotOnOrAfter != null && statement.SessionNotOnOrAfter <= now)
+                {
                     throw new Saml20FormatException("AuthnStatement attribute SessionNotOnOrAfter MUST be in the future");
+                }
 
                 // TODO: Consider validating that authnStatement.AuthnInstant is in the past
             }

@@ -96,13 +96,12 @@ namespace SAML2.Tests
         public static Assertion GetBasicAssertion()
         {
             var assertion = new Assertion
-            {
-                Issuer = new NameID(),
-                ID = "_b8977dc86cda41493fba68b32ae9291d",
-                IssueInstant = DateTime.UtcNow,
-                Version = "2.0"
-            };
-
+                                {
+                                    Issuer = new NameID(),
+                                    ID = "_b8977dc86cda41493fba68b32ae9291d",
+                                    IssueInstant = DateTime.UtcNow,
+                                    Version = "2.0"
+                                };
 
             assertion.Issuer.Value = GetBasicIssuer();
             assertion.Subject = new Subject();
@@ -122,7 +121,6 @@ namespace SAML2.Tests
             assertion.Conditions.Items = new List<ConditionAbstract>(new ConditionAbstract[] { audienceRestriction });
 
             AuthnStatement authnStatement;
-
             {
                 authnStatement = new AuthnStatement();
                 assertion.Items = new StatementAbstract[] { authnStatement };

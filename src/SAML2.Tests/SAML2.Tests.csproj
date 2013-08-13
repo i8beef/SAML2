@@ -58,9 +58,11 @@
     <Compile Include="Saml20MetadataDocumentTests.cs" />
     <Compile Include="Utils\Saml20UtilsTests.cs" />
     <Compile Include="Utils\XmlSignatureUtilsTest.cs" />
+    <Compile Include="Validation\Saml20AssertionValidatorTests.cs" />
     <Compile Include="Validation\Saml20CoreValidationTest.cs" />
     <Compile Include="SignatureTest.cs" />
     <Compile Include="Validation\Saml20NameIdValidatorTests.cs" />
+    <Compile Include="Validation\Saml20StatementValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
