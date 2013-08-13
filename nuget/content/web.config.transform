@@ -1,7 +1,6 @@
 <configuration>
   <configSections>
-    <section name="Federation" type="SAML2.Config.ConfigurationReader, SAML2" />
-    <section name="SAML20Federation" type="SAML2.Config.ConfigurationReader, SAML2" />
+    <section name="saml2" type="SAML2.Config.Saml2Section, SAML2" />
   </configSections>
   <system.webServer>
     <handlers>
@@ -13,22 +12,22 @@
       <add name="SAML2.Protocol.Saml20MetadataHandler" verb="*" path="Metadata.ashx" type="SAML2.Protocol.Saml20MetadataHandler, SAML2" />
     </handlers>
   </system.webServer>
-  <Federation>
-    <SigningCertificate findValue="CN=CERTIFICATENAME" storeLocation="LocalMachine" storeName="My" x509FindType="FindBySubjectDistinguishedName" />
-    <AllowedAudienceUris>
-      <Audience>urn:SPName</Audience>
-    </AllowedAudienceUris>
-  </Federation>
-  <SAML20Federation>
-    <ServiceProvider id="urn:SPName" server="https://www.example.com">
-      <ServiceEndpoint localpath="Login.ashx" type="signon" redirectUrl="~/AuthenticatedHomePage" index="0" />
-      <ServiceEndpoint localpath="Logout.ashx" type="logout" redirectUrl="~/HomePage" index="1" />
-      <ServiceEndpoint localpath="Metadata.ashx" type="metadata" />
-    </ServiceProvider>
-    <RequestedAttributes>
-      <att name="urn:cn" />-->
-    </RequestedAttributes>
-    <IDPEndPoints metadata="METADATALOCATION">
-    </IDPEndPoints>
-  </SAML20Federation>
+    <saml2>
+    <allowedAudienceUris>
+      <audience uri="urn:SPName" />
+    </allowedAudienceUris>
+    <serviceProvider id="urn:SPName" server="https://www.example.com">
+      <signingCertificate findValue="CN=CERTIFICATENAME" storeLocation="LocalMachine" storeName="My" x509FindType="FindBySubjectDistinguishedName" />
+      <endpoints>
+        <endpoint type="SignOn" localPath="Login.ashx" redirectUrl="~/Default.aspx" />
+        <endpoint type="Logout" localPath="Logout.ashx" redirectUrl="~/MyPage.aspx" />
+        <endpoint type="Metadata" localPath="Metadata.ashx" />
+      </endpoints>
+    </serviceProvider>
+    <requestedAttributes>
+      <att name="urn:cn" />
+    </requestedAttributes>
+    <identityProviders metadata="METADATALOCATION">
+    </identityProviders>
+  </saml2>
 </configuration>
