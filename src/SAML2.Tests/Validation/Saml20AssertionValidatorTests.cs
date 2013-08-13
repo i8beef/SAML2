@@ -132,6 +132,7 @@ namespace SAML2.Tests.Validation
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "The service is not configured to meet the given audience restrictions")]
             public void ThrowsExceptionWhenAudienceRestrictionAnyAudienceRestrictionIsNotMet()
             {
+                // Arrange
                 var assertion = AssertionUtil.GetBasicAssertion();
                 var validator = new Saml20AssertionValidator(AssertionUtil.GetAudiences(), false);
 
@@ -305,6 +306,7 @@ namespace SAML2.Tests.Validation
             [Test]
             public void ValidatesAudienceRestrictionWithMultipleAudienceRestrictions()
             {
+                // Arrange
                 var assertion = AssertionUtil.GetBasicAssertion();
                 var validator = new Saml20AssertionValidator(AssertionUtil.GetAudiences(), false);
 
@@ -328,6 +330,7 @@ namespace SAML2.Tests.Validation
             [Test]
             public void ValidatesAudienceRestrictionWithSeveralAudiences()
             {
+                // Arrange
                 var assertion = AssertionUtil.GetBasicAssertion();
                 var validator = new Saml20AssertionValidator(AssertionUtil.GetAudiences(), false);
 
