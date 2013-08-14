@@ -67,7 +67,9 @@
     <Compile Include="Validation\Saml20SubjectValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Assertions\EncryptedAssertion_01">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

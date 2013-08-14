@@ -79,6 +79,7 @@ namespace SAML2.Bindings
         /// <value>The signing key.</value>
         public AsymmetricAlgorithm SigningKey
         {
+            get { return _signingKey; }
             set
             {
                 // Check if the key is of a supported type. [SAMLBind] sect. 3.4.4.1 specifies this.
@@ -88,8 +89,6 @@ namespace SAML2.Bindings
                 }
                 _signingKey = value;
             }
-
-            get { return _signingKey; }
         }
 
         /// <summary>

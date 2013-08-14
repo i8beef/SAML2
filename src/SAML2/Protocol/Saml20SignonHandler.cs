@@ -101,22 +101,33 @@ namespace SAML2.Protocol
         /// <returns>The assertion XML.</returns>
         internal static XmlElement GetAssertion(XmlElement el, out bool isEncrypted)
         {
+            Logger.Debug("Getting Assertion.");
+
             var encryptedList = el.GetElementsByTagName(EncryptedAssertion.ElementName, Saml20Constants.Assertion);
             if (encryptedList.Count == 1)
             {
                 isEncrypted = true;
-                return (XmlElement)encryptedList[0];
+                var encryptedAssertion = (XmlElement) encryptedList[0];
+
+                Logger.DebugFormat("Found EncryptedAssertion: {0}", encryptedAssertion.OuterXml);
+
+                return encryptedAssertion;
             }
 
             var assertionList = el.GetElementsByTagName(Assertion.ElementName, Saml20Constants.Assertion);
             if (assertionList.Count == 1)
             {
                 isEncrypted = false;
-                return (XmlElement)assertionList[0];
+                var assertion = (XmlElement)assertionList[0];
+
+                Logger.DebugFormat("Found Assertion: {0}", assertion.OuterXml);
+
+                return assertion;
             }
 
-            isEncrypted = false;
+            Logger.Warn("No Assertion found.");
 
+            isEncrypted = false;
             return null;
         }
 
@@ -133,18 +144,18 @@ namespace SAML2.Protocol
         /// <param name="endpoint">The endpoint.</param>
         protected virtual void PreHandleAssertion(HttpContext context, XmlElement elem, IdentityProviderElement endpoint)
         {
-            Logger.DebugFormat("{0}.{1} called", GetType(), "PreHandleAssertion");
+            Logger.DebugFormat("Executing configured assertion prehandler.");
 
             if (endpoint != null && endpoint.Endpoints.LogoutEndpoint != null && !String.IsNullOrEmpty(endpoint.Endpoints.LogoutEndpoint.TokenAccessor))
             {
                 var idpTokenAccessor = Activator.CreateInstance(Type.GetType(endpoint.Endpoints.LogoutEndpoint.TokenAccessor, false)) as ISaml20IdpTokenAccessor;
                 if (idpTokenAccessor != null)
                 {
+                    Logger.DebugFormat("{0}.{1} called", idpTokenAccessor.GetType(), "ReadToken");
                     idpTokenAccessor.ReadToken(elem);
+                    Logger.DebugFormat("{0}.{1} finished", idpTokenAccessor.GetType(), "ReadToken");
                 }
             }
-
-            Logger.DebugFormat("{0}.{1} finished", GetType(), "PreHandleAssertion");
         }
 
         #endregion
@@ -169,6 +180,8 @@ namespace SAML2.Protocol
         /// <param name="inResponseTo">The message the current instance is in response to.</param>
         private static void CheckReplayAttack(HttpContext context, string inResponseTo)
         {
+            Logger.Debug("Checking for replay attack.");
+
             var expectedInResponseToSessionState = context.Session[ExpectedInResponseToSessionKey];
             if (expectedInResponseToSessionState == null)
             {
@@ -186,6 +199,8 @@ namespace SAML2.Protocol
                 Logger.ErrorFormat("Unexpected value {0} for InResponseTo, expected {1}, possible replay attack!", inResponseTo, expectedInResponseTo);
                 throw new Saml20Exception("Replay attack.");
             }
+
+            Logger.Debug("No replay attack detected.");
         }
 
         /// <summary>
@@ -196,13 +211,15 @@ namespace SAML2.Protocol
         /// <returns>The decoded SAML response XML.</returns>
         private static XmlDocument GetDecodedSamlResponse(HttpContext context, Encoding encoding)
         {
+            Logger.Debug("Decoding of SamlResponse started.");
+
             var base64 = context.Request.Params["SAMLResponse"];
 
             var doc = new XmlDocument { PreserveWhitespace = true };
             var samlResponse = encoding.GetString(Convert.FromBase64String(base64));
             doc.LoadXml(samlResponse);
 
-            Logger.DebugFormat("Decoded SAMLResponse, msg: {0}", samlResponse);
+            Logger.DebugFormat("Decoded SamlResponse: {0}", samlResponse);
 
             return doc;
         }
@@ -214,11 +231,13 @@ namespace SAML2.Protocol
         /// <returns>The decrypted <see cref="Saml20EncryptedAssertion"/>.</returns>
         private static Saml20EncryptedAssertion GetDecryptedAssertion(XmlElement elem)
         {
+            Logger.Debug("EncryptedAssertion detected.");
+
             var decryptedAssertion = new Saml20EncryptedAssertion((RSA)Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey);
             decryptedAssertion.LoadXml(elem);
             decryptedAssertion.Decrypt();
 
-            Logger.Debug("Decrypted assertion: " + decryptedAssertion.Assertion.DocumentElement.OuterXml);
+            Logger.Debug("Decrypted EncryptedAssertion: " + decryptedAssertion.Assertion.DocumentElement.OuterXml);
 
             return decryptedAssertion;
         }
@@ -271,9 +290,9 @@ namespace SAML2.Protocol
 
             Logger.DebugFormat(Tracing.Login, assertion.Subject.Value, assertion.SessionIndex, assertion.Subject.Format);
 
+            Logger.Debug("Executing SignOn Actions.");
             foreach (var action in Actions.Actions.GetActions())
             {
-                Logger.Debug("Processing Signon request and executing Actions.");
                 Logger.DebugFormat("{0}.{1} called", action.GetType(), "LoginAction()");
 
                 action.SignOnAction(this, context, assertion);
@@ -288,10 +307,9 @@ namespace SAML2.Protocol
         /// <param name="context">The context.</param>
         private void HandleArtifact(HttpContext context)
         {
-            Logger.Debug("Resolving HTTP SAML artifact.");
-
             var builder = new HttpArtifactBindingBuilder(context);
             var inputStream = builder.ResolveArtifact();
+            
             HandleSoap(context, inputStream);
         }
 
@@ -364,22 +382,18 @@ namespace SAML2.Protocol
         /// <param name="elem">The elem.</param>
         private void HandleEncryptedAssertion(HttpContext context, XmlElement elem)
         {
-            var decryptedAssertion = GetDecryptedAssertion(elem);
-
-            Logger.Debug("Encrypted Assertion was decrypted: " + decryptedAssertion.Assertion.DocumentElement);
-
-            HandleAssertion(context, decryptedAssertion.Assertion.DocumentElement);
+            HandleAssertion(context, GetDecryptedAssertion(elem).Assertion.DocumentElement);
         }
-        
+
         /// <summary>
         /// Handle the authentication response from the IDP.
         /// </summary>
+        /// <param name="context">The context.</param>
         private void HandleResponse(HttpContext context)
         {
             var defaultEncoding = Encoding.UTF8;
             var doc = GetDecodedSamlResponse(context, defaultEncoding);
-
-            Logger.Debug("Received SAMLResponse: " + doc.OuterXml);
+            Logger.Debug("Received SamlResponse: " + doc.OuterXml);
 
             try
             {
@@ -455,7 +469,7 @@ namespace SAML2.Protocol
         /// <param name="inputStream">The input stream.</param>
         private void HandleSoap(HttpContext context, Stream inputStream)
         {
-            Logger.DebugFormat("SP initiated SOAP based Signon.");
+            Logger.DebugFormat("SP initiated SOAP based SignOn.");
 
             var parser = new HttpArtifactBindingParser(inputStream);
             var builder = new HttpArtifactBindingBuilder(context);
@@ -531,8 +545,6 @@ namespace SAML2.Protocol
         /// </summary>
         private void SendRequest(HttpContext context)
         {
-            Logger.Debug("Sending SAML Request.");
-
             // See if the "ReturnUrl" - parameter is set.
             var returnUrl = context.Request.QueryString["ReturnUrl"];
             if (!string.IsNullOrEmpty(returnUrl))
@@ -543,7 +555,9 @@ namespace SAML2.Protocol
             var idp = RetrieveIDP(context);
             if (idp == null)
             {
-                //Display a page to the user where she can pick the IDP
+                // Display a page to the user where she can pick the IDP
+                Logger.Debug("IDP not found. Redirecting for IDP selection.");
+
                 var page = new SelectSaml20IDP();
                 page.ProcessRequest(context);
                 return;
@@ -616,8 +630,10 @@ namespace SAML2.Protocol
                                       SigningKey = _certificate.PrivateKey,
                                       Request = request.GetXml().OuterXml
                                   };
-                var s = request.Destination + "?" + builder.ToQuery();
 
+                Logger.DebugFormat("AuthnRequest sent: {0}", builder.Request);
+
+                var s = request.Destination + "?" + builder.ToQuery();
                 context.Response.Redirect(s, true);
                 return;
             }
@@ -633,9 +649,12 @@ namespace SAML2.Protocol
                 {
                     request.ProtocolBinding = Saml20Constants.ProtocolBindings.HttpPost;
                 }
+
                 var req = request.GetXml();
                 XmlSignatureUtils.SignDocument(req, request.Id);
                 builder.Request = req.OuterXml;
+
+                Logger.DebugFormat("AuthnRequest sent: {0}",builder.Request);
 
                 builder.GetPage().ProcessRequest(context);
                 return;
@@ -652,6 +671,8 @@ namespace SAML2.Protocol
                 {
                     request.ProtocolBinding = Saml20Constants.ProtocolBindings.HttpArtifact;
                 }
+
+                Logger.DebugFormat("AuthnRequest sent: {0}", request.GetXml().OuterXml);
 
                 builder.RedirectFromLogin(destination, request);
             }
@@ -670,10 +691,10 @@ namespace SAML2.Protocol
         /// <param name="context">The context.</param>
         protected override void Handle(HttpContext context)
         {
-            Logger.Debug("Signon handler called.");
+            Logger.Debug("SignOn handler called.");
 
-            //Some IdP's are known to fail to set an actual value in the SOAPAction header
-            //so we just check for the existence of the header field.
+            // Some IdP's are known to fail to set an actual value in the SOAPAction header
+            // so we just check for the existence of the header field.
             if (Array.Exists(context.Request.Headers.AllKeys, s => s == SoapConstants.SoapAction))
             {
                 HandleSoap(context, context.Request.InputStream);

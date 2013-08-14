@@ -85,6 +85,7 @@ namespace SAML2.Protocol
         private void CreateMetadataDocument(HttpContext context, bool sign)
         {
             Logger.Debug("Creating metadata document.");
+
             var configuration = Saml2Config.GetConfig();
 
             var keyinfo = new KeyInfo();
