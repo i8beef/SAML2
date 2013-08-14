@@ -42,11 +42,7 @@ namespace SAML2.Config
         [ConfigurationProperty("organization")]
         public OrganizationElement Organization
         {
-            get
-            {
-                // This makes the value of Organization be null if it is excluded in the config
-                return (OrganizationElement)base[new ConfigurationProperty("organization", typeof(OrganizationElement), null)];
-            }
+            get { return (OrganizationElement)base["organization"]; }
             set { base["organization"] = value; }
         }
 

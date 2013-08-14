@@ -541,7 +541,7 @@ namespace SAML2
             keyEncryption.KeyInfo = keySigning.KeyInfo;
 
             // apply the <Organization> element
-            if (config.Metadata.Organization != null)
+            if (config.Metadata.Organization.ElementInformation.IsPresent)
             {
                 entity.Organization = new Organization
                                           {
