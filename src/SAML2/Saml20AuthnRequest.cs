@@ -6,7 +6,6 @@ using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
 using Saml2.Properties;
-using AuthnContextType = SAML2.Schema.Protocol.AuthnContextType;
 
 namespace SAML2
 {
@@ -224,7 +223,7 @@ namespace SAML2
                 }
 
                 result.RequestedAuthnContext.Items = new string[config.ServiceProvider.AuthenticationContexts.Count];
-                result.RequestedAuthnContext.ItemsElementName = new AuthnContextType[config.ServiceProvider.AuthenticationContexts.Count];
+                result.RequestedAuthnContext.ItemsElementName = new Schema.Protocol.AuthnContextType[config.ServiceProvider.AuthenticationContexts.Count];
 
                 var count = 0;
                 foreach (var authenticationContext in config.ServiceProvider.AuthenticationContexts)
@@ -233,10 +232,10 @@ namespace SAML2
                     switch (authenticationContext.ReferenceType)
                     {
                         case "AuthnContextDeclRef":
-                            result.RequestedAuthnContext.ItemsElementName[count] = AuthnContextType.AuthnContextDeclRef;
+                            result.RequestedAuthnContext.ItemsElementName[count] = Schema.Protocol.AuthnContextType.AuthnContextDeclRef;
                             break;
                         default:
-                            result.RequestedAuthnContext.ItemsElementName[count] = AuthnContextType.AuthnContextClassRef;
+                            result.RequestedAuthnContext.ItemsElementName[count] = Schema.Protocol.AuthnContextType.AuthnContextClassRef;
                             break;
                     }
 
@@ -246,7 +245,7 @@ namespace SAML2
 
             // Restrictions
             var audienceRestrictions = new List<ConditionAbstract>(1);
-            var audienceRestriction = new AudienceRestriction { Audience = new List<string>(1) };
+            var audienceRestriction = new AudienceRestriction { Audience = new List<string>(1) { config.ServiceProvider.Id } };
             audienceRestrictions.Add(audienceRestriction);
 
             result.SetConditions(audienceRestrictions);
