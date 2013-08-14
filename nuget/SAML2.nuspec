@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SAML2</id>
-    <version>2.1.0.0</version>
+    <version>2.2.0.0</version>
     <title>SAML2</title>
     <authors>Michael Hallock</authors>
     <owners>Michael Hallock</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://saml2.codeplex.com/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A .NET implementation of the SAML 2.0 specification for SP integrations.</description>
-    <releaseNotes>Fixed a bug where audience restrictions were being left out in AuthnRequests and added a lot more logging.</releaseNotes>
+    <releaseNotes>Moved contact and organization under metadata config section.</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>SAML SSO</tags>
   </metadata>

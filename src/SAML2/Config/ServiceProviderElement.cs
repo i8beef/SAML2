@@ -47,17 +47,6 @@ namespace SAML2.Config
         }
 
         /// <summary>
-        /// Gets or sets the contacts.
-        /// </summary>
-        /// <value>The contacts.</value>
-        [ConfigurationProperty("contacts")]
-        public ContactCollection Contacts
-        {
-            get { return (ContactCollection)base["contacts"]; }
-            set { base["contacts"] = value; }
-        }
-
-        /// <summary>
         /// Gets or sets the endpoints.
         /// </summary>
         /// <value>The endpoints.</value>
@@ -77,17 +66,6 @@ namespace SAML2.Config
         {
             get { return (NameIdFormatCollection)base["nameIdFormats"]; }
             set { base["nameIdFormats"] = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the organization.
-        /// </summary>
-        /// <value>The organization.</value>
-        [ConfigurationProperty("organization")]
-        public OrganizationElement Organization
-        {
-            get { return (OrganizationElement)base["organization"]; }            
-            set { base["organization"] = value; }            
         }
 
         /// <summary>

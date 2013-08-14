@@ -541,27 +541,29 @@ namespace SAML2
             keyEncryption.KeyInfo = keySigning.KeyInfo;
 
             // apply the <Organization> element
-            if (config.ServiceProvider.Organization != null)
+            if (config.Metadata.Organization != null)
             {
                 entity.Organization = new Organization
                                           {
-                                              OrganizationName = new[] { new LocalizedName { Value = config.ServiceProvider.Organization.Name }},
-                                              OrganizationDisplayName = new[] { new LocalizedName { Value = config.ServiceProvider.Organization.DisplayName } },
-                                              OrganizationURL = new[] { new LocalizedURI { Value = config.ServiceProvider.Organization.Url }}
+                                              OrganizationName = new[] { new LocalizedName { Value = config.Metadata.Organization.Name } },
+                                              OrganizationDisplayName = new[] { new LocalizedName { Value = config.Metadata.Organization.DisplayName } },
+                                              OrganizationURL = new[] { new LocalizedURI { Value = config.Metadata.Organization.Url } }
                                           };
             }
 
-            if (config.ServiceProvider.Contacts != null && config.ServiceProvider.Contacts.Count > 0)
+            if (config.Metadata.Contacts != null && config.Metadata.Contacts.Count > 0)
             {
-                entity.ContactPerson = config.ServiceProvider.Contacts.Select(x => new Contact
-                                                                                       {
-                                                                                           ContactType = (Schema.Metadata.ContactType)((int)x.Type),
-                                                                                           Company = x.Company,
-                                                                                           GivenName = x.GivenName,
-                                                                                           SurName = x.SurName,
-                                                                                           EmailAddress = new[] { x.Email },
-                                                                                           TelephoneNumber = new[] { x.Phone }
-                                                                                       }).ToArray();
+                entity.ContactPerson = config.Metadata.Contacts.Select(x => new Contact
+                                                                                {
+                                                                                    ContactType =
+                                                                                        (Schema.Metadata.ContactType)
+                                                                                        ((int) x.Type),
+                                                                                    Company = x.Company,
+                                                                                    GivenName = x.GivenName,
+                                                                                    SurName = x.SurName,
+                                                                                    EmailAddress = new[] { x.Email },
+                                                                                    TelephoneNumber = new[] { x.Phone }
+                                                                                }).ToArray();
             }
         }
 
