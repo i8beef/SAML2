@@ -82,7 +82,7 @@ namespace SAML2.Identity
         /// Returns the value of the persistent pseudonym issued by the IdP if the Service Provider connection
         /// is set up with persistent pseudonyms. Otherwise, returns null.
         /// </summary>
-        /// <value></value>
+        /// <value>The persistent pseudonym.</value>
         public string PersistentPseudonym { get; private set; }
 
         /// <summary>
