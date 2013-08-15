@@ -409,7 +409,7 @@ namespace SAML2
 
             var spDescriptor = new SPSSODescriptor
                                    {
-                                       ProtocolSupportEnumeration = new[] {Saml20Constants.Protocol},
+                                       ProtocolSupportEnumeration = Saml20Constants.Protocol,
                                        AuthnRequestsSigned = XmlConvert.ToString(true),
                                        WantAssertionsSigned = XmlConvert.ToString(true)
                                    };

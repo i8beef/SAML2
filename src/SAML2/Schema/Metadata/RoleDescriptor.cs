@@ -80,8 +80,8 @@ namespace SAML2.Schema.Metadata
         /// ensure discrimination when necessary.
         /// </summary>
         /// <value>The protocol support enumeration.</value>
-        [XmlAttribute("protocolSupportEnumeration", DataType = "anyURI")]
-        public string[] ProtocolSupportEnumeration { get; set; }
+        [XmlAttribute("protocolSupportEnumeration")]
+        public string ProtocolSupportEnumeration { get; set; }
 
         /// <summary>
         /// Gets or sets the valid until string.
