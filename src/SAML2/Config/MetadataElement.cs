@@ -46,6 +46,17 @@ namespace SAML2.Config
             set { base["organization"] = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the requested attributes.
+        /// </summary>
+        /// <value>The requested attributes.</value>
+        [ConfigurationProperty("requestedAttributes")]
+        public RequestedAttributesCollection RequestedAttributes
+        {
+            get { return (RequestedAttributesCollection)base["requestedAttributes"]; }
+            set { base["requestedAttributes"] = value; }
+        }
+
         #endregion
     }
 }

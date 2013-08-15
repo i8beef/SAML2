@@ -490,23 +490,23 @@ namespace SAML2
             spDescriptor.AssertionConsumerService = signonServiceEndpoints.ToArray();
             
             // Attribute consuming service. 
-            if (config.RequestedAttributes.Count > 0)
+            if (config.Metadata.RequestedAttributes.Count > 0)
             {
                 var attConsumingService = new AttributeConsumingService();
                 spDescriptor.AttributeConsumingService = new[] { attConsumingService };
                 attConsumingService.Index = signonServiceEndpoints[0].Index;
                 attConsumingService.IsDefault = true;
-                attConsumingService.ServiceName = new[] { new LocalizedName("SP", "da") };
+                attConsumingService.ServiceName = new[] { new LocalizedName("SP", "en") };
 
-                attConsumingService.RequestedAttribute = new RequestedAttribute[config.RequestedAttributes.Count];
+                attConsumingService.RequestedAttribute = new RequestedAttribute[config.Metadata.RequestedAttributes.Count];
 
-                for (var i = 0; i < config.RequestedAttributes.Count; i++)
+                for (var i = 0; i < config.Metadata.RequestedAttributes.Count; i++)
                 {
                     attConsumingService.RequestedAttribute[i] = new RequestedAttribute
                                                                     {
-                                                                        Name = config.RequestedAttributes[i].Name
+                                                                        Name = config.Metadata.RequestedAttributes[i].Name
                                                                     };
-                    if (config.RequestedAttributes[i].IsRequired)
+                    if (config.Metadata.RequestedAttributes[i].IsRequired)
                     {
                         attConsumingService.RequestedAttribute[i].IsRequired = true;
                     }
