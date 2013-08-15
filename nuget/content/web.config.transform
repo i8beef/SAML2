@@ -24,9 +24,6 @@
         <endpoint type="Metadata" localPath="Metadata.ashx" />
       </endpoints>
     </serviceProvider>
-    <requestedAttributes>
-      <att name="urn:cn" />
-    </requestedAttributes>
     <identityProviders metadata="METADATALOCATION">
     </identityProviders>
   </saml2>
