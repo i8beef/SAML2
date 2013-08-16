@@ -44,7 +44,7 @@ namespace SAML2.Tests.Validation
             {
                 // Arrange
                 var saml20Assertion = AssertionUtil.GetBasicAssertion();
-                saml20Assertion.Subject.Items = new object[] { String.Empty, 24, new List<object>(1), new Advice() };
+                saml20Assertion.Subject.Items = new object[] { string.Empty, 24, new List<object>(1), new Advice() };
 
                 var validator = new Saml20SubjectValidator();
 

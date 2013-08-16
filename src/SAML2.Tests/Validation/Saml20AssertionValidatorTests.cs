@@ -139,7 +139,7 @@ namespace SAML2.Tests.Validation
                 var audienceConditions = new List<ConditionAbstract>(assertion.Conditions.Items);
                 var audienceRestriction = new AudienceRestriction
                                               {
-                                                  Audience = new List<string>(new[] {"http://well/formed.uri"})
+                                                  Audience = new List<string>(new[] { "http://well/formed.uri" })
                                               };
                 audienceConditions.Add(audienceRestriction);
 
@@ -162,10 +162,10 @@ namespace SAML2.Tests.Validation
 
                 var audienceRestriction = new AudienceRestriction
                                               {
-                                                  Audience = new List<string>(new[] {"malformed uri"})
+                                                  Audience = new List<string>(new[] { "malformed uri" })
                                               };
 
-                assertion.Conditions.Items = new List<ConditionAbstract>(new ConditionAbstract[] {audienceRestriction});
+                assertion.Conditions.Items = new List<ConditionAbstract>(new ConditionAbstract[] { audienceRestriction });
 
                 // Act
                 validator.ValidateAssertion(assertion);
@@ -342,7 +342,7 @@ namespace SAML2.Tests.Validation
                     }
 
                     var audienceRestriction = (AudienceRestriction)audienceCondition;
-                    var audiences = new List<string>(audienceRestriction.Audience) {"http://well/formed.uri"};
+                    var audiences = new List<string>(audienceRestriction.Audience) { "http://well/formed.uri" };
                     audienceRestriction.Audience = audiences;
                     break;
                 }
@@ -363,7 +363,7 @@ namespace SAML2.Tests.Validation
 
                 var conditions = new List<ConditionAbstract>
                                      {
-                                         new ProxyRestriction { Count = "1"}
+                                         new ProxyRestriction { Count = "1" }
                                      };
                 conditions.AddRange(assertion.Conditions.Items);
                 assertion.Conditions.Items = conditions;
@@ -409,7 +409,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [Ignore] // TODO: test data needs fixing
-            [ExpectedException(typeof (Saml20FormatException), ExpectedMessage = "AuthnStatement attribute SessionNotOnOrAfter MUST be in the future")]
+            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnStatement attribute SessionNotOnOrAfter MUST be in the future")]
             public void ThrowsExceptionWhenAuthnStatementSessionNotOnOrAfterInPast()
             {
                 // Arrange

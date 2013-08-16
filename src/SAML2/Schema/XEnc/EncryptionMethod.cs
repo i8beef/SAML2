@@ -9,8 +9,8 @@ namespace SAML2.Schema.XEnc
     /// If the element is absent, the encryption algorithm must be known by the recipient or the decryption will fail.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Xenc)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Metadata, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xenc)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class EncryptionMethod
     {
         /// <summary>
@@ -32,9 +32,9 @@ namespace SAML2.Schema.XEnc
         #region Elements
 
         /// <summary>
-        /// Gets or sets any.
+        /// Gets or sets any elements.
         /// </summary>
-        /// <value>Any.</value>
+        /// <value>Any elements.</value>
         [XmlText]
         [XmlAnyElement]
         public XmlNode[] Any { get; set; }
@@ -47,9 +47,9 @@ namespace SAML2.Schema.XEnc
         public string KeySize { get; set; }
 
         /// <summary>
-        /// Gets or sets the OAE pparams.
+        /// Gets or sets the OAEP parameters.
         /// </summary>
-        /// <value>The OAE pparams.</value>
+        /// <value>The OAEP parameters.</value>
         [XmlElement("OAEPparams", DataType = "base64Binary")]
         public byte[] OAEPparams { get; set; }
 

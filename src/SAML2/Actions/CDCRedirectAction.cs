@@ -11,11 +11,6 @@ namespace SAML2.Actions
     public class CDCRedirectAction : IAction
     {
         /// <summary>
-        /// Name backing field.
-        /// </summary>
-        private string _name = "CDCRedirectAction";
-
-        /// <summary>
         /// setting name for the identity provider cookie writer url 
         /// </summary>
         public const string IDPCookieWriterEndPoint = "idpCookieWriterEndPoint";
@@ -31,6 +26,11 @@ namespace SAML2.Actions
         public const string TargetResource = "TargetResource";
 
         /// <summary>
+        /// Name backing field.
+        /// </summary>
+        private string _name = "CDCRedirectAction";
+
+        /// <summary>
         /// Gets or sets the name of the action.
         /// </summary>
         /// <value>The name.</value>
@@ -41,14 +41,14 @@ namespace SAML2.Actions
         }
 
         /// <summary>
-        /// Action performed during signon.
+        /// Action performed during SignOn.
         /// </summary>
         /// <param name="handler">The handler initiating the call.</param>
         /// <param name="context">The current http context.</param>
-        /// <param name="assertion">The saml assertion of the currently logged in user.</param>
+        /// <param name="assertion">The SAML assertion of the currently logged in user.</param>
         public void SignOnAction(AbstractEndpointHandler handler, HttpContext context, Saml20Assertion assertion)
         {
-            var idpKey = (string) context.Session[Saml20SignonHandler.IDPLoginSessionKey];
+            var idpKey = (string)context.Session[Saml20SignonHandler.IDPLoginSessionKey];
             var signOnHandler = handler as Saml20SignonHandler;
             if (signOnHandler == null)
             {

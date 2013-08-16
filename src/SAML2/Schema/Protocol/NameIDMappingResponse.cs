@@ -9,7 +9,7 @@ namespace SAML2.Schema.Protocol
     /// &lt;NameIDMappingResponse&gt; message.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class NameIDMappingResponse : StatusResponse
     {
@@ -26,8 +26,8 @@ namespace SAML2.Schema.Protocol
         /// encrypted form
         /// </summary>
         /// <value>The item.</value>
-        [XmlElement("EncryptedID", typeof (EncryptedElement), Namespace = Saml20Constants.Assertion)]
-        [XmlElement("NameID", typeof (NameID), Namespace = Saml20Constants.Assertion)]
+        [XmlElement("EncryptedID", typeof(EncryptedElement), Namespace = Saml20Constants.Assertion)]
+        [XmlElement("NameID", typeof(NameID), Namespace = Saml20Constants.Assertion)]
         public object Item { get; set; }
 
         #endregion

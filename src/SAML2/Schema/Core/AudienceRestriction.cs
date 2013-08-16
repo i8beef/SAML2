@@ -14,7 +14,7 @@ namespace SAML2.Schema.Core
     /// </summary>
     [Serializable]
     [DebuggerStepThrough]
-    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class AudienceRestriction : ConditionAbstract
     {
@@ -32,7 +32,7 @@ namespace SAML2.Schema.Core
         /// identifier URI from a SAML name identifier that describes a system entity
         /// </summary>
         /// <value>The audience.</value>
-        [XmlElement("Audience", DataType="anyURI")]
+        [XmlElement("Audience", DataType = "anyURI")]
         public List<string> Audience { get; set; }
 
         #endregion

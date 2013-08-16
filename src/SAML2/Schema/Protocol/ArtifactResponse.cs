@@ -11,7 +11,7 @@ namespace SAML2.Schema.Protocol
     /// message being returned. This wrapped message element can be a request or a response.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class ArtifactResponse : StatusResponse
     {

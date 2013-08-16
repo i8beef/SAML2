@@ -29,8 +29,8 @@ namespace SAML2.Schema.XmlDSig
     /// it or being part of a certification chain that terminates in a certificate containing the validation key. 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Xmldsig)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
     public class X509Data
     {
         /// <summary>
@@ -46,11 +46,11 @@ namespace SAML2.Schema.XmlDSig
         /// </summary>
         /// <value>The items.</value>
         [XmlAnyElement]
-        [XmlElement("X509CRL", typeof (byte[]), DataType = "base64Binary")]
-        [XmlElement("X509Certificate", typeof (byte[]), DataType = "base64Binary")]
-        [XmlElement("X509IssuerSerial", typeof (X509IssuerSerial))]
-        [XmlElement("X509SKI", typeof (byte[]), DataType = "base64Binary")]
-        [XmlElement("X509SubjectName", typeof (string))]
+        [XmlElement("X509CRL", typeof(byte[]), DataType = "base64Binary")]
+        [XmlElement("X509Certificate", typeof(byte[]), DataType = "base64Binary")]
+        [XmlElement("X509IssuerSerial", typeof(X509IssuerSerial))]
+        [XmlElement("X509SKI", typeof(byte[]), DataType = "base64Binary")]
+        [XmlElement("X509SubjectName", typeof(string))]
         [XmlChoiceIdentifier("ItemsElementName")]
         public object[] Items { get; set; }
 
@@ -60,7 +60,7 @@ namespace SAML2.Schema.XmlDSig
         /// <value>The name of the items element.</value>
         [XmlElement("ItemsElementName")]
         [XmlIgnore]
-        public ItemsChoiceType[] ItemsElementName { get; set; }
+        public X509ItemType[] ItemsElementName { get; set; }
 
         #endregion
     }

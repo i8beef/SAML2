@@ -81,7 +81,7 @@ namespace SAML2.Schema.Metadata
         public string GivenName { get; set; }
 
         /// <summary>
-        /// Optional string element that specifies the surname of the contact person.
+        /// Gets or sets optional string element that specifies the surname of the contact person.
         /// </summary>
         /// <value>The name of the sur.</value>
         [XmlElement("SurName")]
@@ -93,7 +93,7 @@ namespace SAML2.Schema.Metadata
         /// contact person.
         /// </summary>
         /// <value>The email address.</value>
-        [XmlElement("EmailAddress", DataType="anyURI")]
+        [XmlElement("EmailAddress", DataType = "anyURI")]
         public string[] EmailAddress { get; set; }
 
         /// <summary>

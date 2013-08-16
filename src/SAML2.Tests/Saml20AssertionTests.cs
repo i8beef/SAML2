@@ -107,7 +107,7 @@ namespace SAML2.Tests
                 var attribute = (SamlAttribute)attributeStatments.Items[0];
 
                 var doc = new XmlDocument();
-                attribute.AnyAttr = new[] { doc.CreateAttribute(String.Empty, "Nonqualified", String.Empty) };
+                attribute.AnyAttr = new[] { doc.CreateAttribute(string.Empty, "Nonqualified", string.Empty) };
 
                 saml20Assertion.Items = statements.ToArray();
 

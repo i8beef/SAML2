@@ -3,9 +3,9 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
+using NUnit.Framework;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
-using NUnit.Framework;
 
 namespace SAML2.Tests
 {
@@ -34,7 +34,8 @@ namespace SAML2.Tests
             var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
             store.Open(OpenFlags.ReadOnly);
             X509Certificate2Collection coll = store.Certificates.Find(X509FindType.FindBySubjectDistinguishedName,
-                                                                      "CN=SafewhereTest_SFS, O=Safewhere, C=DK", true);
+                                                                      "CN=SafewhereTest_SFS, O=Safewhere, C=DK",
+                                                                      true);
 
             Assert.That(coll.Count == 1);
 
@@ -66,12 +67,12 @@ namespace SAML2.Tests
         }
 
         /// <summary>
-        /// Gets the element.
+        /// Gets the specified element.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="ns">The ns.</param>
         /// <param name="doc">The doc.</param>
-        /// <returns></returns>
+        /// <returns>The specified element from the document.</returns>
         private static XmlElement GetElement(string element, string ns, XmlDocument doc)
         {
             var list = doc.GetElementsByTagName(element, ns);

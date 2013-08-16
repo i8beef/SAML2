@@ -32,7 +32,7 @@ namespace SAML2.Config
         }
 
         /// <summary>
-        /// Allows the caller to access the xml representation of an assertion before it's 
+        /// Gets or sets a value indicating a caller to access the xml representation of an assertion before it's 
         /// translated to a strongly typed instance
         /// </summary>
         /// <value>The token accessor.</value>

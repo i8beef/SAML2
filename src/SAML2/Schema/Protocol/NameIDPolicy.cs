@@ -8,8 +8,8 @@ namespace SAML2.Schema.Protocol
     /// &lt;AuthnRequest&gt;.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Protocol, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class NameIDPolicy
     {
         /// <summary>

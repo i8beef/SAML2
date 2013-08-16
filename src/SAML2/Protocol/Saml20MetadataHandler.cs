@@ -1,16 +1,15 @@
 using System;
 using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Web;
 using SAML2.Config;
-using Saml2.Properties;
-using System.Security.Cryptography.Xml;
+using SAML2.Properties;
 
 namespace SAML2.Protocol
 {
     /// <summary>
     /// The handler that exposes a metadata endpoint to the other parties of the federation.
-    ///     
     /// The handler accepts the following GET parameters :
     /// - encoding : Delivers the Metadata document in the specified encoding. Example: encoding=iso-8859-1 . If the parameter is omitted, the encoding utf-8 is used.
     /// - sign : A boolean parameter specifying whether to sign the metadata document. Example: sign=false. If the parameter is omitted, the document is signed.
@@ -23,7 +22,7 @@ namespace SAML2.Protocol
         /// Gets a value indicating whether this instance is reusable.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this instance is reusable; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is reusable; otherwise, <c>false</c>.
         /// </value>
         public new bool IsReusable
         {
@@ -60,7 +59,7 @@ namespace SAML2.Protocol
                     sign = Convert.ToBoolean(param);
                 }
             }
-            catch(FormatException)
+            catch (FormatException)
             {
                 Logger.Error(Resources.GenericError);
                 HandleError(context, Resources.GenericError);
@@ -96,7 +95,7 @@ namespace SAML2.Protocol
 
             Logger.Debug("Metadata document successfully created.");
 
-            context.Response.Write(doc.ToXml( context.Response.ContentEncoding ));
+            context.Response.Write(doc.ToXml(context.Response.ContentEncoding));
         }
     }
 }

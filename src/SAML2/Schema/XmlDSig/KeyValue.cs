@@ -10,8 +10,8 @@ namespace SAML2.Schema.XmlDSig
     /// represented as PCDATA or element types from an external namespace. 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Xmldsig)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
     public class KeyValue
     {
         /// <summary>
@@ -34,8 +34,8 @@ namespace SAML2.Schema.XmlDSig
         /// </summary>
         /// <value>The item.</value>
         [XmlAnyElement]
-        [XmlElement("DSAKeyValue", typeof (DSAKeyValue))]
-        [XmlElement("RSAKeyValue", typeof (RSAKeyValue))]
+        [XmlElement("DSAKeyValue", typeof(DSAKeyValue))]
+        [XmlElement("RSAKeyValue", typeof(RSAKeyValue))]
         public object Item { get; set; }
 
         #endregion

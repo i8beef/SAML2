@@ -10,7 +10,7 @@ namespace SAML2.Utils
     public static class Serialization
     {
         /// <summary>
-        /// Initializes the <see cref="Serialization"/> class.
+        /// Initializes static members of the <see cref="Serialization"/> class.
         /// </summary>
         static Serialization()
         {
@@ -21,9 +21,9 @@ namespace SAML2.Utils
         /// <summary>
         /// Reads and deserializes an item from the reader
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">The type of object to descrialize to.</typeparam>
         /// <param name="reader">The reader.</param>
-        /// <returns></returns>
+        /// <returns>The deserialized item.</returns>
         public static T Deserialize<T>(XmlReader reader)
         {
             var serializer = new XmlSerializer(typeof(T));
@@ -35,9 +35,9 @@ namespace SAML2.Utils
         /// <summary>
         /// Deserializes an item from an XML string.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">The type of object to descrialize to.</typeparam>
         /// <param name="xml">The XML.</param>
-        /// <returns></returns>
+        /// <returns>The deserialized item.</returns>
         public static T DeserializeFromXmlString<T>(string xml)
         {
             var reader = new XmlTextReader(new StringReader(xml));
@@ -87,9 +87,9 @@ namespace SAML2.Utils
         /// <summary>
         /// Serializes an item to an XML string.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">The type of object to serialize.</typeparam>
         /// <param name="item">The item.</param>
-        /// <returns></returns>
+        /// <returns>The serialized string.</returns>
         public static string SerializeToXmlString<T>(T item)
         {
             var stream = new MemoryStream();
@@ -97,6 +97,7 @@ namespace SAML2.Utils
 
             var reader = new StreamReader(stream);
             stream.Seek(0, SeekOrigin.Begin);
+            
             return reader.ReadToEnd();
         }
     }

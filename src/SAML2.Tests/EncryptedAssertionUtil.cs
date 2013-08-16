@@ -18,6 +18,7 @@ namespace SAML2.Tests
         /// <summary>
         /// An example on how to decrypt an encrypted assertion.
         /// </summary>
+        /// <param name="file">The file.</param>
         public static void DecryptAssertion(string file)
         {
             var doc = new XmlDocument();
@@ -31,7 +32,7 @@ namespace SAML2.Tests
             Assert.That(nodelist.Count > 0);
 
             var key = new KeyInfo();
-            key.LoadXml((XmlElement) nodelist[0]);
+            key.LoadXml((XmlElement)nodelist[0]);
 
             // Review: Is it possible to figure out which certificate to load based on the Token?
             /*
@@ -51,11 +52,11 @@ namespace SAML2.Tests
             {
                 if (keyInfoClause is KeyInfoEncryptedKey)
                 {
-                    var keyInfoEncryptedKey = (KeyInfoEncryptedKey) keyInfoClause;
+                    var keyInfoEncryptedKey = (KeyInfoEncryptedKey)keyInfoClause;
                     var encryptedKey = keyInfoEncryptedKey.EncryptedKey;
                     symmetricKey = new RijndaelManaged
                                        {
-                                           Key = EncryptedXml.DecryptKey(encryptedKey.CipherData.CipherValue, (RSA) cert.PrivateKey, false)
+                                           Key = EncryptedXml.DecryptKey(encryptedKey.CipherData.CipherValue, (RSA)cert.PrivateKey, false)
                                        };
                 }
             }
@@ -130,12 +131,12 @@ namespace SAML2.Tests
         }
 
         /// <summary>
-        /// Gets the element.
+        /// Gets the specified element.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="ns">The ns.</param>
         /// <param name="doc">The doc.</param>
-        /// <returns></returns>
+        /// <returns>specified element from the document.</returns>
         private static XmlElement GetElement(string element, string ns, XmlDocument doc)
         {
             var list = doc.GetElementsByTagName(element, ns);

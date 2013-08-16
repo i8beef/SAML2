@@ -10,8 +10,8 @@ namespace SAML2.Schema.Metadata
     /// to sign data or receive encrypted keys, along with additional cryptographic details.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Metadata)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Metadata, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Metadata)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class KeyDescriptor
     {
         /// <summary>
@@ -52,7 +52,7 @@ namespace SAML2.Schema.Metadata
         public EncryptionMethod[] EncryptionMethod { get; set; }
 
         /// <summary>
-        /// The XML Signature element KeyInfo. Can be implicitly converted to the .NET class System.Security.Cryptography.Xml.KeyInfo.
+        /// Gets or sets the XML Signature element KeyInfo. Can be implicitly converted to the .NET class System.Security.Cryptography.Xml.KeyInfo.
         /// </summary>
         [XmlElement("KeyInfo", Namespace = Saml20Constants.Xmldsig)]
         public KeyInfo KeyInfo { get; set; }

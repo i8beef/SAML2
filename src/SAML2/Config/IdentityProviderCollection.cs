@@ -6,9 +6,9 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
+using SAML2.Properties;
 using SAML2.Schema.Metadata;
 using SAML2.Utils;
-using Saml2.Properties;
 
 namespace SAML2.Config
 {
@@ -46,16 +46,17 @@ namespace SAML2.Config
         #region Attributes
 
         /// <summary>
-        /// Gets the encodings.
+        /// Gets or sets the encodings.
         /// </summary>
         [ConfigurationProperty("encodings")]
         public string Encodings
         {
             get { return (string)base["encodings"]; }
+            set { base["encodings"] = value; }
         }
 
         /// <summary>
-        /// Gets the metadata location.
+        /// Gets or sets the metadata location.
         /// </summary>
         [ConfigurationProperty("metadata")]
         public string MetadataLocation
@@ -76,10 +77,110 @@ namespace SAML2.Config
         #endregion
 
         /// <summary>
-        /// Returns a list of the encodings that should be tried when a metadata file does not contain a valid signature 
+        /// Refreshes this instance from metadata location.
+        /// </summary>
+        public void Refresh()
+        {
+            if (MetadataLocation == null)
+            {
+                return;
+            }
+
+            if (!Directory.Exists(MetadataLocation))
+            {
+                throw new DirectoryNotFoundException(Resources.MetadataLocationNotFoundFormat(MetadataLocation));
+            }
+
+            // Start by removing information on files that are no long in the directory.
+            var keys = new List<string>(_fileInfo.Keys.Count);
+            keys.AddRange(_fileInfo.Keys);
+            foreach (string file in keys)
+            {
+                if (!File.Exists(file))
+                {
+                    _fileInfo.Remove(file);
+                    if (_fileToEntity.ContainsKey(file))
+                    {
+                        var endp = this.FirstOrDefault(x => x.Id == _fileToEntity[file]);
+                        if (endp != null)
+                        {
+                            endp.Metadata = null;
+                        }
+
+                        _fileToEntity.Remove(file);
+                    }
+                }
+            }
+
+            // Detect added classes
+            var files = Directory.GetFiles(MetadataLocation);
+            foreach (var file in files)
+            {
+                Saml20MetadataDocument metadataDoc;
+                if (_fileInfo.ContainsKey(file) && _fileInfo[file] == File.GetLastWriteTime(file))
+                {
+                    continue;
+                }
+
+                metadataDoc = ParseFile(file);
+
+                if (metadataDoc != null)
+                {
+                    var endp = this.FirstOrDefault(x => x.Id == metadataDoc.EntityId);
+                    if (endp == null)
+                    {
+                        // If the endpoint does not exist, create it.
+                        endp = new IdentityProviderElement();
+                        BaseAdd(endp);
+                    }
+
+                    endp.Id = endp.Name = metadataDoc.EntityId;
+                    endp.Metadata = metadataDoc;
+
+                    if (_fileToEntity.ContainsKey(file))
+                    {
+                        _fileToEntity.Remove(file);
+                    }
+
+                    _fileToEntity.Add(file, metadataDoc.EntityId);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Parses the geneva server metadata.
+        /// </summary>
+        /// <param name="doc">The doc.</param>
+        /// <returns>The XML document.</returns>
+        private static XmlDocument ParseGenevaServerMetadata(XmlDocument doc)
+        {
+            if (doc == null)
+            {
+                throw new ArgumentNullException("doc");
+            }
+
+            if (doc.DocumentElement == null)
+            {
+                throw new ArgumentException("DocumentElement cannot be null", "doc");
+            }
+
+            var other = new XmlDocument { PreserveWhitespace = true };
+            other.LoadXml(doc.OuterXml);
+
+            foreach (var node in other.DocumentElement.ChildNodes.Cast<XmlNode>().Where(node => node.Name != IDPSSODescriptor.ElementName).ToList())
+            {
+                other.DocumentElement.RemoveChild(node);
+            }
+
+            return other;
+        }
+
+        /// <summary>
+        /// Returns a list of the encodings that should be tried when a metadata file does not contain a valid signature
         /// or cannot be loaded by the XmlDocument class. Either returns a list specified by the administrator in the configuration file
         /// or a default list.
         /// </summary>
+        /// <returns>The list of encodings.</returns>
         private List<Encoding> GetEncodings()
         {
             if (_encodings != null)
@@ -87,25 +188,21 @@ namespace SAML2.Config
                 return _encodings;
             }
 
-            if (string.IsNullOrEmpty(Encodings))
-            {
-                // If it has not been specified in the config file, use the defaults.
-                _encodings = new List<Encoding> { Encoding.UTF8, Encoding.GetEncoding("iso-8859-1") };
-            }
-            else
-            {
-                _encodings = new List<Encoding>(Encodings.Split(' ').Select(Encoding.GetEncoding));
-            }
+            this._encodings = string.IsNullOrEmpty(this.Encodings)
+                                  ? new List<Encoding> { Encoding.UTF8, Encoding.GetEncoding("iso-8859-1") }
+                                  : new List<Encoding>(this.Encodings.Split(' ').Select(Encoding.GetEncoding));
 
             return _encodings;
         }
 
         /// <summary>
         /// Loads a file into an XmlDocument. If the loading or the signature check fails, the method will retry using another encoding.
-        /// </summary>        
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        /// <returns>The XML document.</returns>
         private XmlDocument LoadFileAsXmlDocument(string filename)
         {
-            var doc = new XmlDocument {PreserveWhitespace = true};
+            var doc = new XmlDocument { PreserveWhitespace = true };
 
             try
             {
@@ -164,45 +261,10 @@ namespace SAML2.Config
         }
 
         /// <summary>
-        /// Parses the geneva server metadata.
-        /// </summary>
-        /// <param name="doc">The doc.</param>
-        /// <returns></returns>
-        private static XmlDocument ParseGenevaServerMetadata(XmlDocument doc)
-        {
-            if (doc == null)
-            {
-                throw new ArgumentNullException("doc");
-            }
-
-            if (doc.DocumentElement == null)
-            {
-                throw new ArgumentException("DocumentElement cannot be null", "doc");
-            }
-
-            var other = new XmlDocument { PreserveWhitespace = true };
-            other.LoadXml(doc.OuterXml);
-
-            var remove = new List<XmlNode>();
-            foreach (XmlNode node in other.DocumentElement.ChildNodes)
-            {
-                if (node.Name != IDPSSODescriptor.ElementName)
-                {
-                    remove.Add(node);
-                }
-            }
-
-            foreach (XmlNode node in remove)
-            {
-                other.DocumentElement.RemoveChild(node);
-            }
-
-            return other;
-        }
-
-        /// <summary>
         /// Parses the metadata files found in the directory specified in the configuration.
         /// </summary>
+        /// <param name="file">The file.</param>
+        /// <returns>The parsed <see cref="Saml20MetadataDocument"/>.</returns>
         private Saml20MetadataDocument ParseFile(string file)
         {
             var doc = LoadFileAsXmlDocument(file);
@@ -232,76 +294,6 @@ namespace SAML2.Config
                 Logging.LoggerProvider.LoggerFor(GetType()).Error("Problem parsing metadata file", e);
                 return null;
             }
-        }
-
-        /// <summary>
-        /// Refreshes this instance from metadata location.
-        /// </summary>
-        public void Refresh()
-        {
-            if (MetadataLocation == null)
-            {
-                return;
-            }
-
-            if (!Directory.Exists(MetadataLocation))
-            {
-                throw new DirectoryNotFoundException(Resources.MetadataLocationNotFoundFormat(MetadataLocation));
-            }
-
-            // Start by removing information on files that are no long in the directory.
-            var keys = new List<string>(_fileInfo.Keys.Count);
-            keys.AddRange(_fileInfo.Keys);
-            foreach (string file in keys)
-            {
-                if (!File.Exists(file))
-                {
-                    _fileInfo.Remove(file);
-                    if (_fileToEntity.ContainsKey(file))
-                    {
-                        var endp = this.FirstOrDefault(x => x.Id == _fileToEntity[file]);
-                        if (endp != null)
-                        {
-                            endp.Metadata = null;
-                        }
-                        _fileToEntity.Remove(file);
-                    }
-                }
-            }
-
-            // Detect added classes
-            var files = Directory.GetFiles(MetadataLocation);
-            foreach (var file in files)
-            {
-                Saml20MetadataDocument metadataDoc;
-                if (_fileInfo.ContainsKey(file) && _fileInfo[file] == File.GetLastWriteTime(file))
-                {
-                    continue;
-                }
-
-                metadataDoc = ParseFile(file);
-
-                if (metadataDoc != null)
-                {
-                    var endp = this.FirstOrDefault(x => x.Id == metadataDoc.EntityId);
-                    if (endp == null) // If the endpoint does not exist, create it.
-                    {
-                        endp = new IdentityProviderElement();
-                        base.BaseAdd(endp);
-                    }
-
-                    endp.Id = endp.Name = metadataDoc.EntityId; // Set some default valuDes.
-                    endp.Metadata = metadataDoc;
-
-                    if (_fileToEntity.ContainsKey(file))
-                    {
-                        _fileToEntity.Remove(file);
-                    }
-
-                    _fileToEntity.Add(file, metadataDoc.EntityId);
-                }
-            }
-            
         }
     }
 }

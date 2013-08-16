@@ -29,8 +29,8 @@ namespace SAML2.Schema.XmlDSig
     /// 
     /// </summary>
     [Serializable]    
-    [XmlType(Namespace=Saml20Constants.Xmldsig)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
     public class KeyInfo
     {
         /// <summary>
@@ -65,13 +65,13 @@ namespace SAML2.Schema.XmlDSig
         /// </summary>
         /// <value>The items.</value>
         [XmlAnyElement]
-        [XmlElement("KeyName", typeof (string))]
-        [XmlElement("KeyValue", typeof (KeyValue))]
-        [XmlElement("MgmtData", typeof (string))]
-        [XmlElement("PGPData", typeof (PGPData))]
-        [XmlElement("RetrievalMethod", typeof (RetrievalMethod))]
-        [XmlElement("SPKIData", typeof (SPKIData))]
-        [XmlElement("X509Data", typeof (X509Data))]
+        [XmlElement("KeyName", typeof(string))]
+        [XmlElement("KeyValue", typeof(KeyValue))]
+        [XmlElement("MgmtData", typeof(string))]
+        [XmlElement("PGPData", typeof(PGPData))]
+        [XmlElement("RetrievalMethod", typeof(RetrievalMethod))]
+        [XmlElement("SPKIData", typeof(SPKIData))]
+        [XmlElement("X509Data", typeof(X509Data))]
         [XmlChoiceIdentifier("ItemsElementName")]
         public object[] Items { get; set; }
 
@@ -81,13 +81,15 @@ namespace SAML2.Schema.XmlDSig
         /// <value>The name of the items element.</value>
         [XmlElement("ItemsElementName")]
         [XmlIgnore]
-        public ItemsChoiceType2[] ItemsElementName { get; set; }
+        public KeyInfoItemType[] ItemsElementName { get; set; }
 
         #endregion
 
         /// <summary>
         /// An implicit conversion between our Xml Serialization class, and the .NET framework's built-in version of KeyInfo.
         /// </summary>
+        /// <param name="ki">The keyinfo.</param>
+        /// <returns>The result of the conversion.</returns>
         public static explicit operator System.Security.Cryptography.Xml.KeyInfo(KeyInfo ki)
         {
             var result = new System.Security.Cryptography.Xml.KeyInfo();

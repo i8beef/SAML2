@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Metadata
 {
     /// <summary>
-    /// Key types enum
+    /// Key types enumeration.
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Metadata)]

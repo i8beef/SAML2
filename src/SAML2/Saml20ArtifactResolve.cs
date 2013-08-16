@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Xml;
 using SAML2.Config;
+using SAML2.Properties;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
-using Saml2.Properties;
 
 namespace SAML2
 {

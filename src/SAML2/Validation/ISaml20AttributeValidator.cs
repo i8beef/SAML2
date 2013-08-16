@@ -11,7 +11,7 @@ namespace SAML2.Validation
         /// <summary>
         /// Validates the attribute.
         /// </summary>
-        /// <param name="samlAttribute">The saml attribute.</param>
+        /// <param name="samlAttribute">The SAML attribute.</param>
         void ValidateAttribute(SamlAttribute samlAttribute);
 
         /// <summary>

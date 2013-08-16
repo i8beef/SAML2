@@ -14,21 +14,12 @@ namespace SAML2.Config
         where TConfigurationElementType : ConfigurationElement, IConfigurationElementCollectionElement, new()
     {
         /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElementCollection"/> object is read only.
-        /// </summary>
-        /// <returns>true if the <see cref="T:System.Configuration.ConfigurationElementCollection"/> object is read only; otherwise, false.</returns>
-        public override bool IsReadOnly()
-        {
-            return false;
-        }
-
-        /// <summary>
         /// Gets or sets a property, attribute, or child element of this configuration element.
         /// </summary>
+        /// <param name="index">The index.</param>
         /// <returns>
         /// The specified property, attribute, or child element
         /// </returns>
-        /// <exception cref="T:System.Configuration.ConfigurationErrorsException" />
         public TConfigurationElementType this[int index]
         {
             get { return (TConfigurationElementType)BaseGet(index); }
@@ -38,17 +29,32 @@ namespace SAML2.Config
                 {
                     BaseRemoveAt(index);
                 }
+
                 BaseAdd(index, value);
             }
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EnumerableConfigurationElementCollection&lt;TConfigurationElementType&gt;"/> class.
+        /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElementCollection"/> object is read only.
         /// </summary>
-        public EnumerableConfigurationElementCollection()
-        {}
+        /// <returns>true if the <see cref="T:System.Configuration.ConfigurationElementCollection"/> object is read only; otherwise, false.</returns>
+        public override bool IsReadOnly()
+        {
+            return false;
+        }
 
         #region Implementation of IEnumerable<TConfigurationElementType>
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
+        /// </summary>
+        /// <returns>
+        /// true if the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only; otherwise, false.
+        /// </returns>
+        bool ICollection<TConfigurationElementType>.IsReadOnly
+        {
+            get { throw new NotImplementedException(); }
+        }
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
@@ -63,38 +69,6 @@ namespace SAML2.Config
             {
                 yield return (TConfigurationElementType)type;
             }
-        }
-
-        #endregion
-
-        #region Overrides of ConfigurationElementCollection
-
-        /// <summary>
-        /// When overridden in a derived class, creates a new <see cref="T:System.Configuration.ConfigurationElement"/>.
-        /// </summary>
-        /// <returns>
-        /// A new <see cref="T:System.Configuration.ConfigurationElement"/>.
-        /// </returns>
-        protected override ConfigurationElement CreateNewElement()
-        {
-            return new TConfigurationElementType();
-        }
-
-        /// <summary>
-        /// Gets the element key for a specified configuration element when overridden in a derived class.
-        /// </summary>
-        /// <returns>
-        /// An <see cref="T:System.Object"/> that acts as the key for the specified <see cref="T:System.Configuration.ConfigurationElement"/>.
-        /// </returns>
-        /// <param name="element">The <see cref="T:System.Configuration.ConfigurationElement"/> to return the key for.</param>
-        protected override object GetElementKey(ConfigurationElement element)
-        {
-            if (element == null)
-            {
-                throw new ArgumentNullException("element");
-            }
-
-            return ((TConfigurationElementType)element).ElementKey;
         }
 
         #endregion
@@ -179,9 +153,8 @@ namespace SAML2.Config
         /// <returns>
         /// true if <paramref name="item"/> was successfully removed from the <see cref="T:System.Collections.Generic.ICollection`1"/>; otherwise, false. This method also returns false if <paramref name="item"/> is not found in the original <see cref="T:System.Collections.Generic.ICollection`1"/>.
         /// </returns>
-        /// <param name="item">The object to remove from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
-        ///                 </param><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
-        ///                 </exception>
+        /// <param name="item">The object to remove from the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
+        /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.</exception>
         public bool Remove(TConfigurationElementType item)
         {
             BaseRemove(item);
@@ -189,18 +162,38 @@ namespace SAML2.Config
             return true;
         }
 
+        #endregion
+
+        #region Overrides of ConfigurationElementCollection
+
         /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
+        /// When overridden in a derived class, creates a new <see cref="T:System.Configuration.ConfigurationElement"/>.
         /// </summary>
         /// <returns>
-        /// true if the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only; otherwise, false.
+        /// A new <see cref="T:System.Configuration.ConfigurationElement"/>.
         /// </returns>
-        bool ICollection<TConfigurationElementType>.IsReadOnly
+        protected override ConfigurationElement CreateNewElement()
         {
-            get { throw new NotImplementedException(); }
+            return new TConfigurationElementType();
+        }
+
+        /// <summary>
+        /// Gets the element key for a specified configuration element when overridden in a derived class.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="T:System.Object"/> that acts as the key for the specified <see cref="T:System.Configuration.ConfigurationElement"/>.
+        /// </returns>
+        /// <param name="element">The <see cref="T:System.Configuration.ConfigurationElement"/> to return the key for.</param>
+        protected override object GetElementKey(ConfigurationElement element)
+        {
+            if (element == null)
+            {
+                throw new ArgumentNullException("element");
+            }
+
+            return ((TConfigurationElementType)element).ElementKey;
         }
 
         #endregion
     }
 }
-

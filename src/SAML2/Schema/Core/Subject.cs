@@ -9,7 +9,7 @@ namespace SAML2.Schema.Core
     /// statements in the assertion.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class Subject
     {
@@ -24,10 +24,10 @@ namespace SAML2.Schema.Core
         /// Gets or sets the items.
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("BaseID", typeof (BaseIDAbstract))]
-        [XmlElement("EncryptedID", typeof (EncryptedElement))]
-        [XmlElement("NameID", typeof (NameID))]
-        [XmlElement("SubjectConfirmation", typeof (SubjectConfirmation))]
+        [XmlElement("BaseID", typeof(BaseIDAbstract))]
+        [XmlElement("EncryptedID", typeof(EncryptedElement))]
+        [XmlElement("NameID", typeof(NameID))]
+        [XmlElement("SubjectConfirmation", typeof(SubjectConfirmation))]
         public object[] Items { get; set; }
 
         #endregion

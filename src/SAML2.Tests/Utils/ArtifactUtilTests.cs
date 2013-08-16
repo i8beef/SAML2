@@ -1,6 +1,6 @@
 ﻿using System;
-using SAML2.Utils;
 using NUnit.Framework;
+using SAML2.Utils;
 
 namespace SAML2.Tests.Utils
 {
@@ -23,13 +23,13 @@ namespace SAML2.Tests.Utils
             public void CanParseCreatedArtifact()
             {
                 // Arrange
-                const string sourceIdUrl = "https://kleopatra.safewhere.local/Saml2ExtWeb/artifact.ashx";
+                var sourceIdUrl = "https://kleopatra.safewhere.local/Saml2ExtWeb/artifact.ashx";
 
                 var sourceIdHash = ArtifactUtil.GenerateSourceIdHash(sourceIdUrl);
                 var messageHandle = ArtifactUtil.GenerateMessageHandle();
 
-                const short typeCode = 4;
-                const short endpointIndex = 1;
+                short typeCode = 4;
+                short endpointIndex = 1;
 
                 // Act
                 var artifact = ArtifactUtil.CreateArtifact(typeCode, endpointIndex, sourceIdHash, messageHandle);
@@ -67,7 +67,7 @@ namespace SAML2.Tests.Utils
             /// Verify exception is thrown on message handle length mismatch.
             /// </summary>
             [Test]
-            [ExpectedException(typeof (ArgumentException))]
+            [ExpectedException(typeof(ArgumentException))]
             public void ThrowsExceptionWhenMessageHandleLengthMismatch()
             {
                 // Arrange
@@ -84,12 +84,12 @@ namespace SAML2.Tests.Utils
             /// Verify exception is thrown on source id hash length mismatch.
             /// </summary>
             [Test]
-            [ExpectedException(typeof (ArgumentException))]
+            [ExpectedException(typeof(ArgumentException))]
             public void ThrowsExceptionWhenSourceIdHashLengthMismatch()
             {
                 // Arrange
-                const short typeCode = 4;
-                const short endpointIndex = 1;
+                short typeCode = 4;
+                short endpointIndex = 1;
                 var sourceIdHash = new byte[19];
                 var messageHandle = new byte[20];
 
@@ -108,7 +108,7 @@ namespace SAML2.Tests.Utils
             /// Verify exception is thrown on source id hash length mismatch.
             /// </summary>
             [Test]
-            [ExpectedException(typeof (ArgumentException))]
+            [ExpectedException(typeof(ArgumentException))]
             public void ThrowsExceptionWhenSourceIdHashLengthMismatch()
             {
                 // Arrange
@@ -126,7 +126,7 @@ namespace SAML2.Tests.Utils
             /// Verify exception is thrown on message handle length mismatch.
             /// </summary>
             [Test]
-            [ExpectedException(typeof (ArgumentException))]
+            [ExpectedException(typeof(ArgumentException))]
             public void ThrowsExceptionWhenMessageHandleLengthMismatch()
             {
                 // Arrange
@@ -144,7 +144,7 @@ namespace SAML2.Tests.Utils
             /// Verify exception is thrown on artifact length mismatch.
             /// </summary>
             [Test]
-            [ExpectedException(typeof (ArgumentException))]
+            [ExpectedException(typeof(ArgumentException))]
             public void ThrowsExceptionWhenArtifactLengthMismatch()
             {
                 // Arrange

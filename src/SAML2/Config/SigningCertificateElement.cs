@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 using System.Security.Cryptography.X509Certificates;
-using Saml2.Properties;
+using SAML2.Properties;
 
 namespace SAML2.Config
 {
@@ -18,7 +18,7 @@ namespace SAML2.Config
         [ConfigurationProperty("findValue", IsRequired = true)]
         public string FindValue
         {
-            get { return (string) base["findValue"]; }
+            get { return (string)base["findValue"]; }
             set { base["findValue"] = value; }
         }
 
@@ -51,7 +51,7 @@ namespace SAML2.Config
         [ConfigurationProperty("validOnly")]
         public bool ValidOnly
         {
-            get { return (bool) base["validOnly"]; }
+            get { return (bool)base["validOnly"]; }
             set { base["validOnly"] = value; }
         }
 
@@ -71,7 +71,7 @@ namespace SAML2.Config
         /// <summary>
         /// Opens the certificate from its store.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The <see cref="X509Certificate2"/>.</returns>
         public X509Certificate2 GetCertificate()
         {
             var store = new X509Store(StoreName, StoreLocation);

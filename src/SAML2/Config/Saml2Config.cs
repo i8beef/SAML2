@@ -15,7 +15,7 @@ namespace SAML2.Config
         /// <summary>
         /// Gets the config.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The <see cref="Saml2Section"/> config.</returns>
         public static Saml2Section GetConfig()
         {
             if (_config == null)
@@ -24,7 +24,8 @@ namespace SAML2.Config
 
                 if (_config == null)
                 {
-                    throw new ConfigurationErrorsException(string.Format("Configuration section \"{0}\" not found", typeof(Saml2Section).Name));}
+                    throw new ConfigurationErrorsException(string.Format("Configuration section \"{0}\" not found", typeof(Saml2Section).Name));
+                }
             }
 
             return _config;

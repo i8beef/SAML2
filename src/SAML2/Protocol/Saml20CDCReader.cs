@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web;
-using System;
 using SAML2.Config;
 using SAML2.Properties;
 
@@ -35,7 +35,7 @@ namespace SAML2.Protocol
 
                 var returnUrl = config.ServiceProvider.Server + endp.LocalPath + "?r=1";
 
-                var samlIdp = context.Request.Cookies[CommonDomainCookie.COMMON_DOMAIN_COOKIE_NAME];
+                var samlIdp = context.Request.Cookies[CommonDomainCookie.CommonDomainCookieName];
                 if (samlIdp != null)
                 {
                     returnUrl += "&_saml_idp=" + HttpUtility.UrlEncode(samlIdp.Value);

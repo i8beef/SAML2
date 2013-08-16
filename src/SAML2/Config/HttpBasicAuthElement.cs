@@ -3,7 +3,7 @@
 namespace SAML2.Config
 {
     /// <summary>
-    /// Http Basic Auth comfiguration element.
+    /// Http Basic Authentication configuration element.
     /// </summary>
     public class HttpBasicAuthElement : WritableConfigurationElement
     {

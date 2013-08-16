@@ -53,7 +53,7 @@ namespace SAML2.Config
         [ConfigurationProperty("endpoints", Options = ConfigurationPropertyOptions.IsRequired)]
         public ServiceProviderEndpointCollection Endpoints
         {
-            get { return (ServiceProviderEndpointCollection) base["endpoints"]; }
+            get { return (ServiceProviderEndpointCollection)base["endpoints"]; }
             set { base["endpoints"] = value; }
         }
 

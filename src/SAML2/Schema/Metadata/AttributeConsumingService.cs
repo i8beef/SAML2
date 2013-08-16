@@ -9,8 +9,8 @@ namespace SAML2.Schema.Metadata
     /// provider in terms of the attributes the service requires or desires.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Metadata)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Metadata, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Metadata)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class AttributeConsumingService
     {
         /// <summary>
@@ -24,7 +24,7 @@ namespace SAML2.Schema.Metadata
         /// otherwise indicated by application context. If omitted, the value is assumed to be false.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this instance is default; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is default; otherwise, <c>false</c>.
         /// </value>
         [XmlIgnore]
         public bool? IsDefault { get; set; }
@@ -46,7 +46,7 @@ namespace SAML2.Schema.Metadata
         /// otherwise indicated by application context. If omitted, the value is assumed to be false.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this instance is default; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is default; otherwise, <c>false</c>.
         /// </value>
         [XmlAttribute("isDefault")]
         public string IsDefaultString

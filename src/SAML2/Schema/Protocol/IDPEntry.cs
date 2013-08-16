@@ -8,8 +8,8 @@ namespace SAML2.Schema.Protocol
     /// presenter.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Protocol, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class IDPEntry
     {
         /// <summary>
@@ -24,7 +24,7 @@ namespace SAML2.Schema.Protocol
         /// The unique identifier of the identity provider.
         /// </summary>
         /// <value>The provider ID.</value>
-        [XmlAttribute("ProviderID", DataType="anyURI")]
+        [XmlAttribute("ProviderID", DataType = "anyURI")]
         public string ProviderID { get; set; }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace SAML2.Schema.Protocol
         /// request protocol. The binding to be used must be understood from the profile of use.
         /// </summary>
         /// <value>The loc.</value>
-        [XmlAttribute("Loc", DataType="anyURI")]
+        [XmlAttribute("Loc", DataType = "anyURI")]
         public string Location { get; set; }
 
         #endregion

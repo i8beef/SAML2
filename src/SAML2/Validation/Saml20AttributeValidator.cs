@@ -26,13 +26,18 @@ namespace SAML2.Validation
         /// <remarks>
         /// [SAML2.0std] section 2.7.3.1
         /// </remarks>
-        /// <param name="samlAttribute">The saml attribute.</param>
+        /// <param name="samlAttribute">The SAML attribute.</param>
         public void ValidateAttribute(SamlAttribute samlAttribute)
         {
-            if (samlAttribute == null) throw new ArgumentNullException("samlAttribute");
+            if (samlAttribute == null)
+            {
+                throw new ArgumentNullException("samlAttribute");
+            }
 
             if (!Saml20Utils.ValidateRequiredString(samlAttribute.Name))
+            {
                 throw new Saml20FormatException("Name attribute of Attribute element MUST contain at least one non-whitespace character");
+            }
             
             if (samlAttribute.AttributeValue != null)
             {

@@ -26,7 +26,7 @@ namespace SAML2.Schema.Metadata
         /// received by this identity provider to be signed. If omitted, the value is assumed to be false.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if [want authn requests signed]; otherwise, <c>false</c>.
+        /// <c>true</c> if [want authn requests signed]; otherwise, <c>false</c>.
         /// </value>
         [XmlAttribute]
         public bool WantAuthnRequestsSigned { get; set; }

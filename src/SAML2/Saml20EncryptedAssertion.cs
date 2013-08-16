@@ -38,13 +38,12 @@ namespace SAML2
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of <code>EncryptedAssertion</code>.
+        /// Initializes a new instance of the <see cref="Saml20EncryptedAssertion"/> class.
         /// </summary>
-        public Saml20EncryptedAssertion()
-        {}
+        public Saml20EncryptedAssertion() {}
 
         /// <summary>
-        /// Initializes a new instance of <code>EncryptedAssertion</code>.
+        /// Initializes a new instance of the <see cref="Saml20EncryptedAssertion"/> class.
         /// </summary>
         /// <param name="transportKey">The transport key is used for securing the symmetric key that has encrypted the assertion.</param>        
         public Saml20EncryptedAssertion(RSA transportKey) : this()
@@ -53,7 +52,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Initializes a new instance of <code>EncryptedAssertion</code>.
+        /// Initializes a new instance of the <see cref="Saml20EncryptedAssertion"/> class.
         /// </summary>
         /// <param name="transportKey">The transport key is used for securing the symmetric key that has encrypted the assertion.</param>
         /// <param name="encryptedAssertion">An <code>XmlDocument</code> containing an <code>EncryptedAssertion</code> element.</param>
@@ -67,12 +66,12 @@ namespace SAML2
         #region Properties
 
         /// <summary>
-        /// The <code>Assertion</code> element that is embedded within the <code>EncryptedAssertion</code> element.
+        /// Gets or sets the <code>Assertion</code> element that is embedded within the <code>EncryptedAssertion</code> element.
         /// </summary>
         public XmlDocument Assertion { get; set; }
 
         /// <summary>
-        /// Specifiy the algorithm to use for the session key. The algorithm is specified using the identifiers given in the 
+        /// Gets or sets the algorithm to use for the session key. The algorithm is specified using the identifiers given in the 
         /// Xml Encryption Specification. see also http://www.w3.org/TR/xmlenc-core/#sec-Algorithms
         /// The class <code>EncryptedXml</code> contains public fields with the identifiers. If nothing is 
         /// specified, a 256 bit AES key is used.
@@ -93,12 +92,12 @@ namespace SAML2
         }
 
         /// <summary>
-        /// The transport key is used for securing the symmetric key that has encrypted the assertion.
+        /// Gets or sets the transport key is used for securing the symmetric key that has encrypted the assertion.
         /// </summary>
         public RSA TransportKey { get; set; }
 
         /// <summary>
-        /// The key used for encrypting the <code>Assertion</code>. This key is embedded within a <code>KeyInfo</code> element
+        /// Gets the key used for encrypting the <code>Assertion</code>. This key is embedded within a <code>KeyInfo</code> element
         /// in the <code>EncryptedAssertion</code> element. The session key is encrypted with the <code>TransportKey</code> before
         /// being embedded.
         /// </summary>
@@ -192,7 +191,6 @@ namespace SAML2
                                         EncryptionMethod = new EncryptionMethod(_sessionKeyAlgorithm)
                                     };
 
-
             // Encrypt the assertion and add it to the encryptedData instance.
             var encryptedXml = new EncryptedXml();
             var encryptedElement = encryptedXml.EncryptData(Assertion.DocumentElement, SessionKey, false);
@@ -278,7 +276,7 @@ namespace SAML2
         /// <param name="element">The element.</param>
         /// <param name="elementNS">The element namespace.</param>
         /// <param name="doc">The doc.</param>
-        /// <returns>The element.</returns>
+        /// <returns>The desired element.</returns>
         private static XmlElement GetElement(string element, string elementNS, XmlElement doc)
         {
             var list = doc.GetElementsByTagName(element, elementNS);
@@ -291,6 +289,7 @@ namespace SAML2
         /// </summary>
         /// <param name="algorithm">A string containing one of the algorithm identifiers found in the XML Encryption standard. The class
         /// <code>EncryptedXml</code> contains the identifiers as fields.</param>
+        /// <returns>The <see cref="SymmetricAlgorithm"/>.</returns>
         private static SymmetricAlgorithm GetKeyInstance(string algorithm)
         {
             SymmetricAlgorithm result;
@@ -338,7 +337,7 @@ namespace SAML2
             {
                 if (node.LocalName == Schema.XEnc.EncryptedKey.ElementName && node.NamespaceURI == Saml20Constants.Xenc)
                 {
-                    return ToSymmetricKey((XmlElement) node, keyAlgorithm);
+                    return ToSymmetricKey((XmlElement)node, keyAlgorithm);
                 }
             }
 

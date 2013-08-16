@@ -21,8 +21,8 @@ namespace SAML2.Schema.XmlDSig
     /// 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Xmldsig)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
     public class RetrievalMethod
     {
         /// <summary>
@@ -54,7 +54,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the transforms.
         /// </summary>
         /// <value>The transforms.</value>
-        [XmlArrayItem("Transform", IsNullable=false)]
+        [XmlArrayItem("Transform", IsNullable = false)]
         public Transform[] Transforms { get; set; }
 
         #endregion

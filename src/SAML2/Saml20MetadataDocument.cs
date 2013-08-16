@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
@@ -9,12 +10,11 @@ using SAML2.Config;
 using SAML2.Schema.Core;
 using SAML2.Schema.Metadata;
 using SAML2.Utils;
-using System.Configuration;
 
 namespace SAML2
 {
     /// <summary>
-    /// The Saml20MetadataDocument class handles functionality related to the &lt;EntityDescriptor&gt; element.
+    /// The <see cref="Saml20MetadataDocument"/> class handles functionality related to the &lt;EntityDescriptor&gt; element.
     /// If a received metadata document contains a &lt;EntitiesDescriptor&gt; element, it is necessary to use an
     /// instance of this class for each &lt;EntityDescriptor&gt; contained.
     /// </summary>
@@ -60,11 +60,13 @@ namespace SAML2
         /// Initializes a new instance of the <see cref="Saml20MetadataDocument"/> class.
         /// </summary>
         public Saml20MetadataDocument()
-        {}
+        {
+        }
 
         /// <summary>
-        /// Initialize the instance with an already existing metadata document.
-        /// </summary>        
+        /// Initializes a new instance of the <see cref="Saml20MetadataDocument"/> class.
+        /// </summary>
+        /// <param name="entityDescriptor">The entity descriptor.</param>
         public Saml20MetadataDocument(XmlDocument entityDescriptor) 
             : this()
         {
@@ -106,7 +108,7 @@ namespace SAML2
         #region Properties
 
         /// <summary>
-        /// Contains the endpoints specified in the &lt;AssertionConsumerService&gt; element in the SPSSODescriptor.
+        /// Gets the endpoints specified in the &lt;AssertionConsumerService&gt; element in the SPSSODescriptor.
         /// These endpoints are only applicable if we are reading metadata issued by a service provider.
         /// </summary>
         public List<IdentityProviderEndpointElement> AssertionConsumerServiceEndpoints
@@ -129,7 +131,7 @@ namespace SAML2
         public EntityDescriptor Entity { get; private set; }
 
         /// <summary>
-        /// The ID of the entity described in the document.
+        /// Gets the ID of the entity described in the document.
         /// </summary>
         public string EntityId
         {
@@ -145,7 +147,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// The keys contained in the metadata document.
+        /// Gets the keys contained in the metadata document.
         /// </summary>
         public List<KeyDescriptor> Keys
         {
@@ -161,7 +163,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Determines whether the metadata should be signed when the ToXml() method is called.
+        /// Gets or sets a value indicating whether the metadata should be signed when the ToXml() method is called.
         /// </summary>
         public bool Sign { get; set; }
 
@@ -173,7 +175,9 @@ namespace SAML2
             get
             {
                 if (_sloEndpoints == null)
+                {
                     ExtractEndpoints();
+                }
 
                 return _sloEndpoints;
             }
@@ -202,7 +206,7 @@ namespace SAML2
         /// <summary>
         /// Creates a default entity in the 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The default <see cref="EntityDescriptor"/>.</returns>
         public EntityDescriptor CreateDefaultEntity()
         {
             if (Entity != null)
@@ -219,7 +223,7 @@ namespace SAML2
         /// Gets the ArtifactResolutionService endpoint.
         /// </summary>
         /// <param name="index">The index.</param>
-        /// <returns></returns>
+        /// <returns>The artifact resolution service endpoint.</returns>
         public string GetARSEndpoint(ushort index)
         {
             var ep = _arsEndpoints[index];
@@ -229,7 +233,7 @@ namespace SAML2
         /// <summary>
         /// Gets all AttributeQuery endpoints.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The List of attribute query endpoints.</returns>
         public List<Endpoint> GetAttributeQueryEndpoints()
         {
             if (_attributeQueryEndpoints == null)
@@ -243,7 +247,7 @@ namespace SAML2
         /// <summary>
         /// Gets the location of the first AttributeQuery endpoint.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The attribute query endpoint location.</returns>
         public string GetAttributeQueryEndpointLocation()
         {
             var endpoints = GetAttributeQueryEndpoints();
@@ -258,6 +262,7 @@ namespace SAML2
         /// <summary>
         /// Retrieves the keys marked with the usage given as parameter.
         /// </summary>
+        /// <param name="usage">The usage.</param>
         /// <returns>A list containing the keys. If no key is marked with the given usage, the method returns an empty list.</returns>
         public List<KeyDescriptor> GetKeys(KeyTypes usage)
         {
@@ -266,7 +271,8 @@ namespace SAML2
 
         /// <summary>
         /// Get the first SLO endpoint that supports the given binding.
-        /// </summary>        
+        /// </summary>
+        /// <param name="binding">The binding.</param>
         /// <returns>The endpoint or <c>null</c> if metadata does not have an SLO endpoint with the given binding.</returns>
         public IdentityProviderEndpointElement SLOEndpoint(BindingType binding)
         {
@@ -275,7 +281,8 @@ namespace SAML2
 
         /// <summary>
         /// Get the first SSO endpoint that supports the given binding.
-        /// </summary>        
+        /// </summary>
+        /// <param name="binding">The binding.</param>
         /// <returns>The endpoint or <c>null</c> if metadata does not have an SSO endpoint with the given binding.</returns>
         public IdentityProviderEndpointElement SSOEndpoint(BindingType binding)
         {
@@ -284,7 +291,7 @@ namespace SAML2
 
         /// <summary>
         /// Return a string containing the metadata XML based on the settings added to this instance.
-        /// The resulting XML will be signed, if the AsymmetricAlgoritm property has been set.
+        /// The resulting XML will be signed, if the AsymmetricAlgorithm property has been set.
         /// The default encoding (UTF-8) will be used for the resulting XML.
         /// </summary>
         /// <returns>The XML.</returns>
@@ -295,11 +302,11 @@ namespace SAML2
 
         /// <summary>
         /// Return a string containing the metadata XML based on the settings added to this instance.
-        /// The resulting XML will be signed, if the AsymmetricAlgoritm property has been set.
+        /// The resulting XML will be signed, if the AsymmetricAlgorithm property has been set.
         /// </summary>
-        /// <param name="enc">The enc.</param>
+        /// <param name="encoding">The encoding.</param>
         /// <returns>The XML.</returns>
-        public string ToXml(Encoding enc)
+        public string ToXml(Encoding encoding)
         {
             var doc = new XmlDocument { PreserveWhitespace = true };
             doc.LoadXml(Serialization.SerializeToXmlString(Entity));
@@ -307,11 +314,11 @@ namespace SAML2
             // Add the correct encoding to the head element.
             if (doc.FirstChild is XmlDeclaration)
             {
-                ((XmlDeclaration)doc.FirstChild).Encoding = enc.WebName;
+                ((XmlDeclaration)doc.FirstChild).Encoding = encoding.WebName;
             }
             else
             {
-                doc.PrependChild(doc.CreateXmlDeclaration("1.0", enc.WebName, null));
+                doc.PrependChild(doc.CreateXmlDeclaration("1.0", encoding.WebName, null));
             }
 
             if (Sign)
@@ -329,7 +336,7 @@ namespace SAML2
         /// <summary>
         /// Gets the binding.
         /// </summary>
-        /// <param name="samlBinding">The saml binding.</param>
+        /// <param name="samlBinding">The SAML binding.</param>
         /// <param name="defaultValue">The default value.</param>
         /// <returns>The binding.</returns>
         private static string GetBinding(BindingType samlBinding, string defaultValue)
@@ -347,7 +354,7 @@ namespace SAML2
                 case BindingType.NotSet:
                     return defaultValue;
                 default:
-                    throw new ConfigurationErrorsException(String.Format("Unsupported SAML binding {0}", Enum.GetName(typeof(BindingType), samlBinding)));
+                    throw new ConfigurationErrorsException(string.Format("Unsupported SAML binding {0}", Enum.GetName(typeof(BindingType), samlBinding)));
             }
         }
 
@@ -394,20 +401,23 @@ namespace SAML2
             signedXml.KeyInfo.AddClause(new KeyInfoX509Data(cert, X509IncludeOption.WholeChain));
 
             signedXml.ComputeSignature();
+
             // Append the computed signature. The signature must be placed as the sibling of the Issuer element.
             doc.DocumentElement.InsertBefore(doc.ImportNode(signedXml.GetXml(), true), doc.DocumentElement.FirstChild);
-        }    
+        }
 
         /// <summary>
-        /// Takes the Safewhere configuration class and converts it to a SAML2.0 metadata document.
+        /// Takes the configuration class and converts it to a SAML2.0 metadata document.
         /// </summary>
-        private void ConvertToMetadata(Saml2Section config, KeyInfo keyinfo)
+        /// <param name="config">The config.</param>
+        /// <param name="keyInfo">The keyInfo.</param>
+        private void ConvertToMetadata(Saml2Section config, KeyInfo keyInfo)
         {
             var entity = CreateDefaultEntity();
             entity.EntityID = config.ServiceProvider.Id;
             entity.ValidUntil = DateTime.Now.AddDays(7);
 
-            var spDescriptor = new SPSSODescriptor
+            var serviceProviderDescriptor = new SPSSODescriptor
                                    {
                                        ProtocolSupportEnumeration = Saml20Constants.Protocol,
                                        AuthnRequestsSigned = XmlConvert.ToString(true),
@@ -416,11 +426,11 @@ namespace SAML2
 
             if (config.ServiceProvider.NameIdFormats.Count > 0)
             {
-                spDescriptor.NameIDFormat = new string[config.ServiceProvider.NameIdFormats.Count];
+                serviceProviderDescriptor.NameIDFormat = new string[config.ServiceProvider.NameIdFormats.Count];
                 var count = 0;
-                foreach(var elem in config.ServiceProvider.NameIdFormats)
+                foreach (var elem in config.ServiceProvider.NameIdFormats)
                 {
-                    spDescriptor.NameIDFormat[count++] = elem.Format;
+                    serviceProviderDescriptor.NameIDFormat[count++] = elem.Format;
                 }
             }
             
@@ -486,14 +496,14 @@ namespace SAML2
                 }
             }           
 
-            spDescriptor.SingleLogoutService = logoutServiceEndpoints.ToArray();
-            spDescriptor.AssertionConsumerService = signonServiceEndpoints.ToArray();
+            serviceProviderDescriptor.SingleLogoutService = logoutServiceEndpoints.ToArray();
+            serviceProviderDescriptor.AssertionConsumerService = signonServiceEndpoints.ToArray();
             
             // Attribute consuming service. 
             if (config.Metadata.RequestedAttributes.Count > 0)
             {
                 var attConsumingService = new AttributeConsumingService();
-                spDescriptor.AttributeConsumingService = new[] { attConsumingService };
+                serviceProviderDescriptor.AttributeConsumingService = new[] { attConsumingService };
                 attConsumingService.Index = signonServiceEndpoints[0].Index;
                 attConsumingService.IsDefault = true;
                 attConsumingService.ServiceName = new[] { new LocalizedName("SP", "en") };
@@ -510,25 +520,26 @@ namespace SAML2
                     {
                         attConsumingService.RequestedAttribute[i].IsRequired = true;
                     }
+
                     attConsumingService.RequestedAttribute[i].NameFormat = SamlAttribute.NameformatBasic;
                 }
             }
             else
             {
-                spDescriptor.AttributeConsumingService = new AttributeConsumingService[0];
+                serviceProviderDescriptor.AttributeConsumingService = new AttributeConsumingService[0];
             }
 
             if (config.Metadata == null || !config.Metadata.ExcludeArtifactEndpoints)
             {
-                spDescriptor.ArtifactResolutionService = artifactResolutionEndpoints.ToArray();
+                serviceProviderDescriptor.ArtifactResolutionService = artifactResolutionEndpoints.ToArray();
             }
 
-            entity.Items = new object[] { spDescriptor };
+            entity.Items = new object[] { serviceProviderDescriptor };
 
             // Keyinfo
             var keySigning = new KeyDescriptor();
             var keyEncryption = new KeyDescriptor();
-            spDescriptor.KeyDescriptor = new[] { keySigning, keyEncryption };
+            serviceProviderDescriptor.KeyDescriptor = new[] { keySigning, keyEncryption };
             
             keySigning.Use = KeyTypes.Signing;
             keySigning.UseSpecified = true;
@@ -537,7 +548,7 @@ namespace SAML2
             keyEncryption.UseSpecified = true;
                        
             // Ugly conversion between the .Net framework classes and our classes ... avert your eyes!!
-            keySigning.KeyInfo = Serialization.DeserializeFromXmlString<Schema.XmlDSig.KeyInfo>(keyinfo.GetXml().OuterXml);            
+            keySigning.KeyInfo = Serialization.DeserializeFromXmlString<Schema.XmlDSig.KeyInfo>(keyInfo.GetXml().OuterXml);            
             keyEncryption.KeyInfo = keySigning.KeyInfo;
 
             // apply the <Organization> element
@@ -557,7 +568,7 @@ namespace SAML2
                                                                                 {
                                                                                     ContactType =
                                                                                         (Schema.Metadata.ContactType)
-                                                                                        ((int) x.Type),
+                                                                                        ((int)x.Type),
                                                                                     Company = x.Company,
                                                                                     GivenName = x.GivenName,
                                                                                     SurName = x.SurName,
@@ -605,11 +616,9 @@ namespace SAML2
                                 default:
                                     throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
                             }
-                            _ssoEndpoints.Add(new IdentityProviderEndpointElement
-                            {
-                                Url = endpoint.Location,
-                                Binding = binding
-                            });
+
+                            _ssoEndpoints.Add(
+                                new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
                         }
                     }
 
@@ -639,11 +648,9 @@ namespace SAML2
                                     default:
                                         throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
                                 }
-                                _sloEndpoints.Add(new IdentityProviderEndpointElement
-                                {
-                                    Url = endpoint.Location,
-                                    Binding = binding
-                                });
+
+                                _sloEndpoints.Add(
+                                    new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
                             }
                         }
 
@@ -679,11 +686,8 @@ namespace SAML2
                                 default:
                                     throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
                             }
-                            _assertionConsumerServiceEndpoints.Add(new IdentityProviderEndpointElement
-                            {
-                                Url = endpoint.Location,
-                                Binding = binding
-                            });
+
+                            _assertionConsumerServiceEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
                         }
                     }
 
@@ -695,7 +699,6 @@ namespace SAML2
                 }
             }
         }
-
 
         /// <summary>
         /// Extract KeyDescriptors from the metadata document represented by this instance.

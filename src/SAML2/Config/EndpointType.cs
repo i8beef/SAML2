@@ -1,22 +1,22 @@
 ﻿namespace SAML2.Config
 {
     /// <summary>
-    /// Endpoint types (signon, logout or metadata)
+    /// Endpoint types.
     /// </summary>
     public enum EndpointType
     {
         /// <summary>
-        /// Signon endpoint
+        /// SignOn endpoint.
         /// </summary>
         SignOn,
 
         /// <summary>
-        /// Logout endpoint
+        /// Logout endpoint.
         /// </summary>
         Logout,
 
         /// <summary>
-        /// Metadata endpoint
+        /// Metadata endpoint.
         /// </summary>
         Metadata
     }

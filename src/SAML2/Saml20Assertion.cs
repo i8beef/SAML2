@@ -14,13 +14,17 @@ using SAML2.Validation;
 
 namespace SAML2
 {
-    ///<summary>
+    /// <summary>
     /// Encapsulates the functionality required of a DK-SAML 2.0 Assertion. 
-    /// 
-    ///</summary>
+    /// </summary>
     public class Saml20Assertion 
     {
         #region Private variables
+
+        /// <summary>
+        /// Auto validate assertions.
+        /// </summary>
+        private readonly bool _autoValidate = true;
 
         /// <summary>
         /// A strongly-typed version of the assertion. It is generated on-demand from the contents of the <code>_samlAssertion</code>
@@ -29,9 +33,8 @@ namespace SAML2
         private Assertion _assertion;
 
         /// <summary>
-        /// An list of the unencrypted attributes in the assertion. This list is lazy initialized, ie. it will only be retrieved
+        /// An list of the unencrypted attributes in the assertion. This list is lazy initialized, i.e. it will only be retrieved
         /// from the <code>_samlAssertion</code> field when it is requested through the <code>Attributes</code> property.
-        /// 
         /// When the <code>Sign</code> method is called, the attributes in the list are embedded into the <code>_samlAssertion</code>
         /// and this variable is nulled.
         /// </summary>
@@ -41,11 +44,6 @@ namespace SAML2
         /// The assertion validator.
         /// </summary>
         private ISaml20AssertionValidator _assertionValidator;
-
-        /// <summary>
-        /// Auto validate assertions.
-        /// </summary>
-        private readonly bool _autoValidate = true;
 
         /// <summary>
         /// List of encrypted assertion attributes.
@@ -69,8 +67,7 @@ namespace SAML2
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20Assertion"/> class.
         /// </summary>
-        public Saml20Assertion() 
-        {}
+        public Saml20Assertion() {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20Assertion"/> class.
@@ -92,7 +89,8 @@ namespace SAML2
         /// <param name="trustedSigners">If <code>null</code>, the signature of the given assertion is not verified.</param>
         /// <param name="profile">Determines the type of validation to perform on the token</param>
         /// <param name="quirksMode">if set to <c>true</c> quirks mode is enabled.</param>
-        public Saml20Assertion(XmlElement assertion, IEnumerable<AsymmetricAlgorithm> trustedSigners, string profile, bool quirksMode){
+        public Saml20Assertion(XmlElement assertion, IEnumerable<AsymmetricAlgorithm> trustedSigners, string profile, bool quirksMode)
+        {
             _profile = profile;
             _quirksMode = quirksMode;
             LoadXml(assertion, trustedSigners);
@@ -119,7 +117,7 @@ namespace SAML2
         #region Properties
 
         /// <summary>
-        /// A strongly-typed version of the Saml Assertion. It is lazily generated based on the contents of the
+        /// Gets a strongly-typed version of the SAML Assertion. It is lazily generated based on the contents of the
         /// <code>_samlAssertion</code> field.
         /// </summary>
         public Assertion Assertion
@@ -141,7 +139,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// The unencrypted attributes of the assertion.
+        /// Gets or sets the unencrypted attributes of the assertion.
         /// </summary>
         public List<SamlAttribute> Attributes
         {
@@ -179,7 +177,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// The encrypted attributes of the assertion.
+        /// Gets or sets the encrypted attributes of the assertion.
         /// </summary>
         /// <value>The encrypted attributes.</value>
         public List<EncryptedElement> EncryptedAttributes
@@ -214,7 +212,7 @@ namespace SAML2
         public string EncryptedId { get; set; }
         
         /// <summary>
-        /// The ID attribute of the &lt;Assertion&gt; element.
+        /// Gets the ID attribute of the &lt;Assertion&gt; element.
         /// </summary>
         public string Id
         {
@@ -222,7 +220,7 @@ namespace SAML2
         }
         
         /// <summary>
-        /// Checks if the expiration time has been exceeded.
+        /// Gets a value indicating whether the expiration time has been exceeded.
         /// </summary>
         public bool IsExpired
         {
@@ -241,7 +239,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Retrieve the value of the &lt;Issuer&gt; element.
+        /// Gets the value of the &lt;Issuer&gt; element.
         /// </summary>
         public string Issuer
         {
@@ -249,7 +247,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Retrieve the NotOnOrAfter propoerty, if it is included in the assertion.
+        /// Gets the NotOnOrAfter property, if it is included in the assertion.
         /// </summary>
         public DateTime NotOnOrAfter
         {
@@ -285,7 +283,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// They asymmetric key that can verify the signature of the assertion.
+        /// Gets or sets the asymmetric key that can verify the signature of the assertion.
         /// </summary>
         public AsymmetricAlgorithm SigningKey { get; set; }
 
@@ -328,7 +326,7 @@ namespace SAML2
                     var config = Saml2Config.GetConfig();
                     if (config == null || config.AllowedAudienceUris == null)
                     {
-                        if (String.IsNullOrEmpty(_profile))
+                        if (string.IsNullOrEmpty(_profile))
                         {
                             _assertionValidator = new Saml20AssertionValidator(null, _quirksMode);
                         }
@@ -339,7 +337,7 @@ namespace SAML2
                     }
                     else
                     {
-                        if (String.IsNullOrEmpty(_profile))
+                        if (string.IsNullOrEmpty(_profile))
                         {
                             _assertionValidator = new Saml20AssertionValidator(config.AllowedAudienceUris.Select(x => x.Uri).ToList(), _quirksMode);
                         }
@@ -406,7 +404,6 @@ namespace SAML2
             }
         }
        
-
         /// <summary>
         /// Returns the KeyInfo element of the signature of the token.
         /// </summary>
@@ -422,7 +419,7 @@ namespace SAML2
         /// <returns>SubjectConfirmationData object from subject items, null if none present</returns>
         public SubjectConfirmationData GetSubjectConfirmationData()
         {
-            return SubjectItems.OfType<SubjectConfirmation>().Select(item => (item).SubjectConfirmationData).FirstOrDefault();
+            return SubjectItems.OfType<SubjectConfirmation>().Select(item => item.SubjectConfirmationData).FirstOrDefault();
         }
 
         /// <summary>
@@ -449,9 +446,9 @@ namespace SAML2
             InsertAttributes();
 
             // Remove existing signatures when resigning the assertion
-            var signatureParentNode = XmlAssertion; //FIX.DocumentElement;
+            var signatureParentNode = XmlAssertion; // FIX.DocumentElement;
             XmlNode sigNode;
-            while ( (sigNode = signatureParentNode.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig)[0]) != null )
+            while ((sigNode = signatureParentNode.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig)[0]) != null)
             {
                 signatureParentNode.RemoveChild(sigNode);
             }
@@ -495,8 +492,8 @@ namespace SAML2
             signedXml.AddReference(reference);
 
             // Include the public key of the certificate in the assertion.
-            //signedXml.KeyInfo = new KeyInfo();
-            //signedXml.KeyInfo.AddClause(new KeyInfoX509Data(cert, X509IncludeOption.WholeChain));
+            // signedXml.KeyInfo = new KeyInfo();
+            // signedXml.KeyInfo.AddClause(new KeyInfoX509Data(cert, X509IncludeOption.WholeChain));
 
             signedXml.ComputeSignature();
             // Append the computed signature. The signature must be placed as the sibling of the Issuer element.
@@ -561,7 +558,7 @@ namespace SAML2
 
                 if (item is EncryptedElement)
                 {
-                    _encryptedAssertionAttributes.Add((EncryptedElement) item);
+                    _encryptedAssertionAttributes.Add((EncryptedElement)item);
                 }
             }
         }
@@ -585,9 +582,12 @@ namespace SAML2
 
             var list = XmlAssertion.GetElementsByTagName(AttributeStatement.ElementName, Saml20Constants.Assertion);
 
-            if (list.Count > 0) // Remove the old AttributeStatement.
+            if (list.Count > 0)
             {
-                XmlAssertion.RemoveChild(list[0]); //FIX _samlAssertion.DocumentElement.RemoveChild(list[0]);
+                // Remove the old AttributeStatement.
+                XmlAssertion.RemoveChild(list[0]);
+
+                // FIX _samlAssertion.DocumentElement.RemoveChild(list[0]);
             }
 
             // Only insert a new AttributeStatement if there are attributes.
@@ -597,6 +597,7 @@ namespace SAML2
                 // be able to make this transition in a more elegant way.
                 var attributeStatementDoc = Serialization.Serialize(attributeStatement);
                 var attr = XmlAssertion.OwnerDocument.ImportNode(attributeStatementDoc.DocumentElement, true);
+
                 // Insert the new statement.
                 XmlAssertion.AppendChild(attr);                
             }

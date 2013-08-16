@@ -2,8 +2,8 @@ using System;
 using System.Collections.Specialized;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using SAML2.Bindings;
 using NUnit.Framework;
+using SAML2.Bindings;
 
 namespace SAML2.Tests.Bindings
 {
@@ -13,6 +13,29 @@ namespace SAML2.Tests.Bindings
     [TestFixture]
     public class HttpRedirectBindingParserTests
     {
+        /// <summary>
+        /// Performs a simple split of an Url query, and stores the result in a NameValueCollection.
+        /// This method may fail horribly if the query string is not correctly URL-encoded.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>The <see cref="NameValueCollection"/> that results from parsing the query.</returns>
+        private static NameValueCollection QueryToNameValueCollection(string request)
+        {
+            if (request[0] == '?')
+            {
+                request = request.Substring(1);
+            }
+
+            var result = new NameValueCollection();
+            foreach (var s in request.Split('&'))
+            {
+                var keyvalue = s.Split('=');
+                result.Add(keyvalue[0], keyvalue[1]);
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Constructor method tests.
         /// </summary>
@@ -28,7 +51,7 @@ namespace SAML2.Tests.Bindings
             {
                 // Arrange
                 var request = string.Empty.PadLeft(350, 'A') + "ÆØÅæøå";
-                var bindingBuilder = new SAML2.Bindings.HttpRedirectBindingBuilder {Request = request};
+                var bindingBuilder = new SAML2.Bindings.HttpRedirectBindingBuilder { Request = request };
 
                 var query = bindingBuilder.ToQuery();
                 var coll = QueryToNameValueCollection(query);
@@ -199,27 +222,6 @@ namespace SAML2.Tests.Bindings
                 // Assert
                 Assert.Fail("Trying to verify signature of an unsigned request should have thrown an exception.");
             }
-        }
-
-        /// <summary>
-        /// Performs a simple split of an Url query, and stores the result in a NameValueCollection.
-        /// This method may fail horribly if the query string is not correctly URL-encoded.
-        /// </summary>
-        private static NameValueCollection QueryToNameValueCollection(string request)
-        {
-            if (request[0] == '?')
-            {
-                request = request.Substring(1);
-            }
-
-            var result = new NameValueCollection();
-            foreach (var s in request.Split('&'))
-            {
-                var keyvalue = s.Split('=');
-                result.Add(keyvalue[0], keyvalue[1]);
-            }
-
-            return result;
         }
     }
 }

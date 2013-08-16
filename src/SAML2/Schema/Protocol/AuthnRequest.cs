@@ -19,8 +19,8 @@ namespace SAML2.Schema.Protocol
     /// by the protocol binding used to deliver the message.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Protocol, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class AuthnRequest : RequestAbstract
     {
 
@@ -33,7 +33,7 @@ namespace SAML2.Schema.Protocol
         /// Gets or sets a value indicating whether [assertion consumer service index specified].
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if [assertion consumer service index specified]; otherwise, <c>false</c>.
+        /// <c>true</c> if [assertion consumer service index specified]; otherwise, <c>false</c>.
         /// </value>
         [XmlIgnore]
         public bool AssertionConsumerServiceIndexSpecified { get; set; }
@@ -42,7 +42,7 @@ namespace SAML2.Schema.Protocol
         /// Gets or sets a value indicating whether [attribute consuming service index specified].
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if [attribute consuming service index specified]; otherwise, <c>false</c>.
+        /// <c>true</c> if [attribute consuming service index specified]; otherwise, <c>false</c>.
         /// </value>
         [XmlIgnore]
         public bool AttributeConsumingServiceIndexSpecified { get; set; }
@@ -65,7 +65,7 @@ namespace SAML2.Schema.Protocol
         /// value is not provided, the default is "false".
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this instance is passive; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is passive; otherwise, <c>false</c>.
         /// </value>
         [XmlIgnore]
         public bool? IsPassive { get; set; }
@@ -125,7 +125,11 @@ namespace SAML2.Schema.Protocol
             set
             {
                 bool val;
-                if (!bool.TryParse(value, out val)) return;
+                if (!bool.TryParse(value, out val))
+                {
+                    return;
+                }
+
                 ForceAuthn = val;
             }
         }
@@ -134,7 +138,7 @@ namespace SAML2.Schema.Protocol
         /// Gets or sets a value indicating whether this instance is passive specified.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this instance is passive specified; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is passive specified; otherwise, <c>false</c>.
         /// </value>
         [XmlAttribute("IsPassive")]
         public string IsPassiveString
@@ -143,7 +147,11 @@ namespace SAML2.Schema.Protocol
             set
             {
                 bool val;
-                if (!bool.TryParse(value, out val)) return;
+                if (!bool.TryParse(value, out val))
+                {
+                    return;
+                }
+
                 IsPassive = val;
             }
         }

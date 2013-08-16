@@ -7,8 +7,8 @@ namespace SAML2.Schema.XmlDSig
     /// Holds a list of transform classes
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Xmldsig)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
     public class Transforms
     {
         /// <summary>

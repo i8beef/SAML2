@@ -26,11 +26,11 @@ namespace SAML2.Actions
         }
 
         /// <summary>
-        /// Action performed during signon.
+        /// Action performed during SignOn.
         /// </summary>
         /// <param name="handler">The handler initiating the call.</param>
         /// <param name="context">The current http context.</param>
-        /// <param name="assertion">The saml assertion of the currently logged in user.</param>
+        /// <param name="assertion">The SAML assertion of the currently logged in user.</param>
         public void SignOnAction(AbstractEndpointHandler handler, HttpContext context, Saml20Assertion assertion)
         {
             FormsAuthentication.SetAuthCookie(Saml20PrincipalCache.GetPrincipal().Identity.Name, false);  

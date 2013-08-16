@@ -16,7 +16,7 @@ namespace SAML2.Protocol
     public abstract class Saml20AbstractEndpointHandler : AbstractEndpointHandler
     {
         /// <summary>
-        /// Parameter name for idp choice
+        /// Parameter name for IDP choice
         /// </summary>
         public const string IDPChoiceParameterName = "cidp";
 
@@ -36,7 +36,7 @@ namespace SAML2.Protocol
         public const string IDPLoginSessionKey = "LoginIDPId";
 
         /// <summary>
-        /// Key used to save the idp name id in session context
+        /// Key used to save the IDP name id in session context
         /// </summary>
         public const string IDPNameId = "IDPNameId";
 
@@ -81,12 +81,14 @@ namespace SAML2.Protocol
         /// Handles the selection of an IDP. If only one IDP is found, the user is automatically redirected to it.
         /// If several are found, and nothing indicates to which one the user should be sent, this method returns null.
         /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>The <see cref="IdentityProviderElement"/>.</returns>
         public IdentityProviderElement RetrieveIDP(HttpContext context)
         {
             var config = Saml2Config.GetConfig();
             config.IdentityProviders.Refresh();
 
-            //If idpChoice is set, use it value
+            // If idpChoice is set, use it value
             if (!string.IsNullOrEmpty(context.Request.Params[IDPChoiceParameterName]))
             {
                 Logger.Debug("Using IDPChoiceParamater: " + context.Request.Params[IDPChoiceParameterName]);
@@ -97,8 +99,8 @@ namespace SAML2.Protocol
                 }
             }
 
-            //If we have a common domain cookie, use it's value
-            //It must have been returned from the local common domain cookie reader endpoint.
+            // If we have a common domain cookie, use it's value
+            // It must have been returned from the local common domain cookie reader endpoint.
             if (!string.IsNullOrEmpty(context.Request.QueryString["_saml_idp"]))
             {
                 var cdc = new CommonDomainCookie(context.Request.QueryString["_saml_idp"]);
@@ -115,7 +117,7 @@ namespace SAML2.Protocol
                 }
             }
 
-            //If there is only one configured IdentityProviderEndpointElement lets just use that
+            // If there is only one configured IdentityProviderEndpointElement lets just use that
             if (config.IdentityProviders.Count == 1 && config.IdentityProviders[0].Metadata != null)
             {
                 Logger.Debug("No IDP selected in Common Domain Cookie, using default IDP: " + config.IdentityProviders[0].Name);
@@ -159,7 +161,8 @@ namespace SAML2.Protocol
         /// </summary>
         /// <param name="defaultBinding">The binding to use if none has been specified in the configuration and the metadata allows all bindings.</param>
         /// <param name="config">The endpoint as described in the configuration. May be null.</param>
-        /// <param name="metadata">A list of endpoints of the given type (eg. SSO or SLO) that the metadata contains. </param>        
+        /// <param name="metadata">A list of endpoints of the given type (e.g. SSO or SLO) that the metadata contains.</param>
+        /// <returns>The <see cref="IdentityProviderElement"/>.</returns>
         internal static IdentityProviderEndpointElement DetermineEndpointConfiguration(BindingType defaultBinding, IdentityProviderEndpointElement config, List<IdentityProviderEndpointElement> metadata)
         {
             var result = new IdentityProviderEndpointElement { Binding = defaultBinding };
@@ -190,7 +193,7 @@ namespace SAML2.Protocol
                 var endpoint = metadata.Find(el => el.Binding == result.Binding);
                 if (endpoint == null)
                 {
-                    throw new ConfigurationErrorsException(String.Format("No IdentityProvider supporting SAML binding {0} found in metadata", result.Binding));
+                    throw new ConfigurationErrorsException(string.Format("No IdentityProvider supporting SAML binding {0} found in metadata", result.Binding));
                 }
 
                 result.Url = endpoint.Url;
@@ -234,8 +237,8 @@ namespace SAML2.Protocol
         /// <summary>
         /// Checks the configuration elements and redirects to an error page if something is missing or wrong.
         /// </summary>
-        /// <param name="ctx"></param>
-        private void CheckConfiguration(HttpContext ctx)
+        /// <param name="context">The context.</param>
+        private void CheckConfiguration(HttpContext context)
         {
             if (Validated)
             {
@@ -246,7 +249,7 @@ namespace SAML2.Protocol
             Validated = BindingUtility.ValidateConfiguration(out errorMessage);
             if (!Validated)
             {
-                HandleError(ctx, errorMessage);
+                HandleError(context, errorMessage);
             }                        
         }
     }

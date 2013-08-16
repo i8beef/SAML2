@@ -29,13 +29,13 @@ namespace SAML2.Config
 
         #endregion
 
-        ///<summary>
+        /// <summary>
         /// Returns the runtime-class configured pseudonym mapper (if any is present) for a given IdP.
-        ///</summary>
-        ///<returns></returns>
+        /// </summary>
+        /// <returns>The <see cref="IPersistentPseudonymMapper"/> implementation.</returns>
         public IPersistentPseudonymMapper GetMapper()
         {
-            if (!String.IsNullOrEmpty(Mapper))
+            if (!string.IsNullOrEmpty(Mapper))
             {
                 _mapper = (IPersistentPseudonymMapper)Activator.CreateInstance(Type.GetType(Mapper), true);
             }

@@ -14,7 +14,7 @@ namespace SAML2.Schema.Core
     /// </summary>
     [XmlInclude(typeof(KeyInfoConfirmationData))]
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class SubjectConfirmationData
     {
@@ -79,7 +79,7 @@ namespace SAML2.Schema.Core
         public string NotOnOrAfterString
         {
             get { return NotOnOrAfter.HasValue ? Saml20Utils.ToUtcString(NotOnOrAfter.Value) : null; }
-            set { NotOnOrAfter = string.IsNullOrEmpty(value) ? (DateTime?) null : Saml20Utils.FromUtcString(value); }
+            set { NotOnOrAfter = string.IsNullOrEmpty(value) ? (DateTime?)null : Saml20Utils.FromUtcString(value); }
         }
 
         /// <summary>

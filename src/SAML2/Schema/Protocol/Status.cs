@@ -4,11 +4,11 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Protocol
 {
     /// <summary>
-    /// The saml protocol status class.
+    /// The SAML protocol status class.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Protocol, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class Status
     {
         /// <summary>

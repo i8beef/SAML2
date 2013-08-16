@@ -15,7 +15,6 @@ using SAML2.Protocol;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
-using Saml2.Properties;
 
 namespace SAML2
 {
@@ -200,7 +199,7 @@ namespace SAML2
                  s = builder.GetResponse(endPoint.Metadata.GetAttributeQueryEndpointLocation(), query.OuterXml, endPoint.AttributeQuery);
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logger.Error(e.Message, e);
                 throw;
@@ -218,7 +217,7 @@ namespace SAML2
             var xmlAssertion = Saml20SignonHandler.GetAssertion(parser.SamlMessage, out isEncrypted);
             if (isEncrypted)
             {
-                var ass = new Saml20EncryptedAssertion((RSA) Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey);
+                var ass = new Saml20EncryptedAssertion((RSA)Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey);
                 ass.LoadXml(xmlAssertion);
                 ass.Decrypt();
                 xmlAssertion = ass.Assertion.DocumentElement;
@@ -240,10 +239,10 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Gets the name format.
+        /// Gets the name format's string representation.
         /// </summary>
         /// <param name="nameFormat">The name format.</param>
-        /// <returns>The name format.</returns>
+        /// <returns>The name format string.</returns>
         private static string GetNameFormat(Saml20NameFormat nameFormat)
         {
             string result;

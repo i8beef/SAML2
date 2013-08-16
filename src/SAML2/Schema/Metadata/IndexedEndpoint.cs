@@ -9,10 +9,10 @@ namespace SAML2.Schema.Metadata
     /// indexing of otherwise identical endpoints so that they can be referenced by protocol messages.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Metadata)]
+    [XmlType(Namespace = Saml20Constants.Metadata)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
-    public class IndexedEndpoint : Endpoint {
-        
+    public class IndexedEndpoint : Endpoint
+    {   
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
@@ -24,7 +24,7 @@ namespace SAML2.Schema.Metadata
         /// omitted, the value is assumed to be false.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this instance is default; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is default; otherwise, <c>false</c>.
         /// </value>
         [XmlIgnore]
         public bool? IsDefault { get; set; }
@@ -50,7 +50,7 @@ namespace SAML2.Schema.Metadata
         public string IsDefaultString
         {
             get { return IsDefault == null ? null : XmlConvert.ToString(IsDefault.Value); }
-            set { IsDefault = value == null ? (bool?) null : XmlConvert.ToBoolean(value); }
+            set { IsDefault = value == null ? (bool?)null : XmlConvert.ToBoolean(value); }
         }
 
         #endregion

@@ -10,7 +10,7 @@ namespace SAML2.Schema.XEnc
     /// can occur if multiple EncryptedData elements exist that are encrypted by the same key.
     /// </summary>
     [Serializable]
-    [XmlType(TypeName="ReferenceType", Namespace=Saml20Constants.Xenc)]
+    [XmlType(TypeName = "ReferenceType", Namespace = Saml20Constants.Xenc)]
     public class ReferenceType
     {
         /// <summary>
@@ -24,7 +24,7 @@ namespace SAML2.Schema.XEnc
         /// Gets or sets the URI.
         /// </summary>
         /// <value>The URI.</value>
-        [XmlAttribute("URI", DataType="anyURI")]
+        [XmlAttribute("URI", DataType = "anyURI")]
         public string URI { get; set; }
 
         #endregion
@@ -32,9 +32,9 @@ namespace SAML2.Schema.XEnc
         #region Elements
 
         /// <summary>
-        /// Gets or sets any.
+        /// Gets or sets any elements.
         /// </summary>
-        /// <value>Any.</value>
+        /// <value>Any elements.</value>
         [XmlAnyElement]
         public XmlElement[] Any { get; set; }
 

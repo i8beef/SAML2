@@ -22,7 +22,7 @@ namespace SAML2.Validation
 
             if (subjectConfirmationData.AnyElements == null)
             {
-                throw new Saml20FormatException(String.Format("SubjectConfirmationData element MUST have at least one {0} subelement", KeyInfo.ElementName));
+                throw new Saml20FormatException(string.Format("SubjectConfirmationData element MUST have at least one {0} subelement", KeyInfo.ElementName));
             }
 
             var keyInfoFound = false;
@@ -38,14 +38,14 @@ namespace SAML2.Validation
                 // A KeyInfo element MUST identify a cryptographic key
                 if (!element.HasChildNodes)
                 {
-                    throw new Saml20FormatException(String.Format("{0} subelement of SubjectConfirmationData MUST NOT be empty", KeyInfo.ElementName));
+                    throw new Saml20FormatException(string.Format("{0} subelement of SubjectConfirmationData MUST NOT be empty", KeyInfo.ElementName));
                 }
             }
 
             // There MUST BE at least one <ds:KeyInfo> element present (from the arbitrary elements list on SubjectConfirmationData
             if (!keyInfoFound)
             {
-                throw new Saml20FormatException(String.Format("SubjectConfirmationData element MUST contain at least one {0} in namespace {1}", KeyInfo.ElementName, Saml20Constants.Xmldsig));
+                throw new Saml20FormatException(string.Format("SubjectConfirmationData element MUST contain at least one {0} in namespace {1}", KeyInfo.ElementName, Saml20Constants.Xmldsig));
             }
         }
 

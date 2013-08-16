@@ -30,8 +30,8 @@ namespace SAML2.Schema.XmlDSig
     /// binary document and it is desired to extract and decode so as to sign the original bitwise representation.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Xmldsig)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
     public class ObjectType
     {
         /// <summary>
@@ -52,7 +52,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the id.
         /// </summary>
         /// <value>The id.</value>
-        [XmlAttribute("Id", DataType="ID")]
+        [XmlAttribute("Id", DataType = "ID")]
         public string Id { get; set; }
 
         /// <summary>
@@ -67,9 +67,9 @@ namespace SAML2.Schema.XmlDSig
         #region Elements
 
         /// <summary>
-        /// Gets or sets any.
+        /// Gets or sets any elements.
         /// </summary>
-        /// <value>Any.</value>
+        /// <value>Any elements.</value>
         [XmlText]
         [XmlAnyElement]
         public XmlNode[] Any { get; set; }

@@ -11,7 +11,7 @@ namespace SAML2.Schema.Core
     /// SubjectConfirmationDataType complex type MAY also appear.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class KeyInfoConfirmationData : SubjectConfirmationData
     {

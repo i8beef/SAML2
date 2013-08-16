@@ -7,7 +7,7 @@ namespace SAML2.Schema.XmlDSig
     /// contains an X.509 issuer distinguished name/serial number pair that SHOULD be compliant with RFC2253 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Xmldsig)]
+    [XmlType(Namespace = Saml20Constants.Xmldsig)]
     public class X509IssuerSerial
     {
         /// <summary>
@@ -29,7 +29,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the X509 serial number.
         /// </summary>
         /// <value>The X509 serial number.</value>
-        [XmlElement("X509SerialNumber", DataType="integer")]
+        [XmlElement("X509SerialNumber", DataType = "integer")]
         public string X509SerialNumber { get; set; }
 
         #endregion

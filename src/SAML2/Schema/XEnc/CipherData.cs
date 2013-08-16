@@ -9,8 +9,8 @@ namespace SAML2.Schema.XEnc
     /// external location containing the encrypted octet sequence via the CipherReference element.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Xenc)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Xenc, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xenc)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xenc, IsNullable = false)]
     public class CipherData
     {
         /// <summary>
@@ -24,8 +24,8 @@ namespace SAML2.Schema.XEnc
         /// Gets or sets the item.
         /// </summary>
         /// <value>The item.</value>
-        [XmlElement("CipherReference", typeof (CipherReference))]
-        [XmlElement("CipherValue", typeof (byte[]), DataType = "base64Binary")]
+        [XmlElement("CipherReference", typeof(CipherReference))]
+        [XmlElement("CipherValue", typeof(byte[]), DataType = "base64Binary")]
         public object Item { get; set; }
 
         #endregion

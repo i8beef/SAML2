@@ -19,7 +19,9 @@ namespace SAML2.Bindings
         /// Initializes a new instance of the <see cref="HttpArtifactBindingBuilder"/> class.
         /// </summary>
         /// <param name="context">The current http context.</param>
-        public HttpArtifactBindingBuilder(HttpContext context): base(context){}
+        public HttpArtifactBindingBuilder(HttpContext context) : base(context)
+        {
+        }
 
         /// <summary>
         /// Creates an artifact and redirects the user to the IdP
@@ -29,7 +31,7 @@ namespace SAML2.Bindings
         public void RedirectFromLogin(IdentityProviderEndpointElement destination, Saml20AuthnRequest request)
         {
             var config = Saml2Config.GetConfig();
-            var index = (Int16)config.ServiceProvider.Endpoints.SignOnEndpoint.Index;
+            var index = (short)config.ServiceProvider.Endpoints.SignOnEndpoint.Index;
             var doc = request.GetXml();
             XmlSignatureUtils.SignDocument(doc, request.Request.ID);
             ArtifactRedirect(destination, index, doc, Context.Request.Params["relayState"]);
@@ -54,7 +56,7 @@ namespace SAML2.Bindings
         public void RedirectFromLogout(IdentityProviderEndpointElement destination, Saml20LogoutRequest request, string relayState)
         {
             var config = Saml2Config.GetConfig();
-            var index = (Int16)config.ServiceProvider.Endpoints.LogoutEndpoint.Index;
+            var index = (short)config.ServiceProvider.Endpoints.LogoutEndpoint.Index;
             var doc = request.GetXml();
             XmlSignatureUtils.SignDocument(doc, request.Request.ID);
             ArtifactRedirect(destination, index, doc, relayState);
@@ -68,39 +70,11 @@ namespace SAML2.Bindings
         public void RedirectFromLogout(IdentityProviderEndpointElement destination, Saml20LogoutResponse response)
         {
             var config = Saml2Config.GetConfig();
-            var index = (Int16)config.ServiceProvider.Endpoints.LogoutEndpoint.Index;
+            var index = (short)config.ServiceProvider.Endpoints.LogoutEndpoint.Index;
             var doc = response.GetXml();
             XmlSignatureUtils.SignDocument(doc, response.Response.ID);
 
             ArtifactRedirect(destination, index, doc, Context.Request.Params["relayState"]);
-        }
-
-        /// <summary>
-        /// Handles all artifact creations and redirects.
-        /// </summary>
-        /// <param name="destination">The destination.</param>
-        /// <param name="localEndpointIndex">Index of the local endpoint.</param>
-        /// <param name="signedSamlMessage">The signed saml message.</param>
-        /// <param name="relayState">The query string relay state value to add to the communication</param>
-        private void ArtifactRedirect(IdentityProviderEndpointElement destination, Int16 localEndpointIndex, XmlDocument signedSamlMessage, string relayState)
-        {
-            var config = Saml2Config.GetConfig();
-            var sourceId = config.ServiceProvider.Id;
-            var sourceIdHash = ArtifactUtil.GenerateSourceIdHash(sourceId);
-            var messageHandle = ArtifactUtil.GenerateMessageHandle();
-
-            var artifact = ArtifactUtil.CreateArtifact(HttpArtifactBindingConstants.ArtifactTypeCode, localEndpointIndex, sourceIdHash, messageHandle);
-            Context.Cache.Insert(artifact, signedSamlMessage, null, DateTime.Now.AddMinutes(1), Cache.NoSlidingExpiration);
-
-            var destinationUrl = destination.Url + "?" + HttpArtifactBindingConstants.ArtifactQueryStringName + "=" + HttpUtility.UrlEncode(artifact);
-            if (!string.IsNullOrEmpty(relayState))
-            {
-                destinationUrl += "&relayState=" + relayState;
-            }
-
-            Logger.DebugFormat(Tracing.CreatedArtifact, artifact, signedSamlMessage.OuterXml);
-
-            Context.Response.Redirect(destinationUrl);
         }
 
         /// <summary>
@@ -169,7 +143,7 @@ namespace SAML2.Bindings
         /// </summary>
         /// <param name="a">The first array</param>
         /// <param name="b">The second array</param>
-        /// <returns></returns>
+        /// <returns>True of the byte arrays are equal, else false.</returns>
         private static bool ByteArraysAreEqual(byte[] a, byte[] b)
         {
             for (int i = 0; i < a.Length; i++)
@@ -181,6 +155,34 @@ namespace SAML2.Bindings
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Handles all artifact creations and redirects.
+        /// </summary>
+        /// <param name="destination">The destination.</param>
+        /// <param name="localEndpointIndex">Index of the local endpoint.</param>
+        /// <param name="signedSamlMessage">The signed SAML message.</param>
+        /// <param name="relayState">The query string relay state value to add to the communication</param>
+        private void ArtifactRedirect(IdentityProviderEndpointElement destination, short localEndpointIndex, XmlDocument signedSamlMessage, string relayState)
+        {
+            var config = Saml2Config.GetConfig();
+            var sourceId = config.ServiceProvider.Id;
+            var sourceIdHash = ArtifactUtil.GenerateSourceIdHash(sourceId);
+            var messageHandle = ArtifactUtil.GenerateMessageHandle();
+
+            var artifact = ArtifactUtil.CreateArtifact(HttpArtifactBindingConstants.ArtifactTypeCode, localEndpointIndex, sourceIdHash, messageHandle);
+            Context.Cache.Insert(artifact, signedSamlMessage, null, DateTime.Now.AddMinutes(1), Cache.NoSlidingExpiration);
+
+            var destinationUrl = destination.Url + "?" + HttpArtifactBindingConstants.ArtifactQueryStringName + "=" + HttpUtility.UrlEncode(artifact);
+            if (!string.IsNullOrEmpty(relayState))
+            {
+                destinationUrl += "&relayState=" + relayState;
+            }
+
+            Logger.DebugFormat(Tracing.CreatedArtifact, artifact, signedSamlMessage.OuterXml);
+
+            Context.Response.Redirect(destinationUrl);
         }
 
         /// <summary>
@@ -199,7 +201,7 @@ namespace SAML2.Bindings
 
             if (ArtifactUtil.TryParseArtifact(artifact, ref typeCodeValue, ref endPointIndex, ref sourceIdHash, ref messageHandle))
             {
-                foreach(IdentityProviderElement ep in config.IdentityProviders)
+                foreach (IdentityProviderElement ep in config.IdentityProviders)
                 {
                     var hash = ArtifactUtil.GenerateSourceIdHash(ep.Id);
                     if (ByteArraysAreEqual(sourceIdHash, hash))

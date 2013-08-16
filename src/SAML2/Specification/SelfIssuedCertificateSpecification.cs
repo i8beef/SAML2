@@ -16,7 +16,7 @@ namespace SAML2.Specification
         /// </summary>
         /// <param name="certificate">The certificate to validate.</param>
         /// <returns>
-        /// 	<c>true</c>.
+        /// <c>true</c>.
         /// </returns>
         public bool IsSatisfiedBy(X509Certificate2 certificate)
         {

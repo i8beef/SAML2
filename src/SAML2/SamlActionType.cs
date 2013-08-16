@@ -1,17 +1,17 @@
 namespace SAML2
 {
     /// <summary>
-    /// SAML Actions
+    /// SAML Action types.
     /// </summary>
     public enum SamlActionType
     {
         /// <summary>
-        /// Request
+        /// Request action type.
         /// </summary>
         SamlRequest,
 
         /// <summary>
-        /// Response
+        /// Response action type.
         /// </summary>
         SamlResponse
     }

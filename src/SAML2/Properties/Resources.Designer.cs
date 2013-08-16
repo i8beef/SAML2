@@ -15,7 +15,7 @@ using System.Globalization;
 using System.Resources;
 using System.Runtime.CompilerServices;
 
-namespace Saml2.Properties {
+namespace SAML2.Properties {
     /// <summary>
     /// A strongly-typed resource class, for looking up localized strings, formatting them, etc.
     /// </summary>
@@ -235,7 +235,7 @@ namespace Saml2.Properties {
         }
         
         /// <summary>
-        /// Looks up a localized string similar to 'A Saml token must contain conditions.'.
+        /// Looks up a localized string similar to 'A SAML token must contain conditions.'.
         /// </summary>
         public static string ConditionsMissing {
             get {
@@ -1072,7 +1072,7 @@ namespace Saml2.Properties {
         }
         
         /// <summary>
-        /// Looks up a localized string similar to 'A Saml token must contain a subject.'.
+        /// Looks up a localized string similar to 'A SAML token must contain a subject.'.
         /// </summary>
         public static string SubjectMissing {
             get {
@@ -1144,7 +1144,7 @@ namespace Saml2.Properties {
         }
         
         /// <summary>
-        /// Looks up a localized string similar to 'No token version claim found in saml token'.
+        /// Looks up a localized string similar to 'No token version claim found in SAML token'.
         /// </summary>
         public static string TokenVersionMissing {
             get {

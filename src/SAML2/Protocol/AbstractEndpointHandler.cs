@@ -3,10 +3,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Web;
-using SAML2.Logging;
-using SAML2.Config;
 using System.Web.SessionState;
-using SAML2.Protocol.pages;
+using SAML2.Config;
+using SAML2.Logging;
+using SAML2.Protocol.Pages;
 
 namespace SAML2.Protocol
 {
@@ -21,10 +21,10 @@ namespace SAML2.Protocol
         protected static readonly IInternalLogger Logger = LoggerProvider.LoggerFor(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
-        /// Gets or sets the error handling behaviour.
+        /// Gets or sets the error handling behavior.
         /// </summary>
-        /// <value>The error handling behaviour.</value>
-        public string ErrorBehaviour { get; set; }
+        /// <value>The error handling behavior.</value>
+        public string ErrorBehavior { get; set; }
 
         /// <summary>
         /// Gets or sets the redirect URL.
@@ -53,7 +53,7 @@ namespace SAML2.Protocol
             var showError = Saml2Config.GetConfig().ShowError;
             const string defaultMessage = "Unable to validate SAML message!";
 
-            if (!string.IsNullOrEmpty(ErrorBehaviour) && ErrorBehaviour.Equals(ErrorBehavior.ThrowException.ToString()))
+            if (!string.IsNullOrEmpty(ErrorBehavior) && ErrorBehavior.Equals(Config.ErrorBehavior.ThrowException.ToString()))
             {
                 if (showError)
                 {
@@ -69,7 +69,7 @@ namespace SAML2.Protocol
                 var page = new ErrorPage
                                {
                                    OverrideConfig = overrideConfigSetting,
-                                   ErrorText = (showError) ? errorMessage : defaultMessage
+                                   ErrorText = showError ? errorMessage : defaultMessage
                                };
                 page.ProcessRequest(context);
                 context.Response.End();
@@ -105,13 +105,13 @@ namespace SAML2.Protocol
         /// <param name="context">The context.</param>
         public void DoRedirect(HttpContext context)
         {
-            var redirectUrl = (string) context.Session["RedirectUrl"];
-            if (!String.IsNullOrEmpty(redirectUrl))
+            var redirectUrl = (string)context.Session["RedirectUrl"];
+            if (!string.IsNullOrEmpty(redirectUrl))
             {
                 context.Session.Remove("RedirectUrl");
                 context.Response.Redirect(redirectUrl);
             }
-            else if (String.IsNullOrEmpty(RedirectUrl))
+            else if (string.IsNullOrEmpty(RedirectUrl))
             {
                 context.Response.Redirect("~/");
             }

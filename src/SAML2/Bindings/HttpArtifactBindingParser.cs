@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Xml;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
-using System.Xml;
 
 namespace SAML2.Bindings
 {
@@ -25,7 +25,7 @@ namespace SAML2.Bindings
         /// Initializes a new instance of the <see cref="HttpArtifactBindingParser"/> class.
         /// </summary>
         /// <param name="inputStream">The input stream.</param>
-        public HttpArtifactBindingParser(Stream inputStream): base(inputStream) {}
+        public HttpArtifactBindingParser(Stream inputStream) : base(inputStream) {}
 
         /// <summary>
         /// Gets the artifact resolve message.
@@ -37,8 +37,9 @@ namespace SAML2.Bindings
             {
                 if (!IsArtifactResolve)
                 {
-                    throw new InvalidOperationException("The Saml message is not an ArtifactResolve");
+                    throw new InvalidOperationException("The SAML message is not an ArtifactResolve");
                 }
+
                 LoadArtifactResolve();
 
                 return _artifactResolve;
@@ -55,14 +56,14 @@ namespace SAML2.Bindings
             {
                 if (!IsArtifactResponse)
                 {
-                    throw new InvalidOperationException("The Saml message is not an ArtifactResponse");
+                    throw new InvalidOperationException("The SAML message is not an ArtifactResponse");
                 }
+
                 LoadArtifactResponse();
 
                 return _artifactResponse;
             }
         }
-
 
         /// <summary>
         /// Gets a value indicating whether this instance is artifact resolve.

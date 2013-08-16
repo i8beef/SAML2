@@ -8,7 +8,7 @@ namespace SAML2.Schema.Metadata
     /// Extension type
     /// </summary>
     [Serializable]
-    [XmlType(TypeName="ExtensionsType", Namespace=Saml20Constants.Metadata)]
+    [XmlType(TypeName = "ExtensionsType", Namespace = Saml20Constants.Metadata)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class ExtensionType
     {
@@ -20,9 +20,9 @@ namespace SAML2.Schema.Metadata
         #region Elements
 
         /// <summary>
-        /// Gets or sets any.
+        /// Gets or sets any elements.
         /// </summary>
-        /// <value>Any.</value>
+        /// <value>Any elements.</value>
         [XmlAnyElement]
         public XmlElement[] Any { get; set; }
 

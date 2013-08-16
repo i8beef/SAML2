@@ -9,10 +9,10 @@ namespace SAML2.Schema.Metadata
     /// &lt;samlp:AttributeQuery&gt; messages.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Metadata)]
+    [XmlType(Namespace = Saml20Constants.Metadata)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
-    public class AttributeAuthorityDescriptor : RoleDescriptor {
-        
+    public class AttributeAuthorityDescriptor : RoleDescriptor
+    {   
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
@@ -65,7 +65,7 @@ namespace SAML2.Schema.Metadata
         /// this authority.
         /// </summary>
         /// <value>The name ID format.</value>
-        [XmlElement("NameIDFormat", DataType="anyURI")]
+        [XmlElement("NameIDFormat", DataType = "anyURI")]
         public string[] NameIDFormat { get; set; }
 
         #endregion

@@ -10,8 +10,8 @@ namespace SAML2.Schema.Protocol
     /// more information on this element.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Protocol, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class AssertionIDRequest : RequestAbstract
     {
         /// <summary>
@@ -25,7 +25,7 @@ namespace SAML2.Schema.Protocol
         /// Gets or sets the assertion ID ref.
         /// </summary>
         /// <value>The assertion ID ref.</value>
-        [XmlElement("AssertionIDRef", Namespace=Saml20Constants.Assertion, DataType="NCName")]
+        [XmlElement("AssertionIDRef", Namespace = Saml20Constants.Assertion, DataType = "NCName")]
         public string[] AssertionIDRef { get; set; }
 
         #endregion

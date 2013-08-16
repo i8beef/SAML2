@@ -16,22 +16,12 @@ namespace SAML2.Bindings
     public class HttpSoapBindingParser
     {
         /// <summary>
-        /// The current input stream
-        /// </summary>
-        protected Stream InputStream;
-
-        /// <summary>
-        /// The current soap envelope
-        /// </summary>
-        protected string SoapEnvelope;
-
-        /// <summary>
         /// The current logout request
         /// </summary>
         private LogoutRequest _logoutRequest;
         
         /// <summary>
-        /// The current saml message
+        /// The current SAML message
         /// </summary>
         private XmlElement _samlMessage;
 
@@ -45,11 +35,9 @@ namespace SAML2.Bindings
         }
 
         /// <summary>
-        /// Determines whether the current message is a LogoutRequest.
+        /// Gets a value indicating whether the current message is a LogoutRequest.
+        /// <c>true</c> if the current message is a LogoutRequest; otherwise, <c>false</c>.
         /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if the current message is a LogoutRequest; otherwise, <c>false</c>.
-        /// </returns>
         public bool IsLogoutReqest
         {
             get { return SamlMessageName == LogoutRequest.ElementName; }
@@ -65,9 +53,11 @@ namespace SAML2.Bindings
             {
                 if (!IsLogoutReqest)
                 {
-                    throw new InvalidOperationException("The Saml message is not an LogoutRequest");
+                    throw new InvalidOperationException("The SAML message is not an LogoutRequest");
                 }
+
                 LoadLogoutRequest();
+                
                 return _logoutRequest;
             }
         }
@@ -75,7 +65,7 @@ namespace SAML2.Bindings
         /// <summary>
         /// Gets the current SAML message.
         /// </summary>
-        /// <value>The saml message.</value>
+        /// <value>The SAML message.</value>
         public XmlElement SamlMessage
         {
             get
@@ -98,10 +88,22 @@ namespace SAML2.Bindings
         }
 
         /// <summary>
+        /// Gets or sets the input stream.
+        /// </summary>
+        /// <value>The input stream.</value>
+        protected Stream InputStream { get; set; }
+
+        /// <summary>
+        /// Gets or sets the SOAP envelope.
+        /// </summary>
+        /// <value>The SOAP envelope.</value>
+        protected string SoapEnvelope { get; set; }
+
+        /// <summary>
         /// Checks the SAML message signature.
         /// </summary>
         /// <param name="keys">The keys to check the signature against.</param>
-        /// <returns></returns>
+        /// <returns>True if the signature is valid, else false.</returns>
         public bool CheckSamlMessageSignature(List<KeyDescriptor> keys)
         {
             foreach (var keyDescriptor in keys)
@@ -122,7 +124,7 @@ namespace SAML2.Bindings
         /// <summary>
         /// Gets the status of the current message.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The <see cref="Status"/>.</returns>
         public Status GetStatus()
         {
             var status = (XmlElement)SamlMessage.GetElementsByTagName(Status.ElementName, Saml20Constants.Protocol)[0];
@@ -145,16 +147,16 @@ namespace SAML2.Bindings
             var doc = new XmlDocument { PreserveWhitespace = true };
             doc.LoadXml(SoapEnvelope);
 
-            var soapBody = (XmlElement) doc.GetElementsByTagName(SoapConstants.SoapBody, SoapConstants.SoapNamespace)[0];
+            var soapBody = (XmlElement)doc.GetElementsByTagName(SoapConstants.SoapBody, SoapConstants.SoapNamespace)[0];
 
-            _samlMessage = soapBody != null ? (XmlElement) soapBody.FirstChild : doc.DocumentElement;
+            _samlMessage = soapBody != null ? (XmlElement)soapBody.FirstChild : doc.DocumentElement;
         }
 
         /// <summary>
         /// Checks the signature.
         /// </summary>
         /// <param name="key">The key to check against.</param>
-        /// <returns></returns>
+        /// <returns>True if the signature is valid, else false.</returns>
         private bool CheckSignature(AsymmetricAlgorithm key)
         {
             var doc = new XmlDocument { PreserveWhitespace = true };

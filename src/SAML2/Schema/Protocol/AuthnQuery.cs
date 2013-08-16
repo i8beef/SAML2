@@ -9,7 +9,7 @@ namespace SAML2.Schema.Protocol
     /// more assertions containing authentication statements.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class AuthnQuery : SubjectQueryAbstract
     {

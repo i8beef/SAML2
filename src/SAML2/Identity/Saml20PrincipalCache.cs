@@ -1,5 +1,5 @@
-﻿using System.Web;
-using System.Security.Principal;
+﻿using System.Security.Principal;
+using System.Web;
 
 namespace SAML2.Identity
 {
@@ -14,7 +14,7 @@ namespace SAML2.Identity
         /// <param name="principal">The principal.</param>
         internal static void AddPrincipal(IPrincipal principal)
         {
-            HttpContext.Current.Session[typeof (Saml20Identity).FullName] = principal;
+            HttpContext.Current.Session[typeof(Saml20Identity).FullName] = principal;
         }
 
         /// <summary>

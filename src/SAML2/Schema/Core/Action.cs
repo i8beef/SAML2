@@ -8,8 +8,8 @@ namespace SAML2.Schema.Core
     /// string-data content provides the label for an action sought to be performed on the specified resource,
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Assertion)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Assertion, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class Action
     {
         /// <summary>
@@ -34,7 +34,7 @@ namespace SAML2.Schema.Core
         /// effect.
         /// </summary>
         /// <value>The namespace.</value>
-        [XmlAttribute("Namespace", DataType="anyURI")]
+        [XmlAttribute("Namespace", DataType = "anyURI")]
         public string Namespace { get; set; }
 
         #endregion

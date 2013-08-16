@@ -2,10 +2,10 @@ using System;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using SAML2.Config;
+using SAML2.Properties;
 using SAML2.Utils;
-using Saml2.Properties;
 
-namespace SAML2.Protocol.pages
+namespace SAML2.Protocol.Pages
 {
     /// <summary>
     /// Page that handles selecting an IdP when more than one is configured
@@ -47,11 +47,11 @@ namespace SAML2.Protocol.pages
                 }
                 else
                 {
-                    var label = new Label {Text = endPoint.Name};
+                    var label = new Label { Text = endPoint.Name };
                     label.Style.Add(HtmlTextWriterStyle.TextDecoration, "line-through");
                     BodyPanel.Controls.Add(label);
 
-                    label = new Label {Text = " (Metadata not found)"};
+                    label = new Label { Text = " (Metadata not found)" };
                     label.Style.Add(HtmlTextWriterStyle.FontSize, "x-small");
                     BodyPanel.Controls.Add(label);
 

@@ -244,12 +244,13 @@
     <Compile Include="Schema\XmlDSig\CanonicalizationMethod.cs" />
     <Compile Include="Schema\XmlDSig\DigestMethod.cs" />
     <Compile Include="Schema\XmlDSig\DSAKeyValue.cs" />
-    <Compile Include="Schema\XmlDSig\Enums.cs" />
+    <Compile Include="Schema\XmlDSig\KeyInfoItemType.cs" />
     <Compile Include="Schema\XmlDSig\KeyInfo.cs" />
     <Compile Include="Schema\XmlDSig\KeyValue.cs" />
     <Compile Include="Schema\XmlDSig\Manifest.cs" />
     <Compile Include="Schema\XmlDSig\ObjectType.cs" />
     <Compile Include="Schema\XmlDSig\PGPData.cs" />
+    <Compile Include="Schema\XmlDSig\PgpItemType.cs" />
     <Compile Include="Schema\XmlDSig\Reference.cs" />
     <Compile Include="Schema\XmlDSig\RetrievalMethod.cs" />
     <Compile Include="Schema\XmlDSig\RSAKeyValue.cs" />
@@ -264,6 +265,7 @@
     <Compile Include="Schema\XmlDSig\Transforms.cs" />
     <Compile Include="Schema\XmlDSig\X509Data.cs" />
     <Compile Include="Schema\XmlDSig\X509IssuerSerial.cs" />
+    <Compile Include="Schema\XmlDSig\X509ItemType.cs" />
     <Compile Include="Specification\DefaultCertificateSpecification.cs" />
     <Compile Include="Specification\ICertificateSpecification.cs" />
     <Compile Include="Specification\SelfIssuedCertificateSpecification.cs" />

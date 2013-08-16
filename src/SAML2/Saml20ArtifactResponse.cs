@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Xml;
 using SAML2.Config;
+using SAML2.Properties;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
-using Saml2.Properties;
 
 namespace SAML2
 {
     /// <summary>
-    /// Encapsulates the ArtificatResponse schema class
+    /// Encapsulates the ArtifactResponse schema class
     /// </summary>
     public class Saml20ArtifactResponse
     {
@@ -29,7 +29,7 @@ namespace SAML2
                                         ID = "id" + Guid.NewGuid().ToString("N"),
                                         Issuer = new NameID(),
                                         IssueInstant = DateTime.Now,
-                                        Status = new Status {StatusCode = new StatusCode()}
+                                        Status = new Status { StatusCode = new StatusCode() }
                                     };
         }
 
@@ -104,10 +104,12 @@ namespace SAML2
         /// <summary>
         /// Returns the ArtifactResponse as an XML document.
         /// </summary>
+        /// <returns>The XML document.</returns>
         public XmlDocument GetXml()
         {
             var doc = new XmlDocument { PreserveWhitespace = true };
             doc.LoadXml(Serialization.SerializeToXmlString(_artifactResponse));
+
             return doc;
         }
     }

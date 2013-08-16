@@ -1,10 +1,10 @@
 using System;
 using System.Xml;
 using SAML2.Config;
+using SAML2.Properties;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
-using Saml2.Properties;
 
 namespace SAML2
 {
@@ -50,7 +50,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Returns the id of the logout request.
+        /// Gets the id of the logout request.
         /// </summary>
         public string Id
         {
@@ -91,7 +91,7 @@ namespace SAML2
         public string SessionIndex
         {
             get { return Request.SessionIndex[0]; }
-            set { Request.SessionIndex = new[]{value};}
+            set { Request.SessionIndex = new[] { value }; }
         }
 
         /// <summary>
@@ -106,7 +106,6 @@ namespace SAML2
 
         #endregion
 
-       
         /// <summary>
         /// Returns an instance of the class with meaningful default values set.
         /// </summary>

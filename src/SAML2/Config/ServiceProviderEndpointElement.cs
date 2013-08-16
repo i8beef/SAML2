@@ -27,7 +27,7 @@ namespace SAML2.Config
         [ConfigurationProperty("index")]
         public int Index
         {
-            get { return (int) base["index"]; }
+            get { return (int)base["index"]; }
             set { base["index"] = value; }
         }
 
@@ -38,7 +38,7 @@ namespace SAML2.Config
         [ConfigurationProperty("localPath", IsRequired = true)]
         public string LocalPath
         {
-            get { return (string) base["localPath"]; }
+            get { return (string)base["localPath"]; }
             set { base["localPath"] = value; }
         }
 

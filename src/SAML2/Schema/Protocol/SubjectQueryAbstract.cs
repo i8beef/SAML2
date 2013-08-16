@@ -8,11 +8,11 @@ namespace SAML2.Schema.Protocol
     /// is an extension point that allows new SAML queries to be
     /// defined that specify a single SAML subject.
     /// </summary>
-    [XmlInclude(typeof (AuthzDecisionQuery))]
-    [XmlInclude(typeof (AttributeQuery))]
-    [XmlInclude(typeof (AuthnQuery))]
+    [XmlInclude(typeof(AuthzDecisionQuery))]
+    [XmlInclude(typeof(AttributeQuery))]
+    [XmlInclude(typeof(AuthnQuery))]
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public abstract class SubjectQueryAbstract : RequestAbstract
     {
@@ -27,7 +27,7 @@ namespace SAML2.Schema.Protocol
         /// Gets or sets the subject.
         /// </summary>
         /// <value>The subject.</value>
-        [XmlElement("Subject", Namespace=Saml20Constants.Assertion)]
+        [XmlElement("Subject", Namespace = Saml20Constants.Assertion)]
         public Subject Subject { get; set; }
 
         #endregion

@@ -6,22 +6,22 @@
     public enum AuthenticationContextComparison
     {
         /// <summary>
-        /// Exact
+        /// Exact comparison type.
         /// </summary>
         Exact,
 
         /// <summary>
-        /// Minimum
+        /// Minimum comparison type.
         /// </summary>
         Minimum,
 
         /// <summary>
-        /// Maximum
+        /// Maximum comparison type.
         /// </summary>
         Maximum,
 
         /// <summary>
-        /// Better
+        /// Better comparison type.
         /// </summary>
         Better
     }

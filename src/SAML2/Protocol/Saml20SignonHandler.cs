@@ -12,18 +12,17 @@ using System.Xml;
 using SAML2.Bindings;
 using SAML2.Config;
 using SAML2.Properties;
-using SAML2.Protocol.pages;
+using SAML2.Protocol.Pages;
 using SAML2.Schema.Core;
 using SAML2.Schema.Metadata;
 using SAML2.Schema.Protocol;
 using SAML2.Specification;
 using SAML2.Utils;
-using Saml2.Properties;
 
 namespace SAML2.Protocol
 {
     /// <summary>
-    /// Implements a Saml 2.0 protocol sign-on endpoint. Handles all SAML bindings.
+    /// Implements a SAML 2.0 protocol sign-on endpoint. Handles all SAML bindings.
     /// </summary>
     public class Saml20SignonHandler : Saml20AbstractEndpointHandler
     {
@@ -35,7 +34,7 @@ namespace SAML2.Protocol
         /// <summary>
         /// The certificate for the endpoint.
         /// </summary>
-        private readonly X509Certificate2  _certificate;
+        private readonly X509Certificate2 _certificate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20SignonHandler"/> class.
@@ -49,7 +48,7 @@ namespace SAML2.Protocol
             {
                 RedirectUrl = Saml2Config.GetConfig().ServiceProvider.Endpoints.SignOnEndpoint.RedirectUrl;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logger.Error(e.Message, e);
             }
@@ -107,7 +106,7 @@ namespace SAML2.Protocol
             if (encryptedList.Count == 1)
             {
                 isEncrypted = true;
-                var encryptedAssertion = (XmlElement) encryptedList[0];
+                var encryptedAssertion = (XmlElement)encryptedList[0];
 
                 Logger.DebugFormat("Found EncryptedAssertion: {0}", encryptedAssertion.OuterXml);
 
@@ -130,8 +129,7 @@ namespace SAML2.Protocol
             isEncrypted = false;
             return null;
         }
-
-
+        
         #endregion
 
         #region Protected methods
@@ -146,7 +144,7 @@ namespace SAML2.Protocol
         {
             Logger.DebugFormat("Executing configured assertion prehandler.");
 
-            if (endpoint != null && endpoint.Endpoints.LogoutEndpoint != null && !String.IsNullOrEmpty(endpoint.Endpoints.LogoutEndpoint.TokenAccessor))
+            if (endpoint != null && endpoint.Endpoints.LogoutEndpoint != null && !string.IsNullOrEmpty(endpoint.Endpoints.LogoutEndpoint.TokenAccessor))
             {
                 var idpTokenAccessor = Activator.CreateInstance(Type.GetType(endpoint.Endpoints.LogoutEndpoint.TokenAccessor, false)) as ISaml20IdpTokenAccessor;
                 if (idpTokenAccessor != null)
@@ -204,7 +202,7 @@ namespace SAML2.Protocol
         }
 
         /// <summary>
-        /// Gets the decoded saml response.
+        /// Gets the decoded SAML response.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="encoding">The encoding.</param>
@@ -282,7 +280,7 @@ namespace SAML2.Protocol
         /// <param name="assertion">The assertion.</param>
         private void DoSignOn(HttpContext context, Saml20Assertion assertion)
         {
-            //User is now logged in at IDP specified in tmp
+            // User is now logged in at IDP specified in tmp
             context.Session[IDPLoginSessionKey] = context.Session[IDPTempSessionKey];
             context.Session[IDPSessionIdKey] = assertion.SessionIndex;
             context.Session[IDPNameIdFormat] = assertion.Subject.Format;
@@ -482,7 +480,7 @@ namespace SAML2.Protocol
                 if (!parser.CheckSamlMessageSignature(idp.Metadata.Keys))
                 {
                     Logger.Error("Could not verify signature, msg: " + parser.SamlMessage);
-                    HandleError(context, "Invalid Saml message signature");
+                    HandleError(context, "Invalid SAML message signature");
                 }
 
                 builder.RespondToArtifactResolve(parser.ArtifactResolve);
@@ -543,6 +541,7 @@ namespace SAML2.Protocol
         /// <summary>
         /// Send an authentication request to the IDP.
         /// </summary>
+        /// <param name="context">The context.</param>
         private void SendRequest(HttpContext context)
         {
             // See if the "ReturnUrl" - parameter is set.
@@ -575,8 +574,8 @@ namespace SAML2.Protocol
         /// <param name="context">The context.</param>
         private void TransferClient(IdentityProviderElement identityProvider, Saml20AuthnRequest request, HttpContext context)
         {
-            //Set the last IDP we attempted to login at.
-            context.Session[IDPTempSessionKey]= identityProvider.Id;
+            // Set the last IDP we attempted to login at.
+            context.Session[IDPTempSessionKey] = identityProvider.Id;
 
             // Determine which endpoint to use from the configuration file or the endpoint metadata.
             var destination = DetermineEndpointConfiguration(BindingType.Redirect, identityProvider.Endpoints.SignOnEndpoint, identityProvider.Metadata.SSOEndpoints);
@@ -617,7 +616,7 @@ namespace SAML2.Protocol
                 }
             }
 
-            //Save request message id to session
+            // Save request message id to session
             context.Session.Add(ExpectedInResponseToSessionKey, request.Id);
 
             // Handle Redirect binding
@@ -644,7 +643,7 @@ namespace SAML2.Protocol
                 Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HttpPost, identityProvider.Id);
 
                 var builder = new HttpPostBindingBuilder(destination);
-                //Honor the ForceProtocolBinding and only set this if it's not already set
+                // Honor the ForceProtocolBinding and only set this if it's not already set
                 if (string.IsNullOrEmpty(request.ProtocolBinding))
                 {
                     request.ProtocolBinding = Saml20Constants.ProtocolBindings.HttpPost;
@@ -654,7 +653,7 @@ namespace SAML2.Protocol
                 XmlSignatureUtils.SignDocument(req, request.Id);
                 builder.Request = req.OuterXml;
 
-                Logger.DebugFormat("AuthnRequest sent: {0}",builder.Request);
+                Logger.DebugFormat("AuthnRequest sent: {0}", builder.Request);
 
                 builder.GetPage().ProcessRequest(context);
                 return;
@@ -666,7 +665,7 @@ namespace SAML2.Protocol
                 Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HttpArtifact, identityProvider.Id);
 
                 var builder = new HttpArtifactBindingBuilder(context);
-                //Honor the ForceProtocolBinding and only set this if it's not already set
+                // Honor the ForceProtocolBinding and only set this if it's not already set
                 if (string.IsNullOrEmpty(request.ProtocolBinding))
                 {
                     request.ProtocolBinding = Saml20Constants.ProtocolBindings.HttpArtifact;

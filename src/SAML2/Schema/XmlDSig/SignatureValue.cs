@@ -11,8 +11,8 @@ namespace SAML2.Schema.XmlDSig
     /// </summary>
     [Serializable]
     [DebuggerStepThrough]
-    [XmlType(Namespace=Saml20Constants.Xmldsig)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
     public class SignatureValue
     {
         /// <summary>
@@ -33,7 +33,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the id.
         /// </summary>
         /// <value>The id.</value>
-        [XmlAttribute(DataType="ID")]
+        [XmlAttribute(DataType = "ID")]
         public string Id { get; set; }
 
         #endregion

@@ -22,7 +22,7 @@ namespace SAML2
                                 ID = "id" + Guid.NewGuid().ToString("N"),
                                 Issuer = new NameID(),
                                 IssueInstant = DateTime.Now,
-                                Status = new Status {StatusCode = new StatusCode()}
+                                Status = new Status { StatusCode = new StatusCode() }
                             };
         }
 
@@ -48,7 +48,7 @@ namespace SAML2
         /// <summary>
         /// Gets or sets the id of the LogoutRequest to which this LogoutResponse corresponds.
         /// </summary>
-        /// <value>InResponseTo.</value>
+        /// <value>The id of the LogoutRequest to which this LogoutResponse corresponds.</value>
         public string InResponseTo
         {
             get { return Response.InResponseTo; }
@@ -84,7 +84,7 @@ namespace SAML2
         /// <summary>
         /// Gets LogoutResponse as an XmlDocument
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The XML document.</returns>
         public XmlDocument GetXml()
         {
             var doc = new XmlDocument { PreserveWhitespace = true };

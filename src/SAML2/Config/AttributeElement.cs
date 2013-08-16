@@ -16,7 +16,7 @@ namespace SAML2.Config
         [ConfigurationProperty("isRequired")]
         public bool IsRequired
         {
-            get { return (bool) base["isRequired"]; }
+            get { return (bool)base["isRequired"]; }
             set { base["isRequired"] = value; }
         }
 
@@ -27,7 +27,7 @@ namespace SAML2.Config
         [ConfigurationProperty("name", IsKey = true, IsRequired = true)]
         public string Name
         {
-            get { return (string) base["name"]; }
+            get { return (string)base["name"]; }
             set { base["name"] = value; }
         }
 

@@ -11,8 +11,8 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [GeneratedCode("xsd", "2.0.50727.42")]
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Protocol, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class Scoping
     {
         /// <summary>
@@ -52,7 +52,7 @@ namespace SAML2.Schema.Protocol
         /// description of entity identifiers.
         /// </summary>
         /// <value>The requester ID.</value>
-        [XmlElement("RequesterID", DataType="anyURI")]
+        [XmlElement("RequesterID", DataType = "anyURI")]
         public string[] RequesterID { get; set; }
 
         #endregion

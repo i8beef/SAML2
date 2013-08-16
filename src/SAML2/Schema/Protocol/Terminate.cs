@@ -9,8 +9,8 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [Serializable]
     [DebuggerStepThrough]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Protocol, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class Terminate
     {
         /// <summary>

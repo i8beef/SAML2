@@ -33,6 +33,5 @@ namespace SAML2.Config
         }
 
         #endregion
-
     }
 }

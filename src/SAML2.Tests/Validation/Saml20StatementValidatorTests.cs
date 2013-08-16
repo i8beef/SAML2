@@ -103,10 +103,8 @@ namespace SAML2.Tests.Validation
                                                              },
                                                  ItemsElementName = new[]
                                                                         {
-                                                                            AuthnContextType.
-                                                                                AuthnContextClassRef,
-                                                                            AuthnContextType.
-                                                                                AuthnContextDeclRef
+                                                                            AuthnContextType.AuthnContextClassRef,
+                                                                            AuthnContextType.AuthnContextDeclRef
                                                                         }
                                              };
                 var validator = new Saml20StatementValidator();
@@ -132,7 +130,7 @@ namespace SAML2.Tests.Validation
                                              {
                                                  Items = new object[]
                                                              {
-                                                                 String.Empty,
+                                                                 string.Empty,
                                                                  "urn:a.valid.uri:string"
                                                              },
                                                  ItemsElementName = new[]
@@ -406,7 +404,7 @@ namespace SAML2.Tests.Validation
                 var statement = new AuthzDecisionStatement();
                 var validator = new Saml20StatementValidator();
 
-                statement.Resource = String.Empty;
+                statement.Resource = string.Empty;
                 var action = new Schema.Core.Action { Namespace = "http://valid/namespace" };
                 statement.Action = new[] { action };
                 validator.ValidateStatement(statement);

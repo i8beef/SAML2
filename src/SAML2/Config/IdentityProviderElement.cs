@@ -96,7 +96,7 @@ namespace SAML2.Config
         }
 
         /// <summary>
-        /// Override option for the default UTF-8 encoding convention on SAML responses
+        /// Gets or sets a value for overriding option for the default UTF-8 encoding convention on SAML responses
         /// </summary>
         /// <value>The response encoding.</value>
         [ConfigurationProperty("responseEncoding")]

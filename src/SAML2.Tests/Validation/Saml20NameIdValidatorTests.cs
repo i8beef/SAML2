@@ -142,7 +142,7 @@ namespace SAML2.Tests.Validation
                 var nameId = new NameID
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.X509SubjectName,
-                                     Value = ""
+                                     Value = string.Empty
                                  };
                 var validator = new Saml20NameIdValidator();
 
@@ -228,7 +228,7 @@ namespace SAML2.Tests.Validation
                 var nameId = new NameID
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Kerberos,
-                                     Value = ""
+                                     Value = string.Empty
                                  };
                 var validator = new Saml20NameIdValidator();
 
@@ -260,7 +260,7 @@ namespace SAML2.Tests.Validation
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Kerberos Format attribute MUST contain a Value with at least 3 characters")]
-            public void ThrowsExceptionWhenKerberosLessThanThreeCharacters()
+            public void ThrowsExceptionWhenKerberosLessThanThreecharacters()
             {
                 // Arrange
                 var nameId = new NameID
@@ -327,7 +327,7 @@ namespace SAML2.Tests.Validation
                 var nameId = new NameID
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Entity,
-                                     Value = ""
+                                     Value = string.Empty
                                  };
                 var validator = new Saml20NameIdValidator();
 
@@ -466,7 +466,7 @@ namespace SAML2.Tests.Validation
                 var nameId = new NameID
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Persistent,
-                                     Value = ""
+                                     Value = string.Empty
                                  };
                 var validator = new Saml20NameIdValidator();
 

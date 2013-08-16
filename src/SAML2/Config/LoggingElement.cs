@@ -16,7 +16,7 @@ namespace SAML2.Config
         [ConfigurationProperty("loggingFactory")]
         public string LoggingFactory
         {
-            get { return (string) base["loggingFactory"];  }
+            get { return (string)base["loggingFactory"]; }
             set { base["loggingFactory"] = value; }
         }
 

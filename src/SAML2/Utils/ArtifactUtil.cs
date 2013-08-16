@@ -42,7 +42,7 @@ namespace SAML2.Utils
         {
             if (sourceIdHash.Length != SourceIdLength)
             {
-                throw new ArgumentException(string.Format(ArgumentLengthErrorFmt, sourceIdHash.Length,SourceIdLength), "sourceIdHash");
+                throw new ArgumentException(string.Format(ArgumentLengthErrorFmt, sourceIdHash.Length, SourceIdLength), "sourceIdHash");
             }
 
             if (messageHandle.Length != MessageHandleLength)
@@ -52,11 +52,11 @@ namespace SAML2.Utils
 
             var typeCode = new byte[2];
             typeCode[0] = (byte)(typeCodeValue >> 8);
-            typeCode[1] = (byte)(typeCodeValue);
+            typeCode[1] = (byte)typeCodeValue;
             
             var endpointIndex = new byte[2];
             endpointIndex[0] = (byte)(endpointIndexValue >> 8);
-            endpointIndex[1] = (byte)(endpointIndexValue);
+            endpointIndex[1] = (byte)endpointIndexValue;
 
             var result = new byte[2 + 2 + SourceIdLength + MessageHandleLength];
 
@@ -71,7 +71,7 @@ namespace SAML2.Utils
         /// <summary>
         /// Generates the message handle.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The message handle.</returns>
         public static byte[] GenerateMessageHandle()
         {
             var rng = RandomNumberGenerator.Create();
@@ -86,7 +86,7 @@ namespace SAML2.Utils
         /// Generates the source id hash.
         /// </summary>
         /// <param name="sourceIdUrl">The source id URL.</param>
-        /// <returns></returns>
+        /// <returns>The source id hash.</returns>
         public static byte[] GenerateSourceIdHash(string sourceIdUrl)
         {
             var sha = SHA1Managed.Create();
@@ -174,7 +174,7 @@ namespace SAML2.Utils
 
             if (TryParseArtifact(artifact, ref parsedTypeCode, ref parsedEndpointIndex, ref parsedSourceIdHash, ref parsedMessageHandle))
             {
-                return (ushort) parsedEndpointIndex;   
+                return (ushort)parsedEndpointIndex;   
             }
 
             throw new ArgumentException("Malformed artifact", "artifact");

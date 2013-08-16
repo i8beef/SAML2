@@ -3,7 +3,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
-namespace SAML2.Protocol.pages
+namespace SAML2.Protocol.Pages
 {
     /// <summary>
     /// A base class for asp pages
@@ -24,7 +24,7 @@ namespace SAML2.Protocol.pages
 
         #endregion
 
-        #region Constructor functions and related
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BasePage"/> class.
@@ -32,41 +32,6 @@ namespace SAML2.Protocol.pages
         public BasePage()
         {
             InitControls();
-        }
-
-        /// <summary>
-        /// Initializes the controls.
-        /// </summary>
-        private void InitControls()
-        {
-            MainPanel = new Panel {ID = "mainPanel"};
-
-            Controls.Add(new LiteralControl("<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine));
-            Controls.Add(new LiteralControl("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\r\n\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">" + Environment.NewLine));
-
-            Head = new HtmlHead {Title = TitleText};
-            Head.Controls.Add(GetEncodingMetaTag());
-
-            var cssLink = new HtmlLink {ID = "mainCSS"};
-            cssLink.Attributes.Add("rel", "stylesheet");
-            cssLink.Attributes.Add("type", "text/css");
-            cssLink.Attributes.Add("href", ClientScript.GetWebResourceUrl(GetType(), "SAML2.Protocol.Resources.DefaultStyle.css"));
-            Head.Controls.Add(cssLink);
-
-            Controls.Add(Head);
-            Controls.Add(new LiteralControl("<body>"));
-
-            HeaderPanel = new Panel { ID = "headerPanel" };
-            BodyPanel = new Panel { ID = "bodyPanel" };
-            FooterPanel = new Panel {ID = "footerPanel"};
-
-            MainPanel.Controls.Add(HeaderPanel);
-            MainPanel.Controls.Add(BodyPanel);
-            MainPanel.Controls.Add(FooterPanel);
-
-            Controls.Add(MainPanel);
-
-            Controls.Add(new LiteralControl(Environment.NewLine + "</body>" + Environment.NewLine + "</html>"));
         }
 
         #endregion
@@ -145,11 +110,45 @@ namespace SAML2.Protocol.pages
         /// <returns>The encoding meta tag.</returns>
         private static HtmlMeta GetEncodingMetaTag()
         {
-            var enc = new HtmlMeta {HttpEquiv = "Content-Type", Content = "text/html; charset=utf-8"};
+            var enc = new HtmlMeta { HttpEquiv = "Content-Type", Content = "text/html; charset=utf-8" };
             return enc;
         }
 
-        #endregion
+        /// <summary>
+        /// Initializes the controls.
+        /// </summary>
+        private void InitControls()
+        {
+            MainPanel = new Panel { ID = "mainPanel" };
 
+            Controls.Add(new LiteralControl("<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine));
+            Controls.Add(new LiteralControl("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\r\n\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">" + Environment.NewLine));
+
+            Head = new HtmlHead { Title = TitleText };
+            Head.Controls.Add(GetEncodingMetaTag());
+
+            var cssLink = new HtmlLink { ID = "mainCSS" };
+            cssLink.Attributes.Add("rel", "stylesheet");
+            cssLink.Attributes.Add("type", "text/css");
+            cssLink.Attributes.Add("href", ClientScript.GetWebResourceUrl(GetType(), "SAML2.Protocol.Resources.DefaultStyle.css"));
+            Head.Controls.Add(cssLink);
+
+            Controls.Add(Head);
+            Controls.Add(new LiteralControl("<body>"));
+
+            HeaderPanel = new Panel { ID = "headerPanel" };
+            BodyPanel = new Panel { ID = "bodyPanel" };
+            FooterPanel = new Panel { ID = "footerPanel" };
+
+            MainPanel.Controls.Add(HeaderPanel);
+            MainPanel.Controls.Add(BodyPanel);
+            MainPanel.Controls.Add(FooterPanel);
+
+            Controls.Add(MainPanel);
+
+            Controls.Add(new LiteralControl(Environment.NewLine + "</body>" + Environment.NewLine + "</html>"));
+        }
+
+        #endregion
     }
 }

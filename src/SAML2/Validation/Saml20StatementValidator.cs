@@ -41,7 +41,7 @@ namespace SAML2.Validation
             }
             else
             {
-                throw new Saml20FormatException(String.Format("Unsupported Statement type {0}", statement.GetType()));
+                throw new Saml20FormatException(string.Format("Unsupported Statement type {0}", statement.GetType()));
             }
         }
 

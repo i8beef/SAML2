@@ -16,6 +16,7 @@ namespace SAML2.Config
         {
             get { return this.FirstOrDefault(x => x.Type == EndpointType.Logout); }
         }
+
         /// <summary>
         /// Gets the sign on endpoint.
         /// </summary>

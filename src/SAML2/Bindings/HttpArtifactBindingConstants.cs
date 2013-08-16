@@ -15,7 +15,7 @@ namespace SAML2.Bindings
         /// <summary>
         /// Default type code
         /// </summary>
-        public const Int16 ArtifactTypeCode = 0x0004;
+        public const short ArtifactTypeCode = 0x0004;
 
         /// <summary>
         /// Artifact query string name

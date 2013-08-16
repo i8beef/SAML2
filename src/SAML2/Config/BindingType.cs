@@ -3,7 +3,7 @@
 namespace SAML2.Config
 {
     /// <summary>
-    /// Binding types (signon, logout or metadata)
+    /// Binding types.
     /// </summary>
     [Flags]
     public enum BindingType

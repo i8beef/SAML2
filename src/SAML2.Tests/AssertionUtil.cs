@@ -6,10 +6,10 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
+using NUnit.Framework;
 using SAML2.Config;
 using SAML2.Schema.Core;
 using SAML2.Utils;
-using NUnit.Framework;
 
 namespace SAML2.Tests
 {
@@ -92,7 +92,7 @@ namespace SAML2.Tests
         /// <summary>
         /// Assembles our basic test assertion
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The <see cref="Assertion"/>.</returns>
         public static Assertion GetBasicAssertion()
         {
             var assertion = new Assertion
@@ -145,37 +145,37 @@ namespace SAML2.Tests
             {
                 attributeStatement = new AttributeStatement();
                 var surName = new SamlAttribute
-                {
-                    FriendlyName = "SurName",
-                    Name = "urn:oid:2.5.4.4",
-                    NameFormat = SamlAttribute.NameformatUri,
-                    AttributeValue = new[] { "Fry" }
-                };
+                    {
+                        FriendlyName = "SurName",
+                        Name = "urn:oid:2.5.4.4",
+                        NameFormat = SamlAttribute.NameformatUri,
+                        AttributeValue = new[] { "Fry" }
+                    };
 
                 var commonName = new SamlAttribute
-                {
-                    FriendlyName = "CommonName",
-                    Name = "urn:oid:2.5.4.3",
-                    NameFormat = SamlAttribute.NameformatUri,
-                    AttributeValue = new[] { "Philip J. Fry" }
-                };
+                    {
+                        FriendlyName = "CommonName",
+                        Name = "urn:oid:2.5.4.3",
+                        NameFormat = SamlAttribute.NameformatUri,
+                        AttributeValue = new[] { "Philip J. Fry" }
+                    };
 
                 var userName = new SamlAttribute
-                {
-                    Name = "urn:oid:0.9.2342.19200300.100.1.1",
-                    NameFormat = SamlAttribute.NameformatUri,
-                    AttributeValue = new[] { "fry" }
-                };
+                    {
+                        Name = "urn:oid:0.9.2342.19200300.100.1.1",
+                        NameFormat = SamlAttribute.NameformatUri,
+                        AttributeValue = new[] { "fry" }
+                    };
 
-                var eMail = new SamlAttribute
-                {
-                    FriendlyName = "Email",
-                    Name = "urn:oid:0.9.2342.19200300.100.1.3",
-                    NameFormat = SamlAttribute.NameformatUri,
-                    AttributeValue = new[] { "fry@planetexpress.com.earth" }
-                };
+                var email = new SamlAttribute
+                    {
+                        FriendlyName = "Email",
+                        Name = "urn:oid:0.9.2342.19200300.100.1.3",
+                        NameFormat = SamlAttribute.NameformatUri,
+                        AttributeValue = new[] { "fry@planetexpress.com.earth" }
+                    };
 
-                attributeStatement.Items = new object[] { surName, commonName, userName, eMail };
+                attributeStatement.Items = new object[] { surName, commonName, userName, email };
             }
 
             assertion.Items = new StatementAbstract[] { authnStatement, attributeStatement };
@@ -237,17 +237,17 @@ namespace SAML2.Tests
             var idpEndpoint = config.IdentityProviders.FirstOrDefault(x => x.Id == issuer);
             if (idpEndpoint == null)
             {
-                throw new InvalidOperationException(String.Format("No idp endpoint found for issuer {0}", issuer));
+                throw new InvalidOperationException(string.Format("No idp endpoint found for issuer {0}", issuer));
             }
 
             if (idpEndpoint.Metadata == null)
             {
-                throw new InvalidOperationException(String.Format("No metadata found for issuer {0}", issuer));
+                throw new InvalidOperationException(string.Format("No metadata found for issuer {0}", issuer));
             }
 
             if (idpEndpoint.Metadata.Keys == null)
             {
-                throw new InvalidOperationException(String.Format("No key descriptors found in metadata found for issuer {0}", issuer));
+                throw new InvalidOperationException(string.Format("No key descriptors found in metadata found for issuer {0}", issuer));
             }
 
             var result = new List<AsymmetricAlgorithm>(1);

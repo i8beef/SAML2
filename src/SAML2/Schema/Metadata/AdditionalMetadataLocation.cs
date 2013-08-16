@@ -11,8 +11,8 @@ namespace SAML2.Schema.Metadata
     /// specified location.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Metadata)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Metadata, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Metadata)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class AdditionalMetadataLocation
     {
         /// <summary>
@@ -33,7 +33,7 @@ namespace SAML2.Schema.Metadata
         /// Gets or sets the @namespace.
         /// </summary>
         /// <value>The @namespace.</value>
-        [XmlAttribute("namespace", DataType="anyURI")]
+        [XmlAttribute("namespace", DataType = "anyURI")]
         public string Namespace { get; set; }
 
         #endregion

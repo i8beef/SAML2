@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 using System.Xml;
-using SAML2.Utils;
 using NUnit.Framework;
+using SAML2.Utils;
 
 namespace SAML2.Tests.Utils
 {

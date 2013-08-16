@@ -25,7 +25,7 @@ namespace SAML2.Schema.Metadata
         /// to function at all (as opposed to merely finding an attribute useful or desirable).
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this instance is required; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is required; otherwise, <c>false</c>.
         /// </value>
         [XmlIgnore]
         public bool? IsRequired { get; set; }
@@ -40,7 +40,7 @@ namespace SAML2.Schema.Metadata
         public string IsRequiredString
         {
             get { return IsRequired.HasValue ? XmlConvert.ToString(IsRequired.Value) : null; }
-            set { IsRequired = string.IsNullOrEmpty(value) ? (bool?) null : XmlConvert.ToBoolean(value); }
+            set { IsRequired = string.IsNullOrEmpty(value) ? (bool?)null : XmlConvert.ToBoolean(value); }
         }
 
         #endregion

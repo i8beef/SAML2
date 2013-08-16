@@ -8,18 +8,9 @@ namespace SAML2.Config
     public class Saml2Section : ConfigurationSection
     {
         /// <summary>
-        /// The section name.
+        /// Gets the section name.
         /// </summary>
-        public static string Name = "saml2";
-
-        /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only.
-        /// </summary>
-        /// <returns>true if the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only; otherwise, false.</returns>
-        public override bool IsReadOnly()
-        {
-            return false;
-        }
+        public static string Name { get { return "saml2"; } }
 
         #region Elements
 
@@ -41,7 +32,7 @@ namespace SAML2.Config
         [ConfigurationProperty("allowedAudienceUris")]
         public AllowedAudienceUriCollection AllowedAudienceUris
         {
-            get { return (AllowedAudienceUriCollection) base["allowedAudienceUris"]; }
+            get { return (AllowedAudienceUriCollection)base["allowedAudienceUris"]; }
             set { base["allowedAudienceUris"] = value; }
         }
 
@@ -63,7 +54,7 @@ namespace SAML2.Config
         [ConfigurationProperty("commonDomainCookie")]
         public CommonDomainCookieElement CommonDomainCookie
         {
-            get { return (CommonDomainCookieElement) base["commonDomainCookie"]; }
+            get { return (CommonDomainCookieElement)base["commonDomainCookie"]; }
             set { base["commonDomainCookie"] = value; }
         }
 
@@ -74,7 +65,7 @@ namespace SAML2.Config
         [ConfigurationProperty("identityProviders")]
         public IdentityProviderCollection IdentityProviders
         {
-            get { return (IdentityProviderCollection) base["identityProviders"]; }
+            get { return (IdentityProviderCollection)base["identityProviders"]; }
             set { base["identityProviders"] = value; }
         }
 
@@ -85,7 +76,7 @@ namespace SAML2.Config
         [ConfigurationProperty("logging")]
         public LoggingElement Logging
         {
-            get { return (LoggingElement) base["logging"]; }
+            get { return (LoggingElement)base["logging"]; }
             set { base["logging"] = value; }
         }
 
@@ -123,5 +114,14 @@ namespace SAML2.Config
         }
 
         #endregion
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only.
+        /// </summary>
+        /// <returns>true if the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only; otherwise, false.</returns>
+        public override bool IsReadOnly()
+        {
+            return false;
+        }
     }
 }

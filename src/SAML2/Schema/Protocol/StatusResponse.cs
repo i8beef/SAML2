@@ -11,12 +11,12 @@ namespace SAML2.Schema.Protocol
     /// All SAML responses are of types that are derived from the StatusResponseType complex type. This type
     /// defines common attributes and elements that are associated with all SAML responses
     /// </summary>
-    [XmlInclude(typeof (NameIDMappingResponse))]
-    [XmlInclude(typeof (ArtifactResponse))]
-    [XmlInclude(typeof (LogoutResponse))]
-    [XmlInclude(typeof (Response))]
+    [XmlInclude(typeof(NameIDMappingResponse))]
+    [XmlInclude(typeof(ArtifactResponse))]
+    [XmlInclude(typeof(LogoutResponse))]
+    [XmlInclude(typeof(Response))]
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class StatusResponse
     {

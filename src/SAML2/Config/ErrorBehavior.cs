@@ -1,17 +1,17 @@
 ﻿namespace SAML2.Config
 {
     /// <summary>
-    /// Error handling behavior (showpage, throwexception)
+    /// Error handling behavior.
     /// </summary>
     public enum ErrorBehavior
     {
         /// <summary>
-        /// ShowPage behaviour
+        /// ShowPage behavior.
         /// </summary>
         ShowPage,
 
         /// <summary>
-        /// ThrowException behaviour
+        /// ThrowException behavior.
         /// </summary>
         ThrowException
     }

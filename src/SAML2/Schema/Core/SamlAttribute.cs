@@ -14,7 +14,7 @@ namespace SAML2.Schema.Core
     /// </summary>
     [XmlInclude(typeof(RequestedAttribute))]
     [Serializable]    
-    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class SamlAttribute
     {
@@ -43,13 +43,13 @@ namespace SAML2.Schema.Core
         public XmlAttribute[] AnyAttr { get; set; }
 
         /// <summary>
-        /// The name of the attribute.
+        /// Gets or sets the name of the attribute.
         /// </summary>
         [XmlAttribute("Name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// A URI reference representing the classification of the attribute name for purposes of interpreting the
+        /// Gets or sets a URI reference representing the classification of the attribute name for purposes of interpreting the
         /// name. See Section 8.2 for some URI references that MAY be used as the value of the NameFormat
         /// attribute and their associated descriptions and processing rules. If no NameFormat value is provided,
         /// the identifier urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified (see Section
@@ -79,7 +79,7 @@ namespace SAML2.Schema.Core
         /// the identical datatype assigned.
         /// </summary>
         /// <value>The attribute value.</value>
-        [XmlElement("AttributeValue", IsNullable=true)]
+        [XmlElement("AttributeValue", IsNullable = true)]
         public string[] AttributeValue { get; set; }
 
         #endregion

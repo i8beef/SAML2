@@ -12,8 +12,8 @@ namespace SAML2.Schema.Core
     /// information that is common to all assertions,
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Assertion)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Assertion, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class Assertion
     {
         /// <summary>
@@ -56,7 +56,7 @@ namespace SAML2.Schema.Core
         public string IssueInstantString
         {
             get { return IssueInstant.HasValue ? Saml20Utils.ToUtcString(IssueInstant.Value) : null; }
-            set { IssueInstant = string.IsNullOrEmpty(value) ? (DateTime?) null : Saml20Utils.FromUtcString(value); }
+            set { IssueInstant = string.IsNullOrEmpty(value) ? (DateTime?)null : Saml20Utils.FromUtcString(value); }
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace SAML2.Schema.Core
         /// An XML Signature that protects the integrity of and authenticates the issuer of the assertion
         /// </summary>
         /// <value>The signature.</value>
-        [XmlElement("Signature", Namespace=Saml20Constants.Xmldsig)]
+        [XmlElement("Signature", Namespace = Saml20Constants.Xmldsig)]
         public Signature Signature { get; set; }
 
         /// <summary>

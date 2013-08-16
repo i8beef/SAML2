@@ -9,8 +9,8 @@ namespace SAML2.Schema.Metadata
     /// entities.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Metadata)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Metadata, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Metadata)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class EntitiesDescriptor
     {
         /// <summary>

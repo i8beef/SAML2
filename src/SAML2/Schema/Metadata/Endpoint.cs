@@ -10,7 +10,7 @@ namespace SAML2.Schema.Metadata
     /// </summary>
     [XmlInclude(typeof(IndexedEndpoint))]
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Metadata)]
+    [XmlType(Namespace = Saml20Constants.Metadata)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class Endpoint
     {   
@@ -34,7 +34,7 @@ namespace SAML2.Schema.Metadata
         /// assigned a URI to identify it.
         /// </summary>
         /// <value>The binding.</value>
-        [XmlAttribute("Binding", DataType="anyURI")]
+        [XmlAttribute("Binding", DataType = "anyURI")]
         public string Binding { get; set; }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace SAML2.Schema.Metadata
         /// URI depends on the protocol binding.
         /// </summary>
         /// <value>The location.</value>
-        [XmlAttribute("Location", DataType="anyURI")]
+        [XmlAttribute("Location", DataType = "anyURI")]
         public string Location { get; set; }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace SAML2.Schema.Metadata
         /// or profile should be sent. The allowable syntax of this URI depends on the protocol binding.
         /// </summary>
         /// <value>The response location.</value>
-        [XmlAttribute("ResponseLocation", DataType="anyURI")]
+        [XmlAttribute("ResponseLocation", DataType = "anyURI")]
         public string ResponseLocation { get; set; }
 
         #endregion
@@ -60,9 +60,9 @@ namespace SAML2.Schema.Metadata
         #region Elements
 
         /// <summary>
-        /// Gets or sets any.
+        /// Gets or sets any elements.
         /// </summary>
-        /// <value>Any.</value>
+        /// <value>Any elements.</value>
         [XmlAnyElement]
         public XmlElement[] Any { get; set; }
 

@@ -15,7 +15,7 @@ namespace SAML2.Identity
     /// The AuthenticationType property of the Identity will be "urn:oasis:names:tc:SAML:2.0:assertion".
     /// </para>
     /// <para>
-    /// The order of the attributes is not maintained when converting from the saml assertion to this class. 
+    /// The order of the attributes is not maintained when converting from the SAML assertion to this class. 
     /// </para>
     /// </summary>
     [Serializable]
@@ -44,27 +44,14 @@ namespace SAML2.Identity
                 {
                     _attributes.Add(att.Name, new List<SamlAttribute>());
                 }
+
                 _attributes[att.Name].Add(att);
             }
         }
 
         /// <summary>
-        /// Retrieve an saml 20 attribute using its name. Note that this is the value contained in the 'Name' attribute, and 
-        /// not the 'FriendlyName' attribute.
-        /// </summary>        
-        /// <exception cref="KeyNotFoundException">If the identity instance does not have the requested attribute.</exception>
-        public List<SamlAttribute> this[string attributeName]
-        {
-            get { return _attributes[attributeName]; }
-        }
-
-        /// <summary>
-        /// <para>
-        /// Retrieves the user's identity and the attributes that were extracted from the saml assertion.
-        /// </para>
-        /// <para>
-        /// This property may return null if the initialization of the saml identity fails.
-        /// </para>
+        /// Gets the user's identity and the attributes that were extracted from the SAML assertion.
+        /// This property may return null if the initialization of the SAML identity fails.
         /// </summary>
         public static Saml20Identity Current
         {
@@ -74,20 +61,22 @@ namespace SAML2.Identity
                 {
                     return Saml20PrincipalCache.GetPrincipal().Identity as Saml20Identity;
                 }
+
                 return null;
             }
         }
 
         /// <summary>
-        /// Returns the value of the persistent pseudonym issued by the IdP if the Service Provider connection
+        /// Gets the value of the persistent pseudonym issued by the IdP if the Service Provider connection
         /// is set up with persistent pseudonyms. Otherwise, returns null.
         /// </summary>
         /// <value>The persistent pseudonym.</value>
         public string PersistentPseudonym { get; private set; }
 
         /// <summary>
-        /// Check if the Saml 2 Assertion's attributes have been correctly initialized.
+        /// Check if the SAML 2 Assertion's attributes have been correctly initialized.
         /// </summary>
+        /// <returns><c>true</c> if this instance is initialized; otherwise, <c>false</c>.</returns>
         public static bool IsInitialized()
         {
             return Saml20PrincipalCache.GetPrincipal() != null && Saml20PrincipalCache.GetPrincipal().Identity is Saml20Identity;
@@ -96,18 +85,23 @@ namespace SAML2.Identity
         /// <summary>
         /// Check if the identity contains a certain attribute.
         /// </summary>
-        /// <param name="attributeName">The name of the attribute to look for.</param>        
+        /// <param name="attributeName">The name of the attribute to look for.</param>
+        /// <returns><c>true</c> if the specified attribute name has attribute; otherwise, <c>false</c>.</returns>
         public bool HasAttribute(string attributeName)
         {
             return _attributes.ContainsKey(attributeName);
         }
 
         /// <summary>
-        /// This method converts the received Saml assertion into a .Net principal.
+        /// This method converts the received SAML assertion into an <see cref="IPrincipal"/>.
         /// </summary>
+        /// <param name="assertion">The assertion.</param>
+        /// <param name="point">The point.</param>
+        /// <returns>The <see cref="IPrincipal"/>.</returns>
         internal static IPrincipal InitSaml20Identity(Saml20Assertion assertion, IdentityProviderElement point)
         {
             var isPersistentPseudonym = assertion.Subject.Format == Saml20Constants.NameIdentifierFormats.Persistent;
+
             // Protocol-level support for persistent pseudonyms: If a mapper has been configured, use it here before constructing the principal.
             var subjectIdentifier = assertion.Subject.Value;
             if (isPersistentPseudonym && point.PersistentPseudonym != null)
@@ -170,9 +164,21 @@ namespace SAML2.Identity
         /// </returns>
         public IEnumerator GetEnumerator()
         {
-            return ((IEnumerable<SamlAttribute>) this).GetEnumerator();
+            return ((IEnumerable<SamlAttribute>)this).GetEnumerator();
         }
 
         #endregion
+
+        /// <summary>
+        /// Retrieve an SAML 20 attribute using its name. Note that this is the value contained in the 'Name' attribute, and
+        /// not the 'FriendlyName' attribute.
+        /// </summary>
+        /// <param name="attributeName">The attribute name.</param>
+        /// <returns>List of <see cref="SamlAttribute"/>.</returns>
+        /// <exception cref="KeyNotFoundException">If the identity instance does not have the requested attribute.</exception>
+        public List<SamlAttribute> this[string attributeName]
+        {
+            get { return _attributes[attributeName]; }
+        }
     }
 }

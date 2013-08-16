@@ -11,7 +11,7 @@ namespace SAML2.Schema.Core
     /// be at most one instance of this element.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class ProxyRestriction : ConditionAbstract
     {
@@ -37,7 +37,7 @@ namespace SAML2.Schema.Core
         /// Gets or sets the audience.
         /// </summary>
         /// <value>The audience.</value>
-        [XmlElement("Audience", DataType="anyURI")]
+        [XmlElement("Audience", DataType = "anyURI")]
         public string[] Audience { get; set; }
 
         #endregion

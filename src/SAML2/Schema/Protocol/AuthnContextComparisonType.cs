@@ -7,7 +7,7 @@ namespace SAML2.Schema.Protocol
     /// AuthContext comparison type enum.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
     public enum AuthnContextComparisonType
     {
         /// <summary>

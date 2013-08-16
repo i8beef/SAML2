@@ -63,7 +63,7 @@ namespace SAML2.Validation
                 }
                 else
                 {
-                    throw new Saml20FormatException(String.Format("Identifier of type {0} is not supported for SubjectConfirmation", subjectConfirmation.Item.GetType()));
+                    throw new Saml20FormatException(string.Format("Identifier of type {0} is not supported for SubjectConfirmation", subjectConfirmation.Item.GetType()));
                 }
             }
             else if (subjectConfirmation.SubjectConfirmationData != null)

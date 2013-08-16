@@ -15,8 +15,8 @@ namespace SAML2.Schema.XEnc
     /// keying material is generated even for repeated agreements using the same sender and recipient public keys.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Xenc)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Xenc, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xenc)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xenc, IsNullable = false)]
     public class AgreementMethod
     {
         /// <summary>
@@ -49,9 +49,8 @@ namespace SAML2.Schema.XEnc
         /// Gets or sets the KA nonce.
         /// </summary>
         /// <value>The KA nonce.</value>
-        [XmlElement("KA-Nonce", DataType="base64Binary")]
+        [XmlElement("KA-Nonce", DataType = "base64Binary")]
         public byte[] KANonce { get; set; }
-
 
         /// <summary>
         /// Gets or sets the originator key info.
@@ -59,8 +58,7 @@ namespace SAML2.Schema.XEnc
         /// <value>The originator key info.</value>
         [XmlElement("OriginatorKeyInfo")]
         public KeyInfo OriginatorKeyInfo { get; set; }
-
-
+        
         /// <summary>
         /// Gets or sets the recipient key info.
         /// </summary>

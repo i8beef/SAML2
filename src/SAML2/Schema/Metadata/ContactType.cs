@@ -4,38 +4,38 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Metadata
 {
     /// <summary>
-    /// Contact type enum
+    /// Contact type enumeration.
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Metadata)]
     public enum ContactType
     {
         /// <summary>
-        /// technical
+        /// technical contact type.
         /// </summary>
         [XmlEnum("technical")]
         Technical,
         
         /// <summary>
-        /// support
+        /// support contact type.
         /// </summary>
         [XmlEnum("support")]
         Support,
         
         /// <summary>
-        /// administrative
+        /// administrative contact type.
         /// </summary>
         [XmlEnum("administrative")]
         Administrative,
         
         /// <summary>
-        /// billing
+        /// billing contact type.
         /// </summary>
         [XmlEnum("billing")]
         Billing,
         
         /// <summary>
-        /// other
+        /// other contact type.
         /// </summary>
         [XmlEnum("other")]
         Other

@@ -10,7 +10,7 @@ namespace SAML2.Utils
     public static class Saml20Utils
     {
         /// <summary>
-        /// Froms the UTC string.
+        /// Converts from the UTC string.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The represented DateTime.</returns>
@@ -39,6 +39,8 @@ namespace SAML2.Utils
         /// <summary>
         /// Make sure that the ID elements is at least 128 bits in length (SAML2.0 std section 1.3.4)
         /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>True if the id is valid, else false.</returns>
         public static bool ValidateIdString(string id)
         {
             return id != null && id.Length >= 16;
@@ -47,6 +49,8 @@ namespace SAML2.Utils
         /// <summary>
         /// A string value marked as OPTIONAL in [SAML2.0std] must contain at least one non-whitespace character
         /// </summary>
+        /// <param name="optString">The opt string.</param>
+        /// <returns>True if the string is value, else false.</returns>
         public static bool ValidateOptionalString(string optString)
         {
             return optString == null || ValidateRequiredString(optString);
@@ -55,9 +59,11 @@ namespace SAML2.Utils
         /// <summary>
         /// A string value marked as REQUIRED in [SAML2.0std] must contain at least one non-whitespace character
         /// </summary>
+        /// <param name="reqString">The req string.</param>
+        /// <returns>True if the string is value, else false.</returns>
         public static bool ValidateRequiredString(string reqString)
         {
-            return !(String.IsNullOrEmpty(reqString) || reqString.Trim().Length == 0);
+            return !(string.IsNullOrEmpty(reqString) || reqString.Trim().Length == 0);
         }
     }
 }

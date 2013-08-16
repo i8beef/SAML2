@@ -4,9 +4,9 @@ using SAML2.Config;
 
 namespace SAML2.Specification
 {
-    ///<summary>
+    /// <summary>
     /// Specification factory for getting certificate specification.
-    ///</summary>
+    /// </summary>
     public class SpecificationFactory
     {
         /// <summary>
@@ -19,14 +19,14 @@ namespace SAML2.Specification
             var specs = new List<ICertificateSpecification>();
             if (endpoint.CertificateValidations != null && endpoint.CertificateValidations.Count > 0)
             {
-                foreach(var elem in endpoint.CertificateValidations)
+                foreach (var elem in endpoint.CertificateValidations)
                 {
                     try
                     {
-                        var val = (ICertificateSpecification) Activator.CreateInstance(Type.GetType(elem.Type));
+                        var val = (ICertificateSpecification)Activator.CreateInstance(Type.GetType(elem.Type));
                         specs.Add(val);
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         Logging.LoggerProvider.LoggerFor(typeof(SpecificationFactory)).Error(e.Message, e);
                     }
@@ -35,7 +35,7 @@ namespace SAML2.Specification
 
             if (specs.Count == 0)
             {
-                //Add default specification
+                // Add default specification
                 specs.Add(new DefaultCertificateSpecification());
             }
 

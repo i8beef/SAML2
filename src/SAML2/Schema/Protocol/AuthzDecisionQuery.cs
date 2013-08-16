@@ -1,8 +1,6 @@
 using System;
 using System.Xml.Serialization;
-using my=SAML2.Schema.Core;
 using SAML2.Schema.Core;
-using Action = SAML2.Schema.Core.Action;
 
 namespace SAML2.Schema.Protocol
 {
@@ -16,7 +14,7 @@ namespace SAML2.Schema.Protocol
     /// enhanced authorization decision features.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class AuthzDecisionQuery : SubjectQueryAbstract
     {
@@ -32,7 +30,7 @@ namespace SAML2.Schema.Protocol
         /// A URI reference indicating the resource for which authorization is requested.
         /// </summary>
         /// <value>The resource.</value>
-        [XmlAttribute("Resource", DataType="anyURI")]
+        [XmlAttribute("Resource", DataType = "anyURI")]
         public string Resource { get; set; }
         
         #endregion
@@ -44,16 +42,15 @@ namespace SAML2.Schema.Protocol
         /// The actions for which authorization is requested.
         /// </summary>
         /// <value>The action.</value>
-        [XmlElement("Action", Namespace=Saml20Constants.Assertion)]
-        public Action[] Action { get; set; }
-
+        [XmlElement("Action", Namespace = Saml20Constants.Assertion)]
+        public Core.Action[] Action { get; set; }
 
         /// <summary>
         /// Gets or sets the evidence.
         /// A set of assertions that the SAML authority MAY rely on in making its authorization decision
         /// </summary>
         /// <value>The evidence.</value>
-        [XmlElement("Evidence", Namespace=Saml20Constants.Assertion)]
+        [XmlElement("Evidence", Namespace = Saml20Constants.Assertion)]
         public Evidence Evidence { get; set; }
 
         #endregion

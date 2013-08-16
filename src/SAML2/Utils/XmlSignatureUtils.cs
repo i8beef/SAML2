@@ -17,6 +17,7 @@ namespace SAML2.Utils
         /// <summary>
         /// Verifies the signature of the XmlDocument instance using the key enclosed with the signature.
         /// </summary>
+        /// <param name="doc">The doc.</param>
         /// <returns><code>true</code> if the document's signature can be verified. <code>false</code> if the signature could
         /// not be verified.</returns>
         /// <exception cref="InvalidOperationException">if the XmlDocument instance does not contain a signed XML document.</exception>
@@ -30,7 +31,9 @@ namespace SAML2.Utils
 
         /// <summary>
         /// Verifies the signature of the XmlDocument instance using the key given as a parameter.
-        /// </summary>        
+        /// </summary>
+        /// <param name="doc">The doc.</param>
+        /// <param name="alg">The alg.</param>
         /// <returns><code>true</code> if the document's signature can be verified. <code>false</code> if the signature could
         /// not be verified.</returns>
         /// <exception cref="InvalidOperationException">if the XmlDocument instance does not contain a signed XML document.</exception>
@@ -44,22 +47,28 @@ namespace SAML2.Utils
 
         /// <summary>
         /// Verifies the signature of the XmlElement instance using the key given as a parameter.
-        /// </summary>        
+        /// </summary>
+        /// <param name="el">The element.</param>
+        /// <param name="alg">The alg.</param>
         /// <returns><code>true</code> if the element's signature can be verified. <code>false</code> if the signature could
         /// not be verified.</returns>
         /// <exception cref="InvalidOperationException">if the XmlDocument instance does not contain a signed XML element.</exception>
         public static bool CheckSignature(XmlElement el, AsymmetricAlgorithm alg)
         {
-            //CheckDocument(el);
+            // CheckDocument(element);
             var signedXml = RetrieveSignature(el);
 
             return signedXml.CheckSignature(alg);
         }
 
         /// <summary>
-        /// Verify the given document using a KeyInfo instance. The KeyInfo instance's KeyClauses will be traversed for 
+        /// Verify the given document using a KeyInfo instance. The KeyInfo instance's KeyClauses will be traversed for
         /// elements that can verify the signature, eg. certificates or keys. If nothing is found, an exception is thrown.
         /// </summary>
+        /// <param name="doc">The doc.</param>
+        /// <param name="keyinfo">The keyinfo.</param>
+        /// <returns><code>true</code> if the element's signature can be verified. <code>false</code> if the signature could
+        /// not be verified.</returns>
         public static bool CheckSignature(XmlDocument doc, KeyInfo keyinfo)
         {
             CheckDocument(doc);
@@ -71,20 +80,20 @@ namespace SAML2.Utils
             {
                 if (clause is RSAKeyValue)
                 {
-                    var key = (RSAKeyValue) clause;
+                    var key = (RSAKeyValue)clause;
                     alg = key.Key;
                     break;
                 }
                 
                 if (clause is KeyInfoX509Data)
                 {
-                    var x509Data = (KeyInfoX509Data) clause;
+                    var x509Data = (KeyInfoX509Data)clause;
                     var count = x509Data.Certificates.Count;
-                    cert = (X509Certificate2) x509Data.Certificates[count - 1];                    
+                    cert = (X509Certificate2)x509Data.Certificates[count - 1];                    
                 } 
                 else if (clause is DSAKeyValue)
                 {
-                    var key = (DSAKeyValue) clause;
+                    var key = (DSAKeyValue)clause;
                     alg = key.Key;
                     break;
                 }                
@@ -99,15 +108,15 @@ namespace SAML2.Utils
         }
 
         /// <summary>
-        /// Attempts to retrieve an asymmetric key from the KeyInfoClause given as parameter.        
+        /// Attempts to retrieve an asymmetric key from the KeyInfoClause given as parameter.
         /// </summary>
-        /// <param name="keyInfoClause"></param>
+        /// <param name="keyInfoClause">The key info clause.</param>
         /// <returns>null if the key could not be found.</returns>
         public static AsymmetricAlgorithm ExtractKey(KeyInfoClause keyInfoClause)
         {
             if (keyInfoClause is RSAKeyValue)
             {
-                var key = (RSAKeyValue) keyInfoClause;
+                var key = (RSAKeyValue)keyInfoClause;
                 return key.Key;                
             }
             
@@ -119,7 +128,7 @@ namespace SAML2.Utils
             
             if (keyInfoClause is DSAKeyValue)
             {
-                var key = (DSAKeyValue) keyInfoClause;
+                var key = (DSAKeyValue)keyInfoClause;
                 return key.Key;                
             }
 
@@ -156,15 +165,15 @@ namespace SAML2.Utils
         /// <summary>
         /// Returns the KeyInfo element that is included with the signature in the element.
         /// </summary>
-        /// <param name="el">The el.</param>
+        /// <param name="element">The element.</param>
         /// <returns>The signature <see cref="KeyInfo"/>.</returns>
         /// <exception cref="InvalidOperationException">if the document is not signed.</exception>
-        public static KeyInfo ExtractSignatureKeys(XmlElement el)
+        public static KeyInfo ExtractSignatureKeys(XmlElement element)
         {
-            CheckDocument(el);
-            var signedXml = new SignedXml(el);
+            CheckDocument(element);
+            var signedXml = new SignedXml(element);
 
-            var nodeList = el.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig);
+            var nodeList = element.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig);
             if (nodeList.Count == 0)
             {
                 throw new InvalidOperationException("The XmlDocument does not contain a signature.");
@@ -209,8 +218,8 @@ namespace SAML2.Utils
         /// <summary>
         /// Checks if an element contains a signature.
         /// </summary>
-        /// <param name="el">The el.</param>
-        /// <returns><c>true</c> if the specified el is signed; otherwise, <c>false</c>.</returns>
+        /// <param name="el">The element.</param>
+        /// <returns><c>true</c> if the specified element is signed; otherwise, <c>false</c>.</returns>
         public static bool IsSigned(XmlElement el)
         {
             CheckDocument(el);
@@ -256,7 +265,7 @@ namespace SAML2.Utils
         /// Do checks on the element given. Every public method accepting a XmlElement instance as parameter should
         /// call this method before continuing.
         /// </summary>
-        /// <param name="el">The el.</param>
+        /// <param name="el">The element.</param>
         private static void CheckDocument(XmlElement el)
         {
             if (el == null)
@@ -284,7 +293,7 @@ namespace SAML2.Utils
         /// <summary>
         /// Digs the &lt;Signature&gt; element out of the document.
         /// </summary>
-        /// <param name="el">The el.</param>
+        /// <param name="el">The element.</param>
         /// <returns>The <see cref="SignedXml"/>.</returns>
         /// <exception cref="InvalidOperationException">if the document does not contain a signature.</exception>
         private static SignedXml RetrieveSignature(XmlElement el)
@@ -388,29 +397,21 @@ namespace SAML2.Utils
             /// Initializes a new instance of the <see cref="SignedXmlWithIdResolvement"/> class.
             /// </summary>
             /// <param name="document">The document.</param>
-            public SignedXmlWithIdResolvement(XmlDocument document)
-                : base(document)
-            {
-            }
+            public SignedXmlWithIdResolvement(XmlDocument document) : base(document) {}
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.SignedXml"/> class from the specified <see cref="T:System.Xml.XmlElement"/> object.
+            /// Initializes a new instance of the <see cref="SignedXmlWithIdResolvement"/> class from the specified <see cref="T:System.Xml.XmlElement"/> object.
             /// </summary>
             /// <param name="elem">The <see cref="T:System.Xml.XmlElement"/> object to use to initialize the new instance of <see cref="T:System.Security.Cryptography.Xml.SignedXml"/>.</param>
             /// <exception cref="T:System.ArgumentNullException">
             /// The <paramref name="elem"/> parameter is null.
-            ///   </exception>
-            public SignedXmlWithIdResolvement(XmlElement elem)
-                : base(elem)
-            {
-            }
+            /// </exception>
+            public SignedXmlWithIdResolvement(XmlElement elem) : base(elem) {}
 
             /// <summary>
             /// Initializes a new instance of the <see cref="SignedXmlWithIdResolvement"/> class.
             /// </summary>
-            public SignedXmlWithIdResolvement()
-            {
-            }
+            public SignedXmlWithIdResolvement() {}
 
             /// <summary>
             /// Returns the <see cref="T:System.Xml.XmlElement"/> object with the specified ID from the specified <see cref="T:System.Xml.XmlDocument"/> object.

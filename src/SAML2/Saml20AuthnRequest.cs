@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 using SAML2.Config;
+using SAML2.Properties;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
-using Saml2.Properties;
 
 namespace SAML2
 {
@@ -26,7 +26,6 @@ namespace SAML2
                               Issuer = new NameID(),
                               IssueInstant = DateTime.Now
                           };
-
         }
 
         #region Request properties
@@ -48,7 +47,7 @@ namespace SAML2
         public AuthnRequest Request { get; private set; }
 
         /// <summary>
-        /// The 'Destination' attribute of the &lt;AuthnRequest&gt;.
+        /// Gets or sets the Destination attribute of the &lt;AuthnRequest&gt;.
         /// </summary>
         public string Destination
         {
@@ -56,9 +55,9 @@ namespace SAML2
             set { Request.Destination = value; }
         }
 
-        ///<summary>
-        /// The 'ForceAuthn' attribute of the &lt;AuthnRequest&gt;.
-        ///</summary>
+        /// <summary>
+        /// Gets or sets the ForceAuthn attribute of the &lt;AuthnRequest&gt;.
+        /// </summary>
         public bool? ForceAuthn
         {
             get { return Request.ForceAuthn; }
@@ -66,7 +65,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// The ID attribute of the &lt;AuthnRequest&gt; message.
+        /// Gets or sets the ID attribute of the &lt;AuthnRequest&gt; message.
         /// </summary>
         public string Id
         {
@@ -74,9 +73,9 @@ namespace SAML2
             set { Request.ID = value; }
         }
 
-        ///<summary>
-        /// The 'IsPassive' attribute of the &lt;AuthnRequest&gt;.
-        ///</summary>
+        /// <summary>
+        /// Gets or sets the 'IsPassive' attribute of the &lt;AuthnRequest&gt;.
+        /// </summary>
         public bool? IsPassive
         {
             get { return Request.IsPassive; }
@@ -124,7 +123,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Sets the ProtocolBinding on the request
+        /// Gets or sets the ProtocolBinding on the request
         /// </summary>
         public string ProtocolBinding
         {
@@ -147,7 +146,7 @@ namespace SAML2
         /// <summary>
         /// Returns an instance of the class with meaningful default values set.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The defaul <see cref="Saml20AuthnRequest"/>.</returns>
         public static Saml20AuthnRequest GetDefault()
         {
             var config = Saml2Config.GetConfig();
@@ -271,7 +270,7 @@ namespace SAML2
         /// <param name="conditions">The conditions.</param>
         private void SetConditions(List<ConditionAbstract> conditions)
         {
-            Request.Conditions = new Conditions {Items = conditions};
+            Request.Conditions = new Conditions { Items = conditions };
         }
     }
 }

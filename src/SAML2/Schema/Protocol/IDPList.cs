@@ -10,8 +10,8 @@ namespace SAML2.Schema.Protocol
     /// </summary>
     [GeneratedCode("xsd", "2.0.50727.42")]
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Protocol, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class IDPList
     {
         /// <summary>
@@ -37,7 +37,7 @@ namespace SAML2.Schema.Protocol
         /// element.
         /// </summary>
         /// <value>The get complete.</value>
-        [XmlElement("GetComplete", DataType="anyURI")]
+        [XmlElement("GetComplete", DataType = "anyURI")]
         public string GetComplete { get; set; }
 
         #endregion

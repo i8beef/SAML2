@@ -9,8 +9,8 @@ namespace SAML2.Schema.Core
     /// The Saml20 Conditions class
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Assertion)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Assertion, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class Conditions
     {
         /// <summary>
@@ -67,10 +67,10 @@ namespace SAML2.Schema.Core
         /// Items may be of types AudienceRestriction, Condition, OneTimeUse and ProxyRestriction
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("AudienceRestriction", typeof (AudienceRestriction))]
-        [XmlElement("Condition", typeof (ConditionAbstract))]
-        [XmlElement("OneTimeUse", typeof (OneTimeUse))]
-        [XmlElement("ProxyRestriction", typeof (ProxyRestriction))]
+        [XmlElement("AudienceRestriction", typeof(AudienceRestriction))]
+        [XmlElement("Condition", typeof(ConditionAbstract))]
+        [XmlElement("OneTimeUse", typeof(OneTimeUse))]
+        [XmlElement("ProxyRestriction", typeof(ProxyRestriction))]
         public List<ConditionAbstract> Items { get; set; }
 
         #endregion

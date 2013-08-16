@@ -9,8 +9,8 @@ namespace SAML2.Schema.Protocol
     /// &lt;NameIDMappingRequest&gt; message
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Protocol, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class NameIDMappingRequest : RequestAbstract
     {
         /// <summary>
@@ -26,9 +26,9 @@ namespace SAML2.Schema.Protocol
         /// requester and the responder.
         /// </summary>
         /// <value>The item.</value>
-        [XmlElement("BaseID", typeof (BaseIDAbstract), Namespace = Saml20Constants.Assertion)]
-        [XmlElement("EncryptedID", typeof (EncryptedElement), Namespace = Saml20Constants.Assertion)]
-        [XmlElement("NameID", typeof (NameID), Namespace = Saml20Constants.Assertion)]
+        [XmlElement("BaseID", typeof(BaseIDAbstract), Namespace = Saml20Constants.Assertion)]
+        [XmlElement("EncryptedID", typeof(EncryptedElement), Namespace = Saml20Constants.Assertion)]
+        [XmlElement("NameID", typeof(NameID), Namespace = Saml20Constants.Assertion)]
         public object Item { get; set; }
         
         /// <summary>

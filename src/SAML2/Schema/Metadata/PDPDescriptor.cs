@@ -8,7 +8,7 @@ namespace SAML2.Schema.Metadata
     /// policy decision points, SAML authorities that respond to &lt;samlp:AuthzDecisionQuery&gt; messages.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Metadata)]
+    [XmlType(Namespace = Saml20Constants.Metadata)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class PDPDescriptor : RoleDescriptor
     {
@@ -45,7 +45,7 @@ namespace SAML2.Schema.Metadata
         /// this authority.
         /// </summary>
         /// <value>The name ID format.</value>
-        [XmlElement("NameIDFormat", DataType="anyURI")]
+        [XmlElement("NameIDFormat", DataType = "anyURI")]
         public string[] NameIDFormat { get; set; }
 
         #endregion

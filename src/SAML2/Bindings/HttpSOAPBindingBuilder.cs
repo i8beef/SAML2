@@ -9,8 +9,8 @@ using System.ServiceModel.Channels;
 using System.Text;
 using System.Web;
 using System.Xml;
-using SAML2.Logging;
 using SAML2.Config;
+using SAML2.Logging;
 
 namespace SAML2.Bindings
 {
@@ -19,11 +19,6 @@ namespace SAML2.Bindings
     /// </summary>
     public class HttpSoapBindingBuilder
     {
-        /// <summary>
-        /// The current http context
-        /// </summary>
-        protected HttpContext Context;
-
         /// <summary>
         /// Logger instance.
         /// </summary>
@@ -39,36 +34,9 @@ namespace SAML2.Bindings
         }
 
         /// <summary>
-        /// Sends a response message.
+        /// Gets or sets the current http context
         /// </summary>
-        /// <param name="samlMessage">The saml message.</param>
-        public void SendResponseMessage(string samlMessage)
-        {
-            Context.Response.ContentType = "text/xml";
-            var writer = new StreamWriter(Context.Response.OutputStream);
-            writer.Write(WrapInSoapEnvelope(samlMessage));
-            writer.Flush();
-            writer.Close();
-            Context.Response.End();
-        }
-
-        /// <summary>
-        /// Wraps a message in a SOAP envelope.
-        /// </summary>
-        /// <param name="s">The s.</param>
-        /// <returns></returns>
-        public string WrapInSoapEnvelope(string s)
-        {
-            var builder = new StringBuilder();
-
-            builder.AppendLine(SoapConstants.EnvelopeBegin);
-            builder.AppendLine(SoapConstants.BodyBegin);
-            builder.AppendLine(s);
-            builder.AppendLine(SoapConstants.BodyEnd);
-            builder.AppendLine(SoapConstants.EnvelopeEnd);
-
-            return builder.ToString();
-        }
+        protected HttpContext Context { get; set; }
 
         /// <summary>
         /// Validates the server certificate.
@@ -84,12 +52,17 @@ namespace SAML2.Bindings
         }
 
         /// <summary>
-        /// Creates a WCF SSL binding.
+        /// Sends a response message.
         /// </summary>
-        /// <returns>The WCF SSL binding.</returns>
-        private static Binding CreateSslBinding()
+        /// <param name="samlMessage">The SAML message.</param>
+        public void SendResponseMessage(string samlMessage)
         {
-            return new BasicHttpBinding(BasicHttpSecurityMode.Transport) { TextEncoding = Encoding.UTF8 };
+            Context.Response.ContentType = "text/xml";
+            var writer = new StreamWriter(Context.Response.OutputStream);
+            writer.Write(WrapInSoapEnvelope(samlMessage));
+            writer.Flush();
+            writer.Close();
+            Context.Response.End();
         }
 
         /// <summary>
@@ -97,7 +70,7 @@ namespace SAML2.Bindings
         /// </summary>
         /// <param name="endpoint">The IdP endpoint.</param>
         /// <param name="message">The message.</param>
-        /// <param name="basicAuth">Basic auth settings.</param>
+        /// <param name="basicAuth">Basic authentication settings.</param>
         /// <returns>The Stream.</returns>
         public Stream GetResponse(string endpoint, string message, HttpBasicAuthElement basicAuth)
         {
@@ -115,7 +88,7 @@ namespace SAML2.Bindings
                 property.Headers.Add(HttpRequestHeader.Authorization, basicAuthzHeader);
             }
             
-            request.Properties.Add( HttpRequestMessageProperty.Name, property );
+            request.Properties.Add(HttpRequestMessageProperty.Name, property);
             if (Context.Request.Params["relayState"] != null)
             {
                 request.Properties.Add("relayState", Context.Request.Params["relayState"]);
@@ -131,12 +104,39 @@ namespace SAML2.Bindings
             Console.WriteLine(response);
             reqChannel.Close();
 
-            var xDoc = new XmlDocument();
-            xDoc.Load(response.GetReaderAtBodyContents());
-            var outerXml = xDoc.DocumentElement.OuterXml;
+            var doc = new XmlDocument();
+            doc.Load(response.GetReaderAtBodyContents());
+            var outerXml = doc.DocumentElement.OuterXml;
             var memStream = new MemoryStream(Encoding.UTF8.GetBytes(outerXml));
 
             return memStream;
+        }
+
+        /// <summary>
+        /// Wraps a message in a SOAP envelope.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>The wrapped message.</returns>
+        public string WrapInSoapEnvelope(string message)
+        {
+            var builder = new StringBuilder();
+
+            builder.AppendLine(SoapConstants.EnvelopeBegin);
+            builder.AppendLine(SoapConstants.BodyBegin);
+            builder.AppendLine(message);
+            builder.AppendLine(SoapConstants.BodyEnd);
+            builder.AppendLine(SoapConstants.EnvelopeEnd);
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Creates a WCF SSL binding.
+        /// </summary>
+        /// <returns>The WCF SSL binding.</returns>
+        private static Binding CreateSslBinding()
+        {
+            return new BasicHttpBinding(BasicHttpSecurityMode.Transport) { TextEncoding = Encoding.UTF8 };
         }
 
         /// <summary>

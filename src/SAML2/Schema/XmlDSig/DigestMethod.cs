@@ -17,8 +17,8 @@ namespace SAML2.Schema.XmlDSig
     /// of the resulting octet stream
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Xmldsig)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
     public class DigestMethod
     {
         /// <summary>
@@ -32,7 +32,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the algorithm.
         /// </summary>
         /// <value>The algorithm.</value>
-        [XmlAttribute("Algorithm", DataType="anyURI")]
+        [XmlAttribute("Algorithm", DataType = "anyURI")]
         public string Algorithm { get; set; }
 
         #endregion
@@ -40,9 +40,9 @@ namespace SAML2.Schema.XmlDSig
         #region Elements
 
         /// <summary>
-        /// Gets or sets any.
+        /// Gets or sets any elements.
         /// </summary>
-        /// <value>Any.</value>
+        /// <value>Any elements.</value>
         [XmlText]
         [XmlAnyElement]
         public XmlNode[] Any { get; set; }

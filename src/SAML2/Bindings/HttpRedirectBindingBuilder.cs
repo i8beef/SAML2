@@ -67,9 +67,9 @@ namespace SAML2.Bindings
         }
 
         /// <summary>
-        /// <para>Sets the relaystate of the message.</para>
-        /// <para>If the message being built is a response message, the relaystate will be included unmodified.</para>
-        /// <para>If the message being built is a request message, the relaystate will be encoded and compressed before being included.</para>
+        /// <para>Gets or sets the relay state of the message.</para>
+        /// <para>If the message being built is a response message, the relay state will be included unmodified.</para>
+        /// <para>If the message being built is a request message, the relay state will be encoded and compressed before being included.</para>
         /// </summary>
         public string RelayState { get; set; }
 
@@ -87,6 +87,7 @@ namespace SAML2.Bindings
                 {
                     throw new ArgumentException("Signing key must be an instance of either RSACryptoServiceProvider or DSA.");
                 }
+
                 _signingKey = value;
             }
         }
@@ -95,6 +96,7 @@ namespace SAML2.Bindings
         /// Returns the query part of the url that should be redirected to.
         /// The resulting string should be pre-pended with either ? or &amp; before use.
         /// </summary>
+        /// <returns>The query string part of the redirect URL.</returns>
         public string ToQuery()
         {
             var result = new StringBuilder();
@@ -109,6 +111,8 @@ namespace SAML2.Bindings
         /// <summary>
         /// Uses DEFLATE compression to compress the input value. Returns the result as a Base64 encoded string.
         /// </summary>
+        /// <param name="val">The val.</param>
+        /// <returns>The compressed string.</returns>
         private static string DeflateEncode(string val)
         {
             var memoryStream = new MemoryStream();
@@ -124,15 +128,17 @@ namespace SAML2.Bindings
         /// <summary>
         /// Uppercase the URL-encoded parts of the string. Needed because Ping does not seem to be able to handle lower-cased URL-encodings.
         /// </summary>
-        private static string UpperCaseUrlEncode(string s)
+        /// <param name="value">The value.</param>
+        /// <returns>The value with URL encodings uppercased.</returns>
+        private static string UpperCaseUrlEncode(string value)
         {
-            var result = new StringBuilder(s);
+            var result = new StringBuilder(value);
             for (var i = 0; i < result.Length; i++)
             {
                 if (result[i] == '%')
                 {
-                    result[++i] = Char.ToUpper(result[i]);
-                    result[++i] = Char.ToUpper(result[i]);
+                    result[++i] = char.ToUpper(result[i]);
+                    result[++i] = char.ToUpper(result[i]);
                 }
             }
 
@@ -207,6 +213,7 @@ namespace SAML2.Bindings
         /// <summary>
         /// Depending on which one is specified, this method adds the SAMLRequest or SAMLResponse parameter to the URL query.
         /// </summary>
+        /// <param name="result">The result.</param>
         private void AddMessageParameter(StringBuilder result)
         {
             if (!(_response == null || _request == null))

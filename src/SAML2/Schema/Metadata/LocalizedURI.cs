@@ -9,7 +9,7 @@ namespace SAML2.Schema.Metadata
     /// attribute.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Metadata)]
+    [XmlType(Namespace = Saml20Constants.Metadata)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class LocalizedURI
     {
@@ -47,7 +47,7 @@ namespace SAML2.Schema.Metadata
         /// Gets or sets the lang.
         /// </summary>
         /// <value>The lang.</value>
-        [XmlAttribute("lang", Form=XmlSchemaForm.Qualified, Namespace="http://www.w3.org/XML/1998/namespace")]
+        [XmlAttribute("lang", Form = XmlSchemaForm.Qualified, Namespace = "http://www.w3.org/XML/1998/namespace")]
         public string Language { get; set; }
 
         #endregion

@@ -26,11 +26,6 @@ namespace SAML2
         public const string Metadata = "urn:oasis:names:tc:SAML:2.0:metadata";
 
         /// <summary>
-        /// All the namespaces defined and reserved by the SAML 2.0 standard
-        /// </summary>
-        public static readonly string[] SamlNamespaces = new string[] { Assertion, Protocol, Metadata };
-
-        /// <summary>
         /// The XML namespace of XmlDSig
         /// </summary>
         public const string Xmldsig = "http://www.w3.org/2000/09/xmldsig#";
@@ -56,7 +51,12 @@ namespace SAML2
         public const string DKSaml20ClaimTypePrefix = "dksaml20/";
 
         /// <summary>
-        /// Formats of nameidentifiers
+        /// All the namespaces defined and reserved by the SAML 2.0 standard
+        /// </summary>
+        public static readonly string[] SamlNamespaces = new[] { Assertion, Protocol, Metadata };
+
+        /// <summary>
+        /// Formats of name identifier formats
         /// </summary>
         public static class NameIdentifierFormats
         {

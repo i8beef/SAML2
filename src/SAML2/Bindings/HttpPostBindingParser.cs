@@ -1,9 +1,9 @@
 using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Security.Cryptography.Xml;
+using System.Text;
 using System.Web;
 using System.Xml;
-using System.Security.Cryptography.Xml;
 using SAML2.Schema.Metadata;
 using SAML2.Utils;
 
@@ -63,7 +63,7 @@ namespace SAML2.Bindings
         public bool IsResponse { get; private set; }
 
         /// <summary>
-        /// Determines whether the message is signed.
+        /// Gets a value indicating whether the message is signed.
         /// </summary>
         public bool IsSigned
         {
@@ -78,7 +78,7 @@ namespace SAML2.Bindings
         /// <summary>
         /// Checks the signature.
         /// </summary>
-        /// <returns>True of the signatire is valid, else false.</returns>
+        /// <returns>True of the signature is valid, else false.</returns>
         public bool CheckSignature()
         {
             return XmlSignatureUtils.CheckSignature(Document);
@@ -88,7 +88,7 @@ namespace SAML2.Bindings
         /// Checks the signature of the message, using a specific set of keys
         /// </summary>
         /// <param name="keys">The set of keys to check the signature against</param>
-        /// <returns>True of the signatire is valid, else false.</returns>
+        /// <returns>True of the signature is valid, else false.</returns>
         public bool CheckSignature(IEnumerable<KeyDescriptor> keys)
         {
             foreach (var keyDescriptor in keys)

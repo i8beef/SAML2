@@ -1,9 +1,9 @@
 using System;
 using System.Security.Cryptography.Xml;
 using System.Xml;
+using NUnit.Framework;
 using SAML2.Schema.Metadata;
 using SAML2.Utils;
-using NUnit.Framework;
 
 namespace SAML2.Tests
 {
@@ -26,12 +26,12 @@ namespace SAML2.Tests
             public void CanExtractCertificates()
             {
                 // Arrange
-                var doc = new XmlDocument {PreserveWhitespace = true};
+                var doc = new XmlDocument { PreserveWhitespace = true };
                 doc.Load(@"Protocol\MetadataDocs\metadata-ADLER.xml");
 
                 // Act
                 var metadata = new Saml20MetadataDocument(doc);
-                var certificateCheckResult = XmlSignatureUtils.CheckSignature(doc, (KeyInfo) metadata.Keys[0].KeyInfo);
+                var certificateCheckResult = XmlSignatureUtils.CheckSignature(doc, (KeyInfo)metadata.Keys[0].KeyInfo);
 
                 // Assert
                 Assert.That(metadata.GetKeys(KeyTypes.Signing).Count == 1);
@@ -54,7 +54,7 @@ namespace SAML2.Tests
             public void CanExtractEndpoints()
             {
                 // Arrange
-                var doc = new XmlDocument {PreserveWhitespace = true};
+                var doc = new XmlDocument { PreserveWhitespace = true };
                 doc.Load(@"Protocol\MetadataDocs\metadata-ADLER.xml");
 
                 // Act
@@ -89,7 +89,7 @@ namespace SAML2.Tests
 
                 // Act
                 var metadata = doc.ToXml();
-                var document = new XmlDocument {PreserveWhitespace = true};
+                var document = new XmlDocument { PreserveWhitespace = true };
                 document.LoadXml(metadata);
                 var result = XmlSignatureUtils.CheckSignature(document);
 

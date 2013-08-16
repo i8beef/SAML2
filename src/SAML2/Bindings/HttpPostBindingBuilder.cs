@@ -44,9 +44,9 @@ namespace SAML2.Bindings
         public SamlActionType Action { get; set; }
 
         /// <summary>
-        /// Gets or sets the relaystate
+        /// Gets or sets the relay state
         /// </summary>
-        /// <value>The relaystate.</value>
+        /// <value>The relay state.</value>
         public string RelayState { get; set; }        
 
         /// <summary>
@@ -62,6 +62,7 @@ namespace SAML2.Bindings
                 {
                     throw new ArgumentException("Response property is already specified. Unable to set Request property.");
                 }
+
                 _request = value;
             }
         }
@@ -89,7 +90,7 @@ namespace SAML2.Bindings
         /// <summary>
         /// Gets the ASP.Net page that will serve html to user agent.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The Page.</returns>
         public Page GetPage()
         {
             if (_request == null && _response == null)
@@ -129,8 +130,8 @@ namespace SAML2.Bindings
 
             var action = new HtmlInputHidden
                              {
-                                 Name = Enum.GetName(typeof (SamlActionType), Action),
-                                 ID = Enum.GetName(typeof (SamlActionType), Action),
+                                 Name = Enum.GetName(typeof(SamlActionType), Action),
+                                 ID = Enum.GetName(typeof(SamlActionType), Action),
                                  Value = Convert.ToBase64String(Encoding.UTF8.GetBytes(msg))
                              };
             p.Controls.Add(action);

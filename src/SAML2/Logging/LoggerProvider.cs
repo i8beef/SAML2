@@ -19,7 +19,7 @@ namespace SAML2.Logging
         private readonly ILoggerFactory _loggerFactory;
 
         /// <summary>
-        /// Initializes the <see cref="LoggerProvider"/> class.
+        /// Initializes static members of the <see cref="LoggerProvider"/> class.
         /// </summary>
         static LoggerProvider()
         {

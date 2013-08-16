@@ -10,18 +10,18 @@ namespace SAML2.Schema.Protocol
     /// All SAML requests are of types that are derived from the abstract RequestAbstractType complex type.
     /// This type defines common attributes and elements that are associated with all SAML requests
     /// </summary>
-    [XmlInclude(typeof (NameIDMappingRequest))]
-    [XmlInclude(typeof (LogoutRequest))]
-    [XmlInclude(typeof (ManageNameIDRequest))]
-    [XmlInclude(typeof (ArtifactResolve))]
-    [XmlInclude(typeof (AuthnRequest))]
-    [XmlInclude(typeof (SubjectQueryAbstract))]
-    [XmlInclude(typeof (AuthzDecisionQuery))]
-    [XmlInclude(typeof (AttributeQuery))]
-    [XmlInclude(typeof (AuthnQuery))]
-    [XmlInclude(typeof (AssertionIDRequest))]
+    [XmlInclude(typeof(NameIDMappingRequest))]
+    [XmlInclude(typeof(LogoutRequest))]
+    [XmlInclude(typeof(ManageNameIDRequest))]
+    [XmlInclude(typeof(ArtifactResolve))]
+    [XmlInclude(typeof(AuthnRequest))]
+    [XmlInclude(typeof(SubjectQueryAbstract))]
+    [XmlInclude(typeof(AuthzDecisionQuery))]
+    [XmlInclude(typeof(AttributeQuery))]
+    [XmlInclude(typeof(AuthnQuery))]
+    [XmlInclude(typeof(AssertionIDRequest))]
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
     public abstract class RequestAbstract
     {
         /// <summary>
@@ -56,7 +56,7 @@ namespace SAML2.Schema.Protocol
         public string Destination { get; set; }
 
         /// <summary>
-        /// An identifier for the request. It is of type xs:ID and MUST follow the requirements specified in Section
+        /// Gets or sets the identifier for the request. It is of type xs:ID and MUST follow the requirements specified in Section
         /// 1.3.4 for identifier uniqueness. The values of the ID attribute in a request and the InResponseTo
         /// attribute in the corresponding response MUST match.
         /// Gets or sets the ID.
@@ -105,7 +105,7 @@ namespace SAML2.Schema.Protocol
         /// Identifies the entity that generated the request message.
         /// </summary>
         /// <value>The issuer.</value>
-        [XmlElement("Issuer", Namespace=Saml20Constants.Assertion)]
+        [XmlElement("Issuer", Namespace = Saml20Constants.Assertion)]
         public NameID Issuer { get; set; }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace SAML2.Schema.Protocol
         /// An XML Signature that authenticates the requester and provides message integrity
         /// </summary>
         /// <value>The signature.</value>
-        [XmlElement("Signature", Namespace="http://www.w3.org/2000/09/xmldsig#")]
+        [XmlElement("Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#")]
         public Signature Signature { get; set; }
 
         #endregion

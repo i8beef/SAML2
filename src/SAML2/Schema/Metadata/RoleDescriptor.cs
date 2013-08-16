@@ -18,10 +18,10 @@ namespace SAML2.Schema.Metadata
     [XmlInclude(typeof(SPSSODescriptor))]
     [XmlInclude(typeof(IDPSSODescriptor))]    
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Metadata)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Metadata, IsNullable=false)]
-    public abstract class RoleDescriptor {
-
+    [XmlType(Namespace = Saml20Constants.Metadata)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
+    public abstract class RoleDescriptor
+    {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
@@ -51,7 +51,7 @@ namespace SAML2.Schema.Metadata
         /// contained in the element and any contained elements.
         /// </summary>
         /// <value>The cache duration.</value>
-        [XmlAttribute("cacheDuration",DataType = "duration")]
+        [XmlAttribute("cacheDuration", DataType = "duration")]
         public string CacheDuration { get; set; }
 
         /// <summary>

@@ -5,7 +5,7 @@ namespace SAML2.Config
     /// <summary>
     /// Service Provider Endpoint configuration collection.
     /// </summary>
-    [ConfigurationCollection(typeof (AuthenticationContextElement), CollectionType = ConfigurationElementCollectionType.AddRemoveClearMap)]
+    [ConfigurationCollection(typeof(AuthenticationContextElement), CollectionType = ConfigurationElementCollectionType.AddRemoveClearMap)]
     public class AuthenticationContextCollection : EnumerableConfigurationElementCollection<AuthenticationContextElement>
     {
         /// <summary>

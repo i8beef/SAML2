@@ -3,9 +3,9 @@ using System.Xml;
 namespace SAML2
 {
     /// <summary>
-    /// Implementors of this interface will be presented with the Xml form of the Saml 2.0 assertion issued by the IdP
+    /// Implementers of this interface will be presented with the Xml form of the SAML 2.0 assertion issued by the IdP
     /// before it is translated to a runtime type. 
-    /// Implementors MUST NOT alter the xml element or its containing xml document as this may invalidate the xml signature
+    /// Implementers MUST NOT alter the xml element or its containing xml document as this may invalidate the xml signature
     /// </summary>
     public interface ISaml20IdpTokenAccessor
     {

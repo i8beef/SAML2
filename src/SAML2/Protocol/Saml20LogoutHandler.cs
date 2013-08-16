@@ -11,7 +11,6 @@ using SAML2.Properties;
 using SAML2.Schema.Metadata;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
-using Saml2.Properties;
 
 namespace SAML2.Protocol
 {
@@ -90,7 +89,7 @@ namespace SAML2.Protocol
                 if (!parser.CheckSamlMessageSignature(idp.Metadata.Keys))
                 {
                     Logger.ErrorFormat("Signature could not be verified during artifact resolve, msg: " + parser.SamlMessage);
-                    HandleError(context, "Invalid Saml message signature");
+                    HandleError(context, "Invalid SAML message signature");
                 }
 
                 Logger.DebugFormat("Artifact resolve for assertion id: {0}, msg: {1}", parser.ArtifactResolve.ID, parser.SamlMessage);
@@ -115,7 +114,7 @@ namespace SAML2.Protocol
 
                     var req = Serialization.DeserializeFromXmlString<LogoutRequest>(parser.ArtifactResponse.Any.OuterXml);
 
-                    //Send logoutresponse via artifact
+                    // Send logoutresponse via artifact
                     var response = new Saml20LogoutResponse
                                        {
                                            Issuer = config.ServiceProvider.Id,
@@ -144,14 +143,15 @@ namespace SAML2.Protocol
 
                 var req = parser.LogoutRequest;
                 
-                //Build the response object
+                // Build the response object
                 var response = new Saml20LogoutResponse
                                    {
                                        Issuer = config.ServiceProvider.Id,
                                        StatusCode = Saml20Constants.StatusCodes.Success,
                                        InResponseTo = req.ID
                                    };
-                //response.Destination = destination.Url;
+
+                // response.Destination = destination.Url;
 
                 var doc = response.GetXml();
                 XmlSignatureUtils.SignDocument(doc, response.Id);
@@ -186,14 +186,14 @@ namespace SAML2.Protocol
         {
             Logger.DebugFormat("Received LogoutRequest.");
 
-            //Fetch the endpoint configuration
+            // Fetch the endpoint configuration
             var idp = RetrieveIDPConfiguration(context.Session[IDPLoginSessionKey].ToString());
             var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.Endpoints.LogoutEndpoint, idp.Metadata.SLOEndpoints);
 
-            //Fetch config object
+            // Fetch config object
             var config = Saml2Config.GetConfig();
 
-            //Build the response object
+            // Build the response object
             var response = new Saml20LogoutResponse
                                {
                                    Issuer = config.ServiceProvider.Id,
@@ -203,8 +203,9 @@ namespace SAML2.Protocol
 
             var message = string.Empty;
 
-            if (context.Request.RequestType == "GET") // HTTP Redirect binding
+            if (context.Request.RequestType == "GET")
             {
+                // HTTP Redirect binding
                 var parser = new HttpRedirectBindingParser(context.Request.Url);
                 Logger.DebugFormat("Binding: redirect, Signature algorithm: {0}  Signature:  {1}, Message: {2}", parser.SignatureAlgorithm, parser.Signature, parser.Message);
 
@@ -226,8 +227,9 @@ namespace SAML2.Protocol
 
                 message = parser.Message;
             }
-            else if (context.Request.RequestType == "POST") // HTTP Post binding
+            else if (context.Request.RequestType == "POST")
             {
+                // HTTP Post binding
                 var parser = new HttpPostBindingParser(context);
                 Logger.Debug("Binding: POST, Message: " + parser.Message);
 
@@ -258,7 +260,7 @@ namespace SAML2.Protocol
             }
             else
             {
-                //Error: We don't support HEAD, PUT, CONNECT, TRACE, DELETE and OPTIONS
+                // Error: We don't support HEAD, PUT, CONNECT, TRACE, DELETE and OPTIONS
                 HandleError(context, Resources.UnsupportedRequestTypeFormat(context.Request.RequestType));
             }
 
@@ -277,9 +279,7 @@ namespace SAML2.Protocol
                                   {
                                       RelayState = context.Request.Params["RelayState"],
                                       Response = response.GetXml().OuterXml,
-                                      SigningKey =
-                                          Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().
-                                          PrivateKey
+                                      SigningKey = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey
                                   };
 
                 Logger.Debug("LogoutResponse sent: " + builder.Response);
@@ -288,7 +288,7 @@ namespace SAML2.Protocol
                 return;
             }
 
-            //Respond using post binding
+            // Respond using post binding
             if (destination.Binding == BindingType.Post)
             {
                 var builder = new HttpPostBindingBuilder(destination)
@@ -391,7 +391,7 @@ namespace SAML2.Protocol
 
             Logger.DebugFormat("LogoutResponse with id {0} validated succesfully.", response.ID);
 
-            //Log the user out locally
+            // Log the user out locally
             DoLogout(context);
         }
 
@@ -438,9 +438,7 @@ namespace SAML2.Protocol
                 var builder = new HttpRedirectBindingBuilder
                                   {
                                       Request = request.GetXml().OuterXml,
-                                      SigningKey =
-                                          Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().
-                                          PrivateKey
+                                      SigningKey = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey
                                   };
 
                 request.Destination = destination.Url;
@@ -491,8 +489,8 @@ namespace SAML2.Protocol
 
             try
             {
-                //Some IDP's are known to fail to set an actual value in the SOAPAction header
-                //so we just check for the existence of the header field.
+                // Some IDP's are known to fail to set an actual value in the SOAPAction header
+                // so we just check for the existence of the header field.
                 if (Array.Exists(context.Request.Headers.AllKeys, s => s == SoapConstants.SoapAction))
                 {
                     HandleSoap(context, context.Request.InputStream);
@@ -516,7 +514,7 @@ namespace SAML2.Protocol
                 else
                 {
                     IdentityProviderElement idpEndpoint = null;
-                    //context.Session[IDPLoginSessionKey] may be null if IIS has been restarted
+                    // context.Session[IDPLoginSessionKey] may be null if IIS has been restarted
 
                     if (context.Session[IDPSessionIdKey] != null)
                     {
@@ -538,7 +536,7 @@ namespace SAML2.Protocol
             }
             catch (Exception e)
             {
-                //ThreadAbortException is thrown by response.Redirect so don't worry about it
+                // ThreadAbortException is thrown by response.Redirect so don't worry about it
                 if (e is ThreadAbortException)
                 {
                     throw;

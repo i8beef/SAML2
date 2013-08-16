@@ -6,22 +6,41 @@ using System.Web;
 namespace SAML2.Protocol
 {
     /// <summary>
-    /// Implements access to the common domain cookie specified in the SAML20 indentity provider discovery profile
+    /// Implements access to the common domain cookie specified in the SAML20 identity provider discovery profile.
     /// </summary>
     public class CommonDomainCookie
     {
         /// <summary>
-        /// Che name of the CDC cookie
+        /// The name of the common domain cookie.
         /// </summary>
-        public const string COMMON_DOMAIN_COOKIE_NAME = "_saml_idp";
+        public const string CommonDomainCookieName = "_samlIdp";
 
         #region Private variables
 
+        /// <summary>
+        /// The cookie collection.
+        /// </summary>
         private readonly HttpCookieCollection _cookies;
 
-        private readonly string _saml_idp;
+        /// <summary>
+        /// The KnownIdps backing field.
+        /// </summary>
+        private readonly List<string> _knownIdps;
 
-        private bool _isLoaded = false;
+        /// <summary>
+        /// The SAML identity provider.
+        /// </summary>
+        private readonly string _samlIdp;
+
+        /// <summary>
+        /// Indicates if this instance has been loaded.
+        /// </summary>
+        private bool _isLoaded;
+
+        /// <summary>
+        /// Indicates if the cookie is set.
+        /// </summary>
+        private bool _isSet;
 
         #endregion
 
@@ -34,24 +53,22 @@ namespace SAML2.Protocol
         public CommonDomainCookie(HttpCookieCollection cookies)
         {
             _cookies = cookies;
-            _knownIDPs = new List<string>();
+            this._knownIdps = new List<string>();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommonDomainCookie"/> class.
         /// </summary>
-        /// <param name="saml_idp">The cookie value.</param>
-        public CommonDomainCookie(string saml_idp)
+        /// <param name="samlIdp">The SAML identity provider.</param>
+        public CommonDomainCookie(string samlIdp)
         {
-            _saml_idp = saml_idp;
-            _knownIDPs = new List<string>();
+            this._samlIdp = samlIdp;
+            this._knownIdps = new List<string>();
         }
 
         #endregion
 
         #region Properties
-
-        private bool _isSet = false;
 
         /// <summary>
         /// Gets a value indicating whether the Common Domain Cookie was set (had valid values).
@@ -62,22 +79,22 @@ namespace SAML2.Protocol
             get
             {
                 Load();
+
                 return _isSet;
             }
         }
-
-        private readonly List<string> _knownIDPs;
 
         /// <summary>
         /// Gets the list of known IDPs.
         /// </summary>
         /// <value>The known IDPs. Caller should check that values are valid URIs before using them as such.</value>
-        public List<string> KnownIDPs
+        public List<string> KnownIdps
         {
             get
             {
                 EnsureSet();
-                return _knownIDPs;
+
+                return this._knownIdps;
             }
         }
 
@@ -91,10 +108,7 @@ namespace SAML2.Protocol
             {
                 EnsureSet();
 
-                if (_knownIDPs.Count > 0)
-                    return _knownIDPs[_knownIDPs.Count - 1];
-
-                return string.Empty;
+                return this._knownIdps.Count > 0 ? this._knownIdps[this._knownIdps.Count - 1] : string.Empty;
             }
         }
 
@@ -102,55 +116,78 @@ namespace SAML2.Protocol
 
         #region Private utility functions
 
+        /// <summary>
+        /// Ensures the cookie is set.
+        /// </summary>
         private void EnsureSet()
         {
             Load();
             if (!_isSet)
+            {
                 throw new Saml20Exception("The common domain cookie is not set. Please make sure to check the IsSet property before accessing the class' properties.");
+            }
         }
 
+        /// <summary>
+        /// Loads this instance.
+        /// </summary>
         private void Load()
         {
             if (_cookies != null)
+            {
                 LoadCookie();
-            if (!string.IsNullOrEmpty(_saml_idp))
+            }
+
+            if (!string.IsNullOrEmpty(this._samlIdp))
+            {
                 LoadFromString();
+            }
         }
 
+        /// <summary>
+        /// Loads from string.
+        /// </summary>
         private void LoadFromString()
         {
             if (!_isLoaded)
             {
-                ParseCookie(_saml_idp);
+                ParseCookie(this._samlIdp);
                 _isSet = true;
                 _isLoaded = true;
             }
         }
 
+        /// <summary>
+        /// Loads the cookie.
+        /// </summary>
         private void LoadCookie()
         {
             if (!_isLoaded)
             {
-                HttpCookie cdc = _cookies[COMMON_DOMAIN_COOKIE_NAME];
+                var cdc = _cookies[CommonDomainCookieName];
                 if (cdc != null)
                 {
                     ParseCookie(cdc.Value);
                     _isSet = true;
-
                 }
+
                 _isLoaded = true;
             }
         }
 
+        /// <summary>
+        /// Parses the cookie.
+        /// </summary>
+        /// <param name="rawValue">The raw value.</param>
         private void ParseCookie(string rawValue)
         {
-            string value = HttpUtility.UrlDecode(rawValue);
-            string[] idps = value.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string base64idp in idps)
+            var value = HttpUtility.UrlDecode(rawValue);
+            var idps = value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var base64idp in idps)
             {
-                byte[] bytes = Convert.FromBase64String(base64idp);
-                string idp = Encoding.ASCII.GetString(bytes);
-                _knownIDPs.Add(idp);                
+                var bytes = Convert.FromBase64String(base64idp);
+                var idp = Encoding.ASCII.GetString(bytes);
+                _knownIdps.Add(idp);                
             }
         }
 

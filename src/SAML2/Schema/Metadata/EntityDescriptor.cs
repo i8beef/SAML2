@@ -18,8 +18,8 @@ namespace SAML2.Schema.Metadata
     /// * Affiliation
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Metadata)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Metadata, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Metadata)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class EntityDescriptor
     {
         /// <summary>
@@ -123,13 +123,13 @@ namespace SAML2.Schema.Metadata
         /// &lt;AffiliationDescriptor&gt;
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("AffiliationDescriptor", typeof (AffiliationDescriptor))]
-        [XmlElement("AttributeAuthorityDescriptor", typeof (AttributeAuthorityDescriptor))]
-        [XmlElement("AuthnAuthorityDescriptor", typeof (AuthnAuthorityDescriptor))]
-        [XmlElement("IDPSSODescriptor", typeof (IDPSSODescriptor))]
-        [XmlElement("PDPDescriptor", typeof (PDPDescriptor))]
-        [XmlElement("RoleDescriptor", typeof (RoleDescriptor))]
-        [XmlElement("SPSSODescriptor", typeof (SPSSODescriptor))]
+        [XmlElement("AffiliationDescriptor", typeof(AffiliationDescriptor))]
+        [XmlElement("AttributeAuthorityDescriptor", typeof(AttributeAuthorityDescriptor))]
+        [XmlElement("AuthnAuthorityDescriptor", typeof(AuthnAuthorityDescriptor))]
+        [XmlElement("IDPSSODescriptor", typeof(IDPSSODescriptor))]
+        [XmlElement("PDPDescriptor", typeof(PDPDescriptor))]
+        [XmlElement("RoleDescriptor", typeof(RoleDescriptor))]
+        [XmlElement("SPSSODescriptor", typeof(SPSSODescriptor))]
         public object[] Items { get; set; }
 
         /// <summary>

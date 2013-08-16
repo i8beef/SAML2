@@ -8,8 +8,8 @@ namespace SAML2.Schema.Protocol
     /// authentication statements returned in response to a request or query.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Protocol)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Protocol, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Protocol)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
     public class RequestedAuthnContext
     {
         /// <summary>
@@ -55,8 +55,8 @@ namespace SAML2.Schema.Protocol
         /// Specifies one or more URI references identifying authentication context classes or declarations.
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("AuthnContextClassRef", typeof (string), Namespace = Saml20Constants.Assertion, DataType = "anyURI")]
-        [XmlElement("AuthnContextDeclRef", typeof (string), Namespace = Saml20Constants.Assertion, DataType = "anyURI")]
+        [XmlElement("AuthnContextClassRef", typeof(string), Namespace = Saml20Constants.Assertion, DataType = "anyURI")]
+        [XmlElement("AuthnContextDeclRef", typeof(string), Namespace = Saml20Constants.Assertion, DataType = "anyURI")]
         [XmlChoiceIdentifier("ItemsElementName")]
         public string[] Items { get; set; }
 

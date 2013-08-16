@@ -1,9 +1,9 @@
 using System;
 using System.Web.Configuration;
 using System.Web.UI;
-using Saml2.Properties;
+using SAML2.Properties;
 
-namespace SAML2.Protocol.pages
+namespace SAML2.Protocol.Pages
 {
     /// <summary>
     /// A page for displaying error messages
@@ -62,7 +62,7 @@ namespace SAML2.Protocol.pages
                         err = ErrorText;
                         break;
                     case CustomErrorsMode.On:
-                        //Display generic error
+                        // Display generic error
                         break;
                     case CustomErrorsMode.RemoteOnly:
                         if (Context.Request.IsLocal)
@@ -74,7 +74,7 @@ namespace SAML2.Protocol.pages
             }
             else
             {
-                //OverrideConfig: Display detailed error message
+                // OverrideConfig: Display detailed error message
                 err = ErrorText;
             }
             

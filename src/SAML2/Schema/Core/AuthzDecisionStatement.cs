@@ -10,7 +10,7 @@ namespace SAML2.Schema.Core
     /// &lt;AuthzDecisionStatement&gt; elements MUST contain a &lt;Subject&gt; element.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class AuthzDecisionStatement : StatementAbstract
     {
@@ -37,7 +37,7 @@ namespace SAML2.Schema.Core
         /// current document", as specified by IETF RFC 2396 [RFC 2396] Section 4.2.
         /// </summary>
         /// <value>The resource.</value>
-        [XmlAttribute("Resource", DataType="anyURI")]
+        [XmlAttribute("Resource", DataType = "anyURI")]
         public string Resource { get; set; }
         
         #endregion

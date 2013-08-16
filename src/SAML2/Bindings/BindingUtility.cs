@@ -13,7 +13,7 @@ namespace SAML2.Bindings
         /// <summary>
         /// Validates the SAML20Federation configuration.
         /// </summary>
-        /// <param name="errorMessage">The error message. If validation passes, it will be an empty string. Otherwise it will contain a userfriendly message.</param>
+        /// <param name="errorMessage">The error message. If validation passes, it will be an empty string. Otherwise it will contain a user friendly message.</param>
         /// <returns>True if validation passes, false otherwise</returns>
         public static bool ValidateConfiguration(out string errorMessage)
         {
@@ -51,7 +51,6 @@ namespace SAML2.Bindings
                         errorMessage = Saml20Resources.SigningCertificateMissingPrivateKey;
                         return false;
                     }
-
                 }
                 catch (Exception ex)
                 {

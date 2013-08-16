@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SAML2.Config;
-using System;
 
 namespace SAML2.Actions
 {
@@ -34,7 +34,7 @@ namespace SAML2.Actions
 
             return config.Actions == null
                        ? GetDefaultActions()
-                       : config.Actions.Select(ac => (IAction) Activator.CreateInstance(Type.GetType(ac.Type))).ToList();
+                       : config.Actions.Select(ac => (IAction)Activator.CreateInstance(Type.GetType(ac.Type))).ToList();
         }
     }
 }

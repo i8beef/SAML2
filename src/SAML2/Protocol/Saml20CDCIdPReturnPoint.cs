@@ -6,7 +6,7 @@ using SAML2.Config;
 namespace SAML2.Protocol
 {
     /// <summary>
-    /// Saml 2 common domain cookie Id return point.
+    /// SAML 2 common domain cookie Id return point.
     /// </summary>
     public class Saml20CDCIdPReturnPoint : AbstractEndpointHandler
     {

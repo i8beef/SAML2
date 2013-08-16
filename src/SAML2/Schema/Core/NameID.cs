@@ -8,9 +8,8 @@ namespace SAML2.Schema.Core
     /// name. It is a more restricted form of identifier than the &lt;BaseID&gt; element and is the type underlying both
     /// the &lt;NameID&gt; and &lt;Issuer&gt; elements.
     /// </summary>
-    /// 
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class NameID
     {

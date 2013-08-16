@@ -82,7 +82,7 @@ namespace SAML2.Tests.Validation
                                               };
                 var doc = new XmlDocument();
                 var elem = doc.CreateElement("ds", "KeyInfo", Saml20Constants.Xmldsig);
-                elem.AppendChild((doc.CreateElement("lalala")));
+                elem.AppendChild(doc.CreateElement("lalala"));
 
                 subjectConfirmation.SubjectConfirmationData.AnyElements = new[] { elem };
 

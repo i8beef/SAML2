@@ -7,8 +7,8 @@ namespace SAML2.Schema.XmlDSig
     /// Contains a list of SignatureProperty instances
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Xmldsig)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
     public class SignatureProperties
     {
         /// <summary>

@@ -116,7 +116,7 @@ namespace SAML2.Tests
 
             /// <summary>
             /// Test that the <code>Saml20EncryptedAssertion</code> class is capable of finding keys that are "peer" included,
-            /// ie. the &lt;EncryptedKey&gt; element is a sibling of the &lt;EncryptedData&gt; element.
+            /// i.e. the &lt;EncryptedKey&gt; element is a sibling of the &lt;EncryptedData&gt; element.
             /// </summary>
             [Test]
             public void CanDecryptAssertionWithPeerIncludedKeys()
@@ -175,7 +175,7 @@ namespace SAML2.Tests
 
             /// <summary>
             /// Test that the <code>Saml20EncryptedAssertion</code> class is capable of finding keys that are "peer" included,
-            /// ie. the &lt;EncryptedKey&gt; element is a sibling of the &lt;EncryptedData&gt; element, and the assertion does
+            /// i.e. the &lt;EncryptedKey&gt; element is a sibling of the &lt;EncryptedData&gt; element, and the assertion does
             /// not specify an encryption method.
             /// </summary>
             [Test]
@@ -237,7 +237,7 @@ namespace SAML2.Tests
                     Assert.Fail("Verification should fail. Token does not include its signing key.");
                 }
                 catch (InvalidOperationException)
-                { }
+                {}
 
                 Assert.IsNull(assertion.SigningKey, "Signing key is already present on assertion. Modify test.");
                 Assert.That(assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endp.Metadata.GetKeys(KeyTypes.Signing), endp)));

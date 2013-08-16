@@ -17,12 +17,12 @@ namespace SAML2.Bindings
         public const string SamlRequest = "SAMLRequest";
 
         /// <summary>
-        /// SigAlg name
+        /// Signature Algorithm name
         /// </summary>
         public const string SigAlg = "SigAlg";
 
         /// <summary>
-        /// Relaystate name
+        /// Relay state name
         /// </summary>
         public const string RelayState = "RelayState";
 

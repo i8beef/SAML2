@@ -64,7 +64,7 @@ namespace SAML2.Tests.Validation
                 var subjectConfirmationData = new KeyInfoConfirmationData { Recipient = "urn:wellformed.uri:ok" };
                 var doc = new XmlDocument();
                 var elem = doc.CreateElement("ds", "KeyInfo", "http://wrongNameSpace.uri");
-                elem.AppendChild((doc.CreateElement("ds", "KeyName", Saml20Constants.Xmldsig)));
+                elem.AppendChild(doc.CreateElement("ds", "KeyName", Saml20Constants.Xmldsig));
 
                 subjectConfirmationData.AnyElements = new[] { elem };
 
@@ -150,7 +150,7 @@ namespace SAML2.Tests.Validation
                 var subjectConfirmationData = new KeyInfoConfirmationData { Recipient = "urn:wellformed.uri:ok" };
                 var doc = new XmlDocument();
                 var elem = doc.CreateElement("ds", "KeyInfo", Saml20Constants.Xmldsig);
-                elem.AppendChild((doc.CreateElement("lalala")));
+                elem.AppendChild(doc.CreateElement("lalala"));
 
                 subjectConfirmationData.AnyElements = new[] { elem };
 

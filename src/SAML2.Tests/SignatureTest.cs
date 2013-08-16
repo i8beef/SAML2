@@ -110,8 +110,8 @@ namespace SAML2.Tests
             SignDocument(token);
 
             // Manipulate the #%!;er: Attempt to remove the <AudienceRestriction> from the list of conditions.
-            var conditions = (XmlElement) token.GetElementsByTagName("Conditions", "urn:oasis:names:tc:SAML:2.0:assertion")[0];
-            var audienceRestriction = (XmlElement) conditions.GetElementsByTagName("AudienceRestriction", "urn:oasis:names:tc:SAML:2.0:assertion")[0];
+            var conditions = (XmlElement)token.GetElementsByTagName("Conditions", "urn:oasis:names:tc:SAML:2.0:assertion")[0];
+            var audienceRestriction = (XmlElement)conditions.GetElementsByTagName("AudienceRestriction", "urn:oasis:names:tc:SAML:2.0:assertion")[0];
 
             conditions.RemoveChild(audienceRestriction);
             
@@ -141,7 +141,7 @@ namespace SAML2.Tests
             }
             catch
             {
-                //Added to make resharper happy
+                // Added to make resharper happy
                 Assert.That(true);
             }
 
@@ -150,7 +150,7 @@ namespace SAML2.Tests
             assertion.Sign(cert);
 
             // Check that the signature is now valid
-            assertion.CheckValid(new[] {cert.PublicKey.Key});
+            assertion.CheckValid(new[] { cert.PublicKey.Key });
         }
 
         #endregion
@@ -160,6 +160,7 @@ namespace SAML2.Tests
         /// <summary>
         /// Signs the document given as an argument.
         /// </summary>
+        /// <param name="doc">The doc.</param>
         private static void SignDocument(XmlDocument doc)
         {
             var signedXml = new SignedXml(doc);
@@ -171,13 +172,13 @@ namespace SAML2.Tests
             reference.AddTransform(envelope);
 
             // NOTE: C14n may require the following list of namespace prefixes. Seems to work without it, though.
-            //List<string> prefixes = new List<string>();
-            //prefixes.Add(doc.DocumentElement.GetPrefixOfNamespace("http://www.w3.org/2000/09/xmldsig#"));
-            //prefixes.Add(doc.DocumentElement.GetPrefixOfNamespace("http://www.w3.org/2001/XMLSchema-instance"));
-            //prefixes.Add(doc.DocumentElement.GetPrefixOfNamespace("http://www.w3.org/2001/XMLSchema"));
-            //prefixes.Add(doc.DocumentElement.GetPrefixOfNamespace("urn:oasis:names:tc:SAML:2.0:assertion"));
+            // List<string> prefixes = new List<string>();
+            // prefixes.Add(doc.DocumentElement.GetPrefixOfNamespace("http://www.w3.org/2000/09/xmldsig#"));
+            // prefixes.Add(doc.DocumentElement.GetPrefixOfNamespace("http://www.w3.org/2001/XMLSchema-instance"));
+            // prefixes.Add(doc.DocumentElement.GetPrefixOfNamespace("http://www.w3.org/2001/XMLSchema"));
+            // prefixes.Add(doc.DocumentElement.GetPrefixOfNamespace("urn:oasis:names:tc:SAML:2.0:assertion"));
 
-            //XmlDsigExcC14NTransform C14NTransformer = new XmlDsigExcC14NTransform(string.Join(" ", prefixes.ToArray()).Trim());
+            // XmlDsigExcC14NTransform C14NTransformer = new XmlDsigExcC14NTransform(string.Join(" ", prefixes.ToArray()).Trim());
             var c14NTransformer = new XmlDsigExcC14NTransform();
 
             reference.AddTransform(c14NTransformer);            
@@ -197,7 +198,7 @@ namespace SAML2.Tests
             var cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
             Assert.That(cert.HasPrivateKey);
             signedXml.SigningKey = cert.PrivateKey;
-            signedXml.KeyInfo.AddClause(new KeyInfoX509Data(cert,X509IncludeOption.EndCertOnly));
+            signedXml.KeyInfo.AddClause(new KeyInfoX509Data(cert, X509IncludeOption.EndCertOnly));
 
             // Information on the these and other "key info clause" types can be found at:
             // ms-help://MS.MSDNQTR.v80.en/MS.MSDN.v80/MS.NETDEVFX.v20.en/CPref18/html/T_System_Security_Cryptography_Xml_KeyInfoClause_DerivedTypes.htm

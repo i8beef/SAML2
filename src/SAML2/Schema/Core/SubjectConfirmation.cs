@@ -10,7 +10,7 @@ namespace SAML2.Schema.Core
     /// communicating.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class SubjectConfirmation
     {
@@ -47,9 +47,9 @@ namespace SAML2.Schema.Core
         /// Valid elements are &lt;BaseID&gt;, &lt;NameID&gt;, or &lt;EncryptedID&gt; 
         /// </summary>
         /// <value>The item.</value>
-        [XmlElement("BaseID", typeof (BaseIDAbstract))]
-        [XmlElement("EncryptedID", typeof (EncryptedElement))]
-        [XmlElement("NameID", typeof (NameID))]
+        [XmlElement("BaseID", typeof(BaseIDAbstract))]
+        [XmlElement("EncryptedID", typeof(EncryptedElement))]
+        [XmlElement("NameID", typeof(NameID))]
         public object Item { get; set; }
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace SAML2.Specification
         /// </returns>
         public bool IsSatisfiedBy(X509Certificate2 certificate)
         {
-            const bool useMachineContext = false;
+            var useMachineContext = false;
             var chainPolicy = new X509ChainPolicy { RevocationMode = X509RevocationMode.Online };
             var defaultCertificateValidator = X509CertificateValidator.CreateChainTrustValidator(useMachineContext, chainPolicy);
 
@@ -29,7 +29,7 @@ namespace SAML2.Specification
                 defaultCertificateValidator.Validate(certificate);
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logging.LoggerProvider.LoggerFor(GetType()).Warn(string.Format(Tracing.CertificateIsNotRFC3280Valid, certificate.SubjectName.Name, certificate.Thumbprint), e);
             }

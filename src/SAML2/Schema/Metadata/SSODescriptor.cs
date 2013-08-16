@@ -14,7 +14,7 @@ namespace SAML2.Schema.Metadata
     [XmlIncludeAttribute(typeof(IDPSSODescriptor))]
     [Serializable]
     [DebuggerStepThrough]
-    [XmlTypeAttribute(Namespace=Saml20Constants.Metadata)]
+    [XmlTypeAttribute(Namespace = Saml20Constants.Metadata)]
     public abstract class SSODescriptor : RoleDescriptor
     {
         #region Elements
@@ -45,7 +45,7 @@ namespace SAML2.Schema.Metadata
         /// this element.
         /// </summary>
         /// <value>The name ID format.</value>
-        [XmlElement("NameIDFormat", DataType="anyURI")]
+        [XmlElement("NameIDFormat", DataType = "anyURI")]
         public string[] NameIDFormat { get; set; }
 
         /// <summary>

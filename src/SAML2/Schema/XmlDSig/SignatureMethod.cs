@@ -13,8 +13,8 @@ namespace SAML2.Schema.XmlDSig
     /// signature values. 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Xmldsig)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
     public class SignatureMethod
     {
         /// <summary>
@@ -47,7 +47,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the length of the HMAC output.
         /// </summary>
         /// <value>The length of the HMAC output.</value>
-        [XmlElement("HMACOutputLength", DataType="integer")]
+        [XmlElement("HMACOutputLength", DataType = "integer")]
         public string HMACOutputLength { get; set; }
 
         #endregion

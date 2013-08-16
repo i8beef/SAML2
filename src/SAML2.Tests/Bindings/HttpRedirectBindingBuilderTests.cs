@@ -20,7 +20,7 @@ namespace SAML2.Tests.Bindings
             /// Ensure that it is not possible to add a request, when a response has already been added.
             /// </summary>
             [Test]
-            [ExpectedException(typeof (ArgumentException))]
+            [ExpectedException(typeof(ArgumentException))]
             public void DoesNotAllowResponseAndRequestToBothBeSet()
             {
                 // Arrange
@@ -47,7 +47,7 @@ namespace SAML2.Tests.Bindings
             /// Ensure that it is not possible to add a response, when a request has already been added.
             /// </summary>
             [Test]
-            [ExpectedException(typeof (ArgumentException))]
+            [ExpectedException(typeof(ArgumentException))]
             public void DoesNotAllowRequestAndResponseToBothBeSet()
             {
                 // Arrange

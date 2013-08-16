@@ -8,7 +8,7 @@ namespace SAML2.Schema.Core
     /// which the assertion subject was authenticated. It has the following attributes:
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Assertion)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class SubjectLocality
     {

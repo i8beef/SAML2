@@ -10,22 +10,25 @@ namespace SAML2.Identity
     public interface ISaml20Identity : IEnumerable<SamlAttribute>, IIdentity 
     {
         /// <summary>
-        /// Retrieve an saml 20 attribute using its name. Note that this is the value contained in the 'Name' attribute, and 
+        /// Gets the value of the persistent pseudonym issued by the IdP if the Service Provider connection 
+        /// is set up with persistent pseudonyms. Otherwise, returns null.
+        /// </summary>
+        string PersistentPseudonym { get; }
+
+        /// <summary>
+        /// Retrieve an SAML 20 attribute using its name. Note that this is the value contained in the 'Name' attribute, and
         /// not the 'FriendlyName' attribute.
-        /// </summary>        
+        /// </summary>
+        /// <param name="attributeName">The attribute name.</param>
+        /// <returns>A list of <see cref="SamlAttribute"/>.</returns>
         /// <exception cref="KeyNotFoundException">If the identity instance does not have the requested attribute.</exception>
         List<SamlAttribute> this[string attributeName] { get; }
 
         /// <summary>
         /// Check if the identity contains a certain attribute.
         /// </summary>
-        /// <param name="attributeName">The name of the attribute to look for.</param>        
+        /// <param name="attributeName">The name of the attribute to look for.</param>
+        /// <returns><c>true</c> if the specified attribute name has attribute; otherwise, <c>false</c>.</returns>
         bool HasAttribute(string attributeName);
-
-        /// <summary>
-        /// Returns the value of the persistent pseudonym issued by the IdP if the Service Provider connection 
-        /// is set up with persistent pseudonyms. Otherwise, returns null.
-        /// </summary>
-        string PersistentPseudonym { get; }
     }
 }

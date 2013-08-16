@@ -10,7 +10,7 @@ namespace SAML2.Utils
     /// </summary>
     /// <param name="ep">List of configured endpoints</param>
     /// <returns>The IdentityProviderEndpointElement for the IDP that should be used for authentication</returns>
-    public delegate IdentityProviderElement IDPSelectionEventHandler (IdentityProviderCollection ep);
+    public delegate IdentityProviderElement IDPSelectionEventHandler(IdentityProviderCollection ep);
 
     /// <summary>
     /// Contains helper functionality for selection of IDP when more than one is configured

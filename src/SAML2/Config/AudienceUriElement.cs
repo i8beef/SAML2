@@ -14,7 +14,7 @@ namespace SAML2.Config
         [ConfigurationProperty("uri", IsKey = true, IsRequired = true)]
         public string Uri
         {
-            get { return (string) base["uri"]; }
+            get { return (string)base["uri"]; }
             set { base["uri"] = value; }
         }
 

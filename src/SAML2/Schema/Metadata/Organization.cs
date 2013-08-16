@@ -10,7 +10,7 @@ namespace SAML2.Schema.Metadata
     /// directly map to any core SAML elements or attributes.
     /// </summary>
     [Serializable]
-    [XmlRoot(ElementName, IsNullable=false)]
+    [XmlRoot(ElementName, IsNullable = false)]
     public class Organization
     {
         /// <summary>

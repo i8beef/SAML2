@@ -28,10 +28,10 @@ namespace SAML2.Bindings
         private string _signedquery;
 
         /// <summary>
-        /// Parses the query string.
+        /// Initializes a new instance of the <see cref="HttpRedirectBindingParser"/> class.
         /// </summary>
         /// <param name="uri">The URL that the user was redirected to by the IDP. It is essential for the survival of the signature,
-        /// that the URL is not modified in any way, eg. by URL-decoding it.</param>
+        /// that the URL is not modified in any way, e.g. by URL-decoding it.</param>
         public HttpRedirectBindingParser(Uri uri)
         {
             var paramDict = UriToDictionary(uri);
@@ -50,7 +50,7 @@ namespace SAML2.Bindings
         }
 
         /// <summary>
-        /// <code>true</code> if the parsed message contains a request message.
+        /// Gets a value indicating whether the parsed message contains a request message.
         /// </summary>
         public bool IsRequest
         {
@@ -58,12 +58,12 @@ namespace SAML2.Bindings
         }
 
         /// <summary>
-        /// <code>true</code> if the parsed message contains a response message.
+        /// Gets a value indicating whether the parsed message contains a response message.
         /// </summary>
         public bool IsResponse { get; private set; }
 
         /// <summary>
-        /// <code>true</code> if the parsed message contains a signature.
+        /// Gets a value indicating whether the parsed message contains a signature.
         /// </summary>
         public bool IsSigned
         {
@@ -71,20 +71,20 @@ namespace SAML2.Bindings
         }
 
         /// <summary>
-        /// Returns the message that was contained in the query. Use the <code>IsResponse</code> or the <code>IsRequest</code> property 
+        /// Gets the message that was contained in the query. Use the <code>IsResponse</code> or the <code>IsRequest</code> property 
         /// to determine the kind of message.
         /// </summary>
         public string Message { get; private set; }
 
         /// <summary>
-        /// Returns the relaystate that was included with the query. The result will still be encoded according to the 
-        /// rules given in section 3.4.4.1 of [SAMLBind], ie. base64-encoded and DEFLATE-compressed. Use the property 
+        /// Gets the relay state that was included with the query. The result will still be encoded according to the 
+        /// rules given in section 3.4.4.1 of [SAMLBind], i.e. base64-encoded and DEFLATE-compressed. Use the property 
         /// <code>RelayStateDecoded</code> to get the decoded contents of the RelayState parameter.
         /// </summary>
         public string RelayState { get; private set; }
 
         /// <summary>
-        /// Returns a decoded and decompressed version of the RelayState parameter.
+        /// Gets a decoded and decompressed version of the RelayState parameter.
         /// </summary>
         public string RelayStateDecoded
         {
@@ -130,12 +130,12 @@ namespace SAML2.Bindings
             var hash = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(_signedquery));
             if (key is RSACryptoServiceProvider)
             {
-                var rsa = (RSACryptoServiceProvider) key;
+                var rsa = (RSACryptoServiceProvider)key;
                 return rsa.VerifyHash(hash, "SHA1", DecodeSignature());
             }
             else
             {
-                var dsa = (DSA) key;
+                var dsa = (DSA)key;
                 return dsa.VerifySignature(hash, DecodeSignature());
             }
         }
@@ -149,7 +149,7 @@ namespace SAML2.Bindings
         {
             foreach (var keyDescriptor in keys)
             {
-                foreach (KeyInfoClause clause in (KeyInfo) keyDescriptor.KeyInfo)
+                foreach (KeyInfoClause clause in (KeyInfo)keyDescriptor.KeyInfo)
                 {
                     var key = XmlSignatureUtils.ExtractKey(clause);
                     if (key != null && CheckSignature(key))
@@ -163,18 +163,21 @@ namespace SAML2.Bindings
         }
 
         /// <summary>
-        /// Take a Base64-encoded string, decompress the result using the DEFLATE algorithm and return the resulting 
+        /// Take a Base64-encoded string, decompress the result using the DEFLATE algorithm and return the resulting
         /// string.
         /// </summary>
-        private static string DeflateDecompress(string str)
+        /// <param name="value">The value.</param>
+        /// <returns>The decompressed value.</returns>
+        private static string DeflateDecompress(string value)
         {
-            var encoded = Convert.FromBase64String(str);
+            var encoded = Convert.FromBase64String(value);
             var memoryStream = new MemoryStream(encoded);
 
             var result = new StringBuilder();
             using (var stream = new DeflateStream(memoryStream, CompressionMode.Decompress))
             {
                 var testStream = new StreamReader(new BufferedStream(stream), Encoding.UTF8);
+
                 // It seems we need to "peek" on the StreamReader to get it started. If we don't do this, the first call to 
                 // ReadToEnd() will return string.empty.
                 testStream.Peek();
@@ -206,31 +209,27 @@ namespace SAML2.Bindings
         /// <summary>
         /// Re-creates the list of parameters that are signed, in order to verify the signature.
         /// </summary>
-        /// <param name="queryParams">The query params.</param>
+        /// <param name="queryParams">The query parameters.</param>
         private void CreateSignatureSubject(IDictionary<string, string> queryParams)
         {
             var signedQuery = new StringBuilder();
             if (IsResponse)
             {
-                signedQuery.AppendFormat("{0}={1}", HttpRedirectBindingConstants.SamlResponse,
-                                         queryParams[HttpRedirectBindingConstants.SamlResponse]);
+                signedQuery.AppendFormat("{0}={1}", HttpRedirectBindingConstants.SamlResponse, queryParams[HttpRedirectBindingConstants.SamlResponse]);
             }
             else
             {
-                signedQuery.AppendFormat("{0}={1}", HttpRedirectBindingConstants.SamlRequest,
-                                         queryParams[HttpRedirectBindingConstants.SamlRequest]);
+                signedQuery.AppendFormat("{0}={1}", HttpRedirectBindingConstants.SamlRequest, queryParams[HttpRedirectBindingConstants.SamlRequest]);
             }
 
             if (RelayState != null)
             {
-                signedQuery.AppendFormat("&{0}={1}", HttpRedirectBindingConstants.RelayState,
-                                         queryParams[HttpRedirectBindingConstants.RelayState]);
+                signedQuery.AppendFormat("&{0}={1}", HttpRedirectBindingConstants.RelayState, queryParams[HttpRedirectBindingConstants.RelayState]);
             }
 
             if (Signature != null)
             {
-                signedQuery.AppendFormat("&{0}={1}", HttpRedirectBindingConstants.SigAlg,
-                                         queryParams[HttpRedirectBindingConstants.SigAlg]);
+                signedQuery.AppendFormat("&{0}={1}", HttpRedirectBindingConstants.SigAlg, queryParams[HttpRedirectBindingConstants.SigAlg]);
             }
 
             _signedquery = signedQuery.ToString();
@@ -259,7 +258,7 @@ namespace SAML2.Bindings
         }
 
         /// <summary>
-        /// Sets the param.
+        /// Sets the parameter.
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>

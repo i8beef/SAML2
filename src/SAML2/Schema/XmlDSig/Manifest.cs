@@ -12,8 +12,8 @@ namespace SAML2.Schema.XmlDSig
     /// from another Manifest, even the overall digest of this two level deep Manifest might not be checked. 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Xmldsig)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
     public class Manifest
     {
         /// <summary>
@@ -27,7 +27,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the id.
         /// </summary>
         /// <value>The id.</value>
-        [XmlAttribute(DataType="ID")]
+        [XmlAttribute(DataType = "ID")]
         public string Id { get; set; }
 
         #endregion

@@ -9,7 +9,7 @@ namespace SAML2.Schema.Metadata
     /// to service providers.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Metadata)]
+    [XmlType(Namespace = Saml20Constants.Metadata)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
     public class SPSSODescriptor : SSODescriptor
     {
@@ -40,7 +40,7 @@ namespace SAML2.Schema.Metadata
         public string AuthnRequestsSigned
         {
             get { return _authnRequestsSignedField == null ? null : XmlConvert.ToString(_authnRequestsSignedField.Value); }
-            set { _authnRequestsSignedField = string.IsNullOrEmpty(value) ? (bool?) null : XmlConvert.ToBoolean(value); }
+            set { _authnRequestsSignedField = string.IsNullOrEmpty(value) ? (bool?)null : XmlConvert.ToBoolean(value); }
         }
 
         /// <summary>
@@ -51,13 +51,13 @@ namespace SAML2.Schema.Metadata
         /// combination.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if [want assertions signed]; otherwise, <c>false</c>.
+        /// <c>true</c> if [want assertions signed]; otherwise, <c>false</c>.
         /// </value>
         [XmlAttribute]
         public string WantAssertionsSigned
         {
             get { return _wantAssertionsSignedField == null ? null : XmlConvert.ToString(_wantAssertionsSignedField.Value); }
-            set { _wantAssertionsSignedField = string.IsNullOrEmpty(value) ? (bool?) null : XmlConvert.ToBoolean(value); }
+            set { _wantAssertionsSignedField = string.IsNullOrEmpty(value) ? (bool?)null : XmlConvert.ToBoolean(value); }
         }
 
         #endregion

@@ -49,11 +49,11 @@ namespace SAML2.Validation
                 {
                     new MailAddress(nameId.Value);
                 }
-                catch(FormatException fe)
+                catch (FormatException fe)
                 {
                     throw new Saml20FormatException("Value of NameID is not a valid email address according to the IETF RFC 2822 specification", fe);
                 }
-                catch(IndexOutOfRangeException ie)
+                catch (IndexOutOfRangeException ie)
                 {
                     throw new Saml20FormatException("Value of NameID is not a valid email address according to the IETF RFC 2822 specification", ie);
                 }
@@ -94,7 +94,7 @@ namespace SAML2.Validation
                     throw new Saml20FormatException("NameID with Kerberos Format attribute MUST contain a Value that contains a '@'");
                 }
 
-                //TODO: Consider implementing the rules for 'name', 'instance' and 'REALM' found in IETF RFC 1510 (http://www.ietf.org/rfc/rfc1510.txt) here 
+                // TODO: Consider implementing the rules for 'name', 'instance' and 'REALM' found in IETF RFC 1510 (http://www.ietf.org/rfc/rfc1510.txt) here 
             }
             else if (nameId.Format == Saml20Constants.NameIdentifierFormats.Entity)
             {

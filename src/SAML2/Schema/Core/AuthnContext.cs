@@ -9,8 +9,8 @@ namespace SAML2.Schema.Core
     /// or both.
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Assertion)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Assertion, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Assertion)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
     public class AuthnContext
     {
         /// <summary>
@@ -35,9 +35,9 @@ namespace SAML2.Schema.Core
         /// Items may be of types: AuthnContextClassRef, AuthnContextDecl and AuthnContextDeclRef
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("AuthnContextClassRef", typeof (string), DataType = "anyURI")]
-        [XmlElement("AuthnContextDecl", typeof (object))]
-        [XmlElement("AuthnContextDeclRef", typeof (string), DataType = "anyURI")]
+        [XmlElement("AuthnContextClassRef", typeof(string), DataType = "anyURI")]
+        [XmlElement("AuthnContextDecl", typeof(object))]
+        [XmlElement("AuthnContextDeclRef", typeof(string), DataType = "anyURI")]
         [XmlChoiceIdentifier("ItemsElementName")]
         public object[] Items { get; set; }
 

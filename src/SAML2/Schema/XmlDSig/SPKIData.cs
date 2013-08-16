@@ -12,8 +12,8 @@ namespace SAML2.Schema.XmlDSig
     /// structure as a child of KeyInfo. 
     /// </summary>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Xmldsig)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Xmldsig, IsNullable=false)]
+    [XmlType(Namespace = Saml20Constants.Xmldsig)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
     public class SPKIData
     {
         /// <summary>
@@ -24,9 +24,9 @@ namespace SAML2.Schema.XmlDSig
         #region Attributes
 
         /// <summary>
-        /// Gets or sets any.
+        /// Gets or sets any attributes.
         /// </summary>
-        /// <value>Any.</value>
+        /// <value>Any attributes.</value>
         [XmlAnyElement]
         public XmlElement Any { get; set; }
 
@@ -38,7 +38,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the SPKI sexp.
         /// </summary>
         /// <value>The SPKI sexp.</value>
-        [XmlElement("SPKISexp", DataType="base64Binary")]
+        [XmlElement("SPKISexp", DataType = "base64Binary")]
         public byte[][] SPKISexp { get; set; }
 
         #endregion

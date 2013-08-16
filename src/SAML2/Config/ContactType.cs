@@ -1,32 +1,32 @@
 ﻿namespace SAML2.Config
 {
     /// <summary>
-    /// Binding types (signon, logout or metadata)
+    /// Contact types.
     /// </summary>
     public enum ContactType
     {
         /// <summary>
-        /// Technical
+        /// Technical contact type.
         /// </summary>
         Technical,
 
         /// <summary>
-        /// Support
+        /// Support contact type.
         /// </summary>
         Support,
 
         /// <summary>
-        /// Administrative
+        /// Administrative contact type.
         /// </summary>
         Administrative,
 
         /// <summary>
-        /// Billing
+        /// Billing contact type.
         /// </summary>
         Billing,
 
         /// <summary>
-        /// Other
+        /// Other contact type.
         /// </summary>
         Other
     }

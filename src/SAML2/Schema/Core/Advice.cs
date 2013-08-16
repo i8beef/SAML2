@@ -14,8 +14,8 @@ namespace SAML2.Schema.Core
     /// We do not use it (yet) and let it pass unvalidated.
     /// </remarks>
     [Serializable]
-    [XmlType(Namespace=Saml20Constants.Assertion)]
-    [XmlRoot(ElementName, Namespace=Saml20Constants.Assertion, IsNullable=false)]    
+    [XmlType(Namespace = Saml20Constants.Assertion)]
+    [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]    
     public class Advice
     {
         /// <summary>
@@ -31,10 +31,10 @@ namespace SAML2.Schema.Core
         /// </summary>
         /// <value>The items.</value>        
         [XmlAnyElement]
-        [XmlElement("Assertion", typeof (Assertion))]
-        [XmlElement("AssertionIDRef", typeof (string), DataType="NCName")]
-        [XmlElement("AssertionURIRef", typeof (string), DataType="anyURI")]
-        [XmlElement("EncryptedAssertion", typeof (EncryptedElement))]
+        [XmlElement("Assertion", typeof(Assertion))]
+        [XmlElement("AssertionIDRef", typeof(string), DataType = "NCName")]
+        [XmlElement("AssertionURIRef", typeof(string), DataType = "anyURI")]
+        [XmlElement("EncryptedAssertion", typeof(EncryptedElement))]
         [XmlChoiceIdentifier("ItemsElementName")]
         public object[] Items { get; set; }
 
