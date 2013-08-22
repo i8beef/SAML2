@@ -94,6 +94,24 @@ namespace SAML2.Tests
             #region Statements - Attribute
 
             /// <summary>
+            /// Throws exception when no items are present.
+            /// </summary>
+            [Test]
+            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AttributeStatement MUST contain at least one Attribute or EncryptedAttribute")]
+            public void ThrowsExceptionWhenNoItemsArePresent()
+            {
+                // Arrange
+                var saml20Assertion = AssertionUtil.GetBasicAssertion();
+                var attributeStatement = (AttributeStatement)Array.Find(saml20Assertion.Items, x => x is AttributeStatement);
+
+                // Clear all the attributes.
+                attributeStatement.Items = new object[0];
+
+                // Act
+                new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+            }
+
+            /// <summary>
             /// Test that xml attribute extensions on Attribute objects must be namespace qualified
             /// </summary>
             [Test]
@@ -198,6 +216,67 @@ namespace SAML2.Tests
             }
 
             #endregion
+
+            #region Statements - AuthnStatement
+
+            /// <summary>
+            /// Throws exception when <c>AuthnContextClassRef</c> is not well formed URI.
+            /// </summary>
+            [Test]
+            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContextClassRef has a value which is not a wellformed absolute uri")]
+            public void ThrowsWhenAuthnContextClassRefIsNotWellFormedUri()
+            {
+                // Arrange
+                var saml20Assertion = AssertionUtil.GetBasicAssertion();
+                var authnStatement = (AuthnStatement)Array.Find(saml20Assertion.Items, stmnt => stmnt is AuthnStatement);
+
+                var index = Array.FindIndex(authnStatement.AuthnContext.Items, o => o is string && o.ToString() == "urn:oasis:names:tc:SAML:2.0:ac:classes:X509");
+                authnStatement.AuthnContext.Items[index] = "Hallelujagobble!!";
+
+                // Act
+                new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+            }
+
+            #endregion
+
+            #region Subject
+
+            /// <summary>
+            /// Throws exception when subject element is not present.
+            /// </summary>
+            [Test]
+            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnStatement, AuthzDecisionStatement and AttributeStatement require a subject.")]
+            public void ThrowsWhenSubjectElementIsNotPresent()
+            {
+                // Arrange
+                var saml20Assertion = AssertionUtil.GetBasicAssertion();
+                var subjectConfirmation = (SubjectConfirmation)Array.Find(saml20Assertion.Subject.Items, item => item is SubjectConfirmation);
+                subjectConfirmation.SubjectConfirmationData.NotOnOrAfter = DateTime.UtcNow;
+                subjectConfirmation.SubjectConfirmationData.NotBefore = null;
+                saml20Assertion.Subject = null;
+
+                // Act
+                new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+            }
+
+            /// <summary>
+            /// Throws exception when subject method is not well formed URI.
+            /// </summary>
+            [Test]
+            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "SubjectConfirmation element has Method attribute which is not a wellformed absolute uri.")]
+            public void ThrowsWhenSubjectMethodIsNotWellFormedUri()
+            {
+                // Arrange
+                var saml20Assertion = AssertionUtil.GetBasicAssertion();
+                var subjectConfirmation = (SubjectConfirmation)Array.Find(saml20Assertion.Subject.Items, item => item is SubjectConfirmation);
+                subjectConfirmation.Method = "IllegalMethod";
+
+                // Act
+                new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+            }
+
+            #endregion
+
         }
     }
 }
