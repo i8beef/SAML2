@@ -71,10 +71,10 @@ namespace SAML2.Tests.Bindings
         public class ToQueryMethod
         {
             /// <summary>
-            /// Tests that when using the builder to create a response, the relaystate is not encoded.
+            /// Tests that when using the builder to create a response, the relay state is not encoded.
             /// </summary>
             [Test]
-            public void DoesNotEncodeRelatyStateForResponse()
+            public void DoesNotEncodeRelayStateForResponse()
             {
                 // Arrange
                 var relaystate = string.Empty.PadRight(10, 'A');
@@ -92,7 +92,7 @@ namespace SAML2.Tests.Bindings
             }
 
             /// <summary>
-            /// Tests that when using the builder to create a request, the relaystate is encoded.
+            /// Tests that when using the builder to create a request, the relay state is encoded.
             /// </summary>
             [Test]
             public void EncodesRelayStateForRequests()

@@ -146,7 +146,7 @@ namespace SAML2
         /// <summary>
         /// Returns an instance of the class with meaningful default values set.
         /// </summary>
-        /// <returns>The defaul <see cref="Saml20AuthnRequest"/>.</returns>
+        /// <returns>The default <see cref="Saml20AuthnRequest"/>.</returns>
         public static Saml20AuthnRequest GetDefault()
         {
             var config = Saml2Config.GetConfig();

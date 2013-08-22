@@ -172,7 +172,7 @@ namespace SAML2.Bindings
             {
                 return;
             }
-
+            
             result.Append(string.Format("&{0}=", HttpRedirectBindingConstants.SigAlg));
 
             if (_signingKey is RSA)
