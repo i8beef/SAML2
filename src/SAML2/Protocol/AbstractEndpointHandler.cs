@@ -32,6 +32,26 @@ namespace SAML2.Protocol
         /// <value>The redirect URL.</value>
         public string RedirectUrl { get; set; }
 
+        #region IHttpHandler Members
+
+        /// <summary>
+        /// Gets a value indicating whether another request can use the <see cref="T:System.Web.IHttpHandler"/> instance.
+        /// </summary>
+        /// <value></value>
+        /// <returns>true if the <see cref="T:System.Web.IHttpHandler"/> instance is reusable; otherwise, false.</returns>
+        public bool IsReusable
+        {
+            get { return true; }
+        }
+
+        /// <summary>
+        /// Enables processing of HTTP Web requests by a custom HttpHandler that implements the <see cref="T:System.Web.IHttpHandler"/> interface.
+        /// </summary>
+        /// <param name="context">An <see cref="T:System.Web.HttpContext"/> object that provides references to the intrinsic server objects (for example, Request, Response, Session, and Server) used to service HTTP requests.</param>
+        public abstract void ProcessRequest(HttpContext context);
+
+        #endregion
+
         /// <summary>
         /// Displays an error page.
         /// </summary>
@@ -51,7 +71,7 @@ namespace SAML2.Protocol
         public void HandleError(HttpContext context, string errorMessage, bool overrideConfigSetting)
         {
             var showError = Saml2Config.GetConfig().ShowError;
-            const string defaultMessage = "Unable to validate SAML message!";
+            var defaultMessage = "Unable to validate SAML message!";
 
             if (!string.IsNullOrEmpty(ErrorBehavior) && ErrorBehavior.Equals(Config.ErrorBehavior.ThrowException.ToString()))
             {
@@ -120,25 +140,5 @@ namespace SAML2.Protocol
                 context.Response.Redirect(RedirectUrl);
             }
         }
-
-        #region IHttpHandler Members
-
-        /// <summary>
-        /// Gets a value indicating whether another request can use the <see cref="T:System.Web.IHttpHandler"/> instance.
-        /// </summary>
-        /// <value></value>
-        /// <returns>true if the <see cref="T:System.Web.IHttpHandler"/> instance is reusable; otherwise, false.</returns>
-        public bool IsReusable
-        {
-            get { return true; }
-        }
-
-        /// <summary>
-        /// Enables processing of HTTP Web requests by a custom HttpHandler that implements the <see cref="T:System.Web.IHttpHandler"/> interface.
-        /// </summary>
-        /// <param name="context">An <see cref="T:System.Web.HttpContext"/> object that provides references to the intrinsic server objects (for example, Request, Response, Session, and Server) used to service HTTP requests.</param>
-        public abstract void ProcessRequest(HttpContext context);
-
-        #endregion
     }
 }

@@ -44,7 +44,7 @@ namespace SAML2.Validation
         public Saml20AssertionValidator(List<string> allowedAudienceUris, bool quirksMode)
         {
             _allowedAudienceUris = allowedAudienceUris;
-            this._quirksMode = quirksMode;
+            _quirksMode = quirksMode;
         }
 
         #region ISaml20AssertionValidator interface
@@ -81,6 +81,7 @@ namespace SAML2.Validation
 
             var conditions = assertion.Conditions;
             var now = DateTime.UtcNow;
+
             // Negative allowed clock skew does not make sense - we are trying to relax the restriction interval, not restrict it any further
             if (allowedClockSkew < TimeSpan.Zero)
             {
@@ -123,11 +124,54 @@ namespace SAML2.Validation
                         throw new Saml20FormatException("SubjectConfirmationData.NotOnOrAfter must not be in the past");
                     }
                 }
-
             }
         }
 
         #endregion
+
+        /// <summary>
+        /// If both conditions.NotBefore and conditions.NotOnOrAfter are specified, NotBefore
+        /// MUST BE less than NotOnOrAfter
+        /// </summary>
+        /// <param name="conditions">The conditions.</param>
+        /// <exception cref="Saml20FormatException">If <param name="conditions"/>.NotBefore is not less than <paramref name="conditions"/>.NotOnOrAfter</exception>
+        private static void ValidateConditionsInterval(Conditions conditions)
+        {
+            // No settings? No restrictions
+            if (conditions.NotBefore == null && conditions.NotOnOrAfter == null)
+            {
+                return;
+            }
+
+            if (conditions.NotBefore != null && conditions.NotOnOrAfter != null && conditions.NotBefore.Value >= conditions.NotOnOrAfter.Value)
+            {
+                throw new Saml20FormatException(string.Format("NotBefore {0} MUST BE less than NotOnOrAfter {1} on Conditions", Saml20Utils.ToUtcString(conditions.NotBefore.Value), Saml20Utils.ToUtcString(conditions.NotOnOrAfter.Value)));
+            }
+        }
+
+        /// <summary>
+        /// Null fields are considered to be valid
+        /// </summary>
+        /// <param name="notBefore">The not before.</param>
+        /// <param name="now">The now.</param>
+        /// <param name="allowedClockSkew">The allowed clock skew.</param>
+        /// <returns>True if the not before value is valid, else false.</returns>
+        private static bool ValidateNotBefore(DateTime? notBefore, DateTime now, TimeSpan allowedClockSkew)
+        {
+            return notBefore == null || TimeRestrictionValidation.NotBeforeValid(notBefore.Value, now, allowedClockSkew);
+        }
+
+        /// <summary>
+        /// Handle allowed clock skew by increasing notOnOrAfter with allowedClockSkew
+        /// </summary>
+        /// <param name="notOnOrAfter">The not on or after.</param>
+        /// <param name="now">The now.</param>
+        /// <param name="allowedClockSkew">The allowed clock skew.</param>
+        /// <returns>True if the not on or after value is valid, else false.</returns>
+        private static bool ValidateNotOnOrAfter(DateTime? notOnOrAfter, DateTime now, TimeSpan allowedClockSkew)
+        {
+            return notOnOrAfter == null || TimeRestrictionValidation.NotOnOrAfterValid(notOnOrAfter.Value, now, allowedClockSkew);
+        }
 
         /// <summary>
         /// Validates that all the required attributes are present on the assertion.
@@ -206,6 +250,7 @@ namespace SAML2.Validation
                     {
                         throw new Saml20FormatException("Assertion contained more than one condition of type OneTimeUse");
                     }
+
                     oneTimeUseSeen = true;
                     continue;
                 }
@@ -216,6 +261,7 @@ namespace SAML2.Validation
                     {
                         throw new Saml20FormatException("Assertion contained more than one condition of type ProxyRestriction");
                     }
+
                     proxyRestrictionsSeen = true;
 
                     var proxyRestriction = (ProxyRestriction)cat;
@@ -261,7 +307,7 @@ namespace SAML2.Validation
                     foreach (var audience in audienceRestriction.Audience)
                     {
                         // In QuirksMode this validation is omitted
-                        if (!this._quirksMode)
+                        if (!_quirksMode)
                         {
                             // The given audience value MUST BE a valid URI
                             if (!Uri.IsWellFormedUriString(audience, UriKind.Absolute))
@@ -292,53 +338,9 @@ namespace SAML2.Validation
                 }
             }
         }
-
+        
         /// <summary>
-        /// If both conditions.NotBefore and conditions.NotOnOrAfter are specified, NotBefore
-        /// MUST BE less than NotOnOrAfter
-        /// </summary>
-        /// <param name="conditions">The conditions.</param>
-        /// <exception cref="Saml20FormatException">If <param name="conditions"/>.NotBefore is not less than <paramref name="conditions"/>.NotOnOrAfter</exception>
-        private static void ValidateConditionsInterval(Conditions conditions)
-        {
-            // No settings? No restrictions
-            if (conditions.NotBefore == null && conditions.NotOnOrAfter == null)
-            {
-                return;
-            }
-
-            if (conditions.NotBefore != null && conditions.NotOnOrAfter != null && conditions.NotBefore.Value >= conditions.NotOnOrAfter.Value)
-            {
-                throw new Saml20FormatException(string.Format("NotBefore {0} MUST BE less than NotOnOrAfter {1} on Conditions", Saml20Utils.ToUtcString(conditions.NotBefore.Value), Saml20Utils.ToUtcString(conditions.NotOnOrAfter.Value)));
-            }
-        }
-
-        /// <summary>
-        /// Null fields are considered to be valid
-        /// </summary>
-        /// <param name="notBefore">The not before.</param>
-        /// <param name="now">The now.</param>
-        /// <param name="allowedClockSkew">The allowed clock skew.</param>
-        /// <returns>True if the not before value is valid, else false.</returns>
-        private static bool ValidateNotBefore(DateTime? notBefore, DateTime now, TimeSpan allowedClockSkew)
-        {
-            return notBefore == null || TimeRestrictionValidation.NotBeforeValid(notBefore.Value, now, allowedClockSkew);
-        }
-
-        /// <summary>
-        /// Handle allowed clock skew by increasing notOnOrAfter with allowedClockSkew
-        /// </summary>
-        /// <param name="notOnOrAfter">The not on or after.</param>
-        /// <param name="now">The now.</param>
-        /// <param name="allowedClockSkew">The allowed clock skew.</param>
-        /// <returns>True if the not on or after value is valid, else false.</returns>
-        private static bool ValidateNotOnOrAfter(DateTime? notOnOrAfter, DateTime now, TimeSpan allowedClockSkew)
-        {
-            return notOnOrAfter == null || TimeRestrictionValidation.NotOnOrAfterValid(notOnOrAfter.Value, now, allowedClockSkew);
-        }
-
-        /// <summary>
-        /// Validates the details of the Statements present in the assertion ([SAML2.0std] section 2.7)
+        /// Validates the details of the Statements present in the assertion ([SAML2.0 standard] section 2.7)
         /// NOTE: the rules relating to the enforcement of a Subject element are handled during Subject validation
         /// </summary>
         /// <param name="assertion">The assertion.</param>
@@ -357,7 +359,7 @@ namespace SAML2.Validation
         }
 
         /// <summary>
-        /// Validates the subject of an Asssertion
+        /// Validates the subject of an Assertion
         /// </summary>
         /// <param name="assertion">The assertion.</param>
         private void ValidateSubject(Assertion assertion)

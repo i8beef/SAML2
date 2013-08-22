@@ -145,7 +145,6 @@ namespace SAML2.Validation
 
             // Validate the anyUri xsi schema type demands on context reference types
             // We do not support by-value authentication types (since Geneva does not allow it)
-
             if (authnContext.Items.Length > 2)
             {
                 throw new Saml20FormatException("AuthnContext MUST NOT contain more than two elements.");
@@ -166,6 +165,7 @@ namespace SAML2.Validation
                         {
                             throw new Saml20FormatException("AuthnContextClassRef has a value which is not a wellformed absolute uri");
                         }
+
                         break;
                     case Schema.Core.AuthnContextType.AuthnContextDeclRef:
                         if (authnContextDeclRefFound)
@@ -178,6 +178,7 @@ namespace SAML2.Validation
                         {
                             throw new Saml20FormatException("AuthnContextDeclRef has a value which is not a wellformed absolute uri");
                         }
+
                         break;
                     case Schema.Core.AuthnContextType.AuthnContextDecl:
                         throw new Saml20FormatException("AuthnContextDecl elements are not allowed in this implementation");
@@ -224,7 +225,6 @@ namespace SAML2.Validation
             }
 
             // NOTE: Decision property validation is done implicitly be the deserializer since it is represented by an enumeration
-
             if (statement.Action == null || statement.Action.Length == 0)
             {
                 throw new Saml20FormatException("At least one Action subelement must be present for an AuthzDecisionStatement element");

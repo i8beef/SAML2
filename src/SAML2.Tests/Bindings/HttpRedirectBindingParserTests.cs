@@ -76,7 +76,7 @@ namespace SAML2.Tests.Bindings
             {
                 // Arrange
                 var request = string.Empty.PadRight(140, 'l');
-                const string relaystate = "A relaystate test. @@@!!!&&&///";
+                var relaystate = "A relaystate test. @@@!!!&&&///";
 
                 var bindingBuilder = new SAML2.Bindings.HttpRedirectBindingBuilder
                                          {

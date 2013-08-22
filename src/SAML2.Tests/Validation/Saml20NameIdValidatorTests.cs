@@ -274,7 +274,6 @@ namespace SAML2.Tests.Validation
                 validator.ValidateNameId(nameId);
             }
 
-
             /// <summary>
             /// Verify validates kerberos.
             /// </summary>
@@ -549,8 +548,7 @@ namespace SAML2.Tests.Validation
                 // Act
                 validator.ValidateNameId(nameId);
             }
-
-
+            
             /// <summary>
             /// Verify validates transient.
             /// </summary>

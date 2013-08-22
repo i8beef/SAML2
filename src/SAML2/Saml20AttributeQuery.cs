@@ -7,9 +7,9 @@ using System.Security.Cryptography;
 using System.Web;
 using System.Xml;
 using SAML2.Bindings;
-using SAML2.Logging;
 using SAML2.Config;
 using SAML2.Identity;
+using SAML2.Logging;
 using SAML2.Properties;
 using SAML2.Protocol;
 using SAML2.Schema.Core;
@@ -197,7 +197,6 @@ namespace SAML2
             try
             {
                  s = builder.GetResponse(endPoint.Metadata.GetAttributeQueryEndpointLocation(), query.OuterXml, endPoint.AttributeQuery);
-
             }
             catch (Exception e)
             {

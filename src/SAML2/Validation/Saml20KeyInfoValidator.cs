@@ -48,6 +48,5 @@ namespace SAML2.Validation
                 throw new Saml20FormatException(string.Format("SubjectConfirmationData element MUST contain at least one {0} in namespace {1}", KeyInfo.ElementName, Saml20Constants.Xmldsig));
             }
         }
-
     }
 }

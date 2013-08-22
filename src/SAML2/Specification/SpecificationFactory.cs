@@ -43,4 +43,3 @@ namespace SAML2.Specification
         }
     }
 }
-

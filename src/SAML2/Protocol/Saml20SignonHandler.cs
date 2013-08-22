@@ -643,6 +643,7 @@ namespace SAML2.Protocol
                 Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HttpPost, identityProvider.Id);
 
                 var builder = new HttpPostBindingBuilder(destination);
+
                 // Honor the ForceProtocolBinding and only set this if it's not already set
                 if (string.IsNullOrEmpty(request.ProtocolBinding))
                 {
@@ -665,6 +666,7 @@ namespace SAML2.Protocol
                 Logger.DebugFormat(Tracing.SendAuthnRequest, Saml20Constants.ProtocolBindings.HttpArtifact, identityProvider.Id);
 
                 var builder = new HttpArtifactBindingBuilder(context);
+
                 // Honor the ForceProtocolBinding and only set this if it's not already set
                 if (string.IsNullOrEmpty(request.ProtocolBinding))
                 {

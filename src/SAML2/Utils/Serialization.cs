@@ -15,7 +15,7 @@ namespace SAML2.Utils
         static Serialization()
         {
             XmlNamespaces = new XmlSerializerNamespaces();
-            XmlNamespaces.Add("", "");
+            XmlNamespaces.Add(string.Empty, string.Empty);
         }
 
         /// <summary>

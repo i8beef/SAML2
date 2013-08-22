@@ -86,7 +86,7 @@ namespace SAML2.Tests
                 var cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
 
                 // Act
-                new Saml20Assertion(AssertionUtil.GetTestAssertion().DocumentElement, new[] { cert.PublicKey.Key }, false);
+                var assertion = new Saml20Assertion(AssertionUtil.GetTestAssertion().DocumentElement, new[] { cert.PublicKey.Key }, false);
             }
 
             #endregion
@@ -108,7 +108,7 @@ namespace SAML2.Tests
                 attributeStatement.Items = new object[0];
 
                 // Act
-                new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+                var assertion = new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
             }
 
             /// <summary>
@@ -155,7 +155,7 @@ namespace SAML2.Tests
                     try
                     {
                         // Act
-                        new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+                        var assertion = new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
                         Assert.Fail("A SAML-qualified xml attribute extension on Attribute must not be valid");
                     }
                     catch (Saml20FormatException sfe)
@@ -184,7 +184,7 @@ namespace SAML2.Tests
                 saml20Assertion.Items = statements.ToArray();
 
                 // Act
-                new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+                var assertion = new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
             }
 
             /// <summary>
@@ -212,7 +212,7 @@ namespace SAML2.Tests
                 saml20Assertion.Items = statements.ToArray();
 
                 // Act
-                new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+                var assertion = new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
             }
 
             #endregion
@@ -234,7 +234,7 @@ namespace SAML2.Tests
                 authnStatement.AuthnContext.Items[index] = "Hallelujagobble!!";
 
                 // Act
-                new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+                var assertion = new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
             }
 
             #endregion
@@ -256,7 +256,7 @@ namespace SAML2.Tests
                 saml20Assertion.Subject = null;
 
                 // Act
-                new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+                var assertion = new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
             }
 
             /// <summary>
@@ -272,11 +272,10 @@ namespace SAML2.Tests
                 subjectConfirmation.Method = "IllegalMethod";
 
                 // Act
-                new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+                var assertion = new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
             }
 
             #endregion
-
         }
     }
 }

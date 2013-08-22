@@ -71,8 +71,8 @@ namespace SAML2.Tests.Utils
             public void ThrowsExceptionWhenMessageHandleLengthMismatch()
             {
                 // Arrange
-                const short typeCode = 4;
-                const short endpointIndex = 1;
+                short typeCode = 4;
+                short endpointIndex = 1;
                 var sourceIdHash = new byte[20];
                 var messageHandle = new byte[19];
 

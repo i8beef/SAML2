@@ -59,7 +59,7 @@ namespace SAML2.Schema.Core
         public string NameFormat { get; set; }
 
         /// <summary>
-        /// A string that provides a more human-readable form of the attribute's name, which may be useful in
+        /// Gets or sets a string that provides a more human-readable form of the attribute's name, which may be useful in
         /// cases in which the actual Name is complex or opaque, such as an OID or a UUID. This attribute's
         /// value MUST NOT be used as a basis for formally identifying SAML attributes.
         /// </summary>

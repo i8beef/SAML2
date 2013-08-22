@@ -69,6 +69,7 @@ namespace SAML2.Protocol.Pages
                         {
                             err = ErrorText;
                         }
+
                         break;
                 }
             }

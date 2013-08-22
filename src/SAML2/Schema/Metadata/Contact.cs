@@ -14,9 +14,14 @@ namespace SAML2.Schema.Metadata
     public class Contact
     {
         /// <summary>
+        /// The XML Element name of this class
+        /// </summary>
+        public const string ElementName = "ContactPerson";
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Contact"/> class.
         /// </summary>
-        public Contact() {}
+        public Contact() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Contact"/> class.
@@ -26,11 +31,6 @@ namespace SAML2.Schema.Metadata
         {
             ContactType = contactType;
         }
-
-        /// <summary>
-        /// The XML Element name of this class
-        /// </summary>
-        public const string ElementName = "ContactPerson";
 
         #region Attributes
 

@@ -13,6 +13,23 @@ namespace SAML2.Tests.Utils
     public class XmlSignatureUtilsTest
     {
         /// <summary>
+        /// Loads the document.
+        /// </summary>
+        /// <param name="assertionFile">The assertion file.</param>
+        /// <returns>The XML document.</returns>
+        private static XmlDocument LoadDocument(string assertionFile)
+        {
+            using (var fs = File.OpenRead(assertionFile))
+            {
+                var document = new XmlDocument { PreserveWhitespace = true };
+                document.Load(fs);
+                fs.Close();
+
+                return document;
+            }
+        }
+
+        /// <summary>
         /// CheckSignature method tests.
         /// </summary>
         [TestFixture]
@@ -99,23 +116,6 @@ namespace SAML2.Tests.Utils
 
                 // Assert
                 Assert.Fail("Signed documents that do not have PreserveWhitespace set should fail to be processed.");
-            }
-        }
-
-        /// <summary>
-        /// Loads the document.
-        /// </summary>
-        /// <param name="assertionFile">The assertion file.</param>
-        /// <returns>The XML document.</returns>
-        private static XmlDocument LoadDocument(string assertionFile)
-        {
-            using (var fs = File.OpenRead(assertionFile))
-            {
-                var document = new XmlDocument { PreserveWhitespace = true };
-                document.Load(fs);
-                fs.Close();
-
-                return document;
             }
         }
     }

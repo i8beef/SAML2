@@ -33,7 +33,7 @@ namespace SAML2.Utils
         /// Verifies the signature of the XmlDocument instance using the key given as a parameter.
         /// </summary>
         /// <param name="doc">The doc.</param>
-        /// <param name="alg">The alg.</param>
+        /// <param name="alg">The algorithm.</param>
         /// <returns><code>true</code> if the document's signature can be verified. <code>false</code> if the signature could
         /// not be verified.</returns>
         /// <exception cref="InvalidOperationException">if the XmlDocument instance does not contain a signed XML document.</exception>
@@ -49,7 +49,7 @@ namespace SAML2.Utils
         /// Verifies the signature of the XmlElement instance using the key given as a parameter.
         /// </summary>
         /// <param name="el">The element.</param>
-        /// <param name="alg">The alg.</param>
+        /// <param name="alg">The algorithm.</param>
         /// <returns><code>true</code> if the element's signature can be verified. <code>false</code> if the signature could
         /// not be verified.</returns>
         /// <exception cref="InvalidOperationException">if the XmlDocument instance does not contain a signed XML element.</exception>
@@ -63,10 +63,10 @@ namespace SAML2.Utils
 
         /// <summary>
         /// Verify the given document using a KeyInfo instance. The KeyInfo instance's KeyClauses will be traversed for
-        /// elements that can verify the signature, eg. certificates or keys. If nothing is found, an exception is thrown.
+        /// elements that can verify the signature, e.g. certificates or keys. If nothing is found, an exception is thrown.
         /// </summary>
         /// <param name="doc">The doc.</param>
-        /// <param name="keyinfo">The keyinfo.</param>
+        /// <param name="keyinfo">The key info.</param>
         /// <returns><code>true</code> if the element's signature can be verified. <code>false</code> if the signature could
         /// not be verified.</returns>
         public static bool CheckSignature(XmlDocument doc, KeyInfo keyinfo)
@@ -233,10 +233,50 @@ namespace SAML2.Utils
         /// configuration file.
         /// </summary>
         /// <param name="doc">The XmlDocument to be signed</param>
-        /// <param name="id">The is of the topmost element in the xmldocument</param>
+        /// <param name="id">The is of the topmost element in the XmlDocument</param>
         public static void SignDocument(XmlDocument doc, string id)
         {
             SignDocument(doc, id, Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate());
+        }
+
+        /// <summary>
+        /// Signs an XmlDocument with an xml signature using the signing certificate given as argument to the method.
+        /// </summary>
+        /// <param name="doc">The XmlDocument to be signed</param>
+        /// <param name="id">The is of the topmost element in the XmlDocument</param>
+        /// <param name="cert">The certificate used to sign the document</param>
+        public static void SignDocument(XmlDocument doc, string id, X509Certificate2 cert)
+        {
+            var signedXml = new SignedXml(doc);
+            signedXml.SignedInfo.CanonicalizationMethod = SignedXml.XmlDsigExcC14NTransformUrl;
+            signedXml.SigningKey = cert.PrivateKey;
+
+            // Retrieve the value of the "ID" attribute on the root assertion element.
+            var reference = new Reference("#" + id);
+
+            reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());
+            reference.AddTransform(new XmlDsigExcC14NTransform());
+
+            signedXml.AddReference(reference);
+
+            // Include the public key of the certificate in the assertion.
+            signedXml.KeyInfo = new KeyInfo();
+            signedXml.KeyInfo.AddClause(new KeyInfoX509Data(cert, X509IncludeOption.WholeChain));
+
+            signedXml.ComputeSignature();
+
+            // Append the computed signature. The signature must be placed as the sibling of the Issuer element.
+            if (doc.DocumentElement != null)
+            {
+                var nodes = doc.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.Assertion);
+
+                // doc.DocumentElement.InsertAfter(doc.ImportNode(signedXml.GetXml(), true), nodes[0]);
+                var parentNode = nodes[0].ParentNode;
+                if (parentNode != null)
+                {
+                    parentNode.InsertAfter(doc.ImportNode(signedXml.GetXml(), true), nodes[0]);
+                }
+            }
         }
 
         #endregion
@@ -314,44 +354,6 @@ namespace SAML2.Utils
         }
 
         /// <summary>
-        /// Signs an XmlDocument with an xml signature using the signing certificate given as argument to the method.
-        /// </summary>
-        /// <param name="doc">The XmlDocument to be signed</param>
-        /// <param name="id">The is of the topmost element in the xmldocument</param>
-        /// <param name="cert">The certificate used to sign the document</param>
-        public static void SignDocument(XmlDocument doc, string id, X509Certificate2 cert)
-        {
-            var signedXml = new SignedXml(doc);
-            signedXml.SignedInfo.CanonicalizationMethod = SignedXml.XmlDsigExcC14NTransformUrl;
-            signedXml.SigningKey = cert.PrivateKey;
-
-            // Retrieve the value of the "ID" attribute on the root assertion element.
-            var reference = new Reference("#" + id);
-
-            reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());
-            reference.AddTransform(new XmlDsigExcC14NTransform());
-
-            signedXml.AddReference(reference);
-
-            // Include the public key of the certificate in the assertion.
-            signedXml.KeyInfo = new KeyInfo();
-            signedXml.KeyInfo.AddClause(new KeyInfoX509Data(cert, X509IncludeOption.WholeChain));
-
-            signedXml.ComputeSignature();
-            // Append the computed signature. The signature must be placed as the sibling of the Issuer element.
-            if (doc.DocumentElement != null)
-            {
-                var nodes = doc.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.Assertion);
-                // doc.DocumentElement.InsertAfter(doc.ImportNode(signedXml.GetXml(), true), nodes[0]);
-                var parentNode = nodes[0].ParentNode;
-                if (parentNode != null)
-                {
-                    parentNode.InsertAfter(doc.ImportNode(signedXml.GetXml(), true), nodes[0]);
-                }
-            }
-        }
-
-        /// <summary>
         /// Verifies that the reference uri (if any) points to the correct element.
         /// </summary>
         /// <param name="signedXml">the ds:signature element</param>
@@ -397,7 +399,7 @@ namespace SAML2.Utils
             /// Initializes a new instance of the <see cref="SignedXmlWithIdResolvement"/> class.
             /// </summary>
             /// <param name="document">The document.</param>
-            public SignedXmlWithIdResolvement(XmlDocument document) : base(document) {}
+            public SignedXmlWithIdResolvement(XmlDocument document) : base(document) { }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="SignedXmlWithIdResolvement"/> class from the specified <see cref="T:System.Xml.XmlElement"/> object.
@@ -406,12 +408,12 @@ namespace SAML2.Utils
             /// <exception cref="T:System.ArgumentNullException">
             /// The <paramref name="elem"/> parameter is null.
             /// </exception>
-            public SignedXmlWithIdResolvement(XmlElement elem) : base(elem) {}
+            public SignedXmlWithIdResolvement(XmlElement elem) : base(elem) { }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="SignedXmlWithIdResolvement"/> class.
             /// </summary>
-            public SignedXmlWithIdResolvement() {}
+            public SignedXmlWithIdResolvement() { }
 
             /// <summary>
             /// Returns the <see cref="T:System.Xml.XmlElement"/> object with the specified ID from the specified <see cref="T:System.Xml.XmlDocument"/> object.

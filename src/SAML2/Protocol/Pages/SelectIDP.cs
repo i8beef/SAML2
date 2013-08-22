@@ -41,7 +41,6 @@ namespace SAML2.Protocol.Pages
                                    };
 
                     // Link text. If a name has been specified in web.config, use it. Otherwise, use id from metadata.
-
                     BodyPanel.Controls.Add(link);
                     BodyPanel.Controls.Add(new LiteralControl("<br/>"));
                 }

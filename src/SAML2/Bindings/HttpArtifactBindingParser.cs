@@ -25,7 +25,7 @@ namespace SAML2.Bindings
         /// Initializes a new instance of the <see cref="HttpArtifactBindingParser"/> class.
         /// </summary>
         /// <param name="inputStream">The input stream.</param>
-        public HttpArtifactBindingParser(Stream inputStream) : base(inputStream) {}
+        public HttpArtifactBindingParser(Stream inputStream) : base(inputStream) { }
 
         /// <summary>
         /// Gets the artifact resolve message.

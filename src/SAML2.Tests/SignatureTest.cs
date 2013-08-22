@@ -165,6 +165,7 @@ namespace SAML2.Tests
         {
             var signedXml = new SignedXml(doc);
             signedXml.SignedInfo.CanonicalizationMethod = SignedXml.XmlDsigExcC14NTransformUrl;
+
             // TODO Dynamically dig out the correct ID attribute from the XmlDocument.
             var reference = new Reference("#_b8977dc86cda41493fba68b32ae9291d"); 
 

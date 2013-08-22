@@ -35,6 +35,78 @@ namespace SAML2.Protocol
             }
         }
 
+        #region IHttpHandler related
+
+        /// <summary>
+        /// Handles a request.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        protected override void Handle(HttpContext context)
+        {
+            Logger.Debug("Logout handler called.");
+
+            try
+            {
+                // Some IDP's are known to fail to set an actual value in the SOAPAction header
+                // so we just check for the existence of the header field.
+                if (Array.Exists(context.Request.Headers.AllKeys, s => s == SoapConstants.SoapAction))
+                {
+                    HandleSoap(context, context.Request.InputStream);
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(context.Request.Params["SAMLart"]))
+                {
+                    HandleArtifact(context);
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(context.Request.Params["SAMLResponse"]))
+                {
+                    HandleResponse(context);
+                }
+                else if (!string.IsNullOrEmpty(context.Request.Params["SAMLRequest"]))
+                {
+                    HandleRequest(context);
+                }
+                else
+                {
+                    IdentityProviderElement idpEndpoint = null;
+
+                    // context.Session[IDPLoginSessionKey] may be null if IIS has been restarted
+                    if (context.Session[IDPSessionIdKey] != null)
+                    {
+                        idpEndpoint = RetrieveIDPConfiguration(context.Session[IDPLoginSessionKey].ToString());
+                    }
+
+                    if (idpEndpoint == null)
+                    {
+                        // TODO: Reconsider how to accomplish this.
+                        context.User = null;
+                        FormsAuthentication.SignOut();
+
+                        Logger.Error(Resources.UnknownLoginIDP);
+                        HandleError(context, Resources.UnknownLoginIDP);
+                    }
+
+                    TransferClient(idpEndpoint, context);
+                }
+            }
+            catch (Exception e)
+            {
+                // ThreadAbortException is thrown by response.Redirect so don't worry about it
+                if (e is ThreadAbortException)
+                {
+                    throw;
+                }
+
+                Logger.Error(e.Message, e);
+                HandleError(context, e.Message);
+            }
+        }
+
+        #endregion
+
         #region Private methods - Handlers
 
         /// <summary>
@@ -152,7 +224,6 @@ namespace SAML2.Protocol
                                    };
 
                 // response.Destination = destination.Url;
-
                 var doc = response.GetXml();
                 XmlSignatureUtils.SignDocument(doc, response.Id);
                 if (doc.FirstChild is XmlDeclaration)
@@ -473,78 +544,6 @@ namespace SAML2.Protocol
 
             Logger.Error(Resources.BindingError);
             HandleError(context, Resources.BindingError);
-        }
-
-        #endregion
-
-        #region IHttpHandler related
-
-        /// <summary>
-        /// Handles a request.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        protected override void Handle(HttpContext context)
-        {
-            Logger.Debug("Logout handler called.");
-
-            try
-            {
-                // Some IDP's are known to fail to set an actual value in the SOAPAction header
-                // so we just check for the existence of the header field.
-                if (Array.Exists(context.Request.Headers.AllKeys, s => s == SoapConstants.SoapAction))
-                {
-                    HandleSoap(context, context.Request.InputStream);
-                    return;
-                }
-
-                if (!string.IsNullOrEmpty(context.Request.Params["SAMLart"]))
-                {
-                    HandleArtifact(context);
-                    return;
-                }
-
-                if (!string.IsNullOrEmpty(context.Request.Params["SAMLResponse"]))
-                {
-                    HandleResponse(context);
-                }
-                else if (!string.IsNullOrEmpty(context.Request.Params["SAMLRequest"]))
-                {
-                    HandleRequest(context);
-                }
-                else
-                {
-                    IdentityProviderElement idpEndpoint = null;
-                    // context.Session[IDPLoginSessionKey] may be null if IIS has been restarted
-
-                    if (context.Session[IDPSessionIdKey] != null)
-                    {
-                        idpEndpoint = RetrieveIDPConfiguration(context.Session[IDPLoginSessionKey].ToString());
-                    }
-
-                    if (idpEndpoint == null)
-                    {
-                        // TODO: Reconsider how to accomplish this.
-                        context.User = null;
-                        FormsAuthentication.SignOut();
-
-                        Logger.Error(Resources.UnknownLoginIDP);
-                        HandleError(context, Resources.UnknownLoginIDP);
-                    }
-
-                    TransferClient(idpEndpoint, context);
-                }
-            }
-            catch (Exception e)
-            {
-                // ThreadAbortException is thrown by response.Redirect so don't worry about it
-                if (e is ThreadAbortException)
-                {
-                    throw;
-                }
-
-                Logger.Error(e.Message, e);
-                HandleError(context, e.Message);
-            }
         }
 
         #endregion

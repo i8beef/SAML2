@@ -27,6 +27,16 @@ namespace SAML2
         private readonly bool _autoValidate = true;
 
         /// <summary>
+        /// The profile.
+        /// </summary>
+        private readonly string _profile;
+
+        /// <summary>
+        /// Quirksmode switch.
+        /// </summary>
+        private readonly bool _quirksMode;
+
+        /// <summary>
         /// A strongly-typed version of the assertion. It is generated on-demand from the contents of the <code>_samlAssertion</code>
         /// field. 
         /// </summary>
@@ -50,16 +60,6 @@ namespace SAML2
         /// </summary>
         private List<EncryptedElement> _encryptedAssertionAttributes;
 
-        /// <summary>
-        /// The profile.
-        /// </summary>
-        private readonly string _profile;
-
-        /// <summary>
-        /// Quirksmode switch.
-        /// </summary>
-        private readonly bool _quirksMode;
-
         #endregion
 
         #region Constructors
@@ -67,7 +67,7 @@ namespace SAML2
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20Assertion"/> class.
         /// </summary>
-        public Saml20Assertion() {}
+        public Saml20Assertion() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20Assertion"/> class.
@@ -152,6 +152,7 @@ namespace SAML2
 
                 return _assertionAttributes;
             }
+
             set
             {
                 // _assertionAttributes == null is reserved for signalling that the attribute is not initialized, so 
@@ -160,6 +161,7 @@ namespace SAML2
                 {
                     value = new List<SamlAttribute>(0);
                 }
+
                 _assertionAttributes = value;
             }
         }
@@ -371,22 +373,6 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Checks the signature.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns>True, if the given key was able to verify the signature. False in all other cases.</returns>
-        private bool CheckSignature(AsymmetricAlgorithm key)
-        {
-            if (XmlSignatureUtils.CheckSignature(XmlAssertion, key))
-            {
-                SigningKey = key;
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Verifies the assertion's signature and its time to live.
         /// </summary>
         /// <param name="trustedSigners">The trusted signers.</param>
@@ -494,8 +480,8 @@ namespace SAML2
             // Include the public key of the certificate in the assertion.
             // signedXml.KeyInfo = new KeyInfo();
             // signedXml.KeyInfo.AddClause(new KeyInfoX509Data(cert, X509IncludeOption.WholeChain));
-
             signedXml.ComputeSignature();
+
             // Append the computed signature. The signature must be placed as the sibling of the Issuer element.
             var nodes = assertionDocument.DocumentElement.GetElementsByTagName("Issuer", Saml20Constants.Assertion);            
             if (nodes.Count != 1)
@@ -521,6 +507,22 @@ namespace SAML2
             {
                 throw new Saml20Exception("The private key must be part of the certificate.");
             }
+        }
+
+        /// <summary>
+        /// Checks the signature.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>True, if the given key was able to verify the signature. False in all other cases.</returns>
+        private bool CheckSignature(AsymmetricAlgorithm key)
+        {
+            if (XmlSignatureUtils.CheckSignature(XmlAssertion, key))
+            {
+                SigningKey = key;
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

@@ -64,6 +64,7 @@ namespace SAML2.Tests
                     encryptionMethodFound = true;
                 }
             }
+
             Assert.That(encryptionMethodFound, "Unable to find EncryptionMethod element in EncryptedData.");
 
             // Verify that the class has discovered the correct algorithm and set the SessionKeyAlgorithm property accordingly.
@@ -112,7 +113,6 @@ namespace SAML2.Tests
                 // Assert
                 Assert.IsNotNull(encryptedAssertion.Assertion);
             }
-
 
             /// <summary>
             /// Test that the <code>Saml20EncryptedAssertion</code> class is capable of finding keys that are "peer" included,
@@ -237,7 +237,8 @@ namespace SAML2.Tests
                     Assert.Fail("Verification should fail. Token does not include its signing key.");
                 }
                 catch (InvalidOperationException)
-                {}
+                {
+                }
 
                 Assert.IsNull(assertion.SigningKey, "Signing key is already present on assertion. Modify test.");
                 Assert.That(assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endp.Metadata.GetKeys(KeyTypes.Signing), endp)));

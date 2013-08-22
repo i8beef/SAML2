@@ -42,7 +42,6 @@ namespace SAML2.Tests
                 // The two certs in the metadata document happen to be identical, and are also 
                 // used for signing the entire document.
                 // Extract the certificate and verify the document.
-
                 Assert.That(certificateCheckResult);
                 Assert.AreEqual("ADLER_SAML20_ID", metadata.EntityId);
             }

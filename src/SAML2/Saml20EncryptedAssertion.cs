@@ -40,7 +40,7 @@ namespace SAML2
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20EncryptedAssertion"/> class.
         /// </summary>
-        public Saml20EncryptedAssertion() {}
+        public Saml20EncryptedAssertion() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20EncryptedAssertion"/> class.
@@ -110,6 +110,7 @@ namespace SAML2
                     _sessionKey = GetKeyInstance(_sessionKeyAlgorithm);
                     _sessionKey.GenerateKey();
                 }
+
                 return _sessionKey;
             }
         }

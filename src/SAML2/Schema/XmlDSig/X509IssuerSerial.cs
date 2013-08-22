@@ -24,7 +24,6 @@ namespace SAML2.Schema.XmlDSig
         [XmlElement("X509IssuerName")]
         public string X509IssuerName { get; set; }
 
-
         /// <summary>
         /// Gets or sets the X509 serial number.
         /// </summary>

@@ -116,7 +116,6 @@ namespace SAML2.Tests.Validation
                 // Act
                 validator.ValidateAssertion(assertion);
             }
-
         }
 
         /// <summary>
@@ -371,7 +370,6 @@ namespace SAML2.Tests.Validation
                 // Act
                 validator.ValidateAssertion(assertion);
             }
-
 
             /// <summary>
             /// Tests the validation that ensures the Count property tp be a non-negative integer

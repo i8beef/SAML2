@@ -21,7 +21,7 @@ namespace SAML2.Schema.Metadata
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalizedName"/> class.
         /// </summary>
-        public LocalizedName() {}
+        public LocalizedName() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalizedName"/> class.

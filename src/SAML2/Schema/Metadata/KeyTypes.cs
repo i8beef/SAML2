@@ -11,13 +11,13 @@ namespace SAML2.Schema.Metadata
     public enum KeyTypes
     {
         /// <summary>
-        /// encryption
+        /// Encryption key type.
         /// </summary>
         [XmlEnum("encryption")]
         Encryption,
 
         /// <summary>
-        /// signing
+        /// Signing key type.
         /// </summary>
         [XmlEnum("signing")]
         Signing
