@@ -180,6 +180,19 @@ namespace SAML2.Schema.Protocol
         #region Elements
 
         /// <summary>
+        /// Gets or sets the name ID policy.
+        /// Specifies constraints on the name identifier to be used to represent the requested subject. If omitted,
+        /// then any type of identifier supported by the identity provider for the requested subject can be used,
+        /// constrained by any relevant deployment-specific policies, with respect to privacy, for example
+        /// </summary>
+        /// <value>The name ID policy.</value>
+        /// <remarks>
+        /// This is here for a reason. Some SAML implementations require that NameIDPolicy is the first element following issuer.
+        /// </remarks>
+        [XmlElement("NameIDPolicy")]
+        public NameIDPolicy NameIdPolicy { get; set; }
+
+        /// <summary>
         /// Gets or sets the conditions.
         /// Specifies the SAML conditions the requester expects to limit the validity and/or use of the resulting
         /// assertion(s). The responder MAY modify or supplement this set as it deems necessary. The
@@ -189,16 +202,6 @@ namespace SAML2.Schema.Protocol
         /// <value>The conditions.</value>
         [XmlElement("Conditions", Namespace = Saml20Constants.Assertion)]
         public Conditions Conditions { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name ID policy.
-        /// Specifies constraints on the name identifier to be used to represent the requested subject. If omitted,
-        /// then any type of identifier supported by the identity provider for the requested subject can be used,
-        /// constrained by any relevant deployment-specific policies, with respect to privacy, for example
-        /// </summary>
-        /// <value>The name ID policy.</value>
-        [XmlElement("NameIDPolicy")]
-        public NameIDPolicy NameIdPolicy { get; set; }
 
         /// <summary>
         /// Gets or sets the requested authentication context.
