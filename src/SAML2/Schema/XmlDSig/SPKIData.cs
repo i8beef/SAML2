@@ -35,9 +35,9 @@ namespace SAML2.Schema.XmlDSig
         #region Elements
 
         /// <summary>
-        /// Gets or sets the SPKI sexp.
+        /// Gets or sets the SPKIS expression.
         /// </summary>
-        /// <value>The SPKI sexp.</value>
+        /// <value>The SPKIS expression.</value>
         [XmlElement("SPKISexp", DataType = "base64Binary")]
         public byte[][] SPKISexp { get; set; }
 

@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Core
 {
     /// <summary>
-    /// The Saml20 StatementAbstract class. It's the baseclass for all statements in Saml20.
+    /// The SAML20 <c>StatementAbstract</c> class. It's the base class for all statements in SAML20.
     /// </summary>
     [XmlInclude(typeof(AttributeStatement))]
     [XmlIncludeAttribute(typeof(AuthzDecisionStatement))]

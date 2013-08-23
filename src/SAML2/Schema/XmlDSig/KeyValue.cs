@@ -34,8 +34,8 @@ namespace SAML2.Schema.XmlDSig
         /// </summary>
         /// <value>The item.</value>
         [XmlAnyElement]
-        [XmlElement("DSAKeyValue", typeof(DSAKeyValue))]
-        [XmlElement("RSAKeyValue", typeof(RSAKeyValue))]
+        [XmlElement("DSAKeyValue", typeof(DsaKeyValue))]
+        [XmlElement("RSAKeyValue", typeof(RsaKeyValue))]
         public object Item { get; set; }
 
         #endregion

@@ -4,20 +4,20 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Protocol
 {
     /// <summary>
-    /// AuthContext type enumeration.
+    /// <c>AuthContext</c> type enumeration.
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Protocol, IncludeInSchema = false)]
     public enum AuthnContextType
     {
         /// <summary>
-        /// AuthnContextClassRef type.
+        /// <c>AuthnContextClassRef</c> type.
         /// </summary>
         [XmlEnum("urn:oasis:names:tc:SAML:2.0:assertion:AuthnContextClassRef")]
         AuthnContextClassRef,
 
         /// <summary>
-        /// AuthnContextDeclRef type.
+        /// <c>AuthnContextDeclRef</c> type.
         /// </summary>
         [XmlEnum("urn:oasis:names:tc:SAML:2.0:assertion:AuthnContextDeclRef")]
         AuthnContextDeclRef

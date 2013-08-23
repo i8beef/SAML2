@@ -33,7 +33,7 @@ namespace SAML2.Bindings
             var config = Saml2Config.GetConfig();
             var index = (short)config.ServiceProvider.Endpoints.SignOnEndpoint.Index;
             var doc = request.GetXml();
-            XmlSignatureUtils.SignDocument(doc, request.Request.ID);
+            XmlSignatureUtils.SignDocument(doc, request.Request.Id);
             ArtifactRedirect(destination, index, doc, Context.Request.Params["relayState"]);
         }
 
@@ -58,7 +58,7 @@ namespace SAML2.Bindings
             var config = Saml2Config.GetConfig();
             var index = (short)config.ServiceProvider.Endpoints.LogoutEndpoint.Index;
             var doc = request.GetXml();
-            XmlSignatureUtils.SignDocument(doc, request.Request.ID);
+            XmlSignatureUtils.SignDocument(doc, request.Request.Id);
             ArtifactRedirect(destination, index, doc, relayState);
         }
 
@@ -122,7 +122,7 @@ namespace SAML2.Bindings
             
             var response = Saml20ArtifactResponse.GetDefault();
             response.StatusCode = Saml20Constants.StatusCodes.Success;
-            response.InResponseTo = artifactResolve.ID;
+            response.InResponseTo = artifactResolve.Id;
             response.SamlElement = samlDoc.DocumentElement;
 
             var responseDoc = response.GetXml();

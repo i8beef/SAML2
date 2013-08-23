@@ -12,7 +12,7 @@ namespace SAML2.Identity
     /// A specialized version of GenericIdentity that contains attributes from a SAML 2 assertion. 
     /// </para>
     /// <para>
-    /// The AuthenticationType property of the Identity will be "urn:oasis:names:tc:SAML:2.0:assertion".
+    /// The AuthenticationType property of the Identity will be "<c>urn:oasis:names:tc:SAML:2.0:assertion</c>".
     /// </para>
     /// <para>
     /// The order of the attributes is not maintained when converting from the SAML assertion to this class. 
@@ -74,12 +74,35 @@ namespace SAML2.Identity
         public string PersistentPseudonym { get; private set; }
 
         /// <summary>
+        /// Retrieve an SAML 20 attribute using its name. Note that this is the value contained in the 'Name' attribute, and
+        /// not the 'FriendlyName' attribute.
+        /// </summary>
+        /// <param name="attributeName">The attribute name.</param>
+        /// <returns>List of <see cref="SamlAttribute"/>.</returns>
+        /// <exception cref="KeyNotFoundException">If the identity instance does not have the requested attribute.</exception>
+        public List<SamlAttribute> this[string attributeName]
+        {
+            get { return _attributes[attributeName]; }
+        }
+
+        /// <summary>
         /// Check if the SAML 2 Assertion's attributes have been correctly initialized.
         /// </summary>
         /// <returns><c>true</c> if this instance is initialized; otherwise, <c>false</c>.</returns>
         public static bool IsInitialized()
         {
             return Saml20PrincipalCache.GetPrincipal() != null && Saml20PrincipalCache.GetPrincipal().Identity is Saml20Identity;
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through a collection.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+        /// </returns>
+        public IEnumerator GetEnumerator()
+        {
+            return ((IEnumerable<SamlAttribute>)this).GetEnumerator();
         }
 
         /// <summary>
@@ -90,6 +113,23 @@ namespace SAML2.Identity
         public bool HasAttribute(string attributeName)
         {
             return _attributes.ContainsKey(attributeName);
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+        /// </returns>
+        IEnumerator<SamlAttribute> IEnumerable<SamlAttribute>.GetEnumerator()
+        {
+            var allAttributes = new List<SamlAttribute>();
+            foreach (var name in _attributes.Keys)
+            {
+                allAttributes.AddRange(_attributes[name]);
+            }
+
+            return allAttributes.GetEnumerator();
         }
 
         /// <summary>
@@ -131,54 +171,6 @@ namespace SAML2.Identity
             {
                 _attributes[name].Add(value);
             }
-        }
-                
-        #region IEnumerable<Attribute> Members
-
-        /// <summary>
-        /// Returns an enumerator that iterates through the collection.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
-        /// </returns>
-        IEnumerator<SamlAttribute> IEnumerable<SamlAttribute>.GetEnumerator()
-        {
-            var allAttributes = new List<SamlAttribute>();
-            foreach (var name in _attributes.Keys)
-            {
-                allAttributes.AddRange(_attributes[name]);
-            }
-
-            return allAttributes.GetEnumerator();
-        }
-
-        #endregion
-
-        #region IEnumerable Members
-
-        /// <summary>
-        /// Returns an enumerator that iterates through a collection.
-        /// </summary>
-        /// <returns>
-        /// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
-        /// </returns>
-        public IEnumerator GetEnumerator()
-        {
-            return ((IEnumerable<SamlAttribute>)this).GetEnumerator();
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Retrieve an SAML 20 attribute using its name. Note that this is the value contained in the 'Name' attribute, and
-        /// not the 'FriendlyName' attribute.
-        /// </summary>
-        /// <param name="attributeName">The attribute name.</param>
-        /// <returns>List of <see cref="SamlAttribute"/>.</returns>
-        /// <exception cref="KeyNotFoundException">If the identity instance does not have the requested attribute.</exception>
-        public List<SamlAttribute> this[string attributeName]
-        {
-            get { return _attributes[attributeName]; }
         }
     }
 }

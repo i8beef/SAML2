@@ -193,13 +193,13 @@ namespace SAML2.Validation
             }
 
             // Assertion must have an ID
-            if (!Saml20Utils.ValidateRequiredString(assertion.ID))
+            if (!Saml20Utils.ValidateRequiredString(assertion.Id))
             {
                 throw new Saml20FormatException("Assertion element must have the ID attribute set.");
             }
 
             // Make sure that the ID elements is at least 128 bits in length (SAML2.0 std section 1.3.4)
-            if (!Saml20Utils.ValidateIdString(assertion.ID))
+            if (!Saml20Utils.ValidateIdString(assertion.Id))
             {
                 throw new Saml20FormatException("Assertion element must have an ID attribute with at least 16 characters (the equivalent of 128 bits)");
             }
@@ -286,7 +286,7 @@ namespace SAML2.Validation
                     }
                 }
 
-                // AudienceRestriction processing goes here (section 2.5.1.4 of [SAML2.0std])
+                // AudienceRestriction processing goes here (section 2.5.1.4 of [SAML2.0 standard])
                 if (cat is AudienceRestriction)
                 {
                     // No audience restrictions? No problems...
@@ -367,7 +367,7 @@ namespace SAML2.Validation
             if (assertion.Subject == null)
             {
                 // If there is no statements there must be a subject
-                // as specified in [SAML2.0std] section 2.3.3
+                // as specified in [SAML2.0 standard] section 2.3.3
                 if (assertion.Items == null || assertion.Items.Length == 0)
                 {
                     throw new Saml20FormatException("Assertion with no Statements must have a subject.");

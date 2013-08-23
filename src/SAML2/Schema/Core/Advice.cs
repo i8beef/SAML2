@@ -11,7 +11,7 @@ namespace SAML2.Schema.Core
     /// </summary>
     /// <remarks>
     /// Advice is optional, and there are only implicit demands on the reference types.
-    /// We do not use it (yet) and let it pass unvalidated.
+    /// We do not use it (yet) and let it pass without validation.
     /// </remarks>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Assertion)]
@@ -27,7 +27,7 @@ namespace SAML2.Schema.Core
 
         /// <summary>
         /// Gets or sets the items.
-        /// Items may be of types: Assertion, AssertionIDRef, AssertionURIRef abd EncryptedAssertion
+        /// Items may be of types: <c>Assertion</c>, <c>AssertionIDRef</c>, <c>AssertionURIRef</c> and <c>EncryptedAssertion</c>
         /// </summary>
         /// <value>The items.</value>        
         [XmlAnyElement]

@@ -5,9 +5,9 @@ using SAML2.Utils;
 namespace SAML2.Schema.Core
 {
     /// <summary>
-    /// The &lt;AuthnStatement&gt; element describes a statement by the SAML authority asserting that the
+    /// The <c>&lt;AuthnStatement&gt;</c> element describes a statement by the SAML authority asserting that the
     /// assertion subject was authenticated by a particular means at a particular time. Assertions containing
-    /// &lt;AuthnStatement&gt; elements MUST contain a &lt;Subject&gt; element.
+    /// <c>&lt;AuthnStatement&gt;</c> elements MUST contain a <c>&lt;Subject&gt;</c> element.
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Assertion)]
@@ -20,10 +20,10 @@ namespace SAML2.Schema.Core
         public new const string ElementName = "AuthnStatement";
 
         /// <summary>
-        /// Gets or sets the authn instant.
+        /// Gets or sets the authentication instant.
         /// Specifies the time at which the authentication took place. The time value is encoded in UTC
         /// </summary>
-        /// <value>The authn instant.</value>
+        /// <value>The authentication instant.</value>
         [XmlIgnore]
         public DateTime? AuthnInstant { get; set; }
 
@@ -41,9 +41,9 @@ namespace SAML2.Schema.Core
         #region Attributes
 
         /// <summary>
-        /// Gets or sets the authn instant string.
+        /// Gets or sets the authentication instant string.
         /// </summary>
-        /// <value>The authn instant string.</value>
+        /// <value>The authentication instant string.</value>
         [XmlAttribute("AuthnInstant")]
         public string AuthnInstantString
         {
@@ -76,13 +76,13 @@ namespace SAML2.Schema.Core
         #region Elements
 
         /// <summary>
-        /// Gets or sets the authn context.
+        /// Gets or sets the authentication context.
         /// The context used by the authenticating authority up to and including the authentication event that
         /// yielded this statement. Contains an authentication context class reference, an authentication context
         /// declaration or declaration reference, or both. See the Authentication Context specification
-        /// [SAMLAuthnCxt] for a full description of authentication context information.
+        /// for a full description of authentication context information.
         /// </summary>
-        /// <value>The authn context.</value>
+        /// <value>The authentication context.</value>
         [XmlElement("AuthnContext")]
         public AuthnContext AuthnContext { get; set; }
 

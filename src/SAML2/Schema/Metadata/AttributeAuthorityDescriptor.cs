@@ -4,9 +4,9 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Metadata
 {
     /// <summary>
-    /// The &lt;AttributeAuthorityDescriptor&gt; element extends RoleDescriptorType with content
+    /// The <c>&lt;AttributeAuthorityDescriptor&gt;</c> element extends RoleDescriptorType with content
     /// reflecting profiles specific to attribute authorities, SAML authorities that respond to
-    /// &lt;samlp:AttributeQuery&gt; messages.
+    /// <c>&lt;samlp:AttributeQuery&gt;</c> messages.
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Metadata)]

@@ -15,7 +15,7 @@ namespace SAML2.Schema.Metadata
     [XmlInclude(typeof(PDPDescriptor))]
     [XmlInclude(typeof(AuthnAuthorityDescriptor))]
     [XmlInclude(typeof(SSODescriptor))]
-    [XmlInclude(typeof(SPSSODescriptor))]
+    [XmlInclude(typeof(SpSsoDescriptor))]
     [XmlInclude(typeof(IDPSSODescriptor))]    
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Metadata)]
@@ -39,9 +39,9 @@ namespace SAML2.Schema.Metadata
         #region Attributes
 
         /// <summary>
-        /// Gets or sets any attr.
+        /// Gets or sets XML any attribute.
         /// </summary>
-        /// <value>Any attr.</value>
+        /// <value>The XML Any attribute.</value>
         [XmlAnyAttribute]
         public XmlAttribute[] AnyAttr { get; set; }
         
@@ -75,7 +75,7 @@ namespace SAML2.Schema.Metadata
         /// Gets or sets the protocol support enumeration.
         /// A whitespace-delimited set of URIs that identify the set of protocol specifications supported by the
         /// role element. For SAML V2.0 entities, this set MUST include the SAML protocol namespace URI,
-        /// urn:oasis:names:tc:SAML:2.0:protocol. Note that future SAML specifications might
+        /// <c>urn:oasis:names:tc:SAML:2.0:protocol</c>. Note that future SAML specifications might
         /// share the same namespace URI, but SHOULD provide alternate "protocol support" identifiers to
         /// ensure discrimination when necessary.
         /// </summary>

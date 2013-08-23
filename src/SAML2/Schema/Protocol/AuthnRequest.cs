@@ -7,15 +7,15 @@ namespace SAML2.Schema.Protocol
     /// <summary>
     /// To request that an identity provider issue an assertion with an authentication statement, a presenter
     /// authenticates to that identity provider (or relies on an existing security context) and sends it an
-    /// &lt;AuthnRequest&gt; message that describes the properties that the resulting assertion needs to have to
+    /// <c>&lt;AuthnRequest&gt;</c> message that describes the properties that the resulting assertion needs to have to
     /// satisfy its purpose. Among these properties may be information that relates to the content of the assertion
     /// and/or information that relates to how the resulting &lt;Response&gt; message should be delivered to the
     /// requester. The process of authentication of the presenter may take place before, during, or after the initial
-    /// delivery of the &lt;AuthnRequest&gt; message.
+    /// delivery of the <c>&lt;AuthnRequest&gt;</c> message.
     /// The requester might not be the same as the presenter of the request if, for example, the requester is a
     /// relying party that intends to use the resulting assertion to authenticate or authorize the requested subject
     /// so that the relying party can decide whether to provide a service.
-    /// The &lt;AuthnRequest&gt; message SHOULD be signed or otherwise authenticated and integrity protected
+    /// The <c>&lt;AuthnRequest&gt;</c> message SHOULD be signed or otherwise authenticated and integrity protected
     /// by the protocol binding used to deliver the message.
     /// </summary>
     [Serializable]
@@ -47,13 +47,13 @@ namespace SAML2.Schema.Protocol
         public bool AttributeConsumingServiceIndexSpecified { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [force authn].
+        /// Gets or sets a value indicating whether force authentication.
         /// A Boolean value. If "true", the identity provider MUST authenticate the presenter directly rather than
         /// rely on a previous security context. If a value is not provided, the default is "false". However, if both
-        /// ForceAuthn and IsPassive are "true", the identity provider MUST NOT freshly authenticate the
+        /// <c>ForceAuthn</c> and <c>IsPassive</c> are "true", the identity provider MUST NOT freshly authenticate the
         /// presenter unless the constraints of IsPassive can be met.
         /// </summary>
-        /// <value><c>true</c> if [force authn]; otherwise, <c>false</c>.</value>
+        /// <value><c>true</c> if force authentication; otherwise, <c>false</c>.</value>
         [XmlIgnore]
         public bool? ForceAuthn { get; set; }
 
@@ -89,24 +89,24 @@ namespace SAML2.Schema.Protocol
 
         /// <summary>
         /// Gets or sets the assertion consumer service URL.
-        /// Specifies by value the location to which the &lt;Response&gt; message MUST be returned to the
+        /// Specifies by value the location to which the <c>&lt;Response&gt;</c> message MUST be returned to the
         /// requester. The responder MUST ensure by some means that the value specified is in fact associated
         /// with the requester. [SAMLMeta] provides one possible mechanism; signing the enclosing
-        /// &lt;AuthnRequest&gt; message is another. This attribute is mutually exclusive with the
+        /// <c>&lt;AuthnRequest&gt;</c> message is another. This attribute is mutually exclusive with the
         /// AssertionConsumerServiceIndex attribute and is typically accompanied by the
         /// ProtocolBinding attribute.
         /// </summary>
         /// <value>The assertion consumer service URL.</value>
         [XmlAttribute("AssertionConsumerServiceURL", DataType = "anyURI")]
-        public string AssertionConsumerServiceURL { get; set; }
+        public string AssertionConsumerServiceUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the index of the attribute consuming service.
         /// Indirectly identifies information associated with the requester describing the SAML attributes the
-        /// requester desires or requires to be supplied by the identity provider in the &lt;Response&gt; message. The
+        /// requester desires or requires to be supplied by the identity provider in the <c>&lt;Response&gt;</c> message. The
         /// identity provider MUST have a trusted means to map the index value in the attribute to information
         /// associated with the requester. [SAMLMeta] provides one possible mechanism. The identity provider
-        /// MAY use this information to populate one or more &lt;saml:AttributeStatement&gt; elements in the
+        /// MAY use this information to populate one or more <c>&lt;saml:AttributeStatement&gt;</c> elements in the
         /// assertion(s) it returns.
         /// </summary>
         /// <value>The index of the attribute consuming service.</value>
@@ -114,9 +114,9 @@ namespace SAML2.Schema.Protocol
         public ushort AttributeConsumingServiceIndex { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [force authn specified].
+        /// Gets or sets a value indicating whether force authentication specified.
         /// </summary>
-        /// <value><c>true</c> if [force authn specified]; otherwise, <c>false</c>.</value>
+        /// <value><c>true</c> if force authentication specified; otherwise, <c>false</c>.</value>
         [XmlAttribute("ForceAuthn")]
         public string ForceAuthnString
         {
@@ -198,22 +198,22 @@ namespace SAML2.Schema.Protocol
         /// </summary>
         /// <value>The name ID policy.</value>
         [XmlElement("NameIDPolicy")]
-        public NameIDPolicy NameIDPolicy { get; set; }
+        public NameIDPolicy NameIdPolicy { get; set; }
 
         /// <summary>
-        /// Gets or sets the requested authn context.
+        /// Gets or sets the requested authentication context.
         /// Specifies the requirements, if any, that the requester places on the authentication context that applies
         /// to the responding provider's authentication of the presenter. See Section 3.3.2.2.1 for processing rules
         /// regarding this element.
         /// </summary>
-        /// <value>The requested authn context.</value>
+        /// <value>The requested authentication context.</value>
         [XmlElement("RequestedAuthnContext")]
         public RequestedAuthnContext RequestedAuthnContext { get; set; }
 
         /// <summary>
         /// Gets or sets the scoping.
         /// Specifies a set of identity providers trusted by the requester to authenticate the presenter, as well as
-        /// limitations and context related to proxying of the &lt;AuthnRequest&gt; message to subsequent identity
+        /// limitations and context related to proxy of the <c>&lt;AuthnRequest&gt;</c> message to subsequent identity
         /// providers by the responder
         /// </summary>
         /// <value>The scoping.</value>
@@ -223,7 +223,7 @@ namespace SAML2.Schema.Protocol
         /// <summary>
         /// Gets or sets the subject.
         /// Specifies the requested subject of the resulting assertion(s). This may include one or more
-        /// &lt;saml:SubjectConfirmation&gt; elements to indicate how and/or by whom the resulting assertions
+        /// <c>&lt;saml:SubjectConfirmation&gt;</c> elements to indicate how and/or by whom the resulting assertions
         /// can be confirmed.
         /// </summary>
         /// <value>The subject.</value>

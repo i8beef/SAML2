@@ -10,7 +10,7 @@ namespace SAML2.Schema.Metadata
     /// RoleDescriptorType with elements reflecting profiles common to both identity providers and service
     /// providers that support SSO
     /// </summary>
-    [XmlInclude(typeof(SPSSODescriptor))]
+    [XmlInclude(typeof(SpSsoDescriptor))]
     [XmlIncludeAttribute(typeof(IDPSSODescriptor))]
     [Serializable]
     [DebuggerStepThrough]

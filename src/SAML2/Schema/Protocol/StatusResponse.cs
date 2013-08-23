@@ -40,7 +40,7 @@ namespace SAML2.Schema.Protocol
         /// Indicates whether or not (and under what conditions) consent has been obtained from a principal in
         /// the sending of this response. See Section 8.4 for some URI references that MAY be used as the value
         /// of the Consent attribute and their associated descriptions. If no Consent value is provided, the
-        /// identifier urn:oasis:names:tc:SAML:2.0:consent:unspecified (see Section 8.4.1) is in
+        /// identifier <c>urn:oasis:names:tc:SAML:2.0:consent:unspecified</c> (see Section 8.4.1) is in
         /// effect.
         /// </summary>
         /// <value>The consent.</value>
@@ -61,7 +61,7 @@ namespace SAML2.Schema.Protocol
 
         /// <summary>
         /// Gets or sets the ID.
-        /// An identifier for the response. It is of type xs:ID, and MUST follow the requirements specified in
+        /// An identifier for the response. It is of type <c>xs:ID</c>, and MUST follow the requirements specified in
         /// Section 1.3.4 for identifier uniqueness.
         /// </summary>
         /// <value>The ID.</value>

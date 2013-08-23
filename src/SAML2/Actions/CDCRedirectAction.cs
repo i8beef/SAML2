@@ -48,7 +48,7 @@ namespace SAML2.Actions
         /// <param name="assertion">The SAML assertion of the currently logged in user.</param>
         public void SignOnAction(AbstractEndpointHandler handler, HttpContext context, Saml20Assertion assertion)
         {
-            var idpKey = (string)context.Session[Saml20SignonHandler.IDPLoginSessionKey];
+            var idpKey = (string)context.Session[Saml20SignonHandler.IdpLoginSessionKey];
             var signOnHandler = handler as Saml20SignonHandler;
             if (signOnHandler == null)
             {

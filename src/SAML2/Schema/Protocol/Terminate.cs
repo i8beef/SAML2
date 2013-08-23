@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Protocol
 {
     /// <summary>
-    /// The Saml20 protocol Terminate class
+    /// The SAML20 protocol Terminate class
     /// </summary>
     [Serializable]
     [DebuggerStepThrough]

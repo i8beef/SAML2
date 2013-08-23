@@ -32,7 +32,7 @@ namespace SAML2
         private readonly string _profile;
 
         /// <summary>
-        /// Quirksmode switch.
+        /// Quirks mode switch.
         /// </summary>
         private readonly bool _quirksMode;
 
@@ -218,7 +218,7 @@ namespace SAML2
         /// </summary>
         public string Id
         {
-            get { return Assertion.ID; }
+            get { return Assertion.Id; }
         }
         
         /// <summary>
@@ -273,7 +273,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Gets the SessionIndex of the AuthnStatement
+        /// Gets the <c>SessionIndex</c> of the <c>AuthnStatement</c>
         /// </summary>
         public string SessionIndex
         {

@@ -4,8 +4,8 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Metadata
 {
     /// <summary>
-    /// The &lt;AuthnAuthorityDescriptor&gt; element extends RoleDescriptorType with content reflecting
-    /// profiles specific to authentication authorities, SAML authorities that respond to &lt;samlp:AuthnQuery&gt;
+    /// The <c>&lt;AuthnAuthorityDescriptor&gt;</c> element extends RoleDescriptorType with content reflecting
+    /// profiles specific to authentication authorities, SAML authorities that respond to <c>&lt;samlp:AuthnQuery&gt;</c>
     /// messages.
     /// </summary>
     [Serializable]
@@ -28,15 +28,15 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The assertion ID request service.</value>
         [XmlElement("AssertionIDRequestService")]
-        public Endpoint[] AssertionIDRequestService { get; set; }
+        public Endpoint[] AssertionIdRequestService { get; set; }
 
         /// <summary>
-        /// Gets or sets the authn query service.
+        /// Gets or sets the authentication query service.
         /// One or more elements of type EndpointType that describe endpoints that support the profile of
         /// the Authentication Query protocol defined in [SAMLProf]. All authentication authorities support at
         /// least one such endpoint, by definition.
         /// </summary>
-        /// <value>The authn query service.</value>
+        /// <value>The authentication query service.</value>
         [XmlElement("AuthnQueryService")]
         public Endpoint[] AuthnQueryService { get; set; }
 
@@ -47,7 +47,7 @@ namespace SAML2.Schema.Metadata
         /// </summary>
         /// <value>The name ID format.</value>
         [XmlElement("NameIDFormat", DataType = "anyURI")]
-        public string[] NameIDFormat { get; set; }
+        public string[] NameIdFormat { get; set; }
 
         #endregion
     }

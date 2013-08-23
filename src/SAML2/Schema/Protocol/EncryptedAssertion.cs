@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Protocol
 {
     /// <summary>
-    /// The &lt;EncryptedAssertion&gt; element represents an assertion in encrypted fashion, as defined by the
+    /// The <c>&lt;EncryptedAssertion&gt;</c> element represents an assertion in encrypted fashion, as defined by the
     /// XML Encryption Syntax and Processing specification [XMLEnc].
     /// </summary>
     [Serializable]

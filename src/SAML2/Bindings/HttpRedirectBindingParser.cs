@@ -18,7 +18,7 @@ namespace SAML2.Bindings
     public class HttpRedirectBindingParser
     {
         /// <summary>
-        /// RelaystateDecoded backing field.
+        /// <c>RelaystateDecoded</c> backing field.
         /// </summary>
         private string _relaystateDecoded;
 

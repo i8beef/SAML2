@@ -21,12 +21,12 @@ namespace SAML2.Schema.Metadata
         #region Attributes
 
         /// <summary>
-        /// Gets or sets a value indicating whether [want authn requests signed].
-        /// Optional attribute that indicates a requirement for the &lt;samlp:AuthnRequest&gt; messages
+        /// Gets or sets a value indicating whether want authentication requests signed.
+        /// Optional attribute that indicates a requirement for the <c>&lt;samlp:AuthnRequest&gt;</c> messages
         /// received by this identity provider to be signed. If omitted, the value is assumed to be false.
         /// </summary>
         /// <value>
-        /// <c>true</c> if [want authn requests signed]; otherwise, <c>false</c>.
+        /// <c>true</c> if want authentication requests signed; otherwise, <c>false</c>.
         /// </value>
         [XmlAttribute]
         public bool WantAuthnRequestsSigned { get; set; }

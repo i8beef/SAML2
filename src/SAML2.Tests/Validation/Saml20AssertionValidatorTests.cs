@@ -27,7 +27,7 @@ namespace SAML2.Tests.Validation
             {
                 // Arrange
                 var assertion = AssertionUtil.GetBasicAssertion();
-                assertion.ID = null;
+                assertion.Id = null;
 
                 var validator = new Saml20AssertionValidator(AssertionUtil.GetAudiences(), false);
 
@@ -207,7 +207,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Tests the validation that ensures the Count property tp be a non-negative integer
+            /// Tests the validation that ensures the Count property to be a non-negative integer
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Count attribute of ProxyRestriction MUST BE a non-negative integer")]
@@ -229,7 +229,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Tests the validation that ensures the Count property tp be a non-negative integer
+            /// Tests the validation that ensures the Count property to be a non-negative integer
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "ProxyRestriction Audience MUST BE a wellformed uri")]
@@ -372,7 +372,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Tests the validation that ensures the Count property tp be a non-negative integer
+            /// Tests the validation that ensures the Count property to be a non-negative integer
             /// </summary>
             [Test]
             public void ValidatesProxyRestrictionAudience()
@@ -403,10 +403,13 @@ namespace SAML2.Tests.Validation
         public class ValidateTimeRestrictionsMethod
         {
             /// <summary>
-            /// Tests that AuthnStatement objects must have a SessionNotOnOrAfter attribute set in the future.
+            /// Tests that <c>AuthnStatement</c> objects must have a SessionNotOnOrAfter attribute set in the future.
             /// </summary>
+            /// <remarks>
+            /// TODO: test data needs fixing
+            /// </remarks>
             [Test]
-            [Ignore] // TODO: test data needs fixing
+            [Ignore]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnStatement attribute SessionNotOnOrAfter MUST be in the future")]
             public void ThrowsExceptionWhenAuthnStatementSessionNotOnOrAfterInPast()
             {

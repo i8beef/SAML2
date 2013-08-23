@@ -24,21 +24,21 @@ namespace SAML2.Schema.Core
         public const string ElementName = "Attribute";
 
         /// <summary>
-        /// Nameformat "uri".
+        /// Name format "uri".
         /// </summary>
         public const string NameformatUri = "urn:oasis:names:tc:SAML:2.0:attrname-format:uri";
         
         /// <summary>
-        /// Nameformat "basic".
+        /// Name format "basic".
         /// </summary>
         public const string NameformatBasic = "urn:oasis:names:tc:SAML:2.0:attrname-format:basic";
 
         #region Attributes
 
         /// <summary>
-        /// Gets or sets any attr.
+        /// Gets or sets XML any attribute.
         /// </summary>
-        /// <value>Any attr.</value>
+        /// <value>The XML Any attribute.</value>
         [XmlAnyAttribute]
         public XmlAttribute[] AnyAttr { get; set; }
 
@@ -52,7 +52,7 @@ namespace SAML2.Schema.Core
         /// Gets or sets a URI reference representing the classification of the attribute name for purposes of interpreting the
         /// name. See Section 8.2 for some URI references that MAY be used as the value of the NameFormat
         /// attribute and their associated descriptions and processing rules. If no NameFormat value is provided,
-        /// the identifier urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified (see Section
+        /// the identifier <c>urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified</c> (see Section
         /// 8.2.1) is in effect.
         /// </summary>
         [XmlAttribute("NameFormat", DataType = "anyURI")]
@@ -73,10 +73,10 @@ namespace SAML2.Schema.Core
         /// <summary>
         /// Gets or sets the attribute value.
         /// Contains a value of the attribute. If an attribute contains more than one discrete value, it is
-        /// RECOMMENDED that each value appear in its own &lt;AttributeValue&gt; element. If more than
-        /// one &lt;AttributeValue&gt; element is supplied for an attribute, and any of the elements have a
-        /// datatype assigned through xsi:type, then all of the &lt;AttributeValue&gt; elements must have
-        /// the identical datatype assigned.
+        /// RECOMMENDED that each value appear in its own <c>&lt;AttributeValue&gt;</c> element. If more than
+        /// one <c>&lt;AttributeValue&gt;</c> element is supplied for an attribute, and any of the elements have a
+        /// data type assigned through <c>xsi:type</c>, then all of the <c>&lt;AttributeValue&gt;</c> elements must have
+        /// the identical data type assigned.
         /// </summary>
         /// <value>The attribute value.</value>
         [XmlElement("AttributeValue", IsNullable = true)]

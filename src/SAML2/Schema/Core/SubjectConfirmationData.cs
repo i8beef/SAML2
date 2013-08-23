@@ -47,9 +47,9 @@ namespace SAML2.Schema.Core
         public string Address { get; set; }
 
         /// <summary>
-        /// Gets or sets any attr.
+        /// Gets or sets XML any attribute.
         /// </summary>
-        /// <value>Any attr.</value>
+        /// <value>The XML Any attribute.</value>
         [XmlAnyAttribute]
         public XmlAttribute[] AnyAttr { get; set; }
 

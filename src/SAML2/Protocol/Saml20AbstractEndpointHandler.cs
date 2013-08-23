@@ -18,47 +18,47 @@ namespace SAML2.Protocol
         /// <summary>
         /// Parameter name for IDP choice
         /// </summary>
-        public const string IDPChoiceParameterName = "cidp";
+        public const string IdpChoiceParameterName = "cidp";
 
         /// <summary>
-        /// Key used to override ForceAuthn setting
+        /// Key used to override <c>ForceAuthn</c> setting
         /// </summary>
-        public const string IDPForceAuthn = "IDPForceAuthn";
+        public const string IdpForceAuthn = "IDPForceAuthn";
 
         /// <summary>
         /// Key used to override IsPassive setting
         /// </summary>
-        public const string IDPIsPassive = "IDPIsPassive";
+        public const string IdpIsPassive = "IDPIsPassive";
 
         /// <summary>
         /// Key used to save login session
         /// </summary>
-        public const string IDPLoginSessionKey = "LoginIDPId";
+        public const string IdpLoginSessionKey = "LoginIDPId";
 
         /// <summary>
         /// Key used to save the IDP name id in session context
         /// </summary>
-        public const string IDPNameId = "IDPNameId";
+        public const string IdpNameId = "IDPNameId";
 
         /// <summary>
         /// Used to save the name id format of the assertion
         /// </summary>
-        public const string IDPNameIdFormat = "IDPNameIdFormat";
+        public const string IdpNameIdFormat = "IDPNameIdFormat";
 
         /// <summary>
         /// Key used to save SessionId
         /// </summary>
-        public const string IDPSessionIdKey = "IDPSessionID";
+        public const string IdpSessionIdKey = "IDPSessionID";
 
         /// <summary>
         /// Key used to save temporary session id
         /// </summary>
-        public const string IDPTempSessionKey = "TempIDPId";
+        public const string IdpTempSessionKey = "TempIDPId";
 
         /// <summary>
-        /// Determines if configuration has been validated
+        /// Gets or sets a value indicating whether configuration has been validated
         /// </summary>
-        public static bool Validated;
+        public static bool Validated { get; set; }
 
         /// <summary>
         /// Enables processing of HTTP Web requests by a custom HttpHandler that implements the <see cref="T:System.Web.IHttpHandler"/> interface.
@@ -89,10 +89,10 @@ namespace SAML2.Protocol
             config.IdentityProviders.Refresh();
 
             // If idpChoice is set, use it value
-            if (!string.IsNullOrEmpty(context.Request.Params[IDPChoiceParameterName]))
+            if (!string.IsNullOrEmpty(context.Request.Params[IdpChoiceParameterName]))
             {
-                Logger.Debug("Using IDPChoiceParamater: " + context.Request.Params[IDPChoiceParameterName]);
-                var endPoint = config.IdentityProviders.FirstOrDefault(x => x.Id == context.Request.Params[IDPChoiceParameterName]);
+                Logger.Debug("Using IDPChoiceParamater: " + context.Request.Params[IdpChoiceParameterName]);
+                var endPoint = config.IdentityProviders.FirstOrDefault(x => x.Id == context.Request.Params[IdpChoiceParameterName]);
                 if (endPoint != null)
                 {
                     return endPoint;
@@ -140,13 +140,13 @@ namespace SAML2.Protocol
             }
 
             // If an IDPSelectionEvent handler is present, request the handler for an IDP endpoint to use.
-            return IDPSelectionUtil.InvokeIDPSelectionEventHandler(config.IdentityProviders);
+            return IdpSelectionUtil.InvokeIDPSelectionEventHandler(config.IdentityProviders);
         }
 
         /// <summary>
         /// Looks through the Identity Provider configurations and
         /// </summary>
-        /// <param name="idpId">The idp id.</param>
+        /// <param name="idpId">The identity provider id.</param>
         /// <returns>The <see cref="IdentityProviderElement"/>.</returns>
         public IdentityProviderElement RetrieveIDPConfiguration(string idpId)
         {

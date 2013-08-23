@@ -77,7 +77,7 @@ namespace SAML2.Tests.Validation
         public class ValidateAuthnStatmentMethod
         {
             /// <summary>
-            /// Tests that AuthnStatement objects must have an valid uri content for AuthenticatingAuthority entries
+            /// Tests that <c>AuthnStatement</c> objects must have an valid uri content for <c>AuthenticatingAuthority</c> entries
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthenticatingAuthority array contains a value which is not a wellformed absolute uri")]
@@ -114,7 +114,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Tests that AuthnStatement objects must have a valid uri content for AuthnContextClassRef types
+            /// Tests that <c>AuthnStatement</c> objects must have a valid uri content for <c>AuthnContextClassRef</c> types
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContextClassRef has a value which is not a wellformed absolute uri")]
@@ -146,7 +146,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Tests that AuthnStatement objects MUST NOT have content of type AuthnContextDecl
+            /// Tests that <c>AuthnStatement</c> objects MUST NOT have content of type <c>AuthnContextDecl</c>
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContextDecl elements are not allowed in this implementation")]
@@ -176,7 +176,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Tests that AuthnStatement objects must have a valid uri content for AuthnContextDeclRef types
+            /// Tests that <c>AuthnStatement</c> objects must have a valid uri content for <c>AuthnContextDeclRef</c> types
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContextDeclRef has a value which is not a wellformed absolute uri")]
@@ -208,7 +208,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Tests that AuthnStatement objects must have a AuthnContextClassRef type as the first element if it is present
+            /// Tests that <c>AuthnStatement</c> objects must have a <c>AuthnContextClassRef</c> type as the first element if it is present
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContextClassRef must be in the first element")]
@@ -240,7 +240,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Tests that AuthnStatement objects must have no more than 2 {AuthnContextClassRef, AuthnContextDeclRef} elements
+            /// Tests that <c>AuthnStatement</c> objects must have no more than 2 {<c>AuthnContextClassRef</c>, <c>AuthnContextDeclRef</c>} elements
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContext MUST NOT contain more than two elements.")]
@@ -274,7 +274,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Tests that AuthnStatement objects must have non-null contents
+            /// Tests that <c>AuthnStatement</c> objects must have non-null contents
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContext element MUST contain at least one AuthnContextClassRef, AuthnContextDecl or AuthnContextDeclRef element")]
@@ -298,7 +298,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Tests that AuthnStatement objects must have non-empty contents
+            /// Tests that <c>AuthnStatement</c> objects must have non-empty contents
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContext element MUST contain at least one AuthnContextClassRef, AuthnContextDecl or AuthnContextDeclRef element")]
@@ -318,7 +318,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Tests that AuthnStatement objects must have an AuthnContext element
+            /// Tests that <c>AuthnStatement</c> objects must have an <c>AuthnContext</c> element
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnStatement MUST have an AuthnContext element")]
@@ -337,7 +337,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Tests that AuthnStatement objects must have an AuthnInstant attribute.
+            /// Tests that <c>AuthnStatement</c> objects must have an <c>AuthnInstant</c> attribute.
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnStatement MUST have an AuthnInstant attribute")]
@@ -378,7 +378,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Verify exception is thrown on missing AuthzDecisionStatement.
+            /// Verify exception is thrown on missing <c>AuthzDecisionStatement</c>.
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Resource attribute of AuthzDecisionStatement is REQUIRED")]
@@ -395,7 +395,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Validates valid decision statments.
+            /// Validates valid decision statements.
             /// </summary>
             [Test]
             public void ValidatesResources()

@@ -22,7 +22,7 @@ namespace SAML2
             Request = new AuthnRequest
                           {
                               Version = Saml20Constants.Version,
-                              ID = "id" + Guid.NewGuid().ToString("N"),
+                              Id = "id" + Guid.NewGuid().ToString("N"),
                               Issuer = new NameID(),
                               IssueInstant = DateTime.Now
                           };
@@ -36,8 +36,8 @@ namespace SAML2
         /// <value>The assertion consumer service URL.</value>
         public string AssertionConsumerServiceUrl
         {
-            get { return Request.AssertionConsumerServiceURL; }
-            set { Request.AssertionConsumerServiceURL = value; }
+            get { return Request.AssertionConsumerServiceUrl; }
+            set { Request.AssertionConsumerServiceUrl = value; }
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace SAML2
         public AuthnRequest Request { get; private set; }
 
         /// <summary>
-        /// Gets or sets the Destination attribute of the &lt;AuthnRequest&gt;.
+        /// Gets or sets the <c>Destination</c> attribute of the <c>AuthnRequest</c>.
         /// </summary>
         public string Destination
         {
@@ -56,7 +56,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Gets or sets the ForceAuthn attribute of the &lt;AuthnRequest&gt;.
+        /// Gets or sets the <c>ForceAuthn</c> attribute of the <c>AuthnRequest</c>.
         /// </summary>
         public bool? ForceAuthn
         {
@@ -65,16 +65,16 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Gets or sets the ID attribute of the &lt;AuthnRequest&gt; message.
+        /// Gets or sets the ID attribute of the <c>AuthnRequest</c> message.
         /// </summary>
         public string Id
         {
-            get { return Request.ID; }
-            set { Request.ID = value; }
+            get { return Request.Id; }
+            set { Request.Id = value; }
         }
 
         /// <summary>
-        /// Gets or sets the 'IsPassive' attribute of the &lt;AuthnRequest&gt;.
+        /// Gets or sets the 'IsPassive' attribute of the <c>AuthnRequest</c>.
         /// </summary>
         public bool? IsPassive
         {
@@ -83,7 +83,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Gets or sets the IssueInstant of the AuthnRequest.
+        /// Gets or sets the <c>IssueInstant</c> of the <c>AuthnRequest</c>.
         /// </summary>
         /// <value>The issue instant.</value>
         public DateTime? IssueInstant
@@ -118,8 +118,8 @@ namespace SAML2
         /// <value>The name ID policy.</value>
         public NameIDPolicy NameIdPolicy
         {
-            get { return Request.NameIDPolicy; }
-            set { Request.NameIDPolicy = value; }
+            get { return Request.NameIdPolicy; }
+            set { Request.NameIdPolicy = value; }
         }
 
         /// <summary>
@@ -132,9 +132,9 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Gets or sets the requested authn context.
+        /// Gets or sets the requested authentication context.
         /// </summary>
-        /// <value>The requested authn context.</value>
+        /// <value>The requested authentication context.</value>
         public RequestedAuthnContext RequestedAuthnContext
         {
             get { return Request.RequestedAuthnContext; }
@@ -253,7 +253,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Returns the AuthnRequest as an XML document.
+        /// Returns the <c>AuthnRequest</c> as an XML document.
         /// </summary>
         /// <returns>The request XML.</returns>
         public XmlDocument GetXml()

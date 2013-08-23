@@ -17,13 +17,13 @@ namespace SAML2.Schema.XmlDSig
         Item,
 
         /// <summary>
-        /// PgpKeyId item type.
+        /// <c>PgpKeyId</c> item type.
         /// </summary>
         [XmlEnum("PGPKeyID")]
         PgpKeyId,
 
         /// <summary>
-        /// PgpKeyPacket item type.
+        /// <c>PgpKeyPacket</c> item type.
         /// </summary>
         [XmlEnum("PGPKeyPacket")]
         PgpKeyPacket,

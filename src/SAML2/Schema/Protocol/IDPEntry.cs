@@ -36,11 +36,11 @@ namespace SAML2.Schema.Protocol
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the loc.
+        /// Gets or sets the location.
         /// A URI reference representing the location of a profile-specific endpoint supporting the authentication
         /// request protocol. The binding to be used must be understood from the profile of use.
         /// </summary>
-        /// <value>The loc.</value>
+        /// <value>The location.</value>
         [XmlAttribute("Loc", DataType = "anyURI")]
         public string Location { get; set; }
 

@@ -19,9 +19,15 @@ namespace SAML2.Utils
         }
 
         /// <summary>
+        /// Gets the instance of XmlSerializerNamespaces that is used by this class.
+        /// </summary>
+        /// <value>The XmlSerializerNamespaces instance.</value>
+        public static XmlSerializerNamespaces XmlNamespaces { get; private set; }
+
+        /// <summary>
         /// Reads and deserializes an item from the reader
         /// </summary>
-        /// <typeparam name="T">The type of object to descrialize to.</typeparam>
+        /// <typeparam name="T">The type of object to deserialize to.</typeparam>
         /// <param name="reader">The reader.</param>
         /// <returns>The deserialized item.</returns>
         public static T Deserialize<T>(XmlReader reader)
@@ -35,7 +41,7 @@ namespace SAML2.Utils
         /// <summary>
         /// Deserializes an item from an XML string.
         /// </summary>
-        /// <typeparam name="T">The type of object to descrialize to.</typeparam>
+        /// <typeparam name="T">The type of object to deserialize to.</typeparam>
         /// <param name="xml">The XML.</param>
         /// <returns>The deserialized item.</returns>
         public static T DeserializeFromXmlString<T>(string xml)
@@ -43,12 +49,6 @@ namespace SAML2.Utils
             var reader = new XmlTextReader(new StringReader(xml));
             return Deserialize<T>(reader);
         }
-
-        /// <summary>
-        /// Gets the instance of XmlSerializerNamespaces that is used by this class.
-        /// </summary>
-        /// <value>The XmlSerializerNamespaces instance.</value>
-        public static XmlSerializerNamespaces XmlNamespaces { get; private set; }
 
         /// <summary>
         /// Serializes the specified item to a stream.

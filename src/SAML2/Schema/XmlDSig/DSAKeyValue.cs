@@ -4,23 +4,20 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.XmlDSig
 {
     /// <summary>
+    /// <para>
     /// The DSA KeyValue
     /// DSA keys and the DSA signature algorithm are specified in [DSS]. DSA public key values can have the following fields: 
-    /// 
+    /// </para>
+    /// <para>
     /// P - a prime modulus meeting the [DSS] requirements 
-    /// 
     /// Q - an integer in the range 2**159 &lt; Q &lt; 2**160 which is a prime divisor of P-1 
-    /// 
     /// G - an integer with certain properties with respect to P and Q 
-    /// 
     /// Y - G**X mod P (where X is part of the private key and not made public) 
-    /// 
     /// J - (P - 1) / Q 
-    /// 
     /// seed - a DSA prime generation seed 
-    /// 
     /// pgenCounter - a DSA prime generation counter 
-    /// 
+    /// </para>
+    /// <para>
     /// Parameter J is available for inclusion solely for efficiency as it is calculatable from P and Q. 
     /// Parameters seed and pgenCounter are used in the DSA prime number generation algorithm specified in 
     /// [DSS]. As such, they are optional but must either both be present or both be absent. This prime 
@@ -30,11 +27,12 @@ namespace SAML2.Schema.XmlDSig
     /// be absent. If all of P, Q, seed, and pgenCounter are present, implementations are not required to check 
     /// if they are consistent and are free to use either P and Q or seed and pgenCounter. All parameters are 
     /// encoded as base64 [MIME] values.
+    /// </para>
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Xmldsig)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
-    public class DSAKeyValue
+    public class DsaKeyValue
     {
         /// <summary>
         /// The XML Element name of this class

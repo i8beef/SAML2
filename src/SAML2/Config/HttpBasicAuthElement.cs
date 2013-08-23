@@ -10,7 +10,7 @@ namespace SAML2.Config
         #region Attributes
 
         /// <summary>
-        /// Gets or sets a value indicating whether HttpBasicAuth is enabled.
+        /// Gets or sets a value indicating whether <c>HttpBasicAuth</c> is enabled.
         /// </summary>
         /// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
         [ConfigurationProperty("enableHttpBasicAuth")]

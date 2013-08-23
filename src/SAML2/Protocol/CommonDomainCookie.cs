@@ -23,7 +23,7 @@ namespace SAML2.Protocol
         private readonly HttpCookieCollection _cookies;
 
         /// <summary>
-        /// The KnownIdps backing field.
+        /// The <c>KnownIdps</c> backing field.
         /// </summary>
         private readonly List<string> _knownIdps;
 

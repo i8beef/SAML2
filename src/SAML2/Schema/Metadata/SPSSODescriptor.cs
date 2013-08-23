@@ -5,13 +5,13 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Metadata
 {
     /// <summary>
-    /// The &lt;SPSSODescriptor&gt; element extends SSODescriptorType with content reflecting profiles specific
+    /// The <c>SpSsoDescriptor</c> element extends SSODescriptorType with content reflecting profiles specific
     /// to service providers.
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Metadata)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
-    public class SPSSODescriptor : SSODescriptor
+    public class SpSsoDescriptor : SSODescriptor
     {
         /// <summary>
         /// The XML Element name of this class
@@ -19,23 +19,23 @@ namespace SAML2.Schema.Metadata
         public new const string ElementName = "SPSSODescriptor";
 
         /// <summary>
-        /// AuthnRequestsSigned backing field.
+        /// <c>AuthnRequestsSigned</c>c> backing field.
         /// </summary>
         private bool? _authnRequestsSignedField;
 
         /// <summary>
-        /// WantAssertionsSigned backing field.
+        /// <c>WantAssertionsSigned</c> backing field.
         /// </summary>
         private bool? _wantAssertionsSignedField;
 
         #region Attributes
         
         /// <summary>
-        /// Gets or sets a value indicating whether [authn requests signed].
-        /// Optional attribute that indicates whether the &lt;samlp:AuthnRequest&gt; messages sent by this
+        /// Gets or sets a value indicating whether the authentication requests is signed.
+        /// Optional attribute that indicates whether the <c>samlp:AuthnRequest</c> messages sent by this
         /// service provider will be signed. If omitted, the value is assumed to be false.
         /// </summary>
-        /// <value><c>true</c> if [authn requests signed]; otherwise, <c>false</c>.</value>
+        /// <value><c>true</c> if authentication requests signed; otherwise, <c>false</c>.</value>
         [XmlAttribute]
         public string AuthnRequestsSigned
         {
@@ -44,14 +44,14 @@ namespace SAML2.Schema.Metadata
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [want assertions signed].
-        /// Optional attribute that indicates a requirement for the &lt;saml:Assertion&gt; elements received by
+        /// Gets or sets a value indicating whether assertions should be signed.
+        /// Optional attribute that indicates a requirement for the <c>saml:Assertion</c> elements received by
         /// this service provider to be signed. If omitted, the value is assumed to be false. This requirement
         /// is in addition to any requirement for signing derived from the use of a particular profile/binding
         /// combination.
         /// </summary>
         /// <value>
-        /// <c>true</c> if [want assertions signed]; otherwise, <c>false</c>.
+        /// <c>true</c> if want assertions signed; otherwise, <c>false</c>.
         /// </value>
         [XmlAttribute]
         public string WantAssertionsSigned

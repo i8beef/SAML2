@@ -6,7 +6,7 @@ using SAML2.Properties;
 namespace SAML2.Specification
 {
     /// <summary>
-    /// Validates a selfsigned certificate
+    /// Validates a self-signed certificate
     /// </summary>
     public class SelfIssuedCertificateSpecification : ICertificateSpecification
     {

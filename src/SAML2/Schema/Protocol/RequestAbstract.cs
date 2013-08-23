@@ -19,7 +19,7 @@ namespace SAML2.Schema.Protocol
     [XmlInclude(typeof(AuthzDecisionQuery))]
     [XmlInclude(typeof(AttributeQuery))]
     [XmlInclude(typeof(AuthnQuery))]
-    [XmlInclude(typeof(AssertionIDRequest))]
+    [XmlInclude(typeof(AssertionIdRequest))]
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Protocol)]
     public abstract class RequestAbstract
@@ -56,14 +56,14 @@ namespace SAML2.Schema.Protocol
         public string Destination { get; set; }
 
         /// <summary>
-        /// Gets or sets the identifier for the request. It is of type xs:ID and MUST follow the requirements specified in Section
+        /// Gets or sets the identifier for the request. It is of type <c>xs:ID</c> and MUST follow the requirements specified in Section
         /// 1.3.4 for identifier uniqueness. The values of the ID attribute in a request and the InResponseTo
         /// attribute in the corresponding response MUST match.
         /// Gets or sets the ID.
         /// </summary>
         /// <value>The ID.</value>
         [XmlAttribute("ID", DataType = "ID")]
-        public string ID { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Gets or sets the issue instant string.

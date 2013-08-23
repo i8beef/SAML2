@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
 using SAML2.Schema.Core;
 using SAML2.Validation;
@@ -19,7 +18,7 @@ namespace SAML2.Tests.Validation
         public class ValidateSubjectMethod
         {
             /// <summary>
-            /// Tests the validation that ensures that a subject MUST have at least one subelement
+            /// Tests the validation that ensures that a subject MUST have at least one sub element
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Subject MUST contain either an identifier or a subject confirmation")]
@@ -36,7 +35,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Tests the validation that ensures that a subject MUST have at least one subelement of correct type
+            /// Tests the validation that ensures that a subject MUST have at least one sub element of correct type
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Subject must have either NameID, EncryptedID or SubjectConfirmation subelement.")]

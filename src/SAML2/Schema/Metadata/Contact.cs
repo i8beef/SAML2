@@ -35,9 +35,9 @@ namespace SAML2.Schema.Metadata
         #region Attributes
 
         /// <summary>
-        /// Gets or sets any attr.
+        /// Gets or sets XML any attribute.
         /// </summary>
-        /// <value>Any attr.</value>
+        /// <value>The XML Any attribute.</value>
         [XmlAnyAttribute]
         public XmlAttribute[] AnyAttr { get; set; }
 

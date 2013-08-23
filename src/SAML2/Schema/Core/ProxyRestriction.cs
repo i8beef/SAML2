@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Core
 {
     /// <summary>
-    /// The Saml20 ProxyRestriction condition class.
+    /// The SAML20 ProxyRestriction condition class.
     /// Specifies limitations that the asserting party imposes on relying parties that wish to subsequently act
     /// as asserting parties themselves and issue assertions of their own on the basis of the information
     /// contained in the original assertion. Although the schema permits multiple occurrences, there MUST

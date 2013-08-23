@@ -41,12 +41,12 @@ namespace SAML2.Schema.Core
 
         /// <summary>
         /// Gets or sets the ID.
-        /// The identifier for this assertion. It is of type xs:ID, and MUST follow the requirements specified in
+        /// The identifier for this assertion. It is of type <c>xs:ID</c>, and MUST follow the requirements specified in
         /// Section 1.3.4 for identifier uniqueness.
         /// </summary>
         /// <value>The ID.</value>
         [XmlAttribute("ID", DataType = "ID")]
-        public string ID { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Gets or sets a string representation of the issue instant.
@@ -100,7 +100,7 @@ namespace SAML2.Schema.Core
         public NameID Issuer { get; set; }
 
         /// <summary>
-        /// Gets or sets the Statements (AttributeStatement, AuthnStatement and AuthzDecisionStatement types) 
+        /// Gets or sets the Statements (<c>AttributeStatement</c>, <c>AuthnStatement</c> and <c>AuthzDecisionStatement</c> types) 
         /// </summary>
         /// <value>The items.</value>
         [XmlElement("AttributeStatement", typeof(AttributeStatement))]
@@ -137,9 +137,9 @@ namespace SAML2.Schema.Core
         }
 
         /// <summary>
-        /// Get the AuthnStatement elements of the Assertion.
+        /// Get the <c>AuthnStatement</c> elements of the Assertion.
         /// </summary>
-        /// <returns>A list containing the AuthnStatement instances found in the assertion. An empty list if none could be found.</returns>
+        /// <returns>A list containing the <c>AuthnStatement</c> instances found in the assertion. An empty list if none could be found.</returns>
         public List<AuthnStatement> GetAuthnStatements()
         {
             return GetStatements<AuthnStatement>();

@@ -33,7 +33,7 @@ namespace SAML2.Actions
         public void SignOnAction(AbstractEndpointHandler handler, HttpContext context, Saml20Assertion assertion)
         {
             var signonhandler = (Saml20SignonHandler)handler;
-            Saml20PrincipalCache.AddPrincipal(Saml20Identity.InitSaml20Identity(assertion, signonhandler.RetrieveIDPConfiguration((string)context.Session[Saml20AbstractEndpointHandler.IDPTempSessionKey])));
+            Saml20PrincipalCache.AddPrincipal(Saml20Identity.InitSaml20Identity(assertion, signonhandler.RetrieveIDPConfiguration((string)context.Session[Saml20AbstractEndpointHandler.IdpTempSessionKey])));
         }
 
         /// <summary>

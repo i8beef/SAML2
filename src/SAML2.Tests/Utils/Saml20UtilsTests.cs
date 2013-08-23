@@ -11,7 +11,7 @@ namespace SAML2.Tests.Utils
     public class Saml20UtilsTests
     {
         /// <summary>
-        /// FromUtcString method tests.
+        /// <c>FromUtcString</c> method tests.
         /// </summary>
         [TestFixture]
         public class FromUtcStringMethod
@@ -52,7 +52,7 @@ namespace SAML2.Tests.Utils
         }
 
         /// <summary>
-        /// ToUtcString method tests.
+        /// <c>ToUtcString</c> method tests.
         /// </summary>
         [TestFixture]
         public class ToUtcStringMethod

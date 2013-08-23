@@ -17,43 +17,43 @@ namespace SAML2.Schema.XmlDSig
         Item,
         
         /// <summary>
-        /// KeyName item type.
+        /// <c>KeyName</c> item type.
         /// </summary>
         [XmlEnum("KeyName")]
         KeyName,
         
         /// <summary>
-        /// KeyValue item type.
+        /// <c>KeyValue</c> item type.
         /// </summary>
         [XmlEnum("KeyValue")]
         KeyValue,
         
         /// <summary>
-        /// MgmtData item type.
+        /// <c>MgmtData</c> item type.
         /// </summary>
         [XmlEnum("MgmtData")]
         MgmtData,
         
         /// <summary>
-        /// PGPData item type.
+        /// <c>PGPData</c> item type.
         /// </summary>
         [XmlEnum("PGPData")]
         PGPData,
         
         /// <summary>
-        /// RetrievalMethod item type.
+        /// <c>RetrievalMethod</c> item type.
         /// </summary>
         [XmlEnum("RetrievalMethod")]
         RetrievalMethod,
         
         /// <summary>
-        /// SPKIData item type.
+        /// <c>SPKIData</c> item type.
         /// </summary>
         [XmlEnum("SPKIData")]
         SPKIData,
         
         /// <summary>
-        /// X509Data item type.
+        /// <c>X509Data</c> item type.
         /// </summary>
         [XmlEnum("X509Data")]
         X509Data

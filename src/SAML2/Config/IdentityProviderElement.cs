@@ -30,9 +30,9 @@ namespace SAML2.Config
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to force authentication on each AuthnRequest.
+        /// Gets or sets a value indicating whether to force authentication on each <c>AuthnRequest</c>.
         /// </summary>
-        /// <value><c>true</c> if [force auth]; otherwise, <c>false</c>.</value>
+        /// <value><c>true</c> if force authentication; otherwise, <c>false</c>.</value>
         [ConfigurationProperty("forceAuth")]
         public bool ForceAuth
         {
@@ -52,7 +52,7 @@ namespace SAML2.Config
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this AuthnRequest should be passive.
+        /// Gets or sets a value indicating whether this <c>AuthnRequest</c> should be passive.
         /// </summary>
         /// <value><c>true</c> if this instance is passive; otherwise, <c>false</c>.</value>
         [ConfigurationProperty("isPassive")]

@@ -16,7 +16,7 @@ namespace SAML2.Schema.XEnc
         
         /// <summary>
         /// Gets or sets the items.
-        /// DataReferencee and KeyReference elements
+        /// <c>DataReferencee</c> and <c>KeyReference</c> elements
         /// </summary>
         /// <value>The items.</value>
         [XmlElement("DataReference", typeof(ReferenceType))]

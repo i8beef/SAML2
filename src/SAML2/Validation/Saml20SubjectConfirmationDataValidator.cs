@@ -10,12 +10,12 @@ namespace SAML2.Validation
     public class Saml20SubjectConfirmationDataValidator : ISaml20SubjectConfirmationDataValidator
     {
         /// <summary>
-        /// The AnyAttr validator.
+        /// The <c>AnyAttr</c>c> validator.
         /// </summary>
         private readonly Saml20XmlAnyAttributeValidator _anyAttrValidator = new Saml20XmlAnyAttributeValidator();
 
         /// <summary>
-        /// The KeyInfo validator.
+        /// The <c>KeyInfo</c> validator.
         /// </summary>
         private readonly Saml20KeyInfoValidator _keyInfoValidator = new Saml20KeyInfoValidator();
 
@@ -26,7 +26,7 @@ namespace SAML2.Validation
         /// </summary>
         /// <param name="subjectConfirmationData">The subject confirmation data.</param>
         /// <remarks>
-        /// [SAML2.0std] section 2.4.1.2
+        /// [SAML2.0 standard] section 2.4.1.2
         /// </remarks>
         public void ValidateSubjectConfirmationData(SubjectConfirmationData subjectConfirmationData)
         {

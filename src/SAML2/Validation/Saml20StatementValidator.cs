@@ -49,7 +49,7 @@ namespace SAML2.Validation
         /// Validate AttributeStatement.
         /// </summary>
         /// <remarks>
-        /// [SAML2.0std] section 2.7.3
+        /// [SAML2.0 standard] section 2.7.3
         /// </remarks>
         /// <param name="statement">The statement.</param>
         private void ValidateAttributeStatement(AttributeStatement statement)
@@ -82,10 +82,10 @@ namespace SAML2.Validation
         }
         
         /// <summary>
-        /// Validate AuthnStatement.
+        /// Validate <c>AuthnStatement</c>.
         /// </summary>
         /// <remarks>
-        /// [SAML2.0std] section 2.7.2
+        /// [SAML2.0 standard] section 2.7.2
         /// </remarks>
         /// <param name="statement">The statement.</param>
         private void ValidateAuthnStatement(AuthnStatement statement)
@@ -117,12 +117,12 @@ namespace SAML2.Validation
         }
 
         /// <summary>
-        /// Validate AuthzContext.
+        /// Validate <c>AuthzContext</c>.
         /// </summary>
         /// <remarks>
-        /// [SAML2.0std] section 2.7.2.2
+        /// [SAML2.0 standard] section 2.7.2.2
         /// </remarks>
-        /// <param name="authnContext">The authn context.</param>
+        /// <param name="authnContext">The authentication context.</param>
         private void ValidateAuthnContext(AuthnContext authnContext)
         {
             if (authnContext == null)
@@ -204,10 +204,10 @@ namespace SAML2.Validation
         }
 
         /// <summary>
-        /// Validate AuthzDecisionStatement.
+        /// Validate <c>AuthzDecisionStatement</c>.
         /// </summary>
         /// <remarks>
-        /// [SAML2.0std] section 2.7.4
+        /// [SAML2.0 standard] section 2.7.4
         /// </remarks>
         /// <param name="statement">The statement.</param>
         private void ValidateAuthzDecisionStatement(AuthzDecisionStatement statement)
@@ -232,7 +232,7 @@ namespace SAML2.Validation
 
             foreach (var action in statement.Action)
             {
-                // NOTE: [SAML2.0std] claims that the Namespace is [Optional], but according to the schema definition (and Geneva)
+                // NOTE: [SAML2.0 standard] claims that the Namespace is [Optional], but according to the schema definition (and Geneva)
                 // NOTE: it has use="required"
                 if (!Saml20Utils.ValidateRequiredString(action.Namespace))
                 {

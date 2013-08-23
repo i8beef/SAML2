@@ -3,8 +3,7 @@ using System;
 namespace SAML2
 {
     /// <summary>
-    /// Thrown when a token does not comply with the DK-Saml 2.0 specification. This does not necessarily imply that the
-    /// token is not a valid DK SAML 2.0 Assertion.
+    /// Thrown when a token does not comply with the SAML 2.0 specification.
     /// </summary>
     public class Saml20FormatException : Exception
     {

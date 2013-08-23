@@ -36,9 +36,9 @@ namespace SAML2.Schema.XmlDSig
         #region Elements
 
         /// <summary>
-        /// Gets or sets any.
+        /// Gets or sets the any XML element.
         /// </summary>
-        /// <value>Any.</value>
+        /// <value>The Any XML element.</value>
         [XmlText]
         [XmlAnyElement]
         public XmlNode[] Any { get; set; }

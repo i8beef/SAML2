@@ -14,6 +14,17 @@ namespace SAML2.Config
         where TConfigurationElementType : ConfigurationElement, IConfigurationElementCollectionElement, new()
     {
         /// <summary>
+        /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
+        /// </summary>
+        /// <returns>
+        /// true if the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only; otherwise, false.
+        /// </returns>
+        bool ICollection<TConfigurationElementType>.IsReadOnly
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        /// <summary>
         /// Gets or sets a property, attribute, or child element of this configuration element.
         /// </summary>
         /// <param name="index">The index.</param>
@@ -35,28 +46,6 @@ namespace SAML2.Config
         }
 
         /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElementCollection"/> object is read only.
-        /// </summary>
-        /// <returns>true if the <see cref="T:System.Configuration.ConfigurationElementCollection"/> object is read only; otherwise, false.</returns>
-        public override bool IsReadOnly()
-        {
-            return false;
-        }
-
-        #region Implementation of IEnumerable<TConfigurationElementType>
-
-        /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
-        /// </summary>
-        /// <returns>
-        /// true if the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only; otherwise, false.
-        /// </returns>
-        bool ICollection<TConfigurationElementType>.IsReadOnly
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>
@@ -71,9 +60,14 @@ namespace SAML2.Config
             }
         }
 
-        #endregion
-
-        #region Implementation of ICollection<TConfigurationElementType>
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElementCollection"/> object is read only.
+        /// </summary>
+        /// <returns>true if the <see cref="T:System.Configuration.ConfigurationElementCollection"/> object is read only; otherwise, false.</returns>
+        public override bool IsReadOnly()
+        {
+            return false;
+        }
 
         /// <summary>
         /// Adds the range.
@@ -128,20 +122,10 @@ namespace SAML2.Config
         }
 
         /// <summary>
-        /// Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1"/> to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index.
+        /// Copies the automatic.
         /// </summary>
-        /// <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:System.Collections.Generic.ICollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param>
-        /// <param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is null.</exception>
-        /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than 0.</exception>
-        /// <exception cref="T:System.ArgumentException"><paramref name="array"/> is multidimensional.
-        ///                     -or-
-        ///                 <paramref name="arrayIndex"/> is equal to or greater than the length of <paramref name="array"/>.
-        ///                     -or-
-        ///                     The number of elements in the source <see cref="T:System.Collections.Generic.ICollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/>.
-        ///                     -or-
-        ///                     Type <paramref name="T"/> cannot be cast automatically to the type of the destination <paramref name="array"/>.
-        /// </exception>
+        /// <param name="array">The array.</param>
+        /// <param name="arrayIndex">Index of the array.</param>
         public void CopyTo(TConfigurationElementType[] array, int arrayIndex)
         {
             base.CopyTo(array, arrayIndex);
@@ -161,8 +145,6 @@ namespace SAML2.Config
 
             return true;
         }
-
-        #endregion
 
         #region Overrides of ConfigurationElementCollection
 

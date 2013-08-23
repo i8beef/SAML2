@@ -37,7 +37,7 @@ namespace SAML2.Protocol.Pages
                                            string.IsNullOrEmpty(endPoint.Name)
                                                ? endPoint.Metadata.EntityId
                                                : endPoint.Name,
-                                       NavigateUrl = IDPSelectionUtil.GetIDPLoginUrl(endPoint.Id)
+                                       NavigateUrl = IdpSelectionUtil.GetIdpLoginUrl(endPoint.Id)
                                    };
 
                     // Link text. If a name has been specified in web.config, use it. Otherwise, use id from metadata.

@@ -4,10 +4,10 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Core
 {
     /// <summary>
-    /// The &lt;AuthzDecisionStatement&gt; element describes a statement by the SAML authority asserting that
+    /// The <c>&lt;AuthzDecisionStatement&gt;</c> element describes a statement by the SAML authority asserting that
     /// a request for access by the assertion subject to the specified resource has resulted in the specified
     /// authorization decision on the basis of some optionally specified evidence. Assertions containing
-    /// &lt;AuthzDecisionStatement&gt; elements MUST contain a &lt;Subject&gt; element.
+    /// <c>&lt;AuthzDecisionStatement&gt;</c> elements MUST contain a <c>&lt;Subject&gt;</c> element.
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Assertion)]

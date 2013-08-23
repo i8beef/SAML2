@@ -4,14 +4,17 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.XmlDSig
 {
     /// <summary>
+    /// <para>
     /// The structure of SignedInfo includes the canonicalization algorithm, a signature algorithm, and one or 
     /// more references. The SignedInfo element may contain an optional ID attribute that will allow it to be 
-    /// referenced by other signatures and objects. 
-    /// 
+    /// referenced by other signatures and objects.
+    /// </para>
+    /// <para>
     /// SignedInfo does not include explicit signature or digest properties (such as calculation time, 
     /// cryptographic device serial number, etc.). If an application needs to associate properties with the 
     /// signature or digest, it may include such information in a SignatureProperties element within an Object 
     /// element.
+    /// </para>
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Xmldsig)]

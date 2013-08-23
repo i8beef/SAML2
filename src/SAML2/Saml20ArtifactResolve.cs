@@ -26,7 +26,7 @@ namespace SAML2
             _artifactResolve = new ArtifactResolve
                                    {
                                        Version = Saml20Constants.Version,
-                                       ID = "id" + Guid.NewGuid().ToString("N"),
+                                       Id = "id" + Guid.NewGuid().ToString("N"),
                                        Issuer = new NameID(),
                                        IssueInstant = DateTime.Now
                                    };
@@ -48,7 +48,7 @@ namespace SAML2
         /// <value>The ID.</value>
         public string Id
         {
-            get { return _artifactResolve.ID; }
+            get { return _artifactResolve.Id; }
         }
 
         /// <summary>

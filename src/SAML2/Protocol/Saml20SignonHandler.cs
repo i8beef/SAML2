@@ -60,9 +60,9 @@ namespace SAML2.Protocol
         /// Gets the trusted signers.
         /// </summary>
         /// <param name="keys">The keys.</param>
-        /// <param name="ep">The ep.</param>
+        /// <param name="identityProvider">The identity provider.</param>
         /// <returns>List of trusted certificate signers.</returns>
-        public static IEnumerable<AsymmetricAlgorithm> GetTrustedSigners(ICollection<KeyDescriptor> keys, IdentityProviderElement ep)
+        public static IEnumerable<AsymmetricAlgorithm> GetTrustedSigners(ICollection<KeyDescriptor> keys, IdentityProviderElement identityProvider)
         {
             if (keys == null)
             {
@@ -78,7 +78,7 @@ namespace SAML2.Protocol
                     if (clause is KeyInfoX509Data)
                     {
                         var cert = XmlSignatureUtils.GetCertificateFromKeyInfo((KeyInfoX509Data)clause);
-                        if (!CertificateSatisfiesSpecifications(ep, cert))
+                        if (!CertificateSatisfiesSpecifications(identityProvider, cert))
                         {
                             continue;
                         }
@@ -135,9 +135,50 @@ namespace SAML2.Protocol
         #region Protected methods
 
         /// <summary>
+        /// Handles a request.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        protected override void Handle(HttpContext context)
+        {
+            Logger.Debug("SignOn handler called.");
+
+            // Some IdP's are known to fail to set an actual value in the SOAPAction header
+            // so we just check for the existence of the header field.
+            if (Array.Exists(context.Request.Headers.AllKeys, s => s == SoapConstants.SoapAction))
+            {
+                HandleSoap(context, context.Request.InputStream);
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(context.Request.Params["SAMLart"]))
+            {
+                HandleArtifact(context);
+            }
+
+            if (!string.IsNullOrEmpty(context.Request.Params["SamlResponse"]))
+            {
+                HandleResponse(context);
+            }
+            else
+            {
+                if (Saml2Config.GetConfig().CommonDomainCookie.Enabled && context.Request.QueryString["r"] == null
+                    && context.Request.Params["cidp"] == null)
+                {
+                    Logger.Debug("Redirecting to Common Domain for IDP discovery.");
+                    context.Response.Redirect(Saml2Config.GetConfig().CommonDomainCookie.LocalReaderEndpoint);
+                }
+                else
+                {
+                    Logger.Warn("User accessing resource: " + context.Request.RawUrl + " without authentication.");
+                    SendRequest(context);
+                }
+            }
+        }
+
+        /// <summary>
         /// Is called before the assertion is made into a strongly typed representation
         /// </summary>
-        /// <param name="context">The httpcontext.</param>
+        /// <param name="context">The HttpContext.</param>
         /// <param name="elem">The assertion element.</param>
         /// <param name="endpoint">The endpoint.</param>
         protected virtual void PreHandleAssertion(HttpContext context, XmlElement elem, IdentityProviderElement endpoint)
@@ -163,9 +204,9 @@ namespace SAML2.Protocol
         /// <summary>
         /// Determines whether the certificate is satisfied by all specifications.
         /// </summary>
-        /// <param name="idp">The idp.</param>
+        /// <param name="idp">The identity provider.</param>
         /// <param name="cert">The cert.</param>
-        /// <returns><c>true</c> if [is satisfied by all specifications] [the specified ep]; otherwise, <c>false</c>.</returns>
+        /// <returns><c>true</c> if certificate is satisfied by all specifications; otherwise, <c>false</c>.</returns>
         private static bool CertificateSatisfiesSpecifications(IdentityProviderElement idp, X509Certificate2 cert)
         {
             return SpecificationFactory.GetCertificateSpecifications(idp).All(spec => spec.IsSatisfiedBy(cert));
@@ -281,10 +322,10 @@ namespace SAML2.Protocol
         private void DoSignOn(HttpContext context, Saml20Assertion assertion)
         {
             // User is now logged in at IDP specified in tmp
-            context.Session[IDPLoginSessionKey] = context.Session[IDPTempSessionKey];
-            context.Session[IDPSessionIdKey] = assertion.SessionIndex;
-            context.Session[IDPNameIdFormat] = assertion.Subject.Format;
-            context.Session[IDPNameId] = assertion.Subject.Value;
+            context.Session[IdpLoginSessionKey] = context.Session[IdpTempSessionKey];
+            context.Session[IdpSessionIdKey] = assertion.SessionIndex;
+            context.Session[IdpNameIdFormat] = assertion.Subject.Format;
+            context.Session[IdpNameId] = assertion.Subject.Value;
 
             Logger.DebugFormat(Tracing.Login, assertion.Subject.Value, assertion.SessionIndex, assertion.Subject.Format);
 
@@ -575,7 +616,7 @@ namespace SAML2.Protocol
         private void TransferClient(IdentityProviderElement identityProvider, Saml20AuthnRequest request, HttpContext context)
         {
             // Set the last IDP we attempted to login at.
-            context.Session[IDPTempSessionKey] = identityProvider.Id;
+            context.Session[IdpTempSessionKey] = identityProvider.Id;
 
             // Determine which endpoint to use from the configuration file or the endpoint metadata.
             var destination = DetermineEndpointConfiguration(BindingType.Redirect, identityProvider.Endpoints.SignOnEndpoint, identityProvider.Metadata.SSOEndpoints);
@@ -587,11 +628,11 @@ namespace SAML2.Protocol
             }
 
             // Check isPassive status
-            var isPassiveFlag = context.Session[IDPIsPassive];
+            var isPassiveFlag = context.Session[IdpIsPassive];
             if (isPassiveFlag != null && (bool)isPassiveFlag)
             {
                 request.IsPassive = true;
-                context.Session[IDPIsPassive] = null;
+                context.Session[IdpIsPassive] = null;
             }
 
             if (identityProvider.IsPassive)
@@ -600,11 +641,11 @@ namespace SAML2.Protocol
             }
 
             // Check if request should forceAuthn
-            var forceAuthnFlag = context.Session[IDPForceAuthn];
+            var forceAuthnFlag = context.Session[IdpForceAuthn];
             if (forceAuthnFlag != null && (bool)forceAuthnFlag)
             {
                 request.ForceAuthn = true;
-                context.Session[IDPForceAuthn] = null;
+                context.Session[IdpForceAuthn] = null;
             }
 
             // Check if protocol binding should be forced
@@ -680,51 +721,6 @@ namespace SAML2.Protocol
 
             Logger.Error(Resources.BindingError);
             HandleError(context, Resources.BindingError);
-        }
-
-        #endregion
-
-        #region IHttpHandler Members
-
-        /// <summary>
-        /// Handles a request.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        protected override void Handle(HttpContext context)
-        {
-            Logger.Debug("SignOn handler called.");
-
-            // Some IdP's are known to fail to set an actual value in the SOAPAction header
-            // so we just check for the existence of the header field.
-            if (Array.Exists(context.Request.Headers.AllKeys, s => s == SoapConstants.SoapAction))
-            {
-                HandleSoap(context, context.Request.InputStream);
-                return;
-            }
-
-            if (!string.IsNullOrEmpty(context.Request.Params["SAMLart"]))
-            {
-                HandleArtifact(context);
-            }
-
-            if (!string.IsNullOrEmpty(context.Request.Params["SamlResponse"]))
-            {
-                HandleResponse(context);
-            }
-            else
-            {
-                if (Saml2Config.GetConfig().CommonDomainCookie.Enabled && context.Request.QueryString["r"] == null
-                    && context.Request.Params["cidp"] == null)
-                {
-                    Logger.Debug("Redirecting to Common Domain for IDP discovery.");
-                    context.Response.Redirect(Saml2Config.GetConfig().CommonDomainCookie.LocalReaderEndpoint);
-                }
-                else
-                {
-                    Logger.Warn("User accessing resource: " + context.Request.RawUrl + " without authentication.");
-                    SendRequest(context);
-                }
-            }
         }
 
         #endregion

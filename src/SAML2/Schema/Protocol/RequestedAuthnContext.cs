@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Protocol
 {
     /// <summary>
-    /// The &lt;RequestedAuthnContext&gt; element specifies the authentication context requirements of
+    /// The <c>&lt;RequestedAuthnContext&gt;</c> element specifies the authentication context requirements of
     /// authentication statements returned in response to a request or query.
     /// </summary>
     [Serializable]

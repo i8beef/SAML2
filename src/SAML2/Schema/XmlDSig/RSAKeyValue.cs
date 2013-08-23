@@ -8,6 +8,7 @@ namespace SAML2.Schema.XmlDSig
     /// RSA key values have two fields: Modulus and Exponent. 
     /// </para>
     /// <para>
+    /// <code>
     /// &lt;RSAKeyValue&gt;
     ///      &lt;Modulus&gt;xA7SEU+e0yQH5rm9kbCDN9o3aPIo7HbP7tX6WOocLZAtNfyxSZDU16ksL6W
     ///       jubafOqNEpcwR3RdFsT7bCqnXPBe5ELh5u4VEy19MzxkXRgrMvavzyBpVRgBUwUlV
@@ -15,15 +16,16 @@ namespace SAML2.Schema.XmlDSig
     ///      &lt;/Modulus&gt;
     ///      &lt;Exponent&gt;AQAB&lt;/Exponent&gt;
     ///    &lt;/RSAKeyValue&gt;
+    /// </code>
     /// </para>
     /// <para>
-    /// Arbitrary-length integers (e.g. "bignums" such as RSA moduli) are represented in XML as octet strings as defined by the ds:CryptoBinary type.
+    /// Arbitrary-length integers (e.g. "<c>bignums</c>" such as RSA moduli) are represented in XML as octet strings as defined by the <c>ds:CryptoBinary</c> type.
     /// </para>
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Xmldsig)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
-    public class RSAKeyValue
+    public class RsaKeyValue
     {
         /// <summary>
         /// The XML Element name of this class

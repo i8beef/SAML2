@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Core
 {
     /// <summary>
-    /// The &lt;AuthnContext&gt; element specifies the context of an authentication event. The element can contain
+    /// The <c>&lt;AuthnContext&gt;</c> element specifies the context of an authentication event. The element can contain
     /// an authentication context class reference, an authentication context declaration or declaration reference,
     /// or both.
     /// </summary>
@@ -32,7 +32,7 @@ namespace SAML2.Schema.Core
 
         /// <summary>
         /// Gets or sets the items.
-        /// Items may be of types: AuthnContextClassRef, AuthnContextDecl and AuthnContextDeclRef
+        /// Items may be of types: <c>AuthnContextClassRef</c>, <c>AuthnContextDecl</c> and <c>AuthnContextDeclRef</c>
         /// </summary>
         /// <value>The items.</value>
         [XmlElement("AuthnContextClassRef", typeof(string), DataType = "anyURI")]

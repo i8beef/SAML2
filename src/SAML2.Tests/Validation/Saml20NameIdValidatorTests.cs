@@ -297,7 +297,7 @@ namespace SAML2.Tests.Validation
             #region Entity
 
             /// <summary>
-            /// Verify exception is thrown on Entity Valuecontaining only whitespace characters.
+            /// Verify exception is thrown on Entity Value containing only whitespace characters.
             /// </summary>
             [Test]
             [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Entity Format attribute MUST contain a Value that contains more than whitespace characters")]
@@ -414,7 +414,7 @@ namespace SAML2.Tests.Validation
             }
 
             /// <summary>
-            /// Verify Validatese entity.
+            /// Verify entity can be validated.
             /// </summary>
             [Test]
             public void ValidatesEntity()

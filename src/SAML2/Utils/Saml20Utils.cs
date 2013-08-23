@@ -5,7 +5,7 @@ namespace SAML2.Utils
 {
     /// <summary>
     /// Helpers for converting between string and DateTime representations of UTC date-times
-    /// and for enforcing the UTC-string-format demand for xml strings in Saml2.0
+    /// and for enforcing the UTC-string-format demand for xml strings in SAML2.0
     /// </summary>
     public static class Saml20Utils
     {
@@ -37,7 +37,7 @@ namespace SAML2.Utils
         }
 
         /// <summary>
-        /// Make sure that the ID elements is at least 128 bits in length (SAML2.0 std section 1.3.4)
+        /// Make sure that the ID elements is at least 128 bits in length (SAML2.0 standard section 1.3.4)
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>True if the id is valid, else false.</returns>
@@ -47,7 +47,7 @@ namespace SAML2.Utils
         }
 
         /// <summary>
-        /// A string value marked as OPTIONAL in [SAML2.0std] must contain at least one non-whitespace character
+        /// A string value marked as OPTIONAL in [SAML2.0 standard] must contain at least one non-whitespace character
         /// </summary>
         /// <param name="optString">The opt string.</param>
         /// <returns>True if the string is value, else false.</returns>
@@ -57,9 +57,9 @@ namespace SAML2.Utils
         }
 
         /// <summary>
-        /// A string value marked as REQUIRED in [SAML2.0std] must contain at least one non-whitespace character
+        /// A string value marked as REQUIRED in [SAML2.0 standard] must contain at least one non-whitespace character
         /// </summary>
-        /// <param name="reqString">The req string.</param>
+        /// <param name="reqString">The required string.</param>
         /// <returns>True if the string is value, else false.</returns>
         public static bool ValidateRequiredString(string reqString)
         {

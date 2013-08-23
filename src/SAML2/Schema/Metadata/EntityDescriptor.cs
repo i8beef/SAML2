@@ -39,9 +39,9 @@ namespace SAML2.Schema.Metadata
         #region Attributes
 
         /// <summary>
-        /// Gets or sets any attr.
+        /// Gets or sets XML any attribute.
         /// </summary>
-        /// <value>Any attr.</value>
+        /// <value>The XML Any attribute.</value>
         [XmlAnyAttribute]
         public XmlAttribute[] AnyAttr { get; set; }
 
@@ -118,9 +118,9 @@ namespace SAML2.Schema.Metadata
         
         /// <summary>
         /// Gets or sets the items.
-        /// &lt;RoleDescriptor&gt;, &lt;IDPSSODescriptor&gt;, &lt;SPSSODescriptor&gt;,
-        /// &lt;AuthnAuthorityDescriptor&gt;, &lt;AttributeAuthorityDescriptor&gt;, &lt;PDPDescriptor&gt;
-        /// &lt;AffiliationDescriptor&gt;
+        /// <c>&lt;RoleDescriptor&gt;</c>, <c>&lt;IDPSSODescriptor&gt;</c>, <c>&lt;SpSsoDescriptor&gt;,</c>
+        /// <c>&lt;AuthnAuthorityDescriptor&gt;</c>, <c>&lt;AttributeAuthorityDescriptor&gt;</c>, <c>&lt;PDPDescriptor&gt;</c>
+        /// <c>&lt;AffiliationDescriptor&gt;</c>
         /// </summary>
         /// <value>The items.</value>
         [XmlElement("AffiliationDescriptor", typeof(AffiliationDescriptor))]
@@ -129,7 +129,7 @@ namespace SAML2.Schema.Metadata
         [XmlElement("IDPSSODescriptor", typeof(IDPSSODescriptor))]
         [XmlElement("PDPDescriptor", typeof(PDPDescriptor))]
         [XmlElement("RoleDescriptor", typeof(RoleDescriptor))]
-        [XmlElement("SPSSODescriptor", typeof(SPSSODescriptor))]
+        [XmlElement("SpSsoDescriptor", typeof(SpSsoDescriptor))]
         public object[] Items { get; set; }
 
         /// <summary>

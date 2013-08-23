@@ -24,7 +24,7 @@ namespace SAML2.Tests
         private static X509Certificate2 _cert;
 
         /// <summary>
-        /// Returns the Saml20Assertion as an XmlDocument as used by the Assertion class.
+        /// Returns the <c>Saml20Assertion</c> as an XmlDocument as used by the Assertion class.
         /// </summary>
         /// <param name="assertion">The assertion.</param>
         /// <returns>The XML document.</returns>
@@ -98,7 +98,7 @@ namespace SAML2.Tests
             var assertion = new Assertion
                                 {
                                     Issuer = new NameID(),
-                                    ID = "_b8977dc86cda41493fba68b32ae9291d",
+                                    Id = "_b8977dc86cda41493fba68b32ae9291d",
                                     IssueInstant = DateTime.UtcNow,
                                     Version = "2.0"
                                 };

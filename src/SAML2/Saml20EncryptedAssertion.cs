@@ -72,7 +72,7 @@ namespace SAML2
 
         /// <summary>
         /// Gets or sets the algorithm to use for the session key. The algorithm is specified using the identifiers given in the 
-        /// Xml Encryption Specification. see also http://www.w3.org/TR/xmlenc-core/#sec-Algorithms
+        /// Xml Encryption Specification. see also <c>http://www.w3.org/TR/xmlenc-core/#sec-Algorithms</c>
         /// The class <code>EncryptedXml</code> contains public fields with the identifiers. If nothing is 
         /// specified, a 256 bit AES key is used.
         /// </summary>
@@ -286,7 +286,7 @@ namespace SAML2
 
         /// <summary>
         /// Creates an instance of a symmetric key, based on the algorithm identifier found in the Xml Encryption standard.
-        /// see also http://www.w3.org/TR/xmlenc-core/#sec-Algorithms
+        /// see also <c>http://www.w3.org/TR/xmlenc-core/#sec-Algorithms</c>
         /// </summary>
         /// <param name="algorithm">A string containing one of the algorithm identifiers found in the XML Encryption standard. The class
         /// <code>EncryptedXml</code> contains the identifiers as fields.</param>

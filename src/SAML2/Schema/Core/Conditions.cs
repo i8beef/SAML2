@@ -6,7 +6,7 @@ using SAML2.Utils;
 namespace SAML2.Schema.Core
 {
     /// <summary>
-    /// The Saml20 Conditions class
+    /// The SAML20 Conditions class
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Assertion)]

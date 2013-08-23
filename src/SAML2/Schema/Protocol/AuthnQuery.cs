@@ -4,8 +4,8 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Protocol
 {
     /// <summary>
-    /// The &lt;AuthnQuery&gt; message element is used to make the query "What assertions containing
-    /// authentication statements are available for this subject?" A successful &lt;Response&gt; will contain one or
+    /// The <c>&lt;AuthnQuery&gt;</c> message element is used to make the query "What assertions containing
+    /// authentication statements are available for this subject?" A successful <c>&lt;Response&gt;</c> will contain one or
     /// more assertions containing authentication statements.
     /// </summary>
     [Serializable]
@@ -35,12 +35,12 @@ namespace SAML2.Schema.Protocol
         #region Elements
 
         /// <summary>
-        /// Gets or sets the requested authn context.
+        /// Gets or sets the requested authentication context.
         /// If present, specifies a filter for possible responses. Such a query asks the question "What assertions
         /// containing authentication statements do you have for this subject that satisfy the authentication
         /// context requirements in this element?"
         /// </summary>
-        /// <value>The requested authn context.</value>
+        /// <value>The requested authentication context.</value>
         [XmlElement("RequestedAuthnContext")]
         public RequestedAuthnContext RequestedAuthnContext { get; set; }
 

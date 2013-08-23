@@ -16,7 +16,7 @@ namespace SAML2.Tests
         #region Assertion verification
 
         /// <summary>
-        /// Verifies the signature in the "Saml2Assertion_01" file. The assertion in the file is valid.
+        /// Verifies the signature in the "<c>Saml2Assertion_01</c>" file. The assertion in the file is valid.
         /// </summary>
         [Test]
         public void VerifyValidSignaturesAreValid()
@@ -40,8 +40,11 @@ namespace SAML2.Tests
         /// <summary>
         /// Deserializes the test tokens using the Safewhere DK-SAML class.
         /// </summary>
-        [Ignore]    // TODO: test data needs fixing
-        public void TestDKSaml20TokenVerification_01()
+        /// <remarks>
+        /// TODO: test data needs fixing
+        /// </remarks>
+        [Ignore]
+        public void TestSaml20TokenVerification01()
         {
             AssertionUtil.DeserializeToken(@"Assertions\Saml2Assertion_01");
             AssertionUtil.DeserializeToken(@"Assertions\Saml2Assertion_02");
@@ -49,31 +52,31 @@ namespace SAML2.Tests
         }
 
         /// <summary>
-        /// Attempts to deserialize an invalid Saml-token. Tests that the Assertion class immediately "explodes".
+        /// Attempts to deserialize an invalid SAML-token. Tests that the Assertion class immediately "explodes".
         /// </summary>
         [Test]
         [ExpectedException(typeof(Saml20Exception), ExpectedMessage = "Signature could not be verified.")]
-        public void TestDKSaml20TokenVerification_02()
+        public void TestSaml20TokenVerification02()
         {
             AssertionUtil.DeserializeToken(@"Assertions\EvilSaml2Assertion_01");
         }
 
         /// <summary>
-        /// Attempts to deserialize an invalid Saml-token. Tests that the Assertion class immediately "explodes".
+        /// Attempts to deserialize an invalid SAML-token. Tests that the Assertion class immediately "explodes".
         /// </summary>
         [Test]
         [ExpectedException(typeof(Saml20Exception), ExpectedMessage = "Signature could not be verified.")]
-        public void TestDKSaml20TokenVerification_03()
+        public void TestSaml20TokenVerification03()
         {
             AssertionUtil.DeserializeToken(@"Assertions\EvilSaml2Assertion_02");
         }
 
         /// <summary>
-        /// Attempts to deserialize an invalid Saml-token. Tests that the Assertion class immediately "explodes".
+        /// Attempts to deserialize an invalid SAML-token. Tests that the Assertion class immediately "explodes".
         /// </summary>
         [Test]
         [ExpectedException(typeof(Saml20Exception), ExpectedMessage = "Signature could not be verified.")]
-        public void TestDKSaml20TokenVerification_04()
+        public void TestSaml20TokenVerification04()
         {
             AssertionUtil.DeserializeToken(@"Assertions\EvilSaml2Assertion_03");
         }
@@ -125,10 +128,12 @@ namespace SAML2.Tests
         /// <summary>
         /// Tests the signing code of the Assertion class, by first creating an unsigned assertion and then signing and 
         /// verifying it.
-        /// 
         /// </summary>
-        [Ignore]    // TODO: test data needs fixing
-        public void TestSigning_03()
+        /// <remarks>
+        /// TODO: test data needs fixing
+        /// </remarks>
+        [Ignore]
+        public void TestSigning03()
         {
             // Load an unsigned assertion. 
             var assertion = new Saml20Assertion(AssertionUtil.GetTestAssertion().DocumentElement, null, false);

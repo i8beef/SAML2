@@ -108,7 +108,7 @@ namespace SAML2
         #region Properties
 
         /// <summary>
-        /// Gets the endpoints specified in the &lt;AssertionConsumerService&gt; element in the SPSSODescriptor.
+        /// Gets the endpoints specified in the <c>&lt;AssertionConsumerService&gt;</c> element in the <c>SpSsoDescriptor</c>.
         /// These endpoints are only applicable if we are reading metadata issued by a service provider.
         /// </summary>
         public List<IdentityProviderEndpointElement> AssertionConsumerServiceEndpoints
@@ -417,7 +417,7 @@ namespace SAML2
             entity.EntityID = config.ServiceProvider.Id;
             entity.ValidUntil = DateTime.Now.AddDays(7);
 
-            var serviceProviderDescriptor = new SPSSODescriptor
+            var serviceProviderDescriptor = new SpSsoDescriptor
                                    {
                                        ProtocolSupportEnumeration = Saml20Constants.Protocol,
                                        AuthnRequestsSigned = XmlConvert.ToString(true),
@@ -663,9 +663,9 @@ namespace SAML2
                         }
                     }
 
-                    if (item is SPSSODescriptor)
+                    if (item is SpSsoDescriptor)
                     {
-                        var descriptor = (SPSSODescriptor)item;
+                        var descriptor = (SpSsoDescriptor)item;
                         foreach (var endpoint in descriptor.AssertionConsumerService)
                         {
                             BindingType binding;

@@ -194,7 +194,7 @@ namespace SAML2.Tests
             }
 
             /// <summary>
-            /// Decrypts an assertion we received from "fælles-offentlige brugerstyring".
+            /// Decrypts an assertion we received.
             /// </summary>
             /// <remarks>
             /// The entire message is Base 64 encoded in this case.

@@ -21,7 +21,7 @@ namespace SAML2
             Request = new LogoutRequest
                            {
                                Version = Saml20Constants.Version,
-                               ID = "id" + Guid.NewGuid().ToString("N"),
+                               Id = "id" + Guid.NewGuid().ToString("N"),
                                Issuer = new NameID(),
                                IssueInstant = DateTime.Now
                            };
@@ -30,9 +30,9 @@ namespace SAML2
         #region Properties
 
         /// <summary>
-        /// Gets or sets NotOnOrAfter.
+        /// Gets or sets <c>NotOnOrAfter</c>.
         /// </summary>
-        /// <value>NotOnOrAfter.</value>
+        /// <value>The Not On Or After date.</value>
         public DateTime? NotOnOrAfter
         {
             get { return Request.NotOnOrAfter; }
@@ -54,7 +54,7 @@ namespace SAML2
         /// </summary>
         public string Id
         {
-            get { return Request.ID; }
+            get { return Request.Id; }
         }
 
         /// <summary>
@@ -79,13 +79,13 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Gets the underlying LogoutRequest schema class instance.
+        /// Gets the underlying <c>LogoutRequest</c> schema class instance.
         /// </summary>
         /// <value>The request.</value>
         public LogoutRequest Request { get; private set; }
 
         /// <summary>
-        /// Gets or sets the SessionIndex.
+        /// Gets or sets the <c>SessionIndex</c>.
         /// </summary>
         /// <value>The SessionIndex.</value>
         public string SessionIndex
@@ -95,9 +95,9 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Gets or sets SubjectToLogOut.
+        /// Gets or sets <c>SubjectToLogOut</c>.
         /// </summary>
-        /// <value>SubjectToLogOut.</value>
+        /// <value>The Subject To LogOut.</value>
         public NameID SubjectToLogOut
         {
             get { return Request.Item as NameID; }
@@ -126,7 +126,7 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Returns the AuthnRequest as an XML document.
+        /// Returns the <c>AuthnRequest</c> as an XML document.
         /// </summary>
         /// <returns>The request XML.</returns>
         public XmlDocument GetXml()

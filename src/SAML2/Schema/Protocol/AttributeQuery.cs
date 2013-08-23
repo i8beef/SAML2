@@ -23,9 +23,9 @@ namespace SAML2.Schema.Protocol
 
         /// <summary>
         /// Gets or sets the attribute.
-        /// Each &lt;saml:Attribute&gt; element specifies an attribute whose value(s) are to be returned. If no
+        /// Each <c>&lt;saml:Attribute&gt;</c> element specifies an attribute whose value(s) are to be returned. If no
         /// attributes are specified, it indicates that all attributes allowed by policy are requested. If a given
-        /// &lt;saml:Attribute&gt; element contains one or more &lt;saml:AttributeValue&gt; elements, then if
+        /// <c>&lt;saml:Attribute&gt;</c> element contains one or more <c>&lt;saml:AttributeValue&gt;</c> elements, then if
         /// that attribute is returned in the response, it MUST NOT contain any values that are not equal to the
         /// values specified in the query. In the absence of equality rules specified by particular profiles or
         /// attributes, equality is defined as an identical XML representation of the value

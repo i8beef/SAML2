@@ -46,7 +46,7 @@ namespace SAML2
             _attrQuery = new AttributeQuery
                              {
                                  Version = Saml20Constants.Version,
-                                 ID = "id" + Guid.NewGuid().ToString("N"),
+                                 Id = "id" + Guid.NewGuid().ToString("N"),
                                  Issuer = new NameID(),
                                  IssueInstant = DateTime.Now,
                                  Subject = new Subject()
@@ -60,7 +60,7 @@ namespace SAML2
         /// <value>The ID.</value>
         public string Id
         {
-            get { return _attrQuery.ID; }
+            get { return _attrQuery.Id; }
         }
 
         /// <summary>
@@ -123,14 +123,14 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Performs the attribute query and adds the resulting attributes to Saml20Identity.Current.
+        /// Performs the attribute query and adds the resulting attributes to <c>Saml20Identity.Current</c>.
         /// </summary>
         /// <param name="context">The http context.</param>
         public void PerformQuery(HttpContext context)
         {
             var config = Saml2Config.GetConfig();
 
-            var endpointId = context.Session[Saml20AbstractEndpointHandler.IDPLoginSessionKey].ToString();
+            var endpointId = context.Session[Saml20AbstractEndpointHandler.IdpLoginSessionKey].ToString();
             if (string.IsNullOrEmpty(endpointId))
             {
                 Logger.Debug(Tracing.AttrQueryNoLogin);
@@ -147,13 +147,13 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Performs the attribute query against the specified IdP endpoint and adds the resulting attributes to Saml20Identity.Current.
+        /// Performs the attribute query against the specified IdP endpoint and adds the resulting attributes to <c>Saml20Identity.Current</c>.
         /// </summary>
         /// <param name="context">The http context.</param>
         /// <param name="endPoint">The IdP to perform the query against.</param>
         public void PerformQuery(HttpContext context, IdentityProviderElement endPoint)
         {
-            var nameIdFormat = context.Session[Saml20AbstractEndpointHandler.IDPNameIdFormat].ToString();
+            var nameIdFormat = context.Session[Saml20AbstractEndpointHandler.IdpNameIdFormat].ToString();
             if (string.IsNullOrEmpty(nameIdFormat))
             {
                 nameIdFormat = Saml20Constants.NameIdentifierFormats.Persistent;
@@ -163,11 +163,11 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Performs the attribute query against the specified IdP endpoint and adds the resulting attributes to Saml20Identity.Current.
+        /// Performs the attribute query against the specified IdP endpoint and adds the resulting attributes to <c>Saml20Identity.Current</c>.
         /// </summary>
         /// <param name="context">The http context.</param>
         /// <param name="endPoint">The IdP to perform the query against.</param>
-        /// <param name="nameIdFormat">The nameid format.</param>
+        /// <param name="nameIdFormat">The name id format.</param>
         public void PerformQuery(HttpContext context, IdentityProviderElement endPoint, string nameIdFormat)
         {
             Logger.DebugFormat("{0}.{1} called", GetType(), "PerformQuery()");

@@ -24,7 +24,7 @@ namespace SAML2.Validation
         /// Validates the attribute.
         /// </summary>
         /// <remarks>
-        /// [SAML2.0std] section 2.7.3.1
+        /// [SAML2.0 standard] section 2.7.3.1
         /// </remarks>
         /// <param name="samlAttribute">The SAML attribute.</param>
         public void ValidateAttribute(SamlAttribute samlAttribute)
@@ -60,7 +60,7 @@ namespace SAML2.Validation
         /// Validates the encrypted attribute.
         /// </summary>
         /// <remarks>
-        /// [SAML2.0std] section 2.7.3.2
+        /// [SAML2.0 standard] section 2.7.3.2
         /// </remarks>
         /// <param name="encryptedElement">The encrypted element.</param>
         public void ValidateEncryptedAttribute(EncryptedElement encryptedElement)

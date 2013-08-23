@@ -4,8 +4,8 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Protocol
 {
     /// <summary>
-    /// The &lt;NameIDPolicy&gt; element tailors the name identifier in the subjects of assertions resulting from an
-    /// &lt;AuthnRequest&gt;.
+    /// The <c>&lt;NameIDPolicy&gt;</c> element tailors the name identifier in the subjects of assertions resulting from an
+    /// <c>&lt;AuthnRequest&gt;</c>.
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Protocol)]
@@ -47,7 +47,7 @@ namespace SAML2.Schema.Protocol
         /// Gets or sets the format.
         /// Specifies the URI reference corresponding to a name identifier format defined in this or another
         /// specification (see Section 8.3 for examples). The additional value of
-        /// urn:oasis:names:tc:SAML:2.0:nameid-format:encrypted is defined specifically for use
+        /// <c>urn:oasis:names:tc:SAML:2.0:nameid-format:encrypted</c> is defined specifically for use
         /// within this attribute to indicate a request that the resulting identifier be encrypted.
         /// </summary>
         /// <value>The format.</value>

@@ -37,7 +37,7 @@ namespace SAML2.Validation
                 throw new Saml20FormatException("NameID element has Format attribute which is not a wellformed absolute uri.");
             }
 
-            // The processing rules from [SAML2.0std] section 8.3 are implemented here
+            // The processing rules from [SAML2.0 standard] section 8.3 are implemented here
             if (nameId.Format == Saml20Constants.NameIdentifierFormats.Email)
             {
                 if (!Saml20Utils.ValidateRequiredString(nameId.Value))

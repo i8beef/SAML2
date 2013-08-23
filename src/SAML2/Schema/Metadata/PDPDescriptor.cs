@@ -4,8 +4,8 @@ using System.Xml.Serialization;
 namespace SAML2.Schema.Metadata
 {
     /// <summary>
-    /// The &lt;PDPDescriptor&gt; element extends RoleDescriptorType with content reflecting profiles specific to
-    /// policy decision points, SAML authorities that respond to &lt;samlp:AuthzDecisionQuery&gt; messages.
+    /// The <c>&lt;PDPDescriptor&gt;</c> element extends RoleDescriptorType with content reflecting profiles specific to
+    /// policy decision points, SAML authorities that respond to <c>&lt;samlp:AuthzDecisionQuery&gt;</c> messages.
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Metadata)]
@@ -20,12 +20,12 @@ namespace SAML2.Schema.Metadata
         #region Elements
 
         /// <summary>
-        /// Gets or sets the authz service.
+        /// Gets or sets the authorize service.
         /// One or more elements of type EndpointType that describe endpoints that support the profile of
         /// the Authorization Decision Query protocol defined in [SAMLProf]. All policy decision points support
         /// at least one such endpoint, by definition.
         /// </summary>
-        /// <value>The authz service.</value>
+        /// <value>The authorize service.</value>
         [XmlElement("AuthzService")]
         public Endpoint[] AuthzService { get; set; }
 
