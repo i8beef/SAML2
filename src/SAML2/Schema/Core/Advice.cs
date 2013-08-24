@@ -29,12 +29,12 @@ namespace SAML2.Schema.Core
         /// Gets or sets the items.
         /// Items may be of types: <c>Assertion</c>, <c>AssertionIDRef</c>, <c>AssertionURIRef</c> and <c>EncryptedAssertion</c>
         /// </summary>
-        /// <value>The items.</value>        
+        /// <value>The items.</value>
         [XmlAnyElement]
-        [XmlElement("Assertion", typeof(Assertion))]
-        [XmlElement("AssertionIDRef", typeof(string), DataType = "NCName")]
-        [XmlElement("AssertionURIRef", typeof(string), DataType = "anyURI")]
-        [XmlElement("EncryptedAssertion", typeof(EncryptedElement))]
+        [XmlElement("Assertion", typeof(Assertion), Order = 1)]
+        [XmlElement("AssertionIDRef", typeof(string), DataType = "NCName", Order = 1)]
+        [XmlElement("AssertionURIRef", typeof(string), DataType = "anyURI", Order = 1)]
+        [XmlElement("EncryptedAssertion", typeof(EncryptedElement), Order = 1)]
         [XmlChoiceIdentifier("ItemsElementName")]
         public object[] Items { get; set; }
 

@@ -67,10 +67,10 @@ namespace SAML2.Schema.Core
         /// Items may be of types AudienceRestriction, Condition, OneTimeUse and ProxyRestriction
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("AudienceRestriction", typeof(AudienceRestriction))]
-        [XmlElement("Condition", typeof(ConditionAbstract))]
-        [XmlElement("OneTimeUse", typeof(OneTimeUse))]
-        [XmlElement("ProxyRestriction", typeof(ProxyRestriction))]
+        [XmlElement("AudienceRestriction", typeof(AudienceRestriction), Order = 1)]
+        [XmlElement("Condition", typeof(ConditionAbstract), Order = 1)]
+        [XmlElement("OneTimeUse", typeof(OneTimeUse), Order = 1)]
+        [XmlElement("ProxyRestriction", typeof(ProxyRestriction), Order = 1)]
         public List<ConditionAbstract> Items { get; set; }
 
         #endregion

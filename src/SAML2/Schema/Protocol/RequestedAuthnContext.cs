@@ -55,8 +55,8 @@ namespace SAML2.Schema.Protocol
         /// Specifies one or more URI references identifying authentication context classes or declarations.
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("AuthnContextClassRef", typeof(string), Namespace = Saml20Constants.Assertion, DataType = "anyURI")]
-        [XmlElement("AuthnContextDeclRef", typeof(string), Namespace = Saml20Constants.Assertion, DataType = "anyURI")]
+        [XmlElement("AuthnContextClassRef", typeof(string), Namespace = Saml20Constants.Assertion, DataType = "anyURI", Order = 1)]
+        [XmlElement("AuthnContextDeclRef", typeof(string), Namespace = Saml20Constants.Assertion, DataType = "anyURI", Order = 1)]
         [XmlChoiceIdentifier("ItemsElementName")]
         public string[] Items { get; set; }
 

@@ -42,8 +42,8 @@ namespace SAML2.Schema.Protocol
         /// to respond to the request.
         /// </summary>
         /// <value>The IDP list.</value>
-        [XmlElement("IDPList")]
-        public IDPList IdpList { get; set; }
+        [XmlElement("IDPList", Order = 1)]
+        public IdpList IdpList { get; set; }
 
         /// <summary>
         /// Gets or sets the requester ID.
@@ -52,8 +52,8 @@ namespace SAML2.Schema.Protocol
         /// description of entity identifiers.
         /// </summary>
         /// <value>The requester ID.</value>
-        [XmlElement("RequesterID", DataType = "anyURI")]
-        public string[] RequesterID { get; set; }
+        [XmlElement("RequesterID", DataType = "anyURI", Order = 2)]
+        public string[] RequesterId { get; set; }
 
         #endregion
     }

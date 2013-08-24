@@ -95,7 +95,7 @@ namespace SAML2.Schema.Metadata
         /// non-SAML specifications.
         /// </summary>
         /// <value>The additional metadata location.</value>
-        [XmlElement("AdditionalMetadataLocation")]
+        [XmlElement("AdditionalMetadataLocation", Order = 6)]
         public AdditionalMetadataLocation[] AdditionalMetadataLocation { get; set; }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace SAML2.Schema.Metadata
         /// Optional sequence of elements identifying various kinds of contact personnel.
         /// </summary>
         /// <value>The contact person.</value>
-        [XmlElement("ContactPerson")]
+        [XmlElement("ContactPerson", Order = 5)]
         public Contact[] ContactPerson { get; set; }
 
         /// <summary>
@@ -113,23 +113,23 @@ namespace SAML2.Schema.Metadata
         /// namespace.
         /// </summary>
         /// <value>The extensions.</value>
-        [XmlElement("Extensions")]
+        [XmlElement("Extensions", Order = 2)]
         public ExtensionType Extensions { get; set; }
         
         /// <summary>
         /// Gets or sets the items.
-        /// <c>&lt;RoleDescriptor&gt;</c>, <c>&lt;IDPSSODescriptor&gt;</c>, <c>&lt;SpSsoDescriptor&gt;,</c>
+        /// <c>&lt;RoleDescriptor&gt;</c>, <c>&lt;IdpSsoDescriptor&gt;</c>, <c>&lt;SpSsoDescriptor&gt;,</c>
         /// <c>&lt;AuthnAuthorityDescriptor&gt;</c>, <c>&lt;AttributeAuthorityDescriptor&gt;</c>, <c>&lt;PDPDescriptor&gt;</c>
         /// <c>&lt;AffiliationDescriptor&gt;</c>
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("AffiliationDescriptor", typeof(AffiliationDescriptor))]
-        [XmlElement("AttributeAuthorityDescriptor", typeof(AttributeAuthorityDescriptor))]
-        [XmlElement("AuthnAuthorityDescriptor", typeof(AuthnAuthorityDescriptor))]
-        [XmlElement("IDPSSODescriptor", typeof(IDPSSODescriptor))]
-        [XmlElement("PDPDescriptor", typeof(PDPDescriptor))]
-        [XmlElement("RoleDescriptor", typeof(RoleDescriptor))]
-        [XmlElement("SpSsoDescriptor", typeof(SpSsoDescriptor))]
+        [XmlElement("AffiliationDescriptor", typeof(AffiliationDescriptor), Order = 3)]
+        [XmlElement("AttributeAuthorityDescriptor", typeof(AttributeAuthorityDescriptor), Order = 3)]
+        [XmlElement("AuthnAuthorityDescriptor", typeof(AuthnAuthorityDescriptor), Order = 3)]
+        [XmlElement("IdpSsoDescriptor", typeof(IdpSsoDescriptor), Order = 3)]
+        [XmlElement("PDPDescriptor", typeof(PdpDescriptor), Order = 3)]
+        [XmlElement("RoleDescriptor", typeof(RoleDescriptor), Order = 3)]
+        [XmlElement("SpSsoDescriptor", typeof(SpSsoDescriptor), Order = 3)]
         public object[] Items { get; set; }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace SAML2.Schema.Metadata
         /// element.
         /// </summary>
         /// <value>The organization.</value>
-        [XmlElement("Organization")]
+        [XmlElement("Organization", Order = 4)]
         public Organization Organization { get; set; }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace SAML2.Schema.Metadata
         /// An XML signature that authenticates the containing element and its contents
         /// </summary>
         /// <value>The signature.</value>
-        [XmlElement("Signature", Namespace = Saml20Constants.Xmldsig)]
+        [XmlElement("Signature", Namespace = Saml20Constants.Xmldsig, Order = 1)]
         public Signature Signature { get; set; }
 
         #endregion

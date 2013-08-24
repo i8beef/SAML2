@@ -53,9 +53,9 @@ namespace SAML2.Validation
 
             if (subjectConfirmation.Item != null)
             {
-                if (subjectConfirmation.Item is NameID)
+                if (subjectConfirmation.Item is NameId)
                 {
-                    _nameIdValidator.ValidateNameId((NameID)subjectConfirmation.Item);
+                    _nameIdValidator.ValidateNameId((NameId)subjectConfirmation.Item);
                 }
                 else if (subjectConfirmation.Item is EncryptedElement)
                 {

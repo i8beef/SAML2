@@ -12,7 +12,7 @@ namespace SAML2.Schema.Protocol
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Protocol)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
-    public class IDPList
+    public class IdpList
     {
         /// <summary>
         /// The XML Element name of this class
@@ -26,8 +26,8 @@ namespace SAML2.Schema.Protocol
         /// Information about a single identity provider.
         /// </summary>
         /// <value>The IDP entry.</value>
-        [XmlElement("IDPEntry")]
-        public IDPEntry[] IDPEntry { get; set; }
+        [XmlElement("IDPEntry", Order = 1)]
+        public IdpEntry[] IDPEntry { get; set; }
 
         /// <summary>
         /// Gets or sets the get complete.
@@ -37,7 +37,7 @@ namespace SAML2.Schema.Protocol
         /// element.
         /// </summary>
         /// <value>The get complete.</value>
-        [XmlElement("GetComplete", DataType = "anyURI")]
+        [XmlElement("GetComplete", DataType = "anyURI", Order = 2)]
         public string GetComplete { get; set; }
 
         #endregion

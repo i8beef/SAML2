@@ -27,7 +27,7 @@ namespace SAML2.Schema.Core
         /// explicitly named here).
         /// </summary>
         /// <value>The authenticating authority.</value>
-        [XmlElement("AuthenticatingAuthority", DataType = "anyURI")]
+        [XmlElement("AuthenticatingAuthority", DataType = "anyURI", Order = 2)]
         public string[] AuthenticatingAuthority { get; set; }
 
         /// <summary>
@@ -35,9 +35,9 @@ namespace SAML2.Schema.Core
         /// Items may be of types: <c>AuthnContextClassRef</c>, <c>AuthnContextDecl</c> and <c>AuthnContextDeclRef</c>
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("AuthnContextClassRef", typeof(string), DataType = "anyURI")]
-        [XmlElement("AuthnContextDecl", typeof(object))]
-        [XmlElement("AuthnContextDeclRef", typeof(string), DataType = "anyURI")]
+        [XmlElement("AuthnContextClassRef", typeof(string), DataType = "anyURI", Order = 1)]
+        [XmlElement("AuthnContextDecl", typeof(object), Order = 1)]
+        [XmlElement("AuthnContextDeclRef", typeof(string), DataType = "anyURI", Order = 1)]
         [XmlChoiceIdentifier("ItemsElementName")]
         public object[] Items { get; set; }
 

@@ -64,7 +64,7 @@ namespace SAML2.Schema.Metadata
         /// One or more elements specifying attributes required or desired by this service.
         /// </summary>
         /// <value>The requested attribute.</value>
-        [XmlElement("RequestedAttribute")]
+        [XmlElement("RequestedAttribute", Order = 3)]
         public RequestedAttribute[] RequestedAttribute { get; set; }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace SAML2.Schema.Metadata
         /// One or more language-qualified names for the service.
         /// </summary>
         /// <value>The name of the service.</value>
-        [XmlElement("ServiceName")]
+        [XmlElement("ServiceName", Order = 1)]
         public LocalizedName[] ServiceName { get; set; }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace SAML2.Schema.Metadata
         /// Zero or more language-qualified strings that describe the service.
         /// </summary>
         /// <value>The service description.</value>
-        [XmlElement("ServiceDescription")]
+        [XmlElement("ServiceDescription", Order = 2)]
         public LocalizedName[] ServiceDescription { get; set; }
 
         #endregion

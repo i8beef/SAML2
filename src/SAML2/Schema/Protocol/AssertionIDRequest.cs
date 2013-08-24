@@ -25,7 +25,7 @@ namespace SAML2.Schema.Protocol
         /// Gets or sets the assertion ID ref.
         /// </summary>
         /// <value>The assertion ID ref.</value>
-        [XmlElement("AssertionIDRef", Namespace = Saml20Constants.Assertion, DataType = "NCName")]
+        [XmlElement("AssertionIDRef", Namespace = Saml20Constants.Assertion, DataType = "NCName", Order = 1)]
         public string[] AssertionIdRef { get; set; }
 
         #endregion

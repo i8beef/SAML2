@@ -48,13 +48,13 @@ namespace SAML2.Schema.Metadata
         /// element's xenc:EncryptionMethodType complex type.
         /// </summary>
         /// <value>The encryption method.</value>
-        [XmlElement("EncryptionMethod")]
+        [XmlElement("EncryptionMethod", Order = 2)]
         public EncryptionMethod[] EncryptionMethod { get; set; }
 
         /// <summary>
         /// Gets or sets the XML Signature element KeyInfo. Can be implicitly converted to the .NET class System.Security.Cryptography.Xml.KeyInfo.
         /// </summary>
-        [XmlElement("KeyInfo", Namespace = Saml20Constants.Xmldsig)]
+        [XmlElement("KeyInfo", Namespace = Saml20Constants.Xmldsig, Order = 1)]
         public KeyInfo KeyInfo { get; set; }
 
         #endregion

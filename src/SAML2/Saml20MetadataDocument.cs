@@ -426,11 +426,11 @@ namespace SAML2
 
             if (config.ServiceProvider.NameIdFormats.Count > 0)
             {
-                serviceProviderDescriptor.NameIDFormat = new string[config.ServiceProvider.NameIdFormats.Count];
+                serviceProviderDescriptor.NameIdFormat = new string[config.ServiceProvider.NameIdFormats.Count];
                 var count = 0;
                 foreach (var elem in config.ServiceProvider.NameIdFormats)
                 {
-                    serviceProviderDescriptor.NameIDFormat[count++] = elem.Format;
+                    serviceProviderDescriptor.NameIdFormat[count++] = elem.Format;
                 }
             }
             
@@ -593,9 +593,9 @@ namespace SAML2
 
                 foreach (var item in Entity.Items)
                 {
-                    if (item is IDPSSODescriptor)
+                    if (item is IdpSsoDescriptor)
                     {
-                        var descriptor = (IDPSSODescriptor)item;
+                        var descriptor = (IdpSsoDescriptor)item;
                         foreach (var endpoint in descriptor.SingleSignOnService)
                         {
                             BindingType binding;
@@ -622,9 +622,9 @@ namespace SAML2
                         }
                     }
 
-                    if (item is SSODescriptor)
+                    if (item is SsoDescriptor)
                     {
-                        var descriptor = (SSODescriptor)item;
+                        var descriptor = (SsoDescriptor)item;
 
                         if (descriptor.SingleLogoutService != null)
                         {

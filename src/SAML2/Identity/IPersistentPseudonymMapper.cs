@@ -14,6 +14,6 @@ namespace SAML2.Identity
         /// </summary>
         /// <param name="samlSubject">The SAML Subject identity value returned by the IdP</param>
         /// <returns>The service-provider specific mapping of the input parameter</returns>
-        string MapIdentity(NameID samlSubject);
+        string MapIdentity(NameId samlSubject);
     }
 }

@@ -23,7 +23,7 @@ namespace SAML2.Schema.Protocol
         /// A code representing the status of the activity carried out in response to the corresponding request.
         /// </summary>
         /// <value>The status code.</value>
-        [XmlElement("StatusCode")]
+        [XmlElement("StatusCode", Order = 1)]
         public StatusCode StatusCode { get; set; }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace SAML2.Schema.Protocol
         /// Additional information concerning the status of the request.
         /// </summary>
         /// <value>The status detail.</value>
-        [XmlElement("StatusDetail")]
+        [XmlElement("StatusDetail", Order = 3)]
         public StatusDetail StatusDetail { get; set; }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace SAML2.Schema.Protocol
         /// A message which MAY be returned to an operator.
         /// </summary>
         /// <value>The status message.</value>
-        [XmlElement("StatusMessage")]
+        [XmlElement("StatusMessage", Order = 2)]
         public string StatusMessage { get; set; }
 
         #endregion

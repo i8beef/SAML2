@@ -26,7 +26,7 @@ namespace SAML2.Schema.Protocol
         /// Gets or sets the any XML element.
         /// </summary>
         /// <value>The Any XML element.</value>
-        [XmlAnyElement]
+        [XmlAnyElement(Order = 1)]
         public XmlElement Any { get; set; }
 
         #endregion

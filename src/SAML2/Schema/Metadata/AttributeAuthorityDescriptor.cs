@@ -27,7 +27,7 @@ namespace SAML2.Schema.Metadata
         /// definition are supported.
         /// </summary>
         /// <value>The attribute.</value>
-        [XmlElement("Attribute", Namespace = Saml20Constants.Metadata)]
+        [XmlElement("Attribute", Namespace = Saml20Constants.Metadata, Order = 5)]
         public Attribute[] Attribute { get; set; }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace SAML2.Schema.Metadata
         /// authority.
         /// </summary>
         /// <value>The attribute profile.</value>
-        [XmlElement("AttributeProfile", DataType = "anyURI")]
+        [XmlElement("AttributeProfile", DataType = "anyURI", Order = 4)]
         public string[] AttributeProfile { get; set; }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace SAML2.Schema.Metadata
         /// such endpoint, by definition.
         /// </summary>
         /// <value>The attribute service.</value>
-        [XmlElement("AttributeService")]
+        [XmlElement("AttributeService", Order = 1)]
         public Endpoint[] AttributeService { get; set; }
 
         /// <summary>
@@ -56,8 +56,8 @@ namespace SAML2.Schema.Metadata
         /// requests defined in [SAMLBind].
         /// </summary>
         /// <value>The assertion ID request service.</value>
-        [XmlElement("AssertionIDRequestService")]
-        public Endpoint[] AssertionIDRequestService { get; set; }
+        [XmlElement("AssertionIDRequestService", Order = 2)]
+        public Endpoint[] AssertionIdRequestService { get; set; }
 
         /// <summary>
         /// Gets or sets the name ID format.
@@ -65,8 +65,8 @@ namespace SAML2.Schema.Metadata
         /// this authority.
         /// </summary>
         /// <value>The name ID format.</value>
-        [XmlElement("NameIDFormat", DataType = "anyURI")]
-        public string[] NameIDFormat { get; set; }
+        [XmlElement("NameIDFormat", DataType = "anyURI", Order = 3)]
+        public string[] NameIdFormat { get; set; }
 
         #endregion
     }

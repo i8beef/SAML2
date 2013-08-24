@@ -46,7 +46,7 @@ namespace SAML2.Schema.Protocol
         /// The actions for which authorization is requested.
         /// </summary>
         /// <value>The action.</value>
-        [XmlElement("Action", Namespace = Saml20Constants.Assertion)]
+        [XmlElement("Action", Namespace = Saml20Constants.Assertion, Order = 1)]
         public Core.Action[] Action { get; set; }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace SAML2.Schema.Protocol
         /// A set of assertions that the SAML authority MAY rely on in making its authorization decision
         /// </summary>
         /// <value>The evidence.</value>
-        [XmlElement("Evidence", Namespace = Saml20Constants.Assertion)]
+        [XmlElement("Evidence", Namespace = Saml20Constants.Assertion, Order = 2)]
         public Evidence Evidence { get; set; }
 
         #endregion

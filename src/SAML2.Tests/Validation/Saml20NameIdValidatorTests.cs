@@ -26,7 +26,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenEmailInvalidForm()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Email
                                  };
@@ -79,7 +79,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenEmailValueContainsOnlyWhitespace()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Email,
                                      Value = " "
@@ -97,7 +97,7 @@ namespace SAML2.Tests.Validation
             public void ValidatesEmail()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Email,
                                      Value = "my.address@yours.com"
@@ -120,7 +120,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenX509SubjecNameValueContainsOnlyWhirespace()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.X509SubjectName,
                                      Value = " "
@@ -139,7 +139,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenX509SubjecNameValueEmpty()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.X509SubjectName,
                                      Value = string.Empty
@@ -162,7 +162,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenWindowsDomainQualifiedNameValueContainsOnlyWhitespace()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Windows,
                                      Value = " "
@@ -180,7 +180,7 @@ namespace SAML2.Tests.Validation
             public void ValidatesWindowsDomainQualifiedName()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Windows
                                  };
@@ -206,7 +206,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenKerberosValueContainsOnlyWhitespace()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Kerberos,
                                      Value = " "
@@ -225,7 +225,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenKerberosValueEmpty()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Kerberos,
                                      Value = string.Empty
@@ -244,7 +244,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenKerberosInvalidFormat()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Kerberos,
                                      Value = @"a\b"
@@ -263,7 +263,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenKerberosLessThanThreecharacters()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Kerberos,
                                      Value = @"b"
@@ -281,7 +281,7 @@ namespace SAML2.Tests.Validation
             public void ValidatesKerberos()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Kerberos,
                                      Value = "a@b"
@@ -304,7 +304,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenEntityValueContainsOnlyWhitespace()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Entity,
                                      Value = " "
@@ -323,7 +323,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenEntityValueEmpty()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Entity,
                                      Value = string.Empty
@@ -342,7 +342,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenEntityLengthTooLong()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Entity,
                                      Value = new string('f', 1025)
@@ -361,7 +361,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenEntityNameQualifierSet()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Entity,
                                      Value = new string('f', 1024),
@@ -381,7 +381,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenEntitySPNameQualifierSet()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Entity,
                                      Value = new string('f', 1024),
@@ -401,7 +401,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenEntitySPProvidedId()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Entity,
                                      Value = new string('f', 1024),
@@ -420,7 +420,7 @@ namespace SAML2.Tests.Validation
             public void ValidatesEntity()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Entity,
                                      Value = new string('f', 1024)
@@ -443,7 +443,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenPersistentContainsOnlyWhitespace()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Persistent,
                                      Value = " "
@@ -462,7 +462,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenPersistentValueEmpty()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Persistent,
                                      Value = string.Empty
@@ -481,7 +481,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenPersistentLengthTooLong()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Persistent,
                                      Value = new string('f', 257)
@@ -498,7 +498,7 @@ namespace SAML2.Tests.Validation
             [Test]
             public void ValidatesPersistent()
             {
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Persistent,
                                      Value = new string('f', 256)
@@ -519,7 +519,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenTransientValueTooLong()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Transient,
                                      Value = new string('f', 257)
@@ -538,7 +538,7 @@ namespace SAML2.Tests.Validation
             public void ThrowsExceptionWhenTransientValueTooShort()
             {
                 // Arrange
-                var nameId = new NameID
+                var nameId = new NameId
                                  {
                                      Format = Saml20Constants.NameIdentifierFormats.Transient,
                                      Value = new string('f', 15)
@@ -555,7 +555,7 @@ namespace SAML2.Tests.Validation
             [Test]
             public void ValidatesTransient()
             {
-                var nameId = new NameID { Format = Saml20Constants.NameIdentifierFormats.Transient };
+                var nameId = new NameId { Format = Saml20Constants.NameIdentifierFormats.Transient };
                 var validator = new Saml20NameIdValidator();
 
                 nameId.Value = new string('f', 256);

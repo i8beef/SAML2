@@ -25,8 +25,8 @@ namespace SAML2.Schema.Protocol
         /// Specifies an assertion by value, or optionally an encrypted assertion by value.
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("Assertion", typeof(Assertion), Namespace = Saml20Constants.Assertion)]
-        [XmlElement("EncryptedAssertion", typeof(EncryptedElement), Namespace = Saml20Constants.Assertion)]
+        [XmlElement("Assertion", typeof(Assertion), Namespace = Saml20Constants.Assertion, Order = 1)]
+        [XmlElement("EncryptedAssertion", typeof(EncryptedElement), Namespace = Saml20Constants.Assertion, Order = 1)]
         public object[] Items { get; set; }
 
         #endregion

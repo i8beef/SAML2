@@ -41,7 +41,7 @@ namespace SAML2.Schema.Protocol
         /// context requirements in this element?"
         /// </summary>
         /// <value>The requested authentication context.</value>
-        [XmlElement("RequestedAuthnContext")]
+        [XmlElement("RequestedAuthnContext", Order = 1)]
         public RequestedAuthnContext RequestedAuthnContext { get; set; }
 
         #endregion

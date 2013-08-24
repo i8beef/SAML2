@@ -39,7 +39,7 @@ namespace SAML2.Schema.Protocol
         /// additional information by intentionally presenting erroneous requests.
         /// </summary>
         /// <value>The sub status code.</value>
-        [XmlElement("StatusCode", Namespace = Saml20Constants.Protocol)]
+        [XmlElement("StatusCode", Namespace = Saml20Constants.Protocol, Order = 1)]
         public StatusCode SubStatusCode { get; set; }
 
         #endregion

@@ -11,7 +11,7 @@ namespace SAML2.Schema.Protocol
     /// All SAML responses are of types that are derived from the StatusResponseType complex type. This type
     /// defines common attributes and elements that are associated with all SAML responses
     /// </summary>
-    [XmlInclude(typeof(NameIDMappingResponse))]
+    [XmlInclude(typeof(NameIdMappingResponse))]
     [XmlInclude(typeof(ArtifactResponse))]
     [XmlInclude(typeof(LogoutResponse))]
     [XmlInclude(typeof(Response))]
@@ -112,7 +112,7 @@ namespace SAML2.Schema.Protocol
         /// SAML-defined namespace.
         /// </summary>
         /// <value>The extensions.</value>
-        [XmlElement("Extensions")]
+        [XmlElement("Extensions", Order = 3)]
         public Extensions Extensions { get; set; }
 
         /// <summary>
@@ -120,15 +120,15 @@ namespace SAML2.Schema.Protocol
         /// Identifies the entity that generated the response message.
         /// </summary>
         /// <value>The issuer.</value>
-        [XmlElement("Issuer", Namespace = Saml20Constants.Assertion, Form = XmlSchemaForm.Qualified)]
-        public NameID Issuer { get; set; }
+        [XmlElement("Issuer", Namespace = Saml20Constants.Assertion, Form = XmlSchemaForm.Qualified, Order = 1)]
+        public NameId Issuer { get; set; }
 
         /// <summary>
         /// Gets or sets the signature.
         /// An XML Signature that authenticates the responder and provides message integrity
         /// </summary>
         /// <value>The signature.</value>
-        [XmlElement("Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#")]
+        [XmlElement("Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#", Order = 2)]
         public Signature Signature { get; set; }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace SAML2.Schema.Protocol
         /// A code representing the status of the corresponding request
         /// </summary>
         /// <value>The status.</value>
-        [XmlElement("Status")]
+        [XmlElement("Status", Order = 4)]
         public Status Status { get; set; }
 
         #endregion

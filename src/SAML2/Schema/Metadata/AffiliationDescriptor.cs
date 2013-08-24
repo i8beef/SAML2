@@ -89,7 +89,7 @@ namespace SAML2.Schema.Metadata
         /// unique identifier.
         /// </summary>
         /// <value>The affiliate member.</value>
-        [XmlElement("AffiliateMember", DataType = "anyURI")]
+        [XmlElement("AffiliateMember", DataType = "anyURI", Order = 3)]
         public string[] AffiliateMember { get; set; }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace SAML2.Schema.Metadata
         /// namespace.
         /// </summary>
         /// <value>The extensions.</value>
-        [XmlElement("Extensions")]
+        [XmlElement("Extensions", Order = 2)]
         public ExtensionType Extensions { get; set; }
         
         /// <summary>
@@ -109,7 +109,7 @@ namespace SAML2.Schema.Metadata
         /// which are published in the metadata for those entities.
         /// </summary>
         /// <value>The key descriptor.</value>
-        [XmlElement("KeyDescriptor")]
+        [XmlElement("KeyDescriptor", Order = 4)]
         public KeyDescriptor[] KeyDescriptor { get; set; }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace SAML2.Schema.Metadata
         /// An XML signature that authenticates the containing element and its contents
         /// </summary>
         /// <value>The signature.</value>
-        [XmlElement("Signature", Namespace = Saml20Constants.Xmldsig)]
+        [XmlElement("Signature", Namespace = Saml20Constants.Xmldsig, Order = 1)]
         public Signature Signature { get; set; }
 
         #endregion

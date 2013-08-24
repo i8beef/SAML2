@@ -31,7 +31,7 @@ namespace SAML2.Schema.Protocol
         /// attributes, equality is defined as an identical XML representation of the value
         /// </summary>
         /// <value>The attribute.</value>
-        [XmlElement("Attribute", Namespace = Saml20Constants.Assertion)]
+        [XmlElement("Attribute", Namespace = Saml20Constants.Assertion, Order = 1)]
         public SamlAttribute[] SamlAttribute { get; set; }
 
         #endregion

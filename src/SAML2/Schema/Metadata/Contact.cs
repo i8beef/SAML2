@@ -59,8 +59,17 @@ namespace SAML2.Schema.Metadata
         /// Optional string element that specifies the name of the company for the contact person.
         /// </summary>
         /// <value>The company.</value>
-        [XmlElement("Company")]
+        [XmlElement("Company", Order = 1)]
         public string Company { get; set; }
+
+        /// <summary>
+        /// Gets or sets the email address.
+        /// Zero or more elements containing mailto: URIs representing e-mail addresses belonging to the
+        /// contact person.
+        /// </summary>
+        /// <value>The email address.</value>
+        [XmlElement("EmailAddress", DataType = "anyURI", Order = 4)]
+        public string[] EmailAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the extensions.
@@ -69,7 +78,7 @@ namespace SAML2.Schema.Metadata
         /// namespace.
         /// </summary>
         /// <value>The extensions.</value>
-        [XmlElement("Extensions")]
+        [XmlElement("Extensions", Order = 6)]
         public ExtensionType Extensions { get; set; }
 
         /// <summary>
@@ -77,31 +86,22 @@ namespace SAML2.Schema.Metadata
         /// Optional string element that specifies the given (first) name of the contact person.
         /// </summary>
         /// <value>The name of the given.</value>
-        [XmlElement("GivenName")]
+        [XmlElement("GivenName", Order = 2)]
         public string GivenName { get; set; }
 
         /// <summary>
         /// Gets or sets optional string element that specifies the surname of the contact person.
         /// </summary>
         /// <value>The name of the sur.</value>
-        [XmlElement("SurName")]
+        [XmlElement("SurName", Order = 3)]
         public string SurName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the email address.
-        /// Zero or more elements containing mailto: URIs representing e-mail addresses belonging to the
-        /// contact person.
-        /// </summary>
-        /// <value>The email address.</value>
-        [XmlElement("EmailAddress", DataType = "anyURI")]
-        public string[] EmailAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the telephone number.
         /// Zero or more string elements specifying a telephone number of the contact person.
         /// </summary>
         /// <value>The telephone number.</value>
-        [XmlElement("TelephoneNumber")]
+        [XmlElement("TelephoneNumber", Order = 5)]
         public string[] TelephoneNumber { get; set; }
 
         #endregion

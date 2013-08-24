@@ -97,7 +97,7 @@ namespace SAML2.Tests
         {
             var assertion = new Assertion
                                 {
-                                    Issuer = new NameID(),
+                                    Issuer = new NameId(),
                                     Id = "_b8977dc86cda41493fba68b32ae9291d",
                                     IssueInstant = DateTime.UtcNow,
                                     Version = "2.0"

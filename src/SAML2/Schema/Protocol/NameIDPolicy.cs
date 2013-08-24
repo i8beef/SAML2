@@ -10,7 +10,7 @@ namespace SAML2.Schema.Protocol
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Protocol)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
-    public class NameIDPolicy
+    public class NameIdPolicy
     {
         /// <summary>
         /// The XML Element name of this class

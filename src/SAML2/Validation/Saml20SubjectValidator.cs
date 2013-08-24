@@ -38,10 +38,10 @@ namespace SAML2.Validation
 
             foreach (var o in subject.Items)
             {
-                if (o is NameID)
+                if (o is NameId)
                 {
                     validContentFound = true;
-                    _nameIdValidator.ValidateNameId((NameID)o);
+                    _nameIdValidator.ValidateNameId((NameId)o);
                 }
                 else if (o is EncryptedElement)
                 {

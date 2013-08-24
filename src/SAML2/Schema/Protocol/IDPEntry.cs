@@ -10,7 +10,7 @@ namespace SAML2.Schema.Protocol
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Protocol)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
-    public class IDPEntry
+    public class IdpEntry
     {
         /// <summary>
         /// The XML Element name of this class

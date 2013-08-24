@@ -180,6 +180,17 @@ namespace SAML2.Schema.Protocol
         #region Elements
 
         /// <summary>
+        /// Gets or sets the conditions.
+        /// Specifies the SAML conditions the requester expects to limit the validity and/or use of the resulting
+        /// assertion(s). The responder MAY modify or supplement this set as it deems necessary. The
+        /// information in this element is used as input to the process of constructing the assertion, rather than as
+        /// conditions on the use of the request itself.
+        /// </summary>
+        /// <value>The conditions.</value>
+        [XmlElement("Conditions", Namespace = Saml20Constants.Assertion, Order = 3)]
+        public Conditions Conditions { get; set; }
+
+        /// <summary>
         /// Gets or sets the name ID policy.
         /// Specifies constraints on the name identifier to be used to represent the requested subject. If omitted,
         /// then any type of identifier supported by the identity provider for the requested subject can be used,
@@ -189,19 +200,8 @@ namespace SAML2.Schema.Protocol
         /// <remarks>
         /// This is here for a reason. Some SAML implementations require that NameIDPolicy is the first element following issuer.
         /// </remarks>
-        [XmlElement("NameIDPolicy")]
-        public NameIDPolicy NameIdPolicy { get; set; }
-
-        /// <summary>
-        /// Gets or sets the conditions.
-        /// Specifies the SAML conditions the requester expects to limit the validity and/or use of the resulting
-        /// assertion(s). The responder MAY modify or supplement this set as it deems necessary. The
-        /// information in this element is used as input to the process of constructing the assertion, rather than as
-        /// conditions on the use of the request itself.
-        /// </summary>
-        /// <value>The conditions.</value>
-        [XmlElement("Conditions", Namespace = Saml20Constants.Assertion)]
-        public Conditions Conditions { get; set; }
+        [XmlElement("NameIDPolicy", Order = 2)]
+        public NameIdPolicy NameIdPolicy { get; set; }
 
         /// <summary>
         /// Gets or sets the requested authentication context.
@@ -210,7 +210,7 @@ namespace SAML2.Schema.Protocol
         /// regarding this element.
         /// </summary>
         /// <value>The requested authentication context.</value>
-        [XmlElement("RequestedAuthnContext")]
+        [XmlElement("RequestedAuthnContext", Order = 4)]
         public RequestedAuthnContext RequestedAuthnContext { get; set; }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace SAML2.Schema.Protocol
         /// providers by the responder
         /// </summary>
         /// <value>The scoping.</value>
-        [XmlElement("Scoping")]
+        [XmlElement("Scoping", Order = 5)]
         public Scoping Scoping { get; set; }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace SAML2.Schema.Protocol
         /// can be confirmed.
         /// </summary>
         /// <value>The subject.</value>
-        [XmlElement("Subject", Namespace = Saml20Constants.Assertion)]
+        [XmlElement("Subject", Namespace = Saml20Constants.Assertion, Order = 1)]
         public Subject Subject { get; set; }
 
         #endregion

@@ -77,7 +77,7 @@ namespace SAML2.Schema.Core
         /// MAY be ignored by applications that do not understand the advice or do not wish to make use of it.
         /// </summary>
         /// <value>The advice.</value>
-        [XmlElement("Advice")]
+        [XmlElement("Advice", Order = 5)]
         public Advice Advice { get; set; }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace SAML2.Schema.Core
         /// Conditions that MUST be evaluated when assessing the validity of and/or when using the assertion.
         /// </summary>
         /// <value>The conditions.</value>
-        [XmlElement("Conditions")]
+        [XmlElement("Conditions", Order = 4)]
         public Conditions Conditions { get; set; }
         
         /// <summary>
@@ -96,17 +96,17 @@ namespace SAML2.Schema.Core
         /// and the signer of the assertion (if any). Any such requirements imposed
         /// </summary>
         /// <value>The issuer.</value>
-        [XmlElement("Issuer")]
-        public NameID Issuer { get; set; }
+        [XmlElement("Issuer", Order = 1)]
+        public NameId Issuer { get; set; }
 
         /// <summary>
         /// Gets or sets the Statements (<c>AttributeStatement</c>, <c>AuthnStatement</c> and <c>AuthzDecisionStatement</c> types) 
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("AttributeStatement", typeof(AttributeStatement))]
-        [XmlElement("AuthnStatement", typeof(AuthnStatement))]
-        [XmlElement("AuthzDecisionStatement", typeof(AuthzDecisionStatement))]
-        [XmlElement("Statement", typeof(StatementAbstract))]
+        [XmlElement("AttributeStatement", typeof(AttributeStatement), Order = 6)]
+        [XmlElement("AuthnStatement", typeof(AuthnStatement), Order = 6)]
+        [XmlElement("AuthzDecisionStatement", typeof(AuthzDecisionStatement), Order = 6)]
+        [XmlElement("Statement", typeof(StatementAbstract), Order = 6)]
         public StatementAbstract[] Items { get; set; }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace SAML2.Schema.Core
         /// An XML Signature that protects the integrity of and authenticates the issuer of the assertion
         /// </summary>
         /// <value>The signature.</value>
-        [XmlElement("Signature", Namespace = Saml20Constants.Xmldsig)]
+        [XmlElement("Signature", Order = 2, Namespace = Saml20Constants.Xmldsig)]
         public Signature Signature { get; set; }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace SAML2.Schema.Core
         /// The subject of the statement(s) in the assertion
         /// </summary>
         /// <value>The subject.</value>
-        [XmlElement("Subject")]
+        [XmlElement("Subject", Order = 3)]
         public Subject Subject { get; set; }
 
         #endregion

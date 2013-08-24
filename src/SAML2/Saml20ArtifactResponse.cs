@@ -27,7 +27,7 @@ namespace SAML2
                                     {
                                         Version = Saml20Constants.Version,
                                         ID = "id" + Guid.NewGuid().ToString("N"),
-                                        Issuer = new NameID(),
+                                        Issuer = new NameId(),
                                         IssueInstant = DateTime.Now,
                                         Status = new Status { StatusCode = new StatusCode() }
                                     };

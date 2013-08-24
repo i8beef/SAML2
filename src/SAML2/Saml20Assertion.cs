@@ -293,9 +293,9 @@ namespace SAML2
         /// Gets the subject.
         /// </summary>
         /// <value>The subject.</value>
-        public NameID Subject
+        public NameId Subject
         {
-            get { return Assertion.Subject.Items.OfType<NameID>().FirstOrDefault(); }
+            get { return Assertion.Subject.Items.OfType<NameId>().FirstOrDefault(); }
         }
 
         /// <summary>

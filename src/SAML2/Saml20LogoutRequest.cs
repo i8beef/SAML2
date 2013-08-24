@@ -22,7 +22,7 @@ namespace SAML2
                            {
                                Version = Saml20Constants.Version,
                                Id = "id" + Guid.NewGuid().ToString("N"),
-                               Issuer = new NameID(),
+                               Issuer = new NameId(),
                                IssueInstant = DateTime.Now
                            };
         }
@@ -98,9 +98,9 @@ namespace SAML2
         /// Gets or sets <c>SubjectToLogOut</c>.
         /// </summary>
         /// <value>The Subject To LogOut.</value>
-        public NameID SubjectToLogOut
+        public NameId SubjectToLogOut
         {
-            get { return Request.Item as NameID; }
+            get { return Request.Item as NameId; }
             set { Request.Item = value; }
         }
 
@@ -112,7 +112,7 @@ namespace SAML2
         /// <returns>The <see cref="Saml20LogoutRequest"/>.</returns>
         public static Saml20LogoutRequest GetDefault()
         {
-            var result = new Saml20LogoutRequest { SubjectToLogOut = new NameID() };
+            var result = new Saml20LogoutRequest { SubjectToLogOut = new NameId() };
 
             var config = Saml2Config.GetConfig();
             if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.Id))

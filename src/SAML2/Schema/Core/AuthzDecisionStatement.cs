@@ -49,7 +49,7 @@ namespace SAML2.Schema.Core
         /// The set of actions authorized to be performed on the specified resource.
         /// </summary>
         /// <value>The action.</value>
-        [XmlElement("Action")]
+        [XmlElement("Action", Order = 1)]
         public Action[] Action { get; set; }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace SAML2.Schema.Core
         /// A set of assertions that the SAML authority relied on in making the decision.
         /// </summary>
         /// <value>The evidence.</value>
-        [XmlElement("Evidence")]
+        [XmlElement("Evidence", Order = 2)]
         public Evidence Evidence { get; set; }
 
         #endregion

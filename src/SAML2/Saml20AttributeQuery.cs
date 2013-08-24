@@ -47,7 +47,7 @@ namespace SAML2
                              {
                                  Version = Saml20Constants.Version,
                                  Id = "id" + Guid.NewGuid().ToString("N"),
-                                 Issuer = new NameID(),
+                                 Issuer = new NameId(),
                                  IssueInstant = DateTime.Now,
                                  Subject = new Subject()
                              };
@@ -174,7 +174,7 @@ namespace SAML2
 
             var builder = new HttpSoapBindingBuilder(context);
 
-            var name = new NameID
+            var name = new NameId
                            {
                                Value = Saml20Identity.Current.Name,
                                Format = nameIdFormat

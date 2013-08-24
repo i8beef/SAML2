@@ -10,9 +10,9 @@ namespace SAML2.Schema.Protocol
     /// All SAML requests are of types that are derived from the abstract RequestAbstractType complex type.
     /// This type defines common attributes and elements that are associated with all SAML requests
     /// </summary>
-    [XmlInclude(typeof(NameIDMappingRequest))]
+    [XmlInclude(typeof(NameIdMappingRequest))]
     [XmlInclude(typeof(LogoutRequest))]
-    [XmlInclude(typeof(ManageNameIDRequest))]
+    [XmlInclude(typeof(ManageNameIdRequest))]
     [XmlInclude(typeof(ArtifactResolve))]
     [XmlInclude(typeof(AuthnRequest))]
     [XmlInclude(typeof(SubjectQueryAbstract))]
@@ -97,7 +97,7 @@ namespace SAML2.Schema.Protocol
         /// SAML-defined namespace
         /// </summary>
         /// <value>The extensions.</value>
-        [XmlElement("Extensions")]
+        [XmlElement("Extensions", Order = 3)]
         public Extensions Extensions { get; set; }
 
         /// <summary>
@@ -105,15 +105,15 @@ namespace SAML2.Schema.Protocol
         /// Identifies the entity that generated the request message.
         /// </summary>
         /// <value>The issuer.</value>
-        [XmlElement("Issuer", Namespace = Saml20Constants.Assertion)]
-        public NameID Issuer { get; set; }
+        [XmlElement("Issuer", Namespace = Saml20Constants.Assertion, Order = 1)]
+        public NameId Issuer { get; set; }
 
         /// <summary>
         /// Gets or sets the signature.
         /// An XML Signature that authenticates the requester and provides message integrity
         /// </summary>
         /// <value>The signature.</value>
-        [XmlElement("Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#")]
+        [XmlElement("Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#", Order = 2)]
         public Signature Signature { get; set; }
 
         #endregion

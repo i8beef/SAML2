@@ -73,7 +73,7 @@ namespace SAML2.Schema.XmlDSig
         [XmlElement("MgmtData", typeof(string))]
         [XmlElement("PGPData", typeof(PgpData))]
         [XmlElement("RetrievalMethod", typeof(RetrievalMethod))]
-        [XmlElement("SPKIData", typeof(SPKIData))]
+        [XmlElement("SPKIData", typeof(SpkiData))]
         [XmlElement("X509Data", typeof(X509Data))]
         [XmlChoiceIdentifier("ItemsElementName")]
         public object[] Items { get; set; }

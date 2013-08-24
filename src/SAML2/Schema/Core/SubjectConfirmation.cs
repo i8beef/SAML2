@@ -47,9 +47,9 @@ namespace SAML2.Schema.Core
         /// Valid elements are &lt;BaseID&gt;, &lt;NameID&gt;, or &lt;EncryptedID&gt; 
         /// </summary>
         /// <value>The item.</value>
-        [XmlElement("BaseID", typeof(BaseIDAbstract))]
-        [XmlElement("EncryptedID", typeof(EncryptedElement))]
-        [XmlElement("NameID", typeof(NameID))]
+        [XmlElement("BaseID", typeof(BaseIdAbstract), Order = 1)]
+        [XmlElement("EncryptedID", typeof(EncryptedElement), Order = 1)]
+        [XmlElement("NameID", typeof(NameId), Order = 1)]
         public object Item { get; set; }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace SAML2.Schema.Core
         /// attributes, or content that may appear in the &lt;SubjectConfirmationData&gt; element.
         /// </summary>
         /// <value>The subject confirmation data.</value>
-        [XmlElement("SubjectConfirmationData")]
+        [XmlElement("SubjectConfirmationData", Order = 2)]
         public SubjectConfirmationData SubjectConfirmationData { get; set; }
 
         #endregion

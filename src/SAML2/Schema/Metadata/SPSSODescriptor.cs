@@ -11,7 +11,7 @@ namespace SAML2.Schema.Metadata
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Metadata)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
-    public class SpSsoDescriptor : SSODescriptor
+    public class SpSsoDescriptor : SsoDescriptor
     {
         /// <summary>
         /// The XML Element name of this class
@@ -71,7 +71,7 @@ namespace SAML2.Schema.Metadata
         /// such endpoint, by definition.
         /// </summary>
         /// <value>The assertion consumer service.</value>
-        [XmlElement("AssertionConsumerService")]
+        [XmlElement("AssertionConsumerService", Order = 1)]
         public IndexedEndpoint[] AssertionConsumerService { get; set; }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace SAML2.Schema.Metadata
         /// that requires or desires the use of SAML attributes.
         /// </summary>
         /// <value>The attribute consuming service.</value>
-        [XmlElement("AttributeConsumingService")]
+        [XmlElement("AttributeConsumingService", Order = 2)]
         public AttributeConsumingService[] AttributeConsumingService { get; set; }
 
         #endregion

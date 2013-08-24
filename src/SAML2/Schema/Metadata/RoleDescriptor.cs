@@ -12,11 +12,11 @@ namespace SAML2.Schema.Metadata
     /// by extending its abstract RoleDescriptorType complex type
     /// </summary>
     [XmlInclude(typeof(AttributeAuthorityDescriptor))]
-    [XmlInclude(typeof(PDPDescriptor))]
+    [XmlInclude(typeof(PdpDescriptor))]
     [XmlInclude(typeof(AuthnAuthorityDescriptor))]
-    [XmlInclude(typeof(SSODescriptor))]
+    [XmlInclude(typeof(SsoDescriptor))]
     [XmlInclude(typeof(SpSsoDescriptor))]
-    [XmlInclude(typeof(IDPSSODescriptor))]    
+    [XmlInclude(typeof(IdpSsoDescriptor))]    
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Metadata)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
@@ -104,7 +104,7 @@ namespace SAML2.Schema.Metadata
         /// element used within the &lt;EntityDescriptor&gt; element.
         /// </summary>
         /// <value>The contact person.</value>
-        [XmlElement("ContactPerson")]
+        [XmlElement("ContactPerson", Order = 5)]
         public Contact[] ContactPerson { get; set; }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace SAML2.Schema.Metadata
         /// namespace.
         /// </summary>
         /// <value>The extensions.</value>
-        [XmlElement("Extensions")]
+        [XmlElement("Extensions", Order = 2)]
         public ExtensionType Extensions { get; set; }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace SAML2.Schema.Metadata
         /// entity uses when acting in this role.
         /// </summary>
         /// <value>The key descriptor.</value>
-        [XmlElement("KeyDescriptor")]
+        [XmlElement("KeyDescriptor", Order = 3)]
         public KeyDescriptor[] KeyDescriptor { get; set; }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace SAML2.Schema.Metadata
         /// within the &lt;EntityDescriptor&gt; element.
         /// </summary>
         /// <value>The organization.</value>
-        [XmlElement("Organization")]
+        [XmlElement("Organization", Order = 4)]
         public Organization Organization { get; set; }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace SAML2.Schema.Metadata
         /// An XML signature that authenticates the containing element and its contents
         /// </summary>
         /// <value>The signature.</value>
-        [XmlElement("Signature", Namespace = Saml20Constants.Xmldsig)]
+        [XmlElement("Signature", Namespace = Saml20Constants.Xmldsig, Order = 1)]
         public Signature Signature { get; set; }
 
         #endregion

@@ -10,7 +10,7 @@ namespace SAML2.Schema.Protocol
     [Serializable]    
     [XmlType(Namespace = Saml20Constants.Protocol)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
-    public class ManageNameIDRequest : RequestAbstract
+    public class ManageNameIdRequest : RequestAbstract
     {
         /// <summary>
         /// The XML Element name of this class
@@ -25,8 +25,8 @@ namespace SAML2.Schema.Protocol
         /// principal as currently recognized by the identity and service providers prior to this request.
         /// </summary>
         /// <value>The item.</value>
-        [XmlElement("EncryptedID", typeof(EncryptedElement), Namespace = Saml20Constants.Assertion)]
-        [XmlElement("NameID", typeof(NameID), Namespace = Saml20Constants.Assertion)]
+        [XmlElement("EncryptedID", typeof(EncryptedElement), Namespace = Saml20Constants.Assertion, Order = 1)]
+        [XmlElement("NameID", typeof(NameId), Namespace = Saml20Constants.Assertion, Order = 1)]
         public object Item { get; set; }
 
         /// <summary>
@@ -39,9 +39,9 @@ namespace SAML2.Schema.Protocol
         /// content.
         /// </summary>
         /// <value>The item1.</value>
-        [XmlElement("NewEncryptedID", typeof(EncryptedElement))]
-        [XmlElement("NewID", typeof(string))]
-        [XmlElement("Terminate", typeof(Terminate))]
+        [XmlElement("NewEncryptedID", typeof(EncryptedElement), Order = 2)]
+        [XmlElement("NewID", typeof(string), Order = 2)]
+        [XmlElement("Terminate", typeof(Terminate), Order = 2)]
         public object Item1 { get; set; }
 
         #endregion

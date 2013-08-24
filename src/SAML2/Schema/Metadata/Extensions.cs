@@ -23,7 +23,7 @@ namespace SAML2.Schema.Metadata
         /// Gets or sets any elements.
         /// </summary>
         /// <value>Any elements.</value>
-        [XmlAnyElement]
+        [XmlAnyElement(Order = 1)]
         public XmlElement[] Any { get; set; }
 
         #endregion

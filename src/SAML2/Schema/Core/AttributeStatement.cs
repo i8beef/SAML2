@@ -19,13 +19,17 @@ namespace SAML2.Schema.Core
         /// </summary>
         public new const string ElementName = "AttributeStatement";
 
+        #region Elements
+
         /// <summary>
         /// Gets or sets the items.
         /// Items may be of type Attribute and EncryptedAttribute
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("Attribute", typeof(SamlAttribute))]
-        [XmlElement("EncryptedAttribute", typeof(EncryptedElement))]
+        [XmlElement("Attribute", typeof(SamlAttribute), Order = 1)]
+        [XmlElement("EncryptedAttribute", typeof(EncryptedElement), Order = 1)]
         public object[] Items { get; set; }
+
+        #endregion
     }
 }

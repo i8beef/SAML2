@@ -25,10 +25,10 @@ namespace SAML2.Schema.Core
         /// Items may be of types Assertion, AssertionIDRef, AssertionURIRef and EncryptedAssertion
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("Assertion", typeof(Assertion))]
-        [XmlElement("AssertionIDRef", typeof(string), DataType = "NCName")]
-        [XmlElement("AssertionURIRef", typeof(string), DataType = "anyURI")]
-        [XmlElement("EncryptedAssertion", typeof(EncryptedElement))]
+        [XmlElement("Assertion", typeof(Assertion), Order = 1)]
+        [XmlElement("AssertionIDRef", typeof(string), DataType = "NCName", Order = 1)]
+        [XmlElement("AssertionURIRef", typeof(string), DataType = "anyURI", Order = 1)]
+        [XmlElement("EncryptedAssertion", typeof(EncryptedElement), Order = 1)]
         [XmlChoiceIdentifier("ItemsElementName")]
         public object[] Items { get; set; }
 

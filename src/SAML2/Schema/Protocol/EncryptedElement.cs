@@ -27,14 +27,14 @@ namespace SAML2.Schema.Protocol
         /// Gets or sets the encrypted data.
         /// </summary>
         /// <value>The encrypted data.</value>
-        [XmlElement("EncryptedData", Namespace = Saml20Constants.Xenc)]
+        [XmlElement("EncryptedData", Order = 1, Namespace = Saml20Constants.Xenc)]
         public EncryptedData EncryptedData { get; set; }
 
         /// <summary>
         /// Gets or sets the encrypted key.
         /// </summary>
         /// <value>The encrypted key.</value>
-        [XmlElement("EncryptedKey", Namespace = Saml20Constants.Xenc)]
+        [XmlElement("EncryptedKey", Order = 2, Namespace = Saml20Constants.Xenc)]
         public EncryptedKey[] EncryptedKey { get; set; }
 
         #endregion

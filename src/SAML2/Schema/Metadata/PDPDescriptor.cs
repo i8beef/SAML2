@@ -10,7 +10,7 @@ namespace SAML2.Schema.Metadata
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Metadata)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
-    public class PDPDescriptor : RoleDescriptor
+    public class PdpDescriptor : RoleDescriptor
     {
         /// <summary>
         /// The XML Element name of this class
@@ -26,7 +26,7 @@ namespace SAML2.Schema.Metadata
         /// at least one such endpoint, by definition.
         /// </summary>
         /// <value>The authorize service.</value>
-        [XmlElement("AuthzService")]
+        [XmlElement("AuthzService", Order = 1)]
         public Endpoint[] AuthzService { get; set; }
 
         /// <summary>
@@ -36,8 +36,8 @@ namespace SAML2.Schema.Metadata
         /// requests defined in [SAMLBind].
         /// </summary>
         /// <value>The assertion ID request service.</value>
-        [XmlElement("AssertionIDRequestService")]
-        public Endpoint[] AssertionIDRequestService { get; set; }
+        [XmlElement("AssertionIDRequestService", Order = 2)]
+        public Endpoint[] AssertionIdRequestService { get; set; }
 
         /// <summary>
         /// Gets or sets the name ID format.
@@ -45,8 +45,8 @@ namespace SAML2.Schema.Metadata
         /// this authority.
         /// </summary>
         /// <value>The name ID format.</value>
-        [XmlElement("NameIDFormat", DataType = "anyURI")]
-        public string[] NameIDFormat { get; set; }
+        [XmlElement("NameIDFormat", DataType = "anyURI", Order = 3)]
+        public string[] NameIdFormat { get; set; }
 
         #endregion
     }

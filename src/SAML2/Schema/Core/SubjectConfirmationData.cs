@@ -97,7 +97,7 @@ namespace SAML2.Schema.Core
         /// Gets or sets the any-elements-array.
         /// </summary>
         /// <value>The any-elements-array</value>
-        [XmlAnyElement]
+        [XmlAnyElement(Order = 1)]
         public XmlElement[] AnyElements { get; set; }
 
         #endregion

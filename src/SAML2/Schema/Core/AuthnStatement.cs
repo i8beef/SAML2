@@ -83,7 +83,7 @@ namespace SAML2.Schema.Core
         /// for a full description of authentication context information.
         /// </summary>
         /// <value>The authentication context.</value>
-        [XmlElement("AuthnContext")]
+        [XmlElement("AuthnContext", Order = 2)]
         public AuthnContext AuthnContext { get; set; }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace SAML2.Schema.Core
         /// apparently authenticated.
         /// </summary>
         /// <value>The subject locality.</value>
-        [XmlElement("SubjectLocality")]
+        [XmlElement("SubjectLocality", Order = 1)]
         public SubjectLocality SubjectLocality { get; set; }
 
         #endregion

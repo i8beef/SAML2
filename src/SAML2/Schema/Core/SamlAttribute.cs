@@ -79,7 +79,7 @@ namespace SAML2.Schema.Core
         /// the identical data type assigned.
         /// </summary>
         /// <value>The attribute value.</value>
-        [XmlElement("AttributeValue", IsNullable = true)]
+        [XmlElement("AttributeValue", IsNullable = true, Order = 1)]
         public string[] AttributeValue { get; set; }
 
         #endregion

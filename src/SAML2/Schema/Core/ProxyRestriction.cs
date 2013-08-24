@@ -37,7 +37,7 @@ namespace SAML2.Schema.Core
         /// Gets or sets the audience.
         /// </summary>
         /// <value>The audience.</value>
-        [XmlElement("Audience", DataType = "anyURI")]
+        [XmlElement("Audience", DataType = "anyURI", Order = 1)]
         public string[] Audience { get; set; }
 
         #endregion

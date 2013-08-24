@@ -11,7 +11,7 @@ namespace SAML2.Schema.Protocol
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Protocol)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Protocol, IsNullable = false)]
-    public class NameIDMappingRequest : RequestAbstract
+    public class NameIdMappingRequest : RequestAbstract
     {
         /// <summary>
         /// The XML Element name of this class
@@ -26,9 +26,9 @@ namespace SAML2.Schema.Protocol
         /// requester and the responder.
         /// </summary>
         /// <value>The item.</value>
-        [XmlElement("BaseID", typeof(BaseIDAbstract), Namespace = Saml20Constants.Assertion)]
-        [XmlElement("EncryptedID", typeof(EncryptedElement), Namespace = Saml20Constants.Assertion)]
-        [XmlElement("NameID", typeof(NameID), Namespace = Saml20Constants.Assertion)]
+        [XmlElement("BaseID", typeof(BaseIdAbstract), Namespace = Saml20Constants.Assertion, Order = 1)]
+        [XmlElement("EncryptedID", typeof(EncryptedElement), Namespace = Saml20Constants.Assertion, Order = 1)]
+        [XmlElement("NameID", typeof(NameId), Namespace = Saml20Constants.Assertion, Order = 1)]
         public object Item { get; set; }
         
         /// <summary>
@@ -36,8 +36,8 @@ namespace SAML2.Schema.Protocol
         /// The requirements regarding the format and optional name qualifier for the identifier to be returned
         /// </summary>
         /// <value>The name ID policy.</value>
-        [XmlElement("NameIDPolicy")]
-        public NameIDPolicy NameIDPolicy { get; set; }
+        [XmlElement("NameIDPolicy", Order = 2)]
+        public NameIdPolicy NameIdPolicy { get; set; }
 
         #endregion
     }

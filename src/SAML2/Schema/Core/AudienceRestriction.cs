@@ -32,7 +32,7 @@ namespace SAML2.Schema.Core
         /// identifier URI from a SAML name identifier that describes a system entity
         /// </summary>
         /// <value>The audience.</value>
-        [XmlElement("Audience", DataType = "anyURI")]
+        [XmlElement("Audience", DataType = "anyURI", Order = 1)]
         public List<string> Audience { get; set; }
 
         #endregion

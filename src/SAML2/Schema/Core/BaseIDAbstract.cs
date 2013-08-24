@@ -10,7 +10,7 @@ namespace SAML2.Schema.Core
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Assertion)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
-    public abstract class BaseIDAbstract
+    public abstract class BaseIdAbstract
     {
         /// <summary>
         /// The XML Element name of this class

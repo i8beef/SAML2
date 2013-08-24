@@ -5,18 +5,18 @@ using SAML2.Schema.Core;
 namespace SAML2.Schema.Metadata
 {
     /// <summary>
-    /// The &lt;IDPSSODescriptor&gt; element extends SSODescriptorType with content reflecting profiles
+    /// The &lt;IdpSsoDescriptor&gt; element extends SSODescriptorType with content reflecting profiles
     /// specific to identity providers supporting SSO.
     /// </summary>
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Metadata)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Metadata, IsNullable = false)]
-    public class IDPSSODescriptor : SSODescriptor
+    public class IdpSsoDescriptor : SsoDescriptor
     {
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ElementName = "IDPSSODescriptor";
+        public new const string ElementName = "IdpSsoDescriptor";
 
         #region Attributes
 
@@ -42,8 +42,8 @@ namespace SAML2.Schema.Metadata
         /// requests defined in [SAMLBind].
         /// </summary>
         /// <value>The assertion ID request service.</value>
-        [XmlElement("AssertionIDRequestService")]
-        public Endpoint[] AssertionIDRequestService { get; set; }
+        [XmlElement("AssertionIDRequestService", Order = 3)]
+        public Endpoint[] AssertionIdRequestService { get; set; }
 
         /// <summary>
         /// Gets or sets the attribute.
@@ -53,7 +53,7 @@ namespace SAML2.Schema.Metadata
         /// provider has the capability to include it when delivering assertions during single sign-on.
         /// </summary>
         /// <value>The attribute.</value>
-        [XmlElement("Attribute", Namespace = Saml20Constants.Assertion)]
+        [XmlElement("Attribute", Namespace = Saml20Constants.Assertion, Order = 5)]
         public SamlAttribute[] Attributes { get; set; }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace SAML2.Schema.Metadata
         /// identity provider. See [SAMLProf] for some possible values for this element.
         /// </summary>
         /// <value>The attribute profile.</value>
-        [XmlElement("AttributeProfile", DataType = "anyURI")]
+        [XmlElement("AttributeProfile", DataType = "anyURI", Order = 4)]
         public string[] AttributeProfile { get; set; }
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace SAML2.Schema.Metadata
         /// omitted.
         /// </summary>
         /// <value>The name ID mapping service.</value>
-        [XmlElement("NameIDMappingService")]
-        public Endpoint[] NameIDMappingService { get; set; }
+        [XmlElement("NameIDMappingService", Order = 2)]
+        public Endpoint[] NameIdMappingService { get; set; }
 
         /// <summary>
         /// Gets or sets the single sign on service.
@@ -82,7 +82,7 @@ namespace SAML2.Schema.Metadata
         /// one such endpoint, by definition. The ResponseLocation attribute MUST be omitted.
         /// </summary>
         /// <value>The single sign on service.</value>
-        [XmlElement("SingleSignOnService")]
+        [XmlElement("SingleSignOnService", Order = 1)]
         public Endpoint[] SingleSignOnService { get; set; }
 
         #endregion

@@ -38,7 +38,7 @@ namespace SAML2.Schema.Metadata
         /// elements qualified by a SAML-defined namespace within this element.
         /// </summary>
         /// <value>The extensions.</value>
-        [XmlElement("Extensions")]
+        [XmlElement("Extensions", Order = 1)]
         public ExtensionType Extensions { get; set; }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace SAML2.Schema.Metadata
         /// One or more language-qualified names that are suitable for human consumption.
         /// </summary>
         /// <value>The display name of the organization.</value>
-        [XmlElement("OrganizationDisplayName")]
+        [XmlElement("OrganizationDisplayName", Order = 3)]
         public LocalizedName[] OrganizationDisplayName { get; set; }
         
         /// <summary>
@@ -54,7 +54,7 @@ namespace SAML2.Schema.Metadata
         /// One or more language-qualified names that may or may not be suitable for human consumption
         /// </summary>
         /// <value>The name of the organization.</value>
-        [XmlElement("OrganizationName")]
+        [XmlElement("OrganizationName", Order = 2)]
         public LocalizedName[] OrganizationName { get; set; }
         
         /// <summary>
@@ -64,7 +64,7 @@ namespace SAML2.Schema.Metadata
         /// location.
         /// </summary>
         /// <value>The organization URL.</value>
-        [XmlElement("OrganizationURL")]
+        [XmlElement("OrganizationURL", Order = 4)]
         public LocalizedURI[] OrganizationURL { get; set; }
 
         #endregion

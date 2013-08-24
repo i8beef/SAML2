@@ -27,7 +27,7 @@ namespace SAML2.Schema.Protocol
         /// represents. See [SAMLBind] for specific artifact format information.
         /// </summary>
         /// <value>The artifact.</value>
-        [XmlElement("Artifact")]
+        [XmlElement("Artifact", Order = 1)]
         public string Artifact { get; set; }
 
         #endregion

@@ -20,7 +20,7 @@ namespace SAML2.Validation
         /// Validates the name ID.
         /// </summary>
         /// <param name="nameId">The name ID.</param>
-        public void ValidateNameId(NameID nameId)
+        public void ValidateNameId(NameId nameId)
         {
             if (nameId == null)
             {

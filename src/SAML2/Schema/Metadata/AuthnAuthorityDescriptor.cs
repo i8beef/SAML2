@@ -27,7 +27,7 @@ namespace SAML2.Schema.Metadata
         /// requests defined in [SAMLBind].
         /// </summary>
         /// <value>The assertion ID request service.</value>
-        [XmlElement("AssertionIDRequestService")]
+        [XmlElement("AssertionIDRequestService", Order = 2)]
         public Endpoint[] AssertionIdRequestService { get; set; }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace SAML2.Schema.Metadata
         /// least one such endpoint, by definition.
         /// </summary>
         /// <value>The authentication query service.</value>
-        [XmlElement("AuthnQueryService")]
+        [XmlElement("AuthnQueryService", Order = 1)]
         public Endpoint[] AuthnQueryService { get; set; }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace SAML2.Schema.Metadata
         /// this authority.
         /// </summary>
         /// <value>The name ID format.</value>
-        [XmlElement("NameIDFormat", DataType = "anyURI")]
+        [XmlElement("NameIDFormat", DataType = "anyURI", Order = 3)]
         public string[] NameIdFormat { get; set; }
 
         #endregion

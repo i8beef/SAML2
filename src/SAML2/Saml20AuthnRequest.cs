@@ -23,7 +23,7 @@ namespace SAML2
                           {
                               Version = Saml20Constants.Version,
                               Id = "id" + Guid.NewGuid().ToString("N"),
-                              Issuer = new NameID(),
+                              Issuer = new NameId(),
                               IssueInstant = DateTime.Now
                           };
         }
@@ -116,7 +116,7 @@ namespace SAML2
         /// Gets or sets the name ID policy.
         /// </summary>
         /// <value>The name ID policy.</value>
-        public NameIDPolicy NameIdPolicy
+        public NameIdPolicy NameIdPolicy
         {
             get { return Request.NameIdPolicy; }
             set { Request.NameIdPolicy = value; }
@@ -182,7 +182,7 @@ namespace SAML2
             // NameIDPolicy
             if (config.ServiceProvider.NameIdFormats.Count > 0)
             {
-                result.NameIdPolicy = new NameIDPolicy
+                result.NameIdPolicy = new NameIdPolicy
                                           {
                                               AllowCreate = config.ServiceProvider.NameIdFormats.AllowCreate,
                                               Format = config.ServiceProvider.NameIdFormats[0].Format

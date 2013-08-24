@@ -14,7 +14,7 @@ namespace SAML2.Schema.XmlDSig
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Xmldsig)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Xmldsig, IsNullable = false)]
-    public class SPKIData
+    public class SpkiData
     {
         /// <summary>
         /// The XML Element name of this class

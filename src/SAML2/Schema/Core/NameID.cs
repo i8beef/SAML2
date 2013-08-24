@@ -11,7 +11,7 @@ namespace SAML2.Schema.Core
     [Serializable]
     [XmlType(Namespace = Saml20Constants.Assertion)]
     [XmlRoot(ElementName, Namespace = Saml20Constants.Assertion, IsNullable = false)]
-    public class NameID
+    public class NameId
     {
         /// <summary>
         /// The XML Element name of this class

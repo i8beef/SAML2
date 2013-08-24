@@ -167,7 +167,7 @@ namespace SAML2.Config
             var other = new XmlDocument { PreserveWhitespace = true };
             other.LoadXml(doc.OuterXml);
 
-            foreach (var node in other.DocumentElement.ChildNodes.Cast<XmlNode>().Where(node => node.Name != IDPSSODescriptor.ElementName).ToList())
+            foreach (var node in other.DocumentElement.ChildNodes.Cast<XmlNode>().Where(node => node.Name != IdpSsoDescriptor.ElementName).ToList())
             {
                 other.DocumentElement.RemoveChild(node);
             }

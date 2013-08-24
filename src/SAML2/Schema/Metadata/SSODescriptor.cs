@@ -11,11 +11,11 @@ namespace SAML2.Schema.Metadata
     /// providers that support SSO
     /// </summary>
     [XmlInclude(typeof(SpSsoDescriptor))]
-    [XmlIncludeAttribute(typeof(IDPSSODescriptor))]
+    [XmlIncludeAttribute(typeof(IdpSsoDescriptor))]
     [Serializable]
     [DebuggerStepThrough]
     [XmlTypeAttribute(Namespace = Saml20Constants.Metadata)]
-    public abstract class SSODescriptor : RoleDescriptor
+    public abstract class SsoDescriptor : RoleDescriptor
     {
         #region Elements
 
@@ -26,7 +26,7 @@ namespace SAML2.Schema.Metadata
         /// MUST be omitted.
         /// </summary>
         /// <value>The artifact resolution service.</value>
-        [XmlElement("ArtifactResolutionService")]
+        [XmlElement("ArtifactResolutionService", Order = 1)]
         public IndexedEndpoint[] ArtifactResolutionService { get; set; }
 
         /// <summary>
@@ -35,8 +35,8 @@ namespace SAML2.Schema.Metadata
         /// Identifier Management profiles defined in [SAMLProf].
         /// </summary>
         /// <value>The manage name ID service.</value>
-        [XmlElement("ManageNameIDService")]
-        public Endpoint[] ManageNameIDService { get; set; }
+        [XmlElement("ManageNameIDService", Order = 3)]
+        public Endpoint[] ManageNameIdService { get; set; }
 
         /// <summary>
         /// Gets or sets the name ID format.
@@ -45,8 +45,8 @@ namespace SAML2.Schema.Metadata
         /// this element.
         /// </summary>
         /// <value>The name ID format.</value>
-        [XmlElement("NameIDFormat", DataType = "anyURI")]
-        public string[] NameIDFormat { get; set; }
+        [XmlElement("NameIDFormat", DataType = "anyURI", Order = 4)]
+        public string[] NameIdFormat { get; set; }
 
         /// <summary>
         /// Gets or sets the single logout service.
@@ -54,7 +54,7 @@ namespace SAML2.Schema.Metadata
         /// Logout profiles defined in [SAMLProf].
         /// </summary>
         /// <value>The single logout service.</value>
-        [XmlElement("SingleLogoutService")]
+        [XmlElement("SingleLogoutService", Order = 2)]
         public Endpoint[] SingleLogoutService { get; set; }
 
         #endregion

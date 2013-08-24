@@ -83,7 +83,7 @@ namespace SAML2.Schema.Metadata
         /// namespace.
         /// </summary>
         /// <value>The extensions.</value>
-        [XmlElement("Extensions")]
+        [XmlElement("Extensions", Order = 2)]
         public ExtensionType Extensions { get; set; }
 
         /// <summary>
@@ -91,8 +91,8 @@ namespace SAML2.Schema.Metadata
         /// Contains the metadata for one or more SAML entities, or a nested group of additional metadata
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("EntitiesDescriptor", typeof(EntitiesDescriptor))]
-        [XmlElement("EntityDescriptor", typeof(EntityDescriptor))]
+        [XmlElement("EntitiesDescriptor", typeof(EntitiesDescriptor), Order = 3)]
+        [XmlElement("EntityDescriptor", typeof(EntityDescriptor), Order = 3)]
         public object[] Items { get; set; }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace SAML2.Schema.Metadata
         /// An XML signature that authenticates the containing element and its contents
         /// </summary>
         /// <value>The signature.</value>
-        [XmlElement("Signature", Namespace = Saml20Constants.Xmldsig)]
+        [XmlElement("Signature", Namespace = Saml20Constants.Xmldsig, Order = 1)]
         public Signature Signature { get; set; }
 
         #endregion

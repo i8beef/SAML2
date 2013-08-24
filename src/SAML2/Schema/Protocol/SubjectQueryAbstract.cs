@@ -27,7 +27,7 @@ namespace SAML2.Schema.Protocol
         /// Gets or sets the subject.
         /// </summary>
         /// <value>The subject.</value>
-        [XmlElement("Subject", Namespace = Saml20Constants.Assertion)]
+        [XmlElement("Subject", Namespace = Saml20Constants.Assertion, Order = 1)]
         public Subject Subject { get; set; }
 
         #endregion

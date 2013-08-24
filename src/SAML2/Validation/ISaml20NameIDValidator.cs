@@ -12,7 +12,7 @@ namespace SAML2.Validation
         /// Validates the name ID.
         /// </summary>
         /// <param name="nameId">The name ID.</param>
-        void ValidateNameId(NameID nameId);
+        void ValidateNameId(NameId nameId);
 
         /// <summary>
         /// Validates the encrypted ID.

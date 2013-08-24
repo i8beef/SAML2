@@ -67,16 +67,16 @@ namespace SAML2.Schema.Protocol
         /// currently recognized by the identity and service providers prior to this request.
         /// </summary>
         /// <value>The item.</value>
-        [XmlElement("BaseID", typeof(BaseIDAbstract), Namespace = Saml20Constants.Assertion)]
-        [XmlElement("EncryptedID", typeof(EncryptedElement), Namespace = Saml20Constants.Assertion)]
-        [XmlElement("NameID", typeof(NameID), Namespace = Saml20Constants.Assertion)]
+        [XmlElement("BaseID", typeof(BaseIdAbstract), Namespace = Saml20Constants.Assertion, Order = 1)]
+        [XmlElement("EncryptedID", typeof(EncryptedElement), Namespace = Saml20Constants.Assertion, Order = 1)]
+        [XmlElement("NameID", typeof(NameId), Namespace = Saml20Constants.Assertion, Order = 1)]
         public object Item { get; set; }
 
         /// <summary>
         /// Gets or sets the index of the session.
         /// </summary>
         /// <value>The index of the session.</value>
-        [XmlElement("SessionIndex")]
+        [XmlElement("SessionIndex", Order = 2)]
         public string[] SessionIndex { get; set; }
 
         #endregion
