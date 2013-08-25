@@ -1,0 +1,41 @@
+body{
+	font-family: Verdana;
+	color: 555555;
+	font-size: 10pt;
+	text-align: center;	
+}
+
+#mainPanel{
+	width: 70%;
+}
+
+#headerPanel{
+	width: 100%;
+	margin: 0px 0px 0px 0px;
+	padding: 10px 10px 10px 10px;
+	background-color: #CCCCCC;
+	border-top: thin solid #B50000;
+	border-left: thin solid #B50000;
+	border-right: thin solid #B50000;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+#bodyPanel{
+	width: 100%;
+	margin: 0px 0px 0px 0px;
+	padding: 10px 10px 10px 10px;
+	border-bottom: thin solid #B50000;
+	border-left: thin solid #B50000;
+	border-right: thin solid #B50000;	
+}
+
+#footerPanel{
+	width: 100%;
+	color: #CCCCCC;
+	text-align: right;
+}
+
+A,A:visited,A:active{
+	color: #B50000;
+}
