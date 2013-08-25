@@ -297,7 +297,7 @@
     <Compile Include="Validation\Saml20XmlAnyAttributeValidator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Protocol\Resources\DefaultStyle.css" />
+    <None Include="Protocol\Resources\DefaultStyle.css" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
