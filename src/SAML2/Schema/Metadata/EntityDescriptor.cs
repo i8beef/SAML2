@@ -123,13 +123,13 @@ namespace SAML2.Schema.Metadata
         /// <c>&lt;AffiliationDescriptor&gt;</c>
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("AffiliationDescriptor", typeof(AffiliationDescriptor), Order = 3)]
-        [XmlElement("AttributeAuthorityDescriptor", typeof(AttributeAuthorityDescriptor), Order = 3)]
-        [XmlElement("AuthnAuthorityDescriptor", typeof(AuthnAuthorityDescriptor), Order = 3)]
-        [XmlElement("IdpSsoDescriptor", typeof(IdpSsoDescriptor), Order = 3)]
-        [XmlElement("PDPDescriptor", typeof(PdpDescriptor), Order = 3)]
-        [XmlElement("RoleDescriptor", typeof(RoleDescriptor), Order = 3)]
-        [XmlElement("SpSsoDescriptor", typeof(SpSsoDescriptor), Order = 3)]
+        [XmlElement(AffiliationDescriptor.ElementName, typeof(AffiliationDescriptor), Order = 3)]
+        [XmlElement(AttributeAuthorityDescriptor.ElementName, typeof(AttributeAuthorityDescriptor), Order = 3)]
+        [XmlElement(AuthnAuthorityDescriptor.ElementName, typeof(AuthnAuthorityDescriptor), Order = 3)]
+        [XmlElement(IdpSsoDescriptor.ElementName, typeof(IdpSsoDescriptor), Order = 3)]
+        [XmlElement(PdpDescriptor.ElementName, typeof(PdpDescriptor), Order = 3)]
+        [XmlElement(RoleDescriptor.ElementName, typeof(RoleDescriptor), Order = 3)]
+        [XmlElement(SpSsoDescriptor.ElementName, typeof(SpSsoDescriptor), Order = 3)]
         public object[] Items { get; set; }
 
         /// <summary>

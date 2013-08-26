@@ -54,14 +54,12 @@ namespace SAML2
 
         #endregion
 
-        #region Constructors.
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20MetadataDocument"/> class.
         /// </summary>
-        public Saml20MetadataDocument()
-        {
-        }
+        public Saml20MetadataDocument() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20MetadataDocument"/> class.
