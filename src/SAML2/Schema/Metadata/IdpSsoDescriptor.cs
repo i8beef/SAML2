@@ -5,7 +5,7 @@ using SAML2.Schema.Core;
 namespace SAML2.Schema.Metadata
 {
     /// <summary>
-    /// The &lt;IdpSsoDescriptor&gt; element extends SSODescriptorType with content reflecting profiles
+    /// The <c>&lt;IdpSsoDescriptor&gt;</c> element extends SSODescriptorType with content reflecting profiles
     /// specific to identity providers supporting SSO.
     /// </summary>
     [Serializable]
@@ -16,7 +16,7 @@ namespace SAML2.Schema.Metadata
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ElementName = "IdpSsoDescriptor";
+        public new const string ElementName = "IDPSSODescriptor";
 
         #region Attributes
 

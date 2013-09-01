@@ -31,7 +31,7 @@ namespace SAML2.Schema.Core
         /// </summary>
         /// <value>The items.</value>
         [XmlAnyElement]
-        [XmlElement("Assertion", typeof(Assertion), Order = 1)]
+        [XmlElement(Assertion.ElementName, typeof(Assertion), Order = 1)]
         [XmlElement("AssertionIDRef", typeof(string), DataType = "NCName", Order = 1)]
         [XmlElement("AssertionURIRef", typeof(string), DataType = "anyURI", Order = 1)]
         [XmlElement("EncryptedAssertion", typeof(EncryptedElement), Order = 1)]

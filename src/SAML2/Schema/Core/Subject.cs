@@ -24,10 +24,10 @@ namespace SAML2.Schema.Core
         /// Gets or sets the items.
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("BaseID", typeof(BaseIdAbstract), Order = 1)]
+        [XmlElement(BaseIdAbstract.ElementName, typeof(BaseIdAbstract), Order = 1)]
         [XmlElement("EncryptedID", typeof(EncryptedElement), Order = 1)]
-        [XmlElement("NameID", typeof(NameId), Order = 1)]
-        [XmlElement("SubjectConfirmation", typeof(SubjectConfirmation), Order = 1)]
+        [XmlElement(NameId.ElementName, typeof(NameId), Order = 1)]
+        [XmlElement(SubjectConfirmation.ElementName, typeof(SubjectConfirmation), Order = 1)]
         public object[] Items { get; set; }
 
         #endregion
