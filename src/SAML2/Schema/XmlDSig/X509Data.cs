@@ -55,7 +55,7 @@ namespace SAML2.Schema.XmlDSig
         [XmlAnyElement]
         [XmlElement("X509CRL", typeof(byte[]), DataType = "base64Binary")]
         [XmlElement("X509Certificate", typeof(byte[]), DataType = "base64Binary")]
-        [XmlElement("X509IssuerSerial", typeof(X509IssuerSerial))]
+        [XmlElement(X509IssuerSerial.ElementName, typeof(X509IssuerSerial))]
         [XmlElement("X509SKI", typeof(byte[]), DataType = "base64Binary")]
         [XmlElement("X509SubjectName", typeof(string))]
         [XmlChoiceIdentifier("ItemsElementName")]

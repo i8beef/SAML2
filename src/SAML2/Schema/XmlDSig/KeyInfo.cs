@@ -69,12 +69,12 @@ namespace SAML2.Schema.XmlDSig
         /// <value>The items.</value>
         [XmlAnyElement]
         [XmlElement("KeyName", typeof(string))]
-        [XmlElement("KeyValue", typeof(KeyValue))]
+        [XmlElement(KeyValue.ElementName, typeof(KeyValue))]
         [XmlElement("MgmtData", typeof(string))]
-        [XmlElement("PGPData", typeof(PgpData))]
-        [XmlElement("RetrievalMethod", typeof(RetrievalMethod))]
-        [XmlElement("SPKIData", typeof(SpkiData))]
-        [XmlElement("X509Data", typeof(X509Data))]
+        [XmlElement(PgpData.ElementName, typeof(PgpData))]
+        [XmlElement(RetrievalMethod.ElementName, typeof(RetrievalMethod))]
+        [XmlElement(SpkiData.ElementName, typeof(SpkiData))]
+        [XmlElement(X509Data.ElementName, typeof(X509Data))]
         [XmlChoiceIdentifier("ItemsElementName")]
         public object[] Items { get; set; }
 

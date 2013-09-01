@@ -73,6 +73,7 @@ namespace SAML2.Protocol
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 HandleError(context, ex);
             }
         }

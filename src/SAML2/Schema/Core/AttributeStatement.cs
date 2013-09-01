@@ -26,7 +26,7 @@ namespace SAML2.Schema.Core
         /// Items may be of type Attribute and EncryptedAttribute
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("Attribute", typeof(SamlAttribute), Order = 1)]
+        [XmlElement(SamlAttribute.ElementName, typeof(SamlAttribute), Order = 1)]
         [XmlElement("EncryptedAttribute", typeof(EncryptedElement), Order = 1)]
         public object[] Items { get; set; }
 

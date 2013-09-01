@@ -91,8 +91,8 @@ namespace SAML2.Schema.Metadata
         /// Contains the metadata for one or more SAML entities, or a nested group of additional metadata
         /// </summary>
         /// <value>The items.</value>
-        [XmlElement("EntitiesDescriptor", typeof(EntitiesDescriptor), Order = 3)]
-        [XmlElement("EntityDescriptor", typeof(EntityDescriptor), Order = 3)]
+        [XmlElement(ElementName, typeof(EntitiesDescriptor), Order = 3)]
+        [XmlElement(EntityDescriptor.ElementName, typeof(EntityDescriptor), Order = 3)]
         public object[] Items { get; set; }
 
         /// <summary>
