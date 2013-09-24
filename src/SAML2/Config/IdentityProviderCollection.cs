@@ -6,7 +6,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
-using SAML2.Properties;
 using SAML2.Schema.Metadata;
 using SAML2.Utils;
 
@@ -88,7 +87,7 @@ namespace SAML2.Config
 
             if (!Directory.Exists(MetadataLocation))
             {
-                throw new DirectoryNotFoundException(Resources.MetadataLocationNotFoundFormat(MetadataLocation));
+                throw new DirectoryNotFoundException(string.Format(ErrorMessages.MetadataLocationNotFound, MetadataLocation));
             }
 
             // Start by removing information on files that are no long in the directory.

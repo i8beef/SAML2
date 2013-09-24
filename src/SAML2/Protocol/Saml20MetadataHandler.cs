@@ -4,7 +4,6 @@ using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Web;
 using SAML2.Config;
-using SAML2.Properties;
 
 namespace SAML2.Protocol
 {
@@ -43,27 +42,20 @@ namespace SAML2.Protocol
                     context.Response.ContentEncoding = Encoding.GetEncoding(encoding);
                 }
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                Logger.Error(Resources.UnknownEncodingFormat(encoding));
-                HandleError(context, Resources.UnknownEncodingFormat(encoding));
-                return;
+                Logger.ErrorFormat(ErrorMessages.UnknownEncoding, encoding);
+                throw new ArgumentException(string.Format(ErrorMessages.UnknownEncoding, encoding), ex);
             }
 
             var sign = true;
-            try
+            var param = context.Request.QueryString["sign"];                
+            if (!string.IsNullOrEmpty(param))
             {
-                var param = context.Request.QueryString["sign"];                
-                if (!string.IsNullOrEmpty(param))
+                if (!bool.TryParse(param, out sign))
                 {
-                    sign = Convert.ToBoolean(param);
+                    throw new ArgumentException(ErrorMessages.MetadataSignQueryParameterInvalid);
                 }
-            }
-            catch (FormatException)
-            {
-                Logger.Error(Resources.GenericError);
-                HandleError(context, Resources.GenericError);
-                return;
             }
                         
             context.Response.ContentType = Saml20Constants.MetadataMimetype;
@@ -83,7 +75,7 @@ namespace SAML2.Protocol
         /// <param name="sign">if set to <c>true</c> sign the document.</param>
         private void CreateMetadataDocument(HttpContext context, bool sign)
         {
-            Logger.Debug("Creating metadata document.");
+            Logger.Debug(TraceMessages.MetadataDocumentBeingCreated);
 
             var configuration = Saml2Config.GetConfig();
 
@@ -93,7 +85,7 @@ namespace SAML2.Protocol
 
             var doc = new Saml20MetadataDocument(configuration, keyinfo, sign);
 
-            Logger.Debug("Metadata document successfully created.");
+            Logger.Debug(TraceMessages.MetadataDocumentCreated);
 
             context.Response.Write(doc.ToXml(context.Response.ContentEncoding));
         }

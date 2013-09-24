@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Xml;
 using SAML2.Config;
-using SAML2.Properties;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
@@ -89,13 +88,7 @@ namespace SAML2
         public static Saml20ArtifactResponse GetDefault()
         {
             var result = new Saml20ArtifactResponse();
-
             var config = Saml2Config.GetConfig();
-            if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.Id))
-            {
-                throw new Saml20FormatException(Resources.ServiceProviderNotSet);
-            }
-
             result.Issuer = config.ServiceProvider.Id;
 
             return result;

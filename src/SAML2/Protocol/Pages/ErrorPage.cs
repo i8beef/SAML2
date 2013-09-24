@@ -1,7 +1,6 @@
 using System;
 using System.Web.Configuration;
 using System.Web.UI;
-using SAML2.Properties;
 
 namespace SAML2.Protocol.Pages
 {
@@ -19,8 +18,8 @@ namespace SAML2.Protocol.Pages
         {
             OverrideConfig = false;
             ErrorText = string.Empty;
-            TitleText = Resources.Error;
-            HeaderText = Resources.Error;
+            TitleText = ErrorMessages.GenericError;
+            HeaderText = ErrorMessages.GenericError;
         }
 
         #endregion
@@ -49,7 +48,7 @@ namespace SAML2.Protocol.Pages
         /// <param name="e">The <see cref="T:System.EventArgs"/> object that contains the event data.</param>
         protected override void OnLoad(EventArgs e)
         {
-            var err = Resources.GenericError;
+            var err = ErrorMessages.GenericError;
             
             var conf = WebConfigurationManager.OpenWebConfiguration(Context.Request.Path);
             var ces = (CustomErrorsSection)conf.GetSection("system.web/customErrors");

@@ -102,17 +102,6 @@ namespace SAML2.Config
             set { base["serviceProvider"] = value; }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to show errors, or a default error message.
-        /// </summary>
-        /// <value><c>true</c> if errors should be shown; otherwise, <c>false</c>.</value>
-        [ConfigurationProperty("showError")]
-        public bool ShowError
-        {
-            get { return (bool)base["showError"]; }
-            set { base["showError"] = value; }
-        }
-
         #endregion
 
         /// <summary>

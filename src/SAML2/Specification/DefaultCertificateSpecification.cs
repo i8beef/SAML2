@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IdentityModel.Selectors;
 using System.Security.Cryptography.X509Certificates;
-using SAML2.Properties;
 
 namespace SAML2.Specification
 {
@@ -31,7 +30,7 @@ namespace SAML2.Specification
             }
             catch (Exception e)
             {
-                Logging.LoggerProvider.LoggerFor(GetType()).Warn(string.Format(Tracing.CertificateIsNotRFC3280Valid, certificate.SubjectName.Name, certificate.Thumbprint), e);
+                Logging.LoggerProvider.LoggerFor(GetType()).Warn(string.Format(ErrorMessages.CertificateIsNotRFC3280Valid, certificate.SubjectName.Name, certificate.Thumbprint), e);
             }
 
             return false;

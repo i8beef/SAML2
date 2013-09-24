@@ -127,12 +127,6 @@ namespace SAML2.Protocol.Pages
             Head = new HtmlHead { Title = TitleText };
             Head.Controls.Add(GetEncodingMetaTag());
 
-            var cssLink = new HtmlLink { ID = "mainCSS" };
-            cssLink.Attributes.Add("rel", "stylesheet");
-            cssLink.Attributes.Add("type", "text/css");
-            cssLink.Attributes.Add("href", ClientScript.GetWebResourceUrl(GetType(), "SAML2.Protocol.Resources.DefaultStyle.css"));
-            Head.Controls.Add(cssLink);
-
             Controls.Add(Head);
             Controls.Add(new LiteralControl("<body>"));
 

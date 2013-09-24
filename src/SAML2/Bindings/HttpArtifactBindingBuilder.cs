@@ -4,7 +4,6 @@ using System.Web;
 using System.Web.Caching;
 using System.Xml;
 using SAML2.Config;
-using SAML2.Properties;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
 
@@ -19,9 +18,7 @@ namespace SAML2.Bindings
         /// Initializes a new instance of the <see cref="HttpArtifactBindingBuilder"/> class.
         /// </summary>
         /// <param name="context">The current http context.</param>
-        public HttpArtifactBindingBuilder(HttpContext context) : base(context)
-        {
-        }
+        public HttpArtifactBindingBuilder(HttpContext context) : base(context) { }
 
         /// <summary>
         /// Creates an artifact and redirects the user to the IdP
@@ -84,16 +81,16 @@ namespace SAML2.Bindings
         public Stream ResolveArtifact()
         {
             var artifact = Context.Request.Params["SAMLart"];
-            
             var idpEndPoint = DetermineIdp(artifact);
             if (idpEndPoint == null)
             {
-                throw new InvalidOperationException("Received artifact from unknown IDP.");
+                throw new InvalidOperationException(ErrorMessages.ArtifactResolveIdentityProviderUnknown);
             }
 
             var endpointIndex = ArtifactUtil.GetEndpointIndex(artifact);
             var endpointUrl = idpEndPoint.Metadata.GetARSEndpoint(endpointIndex);
 
+            Logger.DebugFormat(TraceMessages.ArtifactResolveForKnownIdentityProvider, artifact, idpEndPoint.Id, endpointUrl);
             var resolve = Saml20ArtifactResolve.GetDefault();
             resolve.Artifact = artifact;
 
@@ -107,7 +104,7 @@ namespace SAML2.Bindings
 
             var artifactResolveString = doc.OuterXml;
 
-            Logger.DebugFormat(Tracing.ResolveArtifact, artifact, idpEndPoint.Id, endpointIndex, endpointUrl, artifactResolveString);
+            Logger.DebugFormat(TraceMessages.ArtifactResolved, artifactResolveString);
 
             return GetResponse(endpointUrl, artifactResolveString, idpEndPoint.ArtifactResolution);
         }
@@ -133,7 +130,7 @@ namespace SAML2.Bindings
 
             XmlSignatureUtils.SignDocument(responseDoc, response.Id);
 
-            Logger.DebugFormat(Tracing.RespondToArtifactResolve, artifactResolve.Artifact, responseDoc.OuterXml);
+            Logger.DebugFormat(TraceMessages.ArtifactResolveResponseSent, artifactResolve.Artifact, responseDoc.OuterXml);
 
             SendResponseMessage(responseDoc.OuterXml);
         }
@@ -166,6 +163,8 @@ namespace SAML2.Bindings
         /// <param name="relayState">The query string relay state value to add to the communication</param>
         private void ArtifactRedirect(IdentityProviderEndpointElement destination, short localEndpointIndex, XmlDocument signedSamlMessage, string relayState)
         {
+            Logger.DebugFormat(TraceMessages.ArtifactRedirectReceived, signedSamlMessage.OuterXml);
+
             var config = Saml2Config.GetConfig();
             var sourceId = config.ServiceProvider.Id;
             var sourceIdHash = ArtifactUtil.GenerateSourceIdHash(sourceId);
@@ -180,7 +179,7 @@ namespace SAML2.Bindings
                 destinationUrl += "&relayState=" + relayState;
             }
 
-            Logger.DebugFormat(Tracing.CreatedArtifact, artifact, signedSamlMessage.OuterXml);
+            Logger.DebugFormat(TraceMessages.ArtifactCreated, artifact);
 
             Context.Response.Redirect(destinationUrl);
         }

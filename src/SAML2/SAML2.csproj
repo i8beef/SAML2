@@ -85,7 +85,6 @@
     <Compile Include="Config\ContactType.cs" />
     <Compile Include="Config\EndpointType.cs" />
     <Compile Include="Config\EnumerableConfigurationElementCollection.cs" />
-    <Compile Include="Config\ErrorBehavior.cs" />
     <Compile Include="Config\HttpBasicAuthElement.cs" />
     <Compile Include="Config\IConfigurationElementCollectionElement.cs" />
     <Compile Include="Config\IdentityProviderEndpointElement.cs" />
@@ -106,6 +105,11 @@
     <Compile Include="Config\ServiceProviderEndpointElement.cs" />
     <Compile Include="Config\SigningCertificateElement.cs" />
     <Compile Include="Config\WritableConfigurationElement.cs" />
+    <Compile Include="ErrorMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ErrorMessages.resx</DependentUpon>
+    </Compile>
     <Compile Include="Identity\IPersistentPseudonymMapper.cs" />
     <Compile Include="Identity\ISaml20Identity.cs" />
     <Compile Include="Identity\Saml20Identity.cs" />
@@ -117,9 +121,6 @@
     <Compile Include="Logging\NoLoggingInternalLogger.cs" />
     <Compile Include="Logging\NoLoggingLoggerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs" />
-    <Compile Include="Properties\Saml20Resources.Designer.cs" />
-    <Compile Include="Properties\Tracing.Designer.cs" />
     <Compile Include="Protocol\AbstractEndpointHandler.cs" />
     <Compile Include="Protocol\CommonDomainCookie.cs" />
     <Compile Include="Protocol\Pages\BasePage.cs">
@@ -132,11 +133,16 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Protocol\Saml20AbstractEndpointHandler.cs" />
-    <Compile Include="Protocol\Saml20CDCIdPReturnPoint.cs" />
+    <Compile Include="Protocol\Saml20CDCIdpReturnPoint.cs" />
     <Compile Include="Protocol\Saml20CDCReader.cs" />
     <Compile Include="Protocol\Saml20LogoutHandler.cs" />
     <Compile Include="Protocol\Saml20MetadataHandler.cs" />
     <Compile Include="Protocol\Saml20SignonHandler.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Saml20ArtifactResolve.cs" />
     <Compile Include="Saml20ArtifactResponse.cs" />
     <Compile Include="Saml20Assertion.cs" />
@@ -272,6 +278,11 @@
     <Compile Include="Specification\ICertificateSpecification.cs" />
     <Compile Include="Specification\SelfIssuedCertificateSpecification.cs" />
     <Compile Include="Specification\SpecificationFactory.cs" />
+    <Compile Include="TraceMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TraceMessages.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utils\ArtifactUtil.cs" />
     <Compile Include="Utils\IDPSelectionUtil.cs" />
     <Compile Include="Utils\Saml20Utils.cs" />
@@ -297,15 +308,18 @@
     <Compile Include="Validation\Saml20XmlAnyAttributeValidator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Protocol\Resources\DefaultStyle.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Include="ErrorMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Saml20Resources.resx" />
-    <EmbeddedResource Include="Properties\Tracing.resx">
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TraceMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TraceMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,5 @@
-using System;
-using System.Web;
+using System.Configuration;
 using SAML2.Config;
-using SAML2.Properties;
 
 namespace SAML2.Bindings
 {
@@ -13,70 +11,47 @@ namespace SAML2.Bindings
         /// <summary>
         /// Validates the SAML20Federation configuration.
         /// </summary>
-        /// <param name="errorMessage">The error message. If validation passes, it will be an empty string. Otherwise it will contain a user friendly message.</param>
         /// <returns>True if validation passes, false otherwise</returns>
-        public static bool ValidateConfiguration(out string errorMessage)
+        public static bool ValidateConfiguration()
         {
-            try
+            var config = Saml2Config.GetConfig();
+            if (config == null)
             {
-                var config = Saml2Config.GetConfig();
-                if (config == null)
-                {
-                    errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingSaml20Federation);
-                    return false;
-                }
-
-                if (config.ServiceProvider == null)
-                {
-                    errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingServiceProvider);
-                    return false;
-                }
-
-                if (string.IsNullOrEmpty(config.ServiceProvider.Id))
-                {
-                    errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingServiceProviderId);
-                    return false;
-                }
-
-                if (config.ServiceProvider.SigningCertificate == null)
-                {
-                    errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingSigningCertificate);
-                    return false;
-                }
-
-                try
-                {
-                    if (!config.ServiceProvider.SigningCertificate.GetCertificate().HasPrivateKey)
-                    {
-                        errorMessage = Saml20Resources.SigningCertificateMissingPrivateKey;
-                        return false;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    errorMessage = HttpUtility.HtmlEncode(Saml20Resources.SigningCertficateLoadError) + ex.Message;
-                    return false;
-                }
-
-                if (config.IdentityProviders == null)
-                {
-                    errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingIDPEndpoints);
-                    return false;
-                }
-
-                if (config.IdentityProviders.MetadataLocation == null)
-                {
-                    errorMessage = HttpUtility.HtmlEncode(Saml20Resources.MissingMetadataLocation);
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                errorMessage = ex.ToString();
-                return false;
+                throw new ConfigurationErrorsException(ErrorMessages.ConfigMissingSaml2Element);
             }
 
-            errorMessage = string.Empty;
+            if (config.ServiceProvider == null)
+            {
+                throw new ConfigurationErrorsException(ErrorMessages.ConfigMissingServiceProviderElement);
+            }
+
+            if (string.IsNullOrEmpty(config.ServiceProvider.Id))
+            {
+                throw new ConfigurationErrorsException(ErrorMessages.ConfigMissingServiceProviderIdAttribute);
+            }
+
+            if (config.ServiceProvider.SigningCertificate == null)
+            {
+                throw new ConfigurationErrorsException(ErrorMessages.ConfigMissingSigningCertificateElement);
+            }
+
+            // This will throw if no certificate or multiple certificates are found
+            var certificate = config.ServiceProvider.SigningCertificate.GetCertificate();
+            if (!certificate.HasPrivateKey)
+            {
+                throw new ConfigurationErrorsException(ErrorMessages.ConfigSigningCertificateMissingPrivateKey);
+            }
+
+            if (config.IdentityProviders == null)
+            {
+                throw new ConfigurationErrorsException(ErrorMessages.ConfigMissingIdentityProvidersElement);
+            }
+
+            if (config.IdentityProviders.MetadataLocation == null)
+            {
+                throw new ConfigurationErrorsException(ErrorMessages.ConfigMissingMetadataLocation);
+            }
+
             return true;
         }
     }

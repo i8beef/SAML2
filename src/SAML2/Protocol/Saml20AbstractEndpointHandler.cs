@@ -5,7 +5,6 @@ using System.Linq;
 using System.Web;
 using SAML2.Bindings;
 using SAML2.Config;
-using SAML2.Schema.Protocol;
 using SAML2.Utils;
 
 namespace SAML2.Protocol
@@ -68,13 +67,13 @@ namespace SAML2.Protocol
         {
             try
             {
-                CheckConfiguration(context);
+                CheckConfiguration();
                 Handle(context);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                HandleError(context, ex);
+                throw;
             }
         }
 
@@ -92,7 +91,7 @@ namespace SAML2.Protocol
             // If idpChoice is set, use it value
             if (!string.IsNullOrEmpty(context.Request.Params[IdpChoiceParameterName]))
             {
-                Logger.Debug("Using IDPChoiceParamater: " + context.Request.Params[IdpChoiceParameterName]);
+                Logger.DebugFormat(TraceMessages.IdentityProviderRetreivedFromQueryString, context.Request.Params[IdpChoiceParameterName]);
                 var endPoint = config.IdentityProviders.FirstOrDefault(x => x.Id == context.Request.Params[IdpChoiceParameterName]);
                 if (endPoint != null)
                 {
@@ -110,18 +109,18 @@ namespace SAML2.Protocol
                     var endPoint = config.IdentityProviders.FirstOrDefault(x => x.Id == cdc.PreferredIDP);
                     if (endPoint != null)
                     {
-                        Logger.Debug("IDP read from Common Domain Cookie: " + cdc.PreferredIDP);
+                        Logger.DebugFormat(TraceMessages.IdentityProviderRetreivedFromCommonDomainCookie, cdc.PreferredIDP);
                         return endPoint;
                     }
 
-                    Logger.Warn("Invalid IDP in Common Domain Cookie, IDP not found in list of IDPs: " + cdc.PreferredIDP);
+                    Logger.WarnFormat(ErrorMessages.CommonDomainCookieIdentityProviderInvalid, cdc.PreferredIDP);
                 }
             }
 
             // If there is only one configured IdentityProviderEndpointElement lets just use that
             if (config.IdentityProviders.Count == 1 && config.IdentityProviders[0].Metadata != null)
             {
-                Logger.Debug("No IDP selected in Common Domain Cookie, using default IDP: " + config.IdentityProviders[0].Name);
+                Logger.DebugFormat(TraceMessages.IdentityProviderRetreivedFromDefault, config.IdentityProviders[0].Name);
                 return config.IdentityProviders[0];
             }
 
@@ -129,14 +128,14 @@ namespace SAML2.Protocol
             var defaultIDP = config.IdentityProviders.FirstOrDefault(idp => idp.Default);
             if (defaultIDP != null)
             {
-                Logger.Debug("Using IDP marked as default: " + defaultIDP.Id);
+                Logger.DebugFormat(TraceMessages.IdentityProviderRetreivedFromDefault, defaultIDP.Id);
                 return defaultIDP;
             }
 
             // In case an IDP selection url has been configured, redirect to that one.
             if (!string.IsNullOrEmpty(config.IdentityProviders.SelectionUrl))
             {
-                Logger.Debug("Redirecting to idpSelectionUrl for selection of IDP: " + config.IdentityProviders.SelectionUrl);
+                Logger.DebugFormat(TraceMessages.IdentityProviderRetreivedFromSelection, config.IdentityProviders.SelectionUrl);
                 context.Response.Redirect(config.IdentityProviders.SelectionUrl);
             }
 
@@ -210,48 +209,16 @@ namespace SAML2.Protocol
         protected abstract void Handle(HttpContext ctx);
 
         /// <summary>
-        /// Utility function for error handling.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="status">The status.</param>
-        protected void HandleError(HttpContext context, Status status)
-        {
-            var errorMessage = string.Format("ErrorCode: {0}. Message: {1}.", status.StatusCode.Value, status.StatusMessage);
-            if (status.StatusCode.SubStatusCode != null)
-            {
-                switch (status.StatusCode.SubStatusCode.Value)
-                {
-                    case Saml20Constants.StatusCodes.AuthnFailed:
-                        HandleError(context, errorMessage, true);
-                        break;
-                    default:
-                        HandleError(context, errorMessage, false);
-                        break;
-                }
-            }
-            else
-            {
-                HandleError(context, errorMessage, false);
-            }
-        }
-
-        /// <summary>
         /// Checks the configuration elements and redirects to an error page if something is missing or wrong.
         /// </summary>
-        /// <param name="context">The context.</param>
-        private void CheckConfiguration(HttpContext context)
+        private void CheckConfiguration()
         {
             if (Validated)
             {
                 return;
             }
 
-            string errorMessage;
-            Validated = BindingUtility.ValidateConfiguration(out errorMessage);
-            if (!Validated)
-            {
-                HandleError(context, errorMessage);
-            }                        
+            Validated = BindingUtility.ValidateConfiguration();
         }
     }
 }

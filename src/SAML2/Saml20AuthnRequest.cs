@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 using SAML2.Config;
-using SAML2.Properties;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
@@ -150,11 +149,6 @@ namespace SAML2
         public static Saml20AuthnRequest GetDefault()
         {
             var config = Saml2Config.GetConfig();
-            if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.Id))
-            {
-                throw new Saml20FormatException(Resources.ServiceProviderNotSet);
-            }
-
             var result = new Saml20AuthnRequest { Issuer = config.ServiceProvider.Id };
             if (config.ServiceProvider.Endpoints.SignOnEndpoint.Binding != BindingType.NotSet)
             {
