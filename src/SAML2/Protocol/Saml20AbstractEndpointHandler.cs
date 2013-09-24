@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using SAML2.Bindings;
 using SAML2.Config;
@@ -69,6 +70,10 @@ namespace SAML2.Protocol
             {
                 CheckConfiguration();
                 Handle(context);
+            }
+            catch (ThreadAbortException)
+            {
+                // This will swallow the ThreadAbortException automatically thrown by Response.Redirect, Response.End, and Server.Transfer
             }
             catch (Exception ex)
             {
