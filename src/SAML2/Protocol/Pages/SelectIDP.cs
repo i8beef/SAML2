@@ -2,7 +2,6 @@ using System;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using SAML2.Config;
-using SAML2.Properties;
 using SAML2.Utils;
 
 namespace SAML2.Protocol.Pages
@@ -18,10 +17,10 @@ namespace SAML2.Protocol.Pages
         /// <param name="e">The <see cref="T:System.EventArgs"/> object that contains the event data.</param>
         protected override void OnLoad(EventArgs e)
         {
-            TitleText = Resources.ChooseIDP;
-            HeaderText = Resources.ChooseIDP;
+            TitleText = Resources.PageIdentityProviderSelectTitle;
+            HeaderText = Resources.PageIdentityProviderSelectTitle;
             
-            BodyPanel.Controls.Add(new LiteralControl(Resources.ChooseDesc));
+            BodyPanel.Controls.Add(new LiteralControl(Resources.PageIdentityProviderSelectDescription));
             BodyPanel.Controls.Add(new LiteralControl("<br/><br/>"));
 
             var config = Saml2Config.GetConfig();

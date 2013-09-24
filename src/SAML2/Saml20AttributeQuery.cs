@@ -10,7 +10,6 @@ using SAML2.Bindings;
 using SAML2.Config;
 using SAML2.Identity;
 using SAML2.Logging;
-using SAML2.Properties;
 using SAML2.Protocol;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
@@ -79,15 +78,8 @@ namespace SAML2
         /// <returns>The default <see cref="Saml20AttributeQuery"/>.</returns>
         public static Saml20AttributeQuery GetDefault()
         {
-            var result = new Saml20AttributeQuery();
-
             var config = Saml2Config.GetConfig();
-            if (config.ServiceProvider == null || string.IsNullOrEmpty(config.ServiceProvider.Id))
-            {
-                throw new Saml20FormatException(Resources.ServiceProviderNotSet);
-            }
-
-            result.Issuer = config.ServiceProvider.Id;
+            var result = new Saml20AttributeQuery { Issuer = config.ServiceProvider.Id };
 
             return result;
         }
@@ -133,14 +125,14 @@ namespace SAML2
             var endpointId = context.Session[Saml20AbstractEndpointHandler.IdpLoginSessionKey].ToString();
             if (string.IsNullOrEmpty(endpointId))
             {
-                Logger.Debug(Tracing.AttrQueryNoLogin);
-                throw new InvalidOperationException(Tracing.AttrQueryNoLogin);
+                Logger.Error(ErrorMessages.AttrQueryNoLogin);
+                throw new InvalidOperationException(ErrorMessages.AttrQueryNoLogin);
             }
 
             var ep = config.IdentityProviders.FirstOrDefault(x => x.Id == endpointId);
             if (ep == null)
             {
-                throw new Saml20Exception(string.Format("Unable to find information about the IdP with id \"{0}\"", endpointId));
+                throw new Saml20Exception(string.Format(ErrorMessages.UnknownIdentityProvider, endpointId));
             }
 
             PerformQuery(context, ep);
@@ -191,7 +183,7 @@ namespace SAML2
                 query.RemoveChild(query.FirstChild);
             }
 
-            Logger.DebugFormat(Tracing.SendAttrQuery, endPoint.Metadata.GetAttributeQueryEndpointLocation(), query.OuterXml);
+            Logger.DebugFormat(TraceMessages.AttrQuerySent, endPoint.Metadata.GetAttributeQueryEndpointLocation(), query.OuterXml);
 
             Stream s;
             try
@@ -208,7 +200,7 @@ namespace SAML2
             var status = parser.GetStatus();
             if (status.StatusCode.Value != Saml20Constants.StatusCodes.Success)
             {
-                Logger.ErrorFormat(Tracing.AttrQueryStatusError, Serialization.SerializeToXmlString(status));
+                Logger.ErrorFormat(ErrorMessages.AttrQueryStatusNotSuccessful, Serialization.SerializeToXmlString(status));
                 throw new Saml20Exception(status.StatusMessage);
             }
 
@@ -223,12 +215,12 @@ namespace SAML2
             }
 
             var assertion = new Saml20Assertion(xmlAssertion, null, Saml2Config.GetConfig().AssertionProfile.AssertionValidator, endPoint.QuirksMode);
-            Logger.DebugFormat(Tracing.AttrQueryAssertion, xmlAssertion == null ? string.Empty : xmlAssertion.OuterXml);
+            Logger.DebugFormat(TraceMessages.AttrQueryAssertionReceived, xmlAssertion == null ? string.Empty : xmlAssertion.OuterXml);
 
             if (!assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endPoint.Metadata.Keys, endPoint)))
             {
-                Logger.Error(Resources.SignatureInvalid);
-                throw new Saml20Exception(Resources.SignatureInvalid);
+                Logger.Error(ErrorMessages.AssertionSignatureInvalid);
+                throw new Saml20Exception(ErrorMessages.AssertionSignatureInvalid);
             }
             
             foreach (var attr in assertion.Attributes)

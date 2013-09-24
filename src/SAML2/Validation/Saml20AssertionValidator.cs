@@ -326,9 +326,9 @@ namespace SAML2.Validation
                     var logger = Logging.LoggerProvider.LoggerFor(GetType());
                     if (logger.IsDebugEnabled)
                     {
-                        var intended = "Intended uris: " + Environment.NewLine + string.Join(Environment.NewLine, audienceRestriction.Audience.ToArray());
-                        var allowed = "Allowed uris: " + Environment.NewLine + string.Join(Environment.NewLine, _allowedAudienceUris.ToArray());
-                        logger.DebugFormat("{0}.{1} {2}", GetType(), "ValidateConditions", intended + allowed);
+                        var intended = string.Join(", ", audienceRestriction.Audience.ToArray());
+                        var allowed = string.Join(", ", _allowedAudienceUris.ToArray());
+                        logger.DebugFormat(TraceMessages.AudienceRestrictionValidated, intended, allowed);
                     }
 
                     if (match == null)
