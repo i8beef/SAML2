@@ -13,7 +13,7 @@ namespace SAML2.Config
         /// Gets or sets the binding.
         /// </summary>
         /// <value>The binding.</value>
-        [ConfigurationProperty("binding", IsRequired = true)]
+        [ConfigurationProperty("binding")]
         public BindingType Binding
         {
             get { return (BindingType)base["binding"]; }
