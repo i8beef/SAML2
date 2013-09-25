@@ -10,20 +10,6 @@ namespace SAML2.Protocol.Pages
     /// </summary>
     public class BasePage : Page
     {
-        #region Constants
-
-        /// <summary>
-        /// AppSetting key for resource
-        /// </summary>
-        public const string AppSettingsKey = "SafewhereResource";
-
-        /// <summary>
-        /// Path to resource
-        /// </summary>
-        public const string DefaultResourcePath = "/SafewhereResource.ashx";
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -110,8 +96,7 @@ namespace SAML2.Protocol.Pages
         /// <returns>The encoding meta tag.</returns>
         private static HtmlMeta GetEncodingMetaTag()
         {
-            var enc = new HtmlMeta { HttpEquiv = "Content-Type", Content = "text/html; charset=utf-8" };
-            return enc;
+            return new HtmlMeta { HttpEquiv = "Content-Type", Content = "text/html; charset=utf-8" };
         }
 
         /// <summary>
@@ -121,8 +106,7 @@ namespace SAML2.Protocol.Pages
         {
             MainPanel = new Panel { ID = "mainPanel" };
 
-            Controls.Add(new LiteralControl("<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine));
-            Controls.Add(new LiteralControl("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\r\n\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">" + Environment.NewLine));
+            Controls.Add(new LiteralControl("<!DOCTYPE html>" + Environment.NewLine + "<html>" + Environment.NewLine));
 
             Head = new HtmlHead { Title = TitleText };
             Head.Controls.Add(GetEncodingMetaTag());
