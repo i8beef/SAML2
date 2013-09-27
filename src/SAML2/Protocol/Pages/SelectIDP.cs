@@ -24,7 +24,6 @@ namespace SAML2.Protocol.Pages
             BodyPanel.Controls.Add(new LiteralControl("<br/><br/>"));
 
             var config = Saml2Config.GetConfig();
-            config.IdentityProviders.Refresh();
 
             foreach (var endPoint in config.IdentityProviders)
             {
