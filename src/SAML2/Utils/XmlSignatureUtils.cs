@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
@@ -25,6 +27,21 @@ namespace SAML2.Utils
         {
             CheckDocument(doc);
             var signedXml = RetrieveSignature(doc);
+
+            if (signedXml.SignatureMethod.Contains("rsa-sha256"))
+            {
+                // SHA256 keys must be obtained from message manually
+                var trustedCertificates = GetCertificates(doc);
+                foreach (var cert in trustedCertificates)
+                {
+                    if (signedXml.CheckSignature(cert.PublicKey.Key))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
 
             return signedXml.CheckSignature();
         }
@@ -233,7 +250,7 @@ namespace SAML2.Utils
         /// configuration file.
         /// </summary>
         /// <param name="doc">The XmlDocument to be signed</param>
-        /// <param name="id">The is of the topmost element in the XmlDocument</param>
+        /// <param name="id">The id of the topmost element in the XmlDocument</param>
         public static void SignDocument(XmlDocument doc, string id)
         {
             SignDocument(doc, id, Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate());
@@ -243,7 +260,7 @@ namespace SAML2.Utils
         /// Signs an XmlDocument with an xml signature using the signing certificate given as argument to the method.
         /// </summary>
         /// <param name="doc">The XmlDocument to be signed</param>
-        /// <param name="id">The is of the topmost element in the XmlDocument</param>
+        /// <param name="id">The id of the topmost element in the XmlDocument</param>
         /// <param name="cert">The certificate used to sign the document</param>
         public static void SignDocument(XmlDocument doc, string id, X509Certificate2 cert)
         {
@@ -320,6 +337,36 @@ namespace SAML2.Utils
         }
 
         /// <summary>
+        /// Gets the certificates.
+        /// </summary>
+        /// <param name="doc">The document.</param>
+        /// <returns>List of <see cref="X509Certificate2"/>.</returns>
+        private static List<X509Certificate2> GetCertificates(XmlDocument doc)
+        {
+            var certificates = new List<X509Certificate2>();
+            var nodeList = doc.GetElementsByTagName("ds:X509Certificate");
+            if (nodeList.Count == 0)
+            {
+                nodeList = doc.GetElementsByTagName("X509Certificate");
+            }
+
+            foreach (XmlNode xn in nodeList)
+            {
+                try
+                {
+                    var xc = new X509Certificate2(Convert.FromBase64String(xn.InnerText));
+                    certificates.Add(xc);
+                }
+                catch
+                {
+                    // Swallow the certificate parse error
+                }
+            }
+
+            return certificates;
+        }
+
+        /// <summary>
         /// Digs the &lt;Signature&gt; element out of the document.
         /// </summary>
         /// <param name="doc">The doc.</param>
@@ -354,8 +401,22 @@ namespace SAML2.Utils
 
             signedXml.LoadXml((XmlElement)nodeList[0]);
 
+            // To support SHA256 for XML signatures, an additional algorithm must be enabled.
+            // This is not supported in .Net versions older than 4.0. In older versions,
+            // an exception will be raised if an SHA256 signature method is attempted to be used.
+            if (signedXml.SignatureMethod.Contains("rsa-sha256"))
+            {
+                var addAlgorithmMethod = typeof(CryptoConfig).GetMethod("AddAlgorithm", BindingFlags.Public | BindingFlags.Static);
+                if (addAlgorithmMethod == null)
+                {
+                    throw new InvalidOperationException("This version of .Net does not support CryptoConfig.AddAlgorithm. Enabling sha256 not psosible.");
+                }
+
+                addAlgorithmMethod.Invoke(null, new object[] { typeof(RSAPKCS1SHA256SignatureDescription), new[] { signedXml.SignatureMethod } });
+            }
+
             // verify that the inlined signature has a valid reference uri
-            VerifyRererenceUri(signedXml, el.GetAttribute("ID"));
+            VerifyReferenceUri(signedXml, el.GetAttribute("ID"));
 
             return signedXml;
         }
@@ -365,7 +426,7 @@ namespace SAML2.Utils
         /// </summary>
         /// <param name="signedXml">the ds:signature element</param>
         /// <param name="id">the expected id referenced by the ds:signature element</param>
-        private static void VerifyRererenceUri(SignedXml signedXml, string id)
+        private static void VerifyReferenceUri(SignedXml signedXml, string id)
         {
             if (id == null)
             {
@@ -396,6 +457,38 @@ namespace SAML2.Utils
         }
 
         #endregion
+
+        /// <summary>
+        /// Used to validate SHA256 signatures
+        /// </summary>
+        public class RSAPKCS1SHA256SignatureDescription : SignatureDescription
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="RSAPKCS1SHA256SignatureDescription"/> class.
+            /// </summary>
+            public RSAPKCS1SHA256SignatureDescription()
+            {
+                KeyAlgorithm = "System.Security.Cryptography.RSACryptoServiceProvider";
+                DigestAlgorithm = "System.Security.Cryptography.SHA256Managed";
+                FormatterAlgorithm = "System.Security.Cryptography.RSAPKCS1SignatureFormatter";
+                DeformatterAlgorithm = "System.Security.Cryptography.RSAPKCS1SignatureDeformatter";
+            }
+
+            /// <summary>
+            /// Creates signature deformatter
+            /// </summary>
+            /// <param name="key">The key to use in the <see cref="T:System.Security.Cryptography.AsymmetricSignatureDeformatter" />.</param>
+            /// <returns>The newly created <see cref="T:System.Security.Cryptography.AsymmetricSignatureDeformatter" /> instance.</returns>
+            public override AsymmetricSignatureDeformatter CreateDeformatter(AsymmetricAlgorithm key)
+            {
+                var asymmetricSignatureDeformatter = (AsymmetricSignatureDeformatter)
+                                                     CryptoConfig.CreateFromName(DeformatterAlgorithm);
+                asymmetricSignatureDeformatter.SetKey(key);
+                asymmetricSignatureDeformatter.SetHashAlgorithm("SHA256");
+
+                return asymmetricSignatureDeformatter;
+            }
+        }
 
         /// <summary>
         /// Signed XML with Id Resolvement class.
