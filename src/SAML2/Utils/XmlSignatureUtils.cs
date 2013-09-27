@@ -338,6 +338,13 @@ namespace SAML2.Utils
         /// <exception cref="InvalidOperationException">if the document does not contain a signature.</exception>
         private static SignedXml RetrieveSignature(XmlElement el)
         {
+            if (el.OwnerDocument.DocumentElement == null)
+            {
+                var doc = new XmlDocument() { PreserveWhitespace = true };
+                doc.LoadXml(el.OuterXml);
+                el = doc.DocumentElement;
+            }
+
             SignedXml signedXml = new SignedXmlWithIdResolvement(el);
             var nodeList = el.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig);
             if (nodeList.Count == 0)
