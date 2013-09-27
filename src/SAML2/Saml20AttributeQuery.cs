@@ -122,7 +122,7 @@ namespace SAML2
         {
             var config = Saml2Config.GetConfig();
 
-            var endpointId = context.Session[Saml20AbstractEndpointHandler.IdpLoginSessionKey].ToString();
+            var endpointId = (string)context.Session[Saml20AbstractEndpointHandler.IdpLoginSessionKey];
             if (string.IsNullOrEmpty(endpointId))
             {
                 Logger.Error(ErrorMessages.AttrQueryNoLogin);
@@ -145,7 +145,7 @@ namespace SAML2
         /// <param name="endPoint">The IdP to perform the query against.</param>
         public void PerformQuery(HttpContext context, IdentityProviderElement endPoint)
         {
-            var nameIdFormat = context.Session[Saml20AbstractEndpointHandler.IdpNameIdFormat].ToString();
+            var nameIdFormat = (string)context.Session[Saml20AbstractEndpointHandler.IdpNameIdFormat];
             if (string.IsNullOrEmpty(nameIdFormat))
             {
                 nameIdFormat = Saml20Constants.NameIdentifierFormats.Persistent;
