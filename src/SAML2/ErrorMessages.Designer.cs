@@ -97,6 +97,15 @@ namespace SAML2 {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not verify artifact response message signature.
+        /// </summary>
+        internal static string ArtifactResponseSignatureInvalid {
+            get {
+                return ResourceManager.GetString("ArtifactResponseSignatureInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ArtifactResponse status code was invalid, expected {0}.
         /// </summary>
         internal static string ArtifactResponseStatusCodeInvalid {

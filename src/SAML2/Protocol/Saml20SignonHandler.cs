@@ -210,26 +210,32 @@ namespace SAML2.Protocol
         {
             return SpecificationFactory.GetCertificateSpecifications(idp).All(spec => spec.IsSatisfiedBy(cert));
         }
-        
+
         /// <summary>
         /// Checks for replay attack.
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <param name="inResponseTo">The message the current instance is in response to.</param>
-        private static void CheckReplayAttack(HttpContext context, string inResponseTo)
+        /// <param name="element">The element.</param>
+        private static void CheckReplayAttack(HttpContext context, XmlElement element)
         {
             Logger.Debug(TraceMessages.ReplayAttackCheck);
 
-            var expectedInResponseToSessionState = context.Session[ExpectedInResponseToSessionKey];
-            if (expectedInResponseToSessionState == null)
+            var inResponseToAttribute = element.Attributes["InResponseTo"];
+            if (inResponseToAttribute == null)
             {
-                throw new Saml20Exception(ErrorMessages.ExpectedInResponseToMissing);
+                throw new Saml20Exception(ErrorMessages.ResponseMissingInResponseToAttribute);
             }
 
-            var expectedInResponseTo = expectedInResponseToSessionState.ToString();
-            if (string.IsNullOrEmpty(expectedInResponseTo) || string.IsNullOrEmpty(inResponseTo))
+            var inResponseTo = inResponseToAttribute.Value;
+            if (string.IsNullOrEmpty(inResponseTo))
             {
                 throw new Saml20Exception(ErrorMessages.ExpectedInResponseToEmpty);
+            }
+
+            var expectedInResponseTo = (string)context.Session[ExpectedInResponseToSessionKey];
+            if (string.IsNullOrEmpty(expectedInResponseTo))
+            {
+                throw new Saml20Exception(ErrorMessages.ExpectedInResponseToMissing);
             }
 
             if (inResponseTo != expectedInResponseTo)
@@ -301,11 +307,11 @@ namespace SAML2.Protocol
         /// <summary>
         /// Gets the status element.
         /// </summary>
-        /// <param name="doc">The doc.</param>
-        /// <returns>The <see cref="Status"/> element.</returns>
-        private static Status GetStatusElement(XmlDocument doc)
+        /// <param name="element">The element.</param>
+        /// <returns>The <see cref="Status" /> element.</returns>
+        private static Status GetStatusElement(XmlElement element)
         {
-            var statElem = (XmlElement)doc.GetElementsByTagName(Status.ElementName, Saml20Constants.Protocol)[0];
+            var statElem = element.GetElementsByTagName(Status.ElementName, Saml20Constants.Protocol)[0];
             return Serialization.DeserializeFromXmlString<Status>(statElem.OuterXml);
         }
 
@@ -428,17 +434,9 @@ namespace SAML2.Protocol
             var doc = GetDecodedSamlResponse(context, defaultEncoding);
             Logger.DebugFormat(TraceMessages.SamlResponseReceived, doc.OuterXml);
 
-            var inResponseToAttribute = doc.DocumentElement.Attributes["InResponseTo"];
-            if (inResponseToAttribute == null)
-            {
-                throw new Saml20Exception(ErrorMessages.ResponseMissingInResponseToAttribute);
-            }
+            CheckReplayAttack(context, doc.DocumentElement);
 
-            var inResponseTo = inResponseToAttribute.Value;
-
-            CheckReplayAttack(context, inResponseTo);
-
-            var status = GetStatusElement(doc);
+            var status = GetStatusElement(doc.DocumentElement);
             if (status.StatusCode.Value != Saml20Constants.StatusCodes.Success)
             {
                 if (status.StatusCode.Value == Saml20Constants.StatusCodes.NoPassive)
@@ -514,6 +512,13 @@ namespace SAML2.Protocol
             {
                 Logger.Debug(TraceMessages.ArtifactResolveReceived);
 
+                var idp = RetrieveIDPConfiguration(parser.Issuer);
+                if (!parser.CheckSamlMessageSignature(idp.Metadata.Keys))
+                {
+                    Logger.Error(ErrorMessages.ArtifactResponseSignatureInvalid);
+                    throw new Saml20Exception(ErrorMessages.ArtifactResponseSignatureInvalid);
+                }
+
                 var status = parser.ArtifactResponse.Status;
                 if (status.StatusCode.Value != Saml20Constants.StatusCodes.Success)
                 {
@@ -523,6 +528,15 @@ namespace SAML2.Protocol
 
                 if (parser.ArtifactResponse.Any.LocalName == Response.ElementName)
                 {
+                    CheckReplayAttack(context, parser.ArtifactResponse.Any);
+
+                    var responseStatus = GetStatusElement(parser.ArtifactResponse.Any);
+                    if (responseStatus.StatusCode.Value != Saml20Constants.StatusCodes.Success)
+                    {
+                        Logger.ErrorFormat(ErrorMessages.ArtifactResponseStatusCodeInvalid, responseStatus.StatusCode.Value);
+                        throw new Saml20Exception(string.Format(ErrorMessages.ArtifactResponseStatusCodeInvalid, responseStatus.StatusCode.Value));
+                    }
+
                     bool isEncrypted;
                     var assertion = GetAssertion(parser.ArtifactResponse.Any, out isEncrypted);
                     if (assertion == null)
