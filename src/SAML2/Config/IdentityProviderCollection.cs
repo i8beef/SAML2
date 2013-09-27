@@ -60,7 +60,17 @@ namespace SAML2.Config
         [ConfigurationProperty("metadata")]
         public string MetadataLocation
         {
-            get { return (string)base["metadata"]; }
+            get
+            {
+                var value = (string)base["metadata"];
+                if (!Path.IsPathRooted(value))
+                {
+                    return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, value);
+                }
+
+                return value;
+            }
+
             set { base["metadata"] = value; }
         }
 
