@@ -72,7 +72,7 @@ namespace SAML2.Protocol
                 // context.Session[IDPLoginSessionKey] may be null if IIS has been restarted
                 if (context.Session[IdpSessionIdKey] != null)
                 {
-                    idpEndpoint = RetrieveIDPConfiguration(context.Session[IdpLoginSessionKey].ToString());
+                    idpEndpoint = RetrieveIDPConfiguration((string)context.Session[IdpLoginSessionKey]);
                 }
 
                 if (idpEndpoint == null)
@@ -174,7 +174,7 @@ namespace SAML2.Protocol
                                            InResponseTo = req.Id
                                        };
 
-                    var endpoint = RetrieveIDPConfiguration(context.Session[IdpLoginSessionKey].ToString());
+                    var endpoint = RetrieveIDPConfiguration((string)context.Session[IdpLoginSessionKey]);
                     var destination = DetermineEndpointConfiguration(BindingType.Redirect, endpoint.Endpoints.LogoutEndpoint, endpoint.Metadata.SLOEndpoints);
 
                     builder.RedirectFromLogout(destination, response);
@@ -229,7 +229,7 @@ namespace SAML2.Protocol
             Logger.DebugFormat(TraceMessages.LogoutRequestReceived);
 
             // Fetch the endpoint configuration
-            var idp = RetrieveIDPConfiguration(context.Session[IdpLoginSessionKey].ToString());
+            var idp = RetrieveIDPConfiguration((string)context.Session[IdpLoginSessionKey]);
             var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.Endpoints.LogoutEndpoint, idp.Metadata.SLOEndpoints);
 
             // Fetch config object
@@ -439,7 +439,7 @@ namespace SAML2.Protocol
             var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.Endpoints.LogoutEndpoint, idp.Metadata.SLOEndpoints);
             request.Destination = destination.Url;
 
-            var nameIdFormat = context.Session[IdpNameIdFormat].ToString();
+            var nameIdFormat = (string)context.Session[IdpNameIdFormat];
             request.SubjectToLogOut.Format = nameIdFormat;
 
             // Handle POST binding
@@ -448,8 +448,8 @@ namespace SAML2.Protocol
                 var builder = new HttpPostBindingBuilder(destination);
                 request.Destination = destination.Url;
                 request.Reason = Saml20Constants.Reasons.User;
-                request.SubjectToLogOut.Value = context.Session[IdpNameId].ToString();
-                request.SessionIndex = context.Session[IdpSessionIdKey].ToString();
+                request.SubjectToLogOut.Value = (string)context.Session[IdpNameId];
+                request.SessionIndex = (string)context.Session[IdpSessionIdKey];
 
                 var requestDocument = request.GetXml();
                 XmlSignatureUtils.SignDocument(requestDocument, request.Id);
@@ -473,8 +473,8 @@ namespace SAML2.Protocol
 
                 request.Destination = destination.Url;
                 request.Reason = Saml20Constants.Reasons.User;
-                request.SubjectToLogOut.Value = context.Session[IdpNameId].ToString();
-                request.SessionIndex = context.Session[IdpSessionIdKey].ToString();
+                request.SubjectToLogOut.Value = (string)context.Session[IdpNameId];
+                request.SessionIndex = (string)context.Session[IdpSessionIdKey];
 
                 var redirectUrl = destination.Url + "?" + builder.ToQuery();
                 Logger.DebugFormat(TraceMessages.LogoutRequestSent, idp.Id, "REDIRECT", redirectUrl);
@@ -488,8 +488,8 @@ namespace SAML2.Protocol
             {
                 request.Destination = destination.Url;
                 request.Reason = Saml20Constants.Reasons.User;
-                request.SubjectToLogOut.Value = context.Session[IdpNameId].ToString();
-                request.SessionIndex = context.Session[IdpSessionIdKey].ToString();
+                request.SubjectToLogOut.Value = (string)context.Session[IdpNameId];
+                request.SessionIndex = (string)context.Session[IdpSessionIdKey];
 
                 Logger.DebugFormat(TraceMessages.LogoutRequestSent, idp.Id, "ARTIFACT", request.GetXml().OuterXml);
 
