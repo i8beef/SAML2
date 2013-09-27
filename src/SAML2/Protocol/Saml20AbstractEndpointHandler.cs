@@ -91,7 +91,6 @@ namespace SAML2.Protocol
         public IdentityProviderElement RetrieveIDP(HttpContext context)
         {
             var config = Saml2Config.GetConfig();
-            config.IdentityProviders.Refresh();
 
             // If idpChoice is set, use it value
             if (!string.IsNullOrEmpty(context.Request.Params[IdpChoiceParameterName]))
@@ -156,7 +155,6 @@ namespace SAML2.Protocol
         public IdentityProviderElement RetrieveIDPConfiguration(string idpId)
         {
             var config = Saml2Config.GetConfig();
-            config.IdentityProviders.Refresh();
 
             return config.IdentityProviders.FirstOrDefault(x => x.Id == idpId);
         }

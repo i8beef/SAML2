@@ -232,7 +232,6 @@ namespace SAML2.Tests
             }
 
             var config = Saml2Config.GetConfig();
-            config.IdentityProviders.Refresh();
 
             var idpEndpoint = config.IdentityProviders.FirstOrDefault(x => x.Id == issuer);
             if (idpEndpoint == null)

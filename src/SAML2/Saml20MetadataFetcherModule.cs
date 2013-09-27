@@ -31,10 +31,7 @@ namespace SAML2
         /// <summary>
         /// Disposes of the resources (other than memory) used by the module that implements <see cref="T:System.Web.IHttpModule" />.
         /// </summary>
-        public void Dispose()
-        {
-            //clean-up code here.
-        }
+        public void Dispose() { }
 
         /// <summary>
         /// Initializes a module and prepares it to handle requests.

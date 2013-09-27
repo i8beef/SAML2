@@ -212,7 +212,6 @@ namespace SAML2.Tests
                 config.AllowedAudienceUris.Add(new AudienceUriElement { Uri = "https://saml.safewhere.net" });
                 config.IdentityProviders.MetadataLocation = @"Protocol\MetadataDocs\FOBS"; // Set it manually.     
                 Assert.That(Directory.Exists(config.IdentityProviders.MetadataLocation));
-                config.IdentityProviders.Refresh();
 
                 var cert = new X509Certificate2(@"Certificates\SafewhereTest_SFS.pfx", "test1234");
                 var encryptedAssertion = new Saml20EncryptedAssertion((RSA)cert.PrivateKey);
