@@ -115,9 +115,9 @@ namespace SAML2.Config
         /// </summary>
         /// <value>The artifact resolution.</value>
         [ConfigurationProperty("artifactResolution")]
-        public HttpBasicAuthElement ArtifactResolution
+        public HttpAuthElement ArtifactResolution
         {
-            get { return (HttpBasicAuthElement)base["artifactResolution"]; }
+            get { return (HttpAuthElement)base["artifactResolution"]; }
             set { base["artifactResolution"] = value; }
         }
 
@@ -126,9 +126,9 @@ namespace SAML2.Config
         /// </summary>
         /// <value>The attribute query.</value>
         [ConfigurationProperty("attributeQuery")]
-        public HttpBasicAuthElement AttributeQuery
+        public HttpAuthElement AttributeQuery
         {
-            get { return (HttpBasicAuthElement)base["attributeQuery"]; }
+            get { return (HttpAuthElement)base["attributeQuery"]; }
             set { base["attributeQuery"] = value; }
         }
 

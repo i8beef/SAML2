@@ -5,20 +5,9 @@ namespace SAML2.Config
     /// <summary>
     /// Http Basic Authentication configuration element.
     /// </summary>
-    public class HttpBasicAuthElement : WritableConfigurationElement
+    public class HttpAuthCredentialsElement : WritableConfigurationElement
     {
         #region Attributes
-
-        /// <summary>
-        /// Gets or sets a value indicating whether <c>HttpBasicAuth</c> is enabled.
-        /// </summary>
-        /// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
-        [ConfigurationProperty("enableHttpBasicAuth")]
-        public bool Enabled
-        {
-            get { return (bool)base["enableHttpBasicAuth"]; }
-            set { base["enableHttpBasicAuth"] = value; }
-        }
 
         /// <summary>
         /// Gets or sets the username.

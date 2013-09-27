@@ -73,9 +73,9 @@ namespace SAML2.Config
         /// </summary>
         /// <value>The signing certificate.</value>
         [ConfigurationProperty("signingCertificate")]
-        public SigningCertificateElement SigningCertificate
+        public CertificateElement SigningCertificate
         {
-            get { return (SigningCertificateElement)base["signingCertificate"]; }
+            get { return (CertificateElement)base["signingCertificate"]; }
             set { base["signingCertificate"] = value; }
         }
 

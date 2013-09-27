@@ -83,9 +83,10 @@
     <Compile Include="Config\ContactCollection.cs" />
     <Compile Include="Config\BindingType.cs" />
     <Compile Include="Config\ContactType.cs" />
+    <Compile Include="Config\HttpAuthCredentialsElement.cs" />
     <Compile Include="Config\EndpointType.cs" />
     <Compile Include="Config\EnumerableConfigurationElementCollection.cs" />
-    <Compile Include="Config\HttpBasicAuthElement.cs" />
+    <Compile Include="Config\HttpAuthElement.cs" />
     <Compile Include="Config\IConfigurationElementCollectionElement.cs" />
     <Compile Include="Config\IdentityProviderEndpointElement.cs" />
     <Compile Include="Config\IdentityProviderEndpointCollection.cs" />
@@ -103,7 +104,7 @@
     <Compile Include="Config\ServiceProviderElement.cs" />
     <Compile Include="Config\ServiceProviderEndpointCollection.cs" />
     <Compile Include="Config\ServiceProviderEndpointElement.cs" />
-    <Compile Include="Config\SigningCertificateElement.cs" />
+    <Compile Include="Config\CertificateElement.cs" />
     <Compile Include="Config\WritableConfigurationElement.cs" />
     <Compile Include="ErrorMessages.Designer.cs">
       <AutoGen>True</AutoGen>
