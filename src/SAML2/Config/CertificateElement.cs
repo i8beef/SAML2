@@ -6,7 +6,7 @@ namespace SAML2.Config
     /// <summary>
     /// Signing Certificate configuration element.
     /// </summary>
-    public class SigningCertificateElement : WritableConfigurationElement
+    public class CertificateElement : WritableConfigurationElement
     {
         #region Attributes
 

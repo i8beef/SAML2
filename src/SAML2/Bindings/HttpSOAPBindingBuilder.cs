@@ -70,21 +70,32 @@ namespace SAML2.Bindings
         /// </summary>
         /// <param name="endpoint">The IdP endpoint.</param>
         /// <param name="message">The message.</param>
-        /// <param name="basicAuth">Basic authentication settings.</param>
+        /// <param name="auth">Basic authentication settings.</param>
         /// <returns>The Stream.</returns>
-        public Stream GetResponse(string endpoint, string message, HttpBasicAuthElement basicAuth)
+        public Stream GetResponse(string endpoint, string message, HttpAuthElement auth)
         {
+            if (auth != null && auth.ClientCertificate != null && auth.Credentials != null)
+            {
+                throw new Saml20Exception(string.Format("Artifact resolution cannot specify both client certificate and basic credentials for endpoint {0}", endpoint));
+            }
+
             var binding = CreateSslBinding();
+            if (auth != null && auth.ClientCertificate != null)
+            {
+                // Client certificate auth
+                binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
+            }
+
             var request = Message.CreateMessage(binding.MessageVersion, HttpArtifactBindingConstants.SoapAction, new SimpleBodyWriter(message));
             request.Headers.To = new Uri(endpoint);
 
             var property = new HttpRequestMessageProperty { Method = "POST" };
             property.Headers.Add(HttpRequestHeader.ContentType, "text/xml; charset=utf-8");
             
-            // We are using Basic http auth over ssl
-            if (basicAuth != null && basicAuth.Enabled)
+            if (auth != null && auth.Credentials != null)
             {
-                var basicAuthzHeader = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(basicAuth.Username + ":" + basicAuth.Password));
+                // Basic http auth over ssl
+                var basicAuthzHeader = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(auth.Credentials.Username + ":" + auth.Credentials.Password));
                 property.Headers.Add(HttpRequestHeader.Authorization, basicAuthzHeader);
             }
             
@@ -97,6 +108,12 @@ namespace SAML2.Bindings
             var epa = new EndpointAddress(endpoint);
 
             var factory = new ChannelFactory<IRequestChannel>(binding, epa);
+            if (auth != null && auth.ClientCertificate != null)
+            {
+                // Client certificate
+                factory.Credentials.ClientCertificate.Certificate = auth.ClientCertificate.GetCertificate();
+            }
+
             var reqChannel = factory.CreateChannel();
             
             reqChannel.Open();
@@ -104,7 +121,7 @@ namespace SAML2.Bindings
             Console.WriteLine(response);
             reqChannel.Close();
 
-            var doc = new XmlDocument();
+            var doc = new XmlDocument { PreserveWhitespace = true };
             doc.Load(response.GetReaderAtBodyContents());
             var outerXml = doc.DocumentElement.OuterXml;
             var memStream = new MemoryStream(Encoding.UTF8.GetBytes(outerXml));
@@ -134,7 +151,7 @@ namespace SAML2.Bindings
         /// Creates a WCF SSL binding.
         /// </summary>
         /// <returns>The WCF SSL binding.</returns>
-        private static Binding CreateSslBinding()
+        private static BasicHttpBinding CreateSslBinding()
         {
             return new BasicHttpBinding(BasicHttpSecurityMode.Transport) { TextEncoding = Encoding.UTF8 };
         }
