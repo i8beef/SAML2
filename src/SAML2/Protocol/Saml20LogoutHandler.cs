@@ -153,6 +153,12 @@ namespace SAML2.Protocol
             {
                 Logger.DebugFormat(TraceMessages.ArtifactResponseReceived, parser.SamlMessage);
 
+                if (!parser.CheckSamlMessageSignature(idp.Metadata.Keys))
+                {
+                    Logger.Error(ErrorMessages.ArtifactResponseSignatureInvalid);
+                    throw new Saml20Exception(ErrorMessages.ArtifactResponseSignatureInvalid);
+                }
+
                 var status = parser.ArtifactResponse.Status;
                 if (status.StatusCode.Value != Saml20Constants.StatusCodes.Success)
                 {

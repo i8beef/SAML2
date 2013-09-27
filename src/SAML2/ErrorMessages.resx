@@ -129,6 +129,9 @@
   <data name="ArtifactResponseMissingResponse" xml:space="preserve">
     <value>Unsupported payload message in ArtifactResponse</value>
   </data>
+  <data name="ArtifactResponseSignatureInvalid" xml:space="preserve">
+    <value>Could not verify artifact response message signature</value>
+  </data>
   <data name="ArtifactResponseStatusCodeInvalid" xml:space="preserve">
     <value>ArtifactResponse status code was invalid, expected {0}</value>
   </data>
