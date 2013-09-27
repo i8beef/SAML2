@@ -28,6 +28,34 @@ namespace SAML2.Schema.Metadata
         public const string ElementName = "RoleDescriptor";
 
         /// <summary>
+        /// The protocol support enumeration backing field
+        /// </summary>
+        private string _protocolSupportEnumeration;
+
+        /// <summary>
+        /// Gets or sets the protocol support enumeration.
+        /// A whitespace-delimited set of URIs that identify the set of protocol specifications supported by the
+        /// role element. For SAML V2.0 entities, this set MUST include the SAML protocol namespace URI,
+        /// <c>urn:oasis:names:tc:SAML:2.0:protocol</c>. Note that future SAML specifications might
+        /// share the same namespace URI, but SHOULD provide alternate "protocol support" identifiers to
+        /// ensure discrimination when necessary.
+        /// </summary>
+        /// <value>The protocol support enumeration.</value>
+        [XmlIgnore]
+        public string[] ProtocolSupportEnumeration
+        {
+            get
+            {
+                return _protocolSupportEnumeration.Split(' ');
+            }
+
+            set
+            {
+                _protocolSupportEnumeration = string.Join(" ", value);
+            } 
+        }
+
+        /// <summary>
         /// Gets or sets the valid until.
         /// Optional attribute indicates the expiration time of the metadata contained in the element and any
         /// contained elements.
@@ -72,16 +100,15 @@ namespace SAML2.Schema.Metadata
         public string Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the protocol support enumeration.
-        /// A whitespace-delimited set of URIs that identify the set of protocol specifications supported by the
-        /// role element. For SAML V2.0 entities, this set MUST include the SAML protocol namespace URI,
-        /// <c>urn:oasis:names:tc:SAML:2.0:protocol</c>. Note that future SAML specifications might
-        /// share the same namespace URI, but SHOULD provide alternate "protocol support" identifiers to
-        /// ensure discrimination when necessary.
+        /// Gets or sets the protocol support enumeration string.
         /// </summary>
-        /// <value>The protocol support enumeration.</value>
-        [XmlAttribute("protocolSupportEnumeration")]
-        public string ProtocolSupportEnumeration { get; set; }
+        /// <value>The protocol support enumeration string.</value>
+        [XmlAttribute("protocolSupportEnumeration", DataType = "anyURI")]
+        public string ProtocolSupportEnumerationString
+        {
+            get { return _protocolSupportEnumeration; }
+            set { _protocolSupportEnumeration = value;  }
+        }
 
         /// <summary>
         /// Gets or sets the valid until string.

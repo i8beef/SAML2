@@ -417,7 +417,7 @@ namespace SAML2
 
             var serviceProviderDescriptor = new SpSsoDescriptor
                                    {
-                                       ProtocolSupportEnumeration = Saml20Constants.Protocol,
+                                       ProtocolSupportEnumerationString = Saml20Constants.Protocol,
                                        AuthnRequestsSigned = XmlConvert.ToString(true),
                                        WantAssertionsSigned = XmlConvert.ToString(true)
                                    };
