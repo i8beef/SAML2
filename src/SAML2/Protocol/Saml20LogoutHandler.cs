@@ -471,16 +471,16 @@ namespace SAML2.Protocol
             // Handle Redirect binding
             if (destination.Binding == BindingType.Redirect)
             {
-                var builder = new HttpRedirectBindingBuilder
-                                  {
-                                      Request = request.GetXml().OuterXml,
-                                      SigningKey = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey
-                                  };
-
                 request.Destination = destination.Url;
                 request.Reason = Saml20Constants.Reasons.User;
                 request.SubjectToLogOut.Value = (string)context.Session[IdpNameId];
                 request.SessionIndex = (string)context.Session[IdpSessionIdKey];
+
+				var builder = new HttpRedirectBindingBuilder
+				{
+					Request = request.GetXml().OuterXml,
+					SigningKey = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey
+				};
 
                 var redirectUrl = destination.Url + "?" + builder.ToQuery();
                 Logger.DebugFormat(TraceMessages.LogoutRequestSent, idp.Id, "REDIRECT", redirectUrl);
