@@ -1,6 +1,8 @@
-﻿using System.Web;
+﻿using System.Reflection;
+using System.Web;
 using SAML2.Identity;
 using SAML2.Protocol;
+using SAML2.State;
 
 namespace SAML2.Actions
 {
@@ -24,6 +26,11 @@ namespace SAML2.Actions
             set { _name = value; }
         }
 
+		/// <summary>
+		/// State service instance
+		/// </summary>
+		private readonly IInternalStateService _stateService = StateServiceProvider.StateServiceFor(MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Action performed during SignOn.
         /// </summary>
@@ -33,7 +40,7 @@ namespace SAML2.Actions
         public void SignOnAction(AbstractEndpointHandler handler, HttpContext context, Saml20Assertion assertion)
         {
             var signonhandler = (Saml20SignonHandler)handler;
-            Saml20PrincipalCache.AddPrincipal(Saml20Identity.InitSaml20Identity(assertion, signonhandler.RetrieveIDPConfiguration((string)context.Session[Saml20AbstractEndpointHandler.IdpTempSessionKey])));
+	        Saml20PrincipalCache.AddPrincipal( Saml20Identity.InitSaml20Identity( assertion, signonhandler.RetrieveIDPConfiguration( _stateService.Get<string>( context, Saml20AbstractEndpointHandler.IdpTempSessionKey ) ) ) );
         }
 
         /// <summary>

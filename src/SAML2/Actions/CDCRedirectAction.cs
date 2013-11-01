@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using SAML2.Protocol;
+using SAML2.State;
 
 namespace SAML2.Actions
 {
@@ -40,6 +42,11 @@ namespace SAML2.Actions
             set { _name = value; }
         }
 
+		/// <summary>
+		/// State service instance
+		/// </summary>
+		private readonly IInternalStateService _stateService = StateServiceProvider.StateServiceFor(MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Action performed during SignOn.
         /// </summary>
@@ -48,7 +55,8 @@ namespace SAML2.Actions
         /// <param name="assertion">The SAML assertion of the currently logged in user.</param>
         public void SignOnAction(AbstractEndpointHandler handler, HttpContext context, Saml20Assertion assertion)
         {
-            var idpKey = (string)context.Session[Saml20SignonHandler.IdpLoginSessionKey];
+	        var idpKey = _stateService.Get<string>( context, Saml20SignonHandler.IdpLoginSessionKey );
+
             var signOnHandler = handler as Saml20SignonHandler;
             if (signOnHandler == null)
             {
