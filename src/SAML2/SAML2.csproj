@@ -83,6 +83,7 @@
     <Compile Include="Config\ContactCollection.cs" />
     <Compile Include="Config\BindingType.cs" />
     <Compile Include="Config\ContactType.cs" />
+    <Compile Include="Config\StateElement.cs" />
     <Compile Include="Config\HttpAuthCredentialsElement.cs" />
     <Compile Include="Config\EndpointType.cs" />
     <Compile Include="Config\EnumerableConfigurationElementCollection.cs" />
@@ -280,6 +281,13 @@
     <Compile Include="Specification\ICertificateSpecification.cs" />
     <Compile Include="Specification\SelfIssuedCertificateSpecification.cs" />
     <Compile Include="Specification\SpecificationFactory.cs" />
+    <Compile Include="State\CacheStateServiceFactory.cs" />
+    <Compile Include="State\CacheStateService.cs" />
+    <Compile Include="State\IStateServiceFactory.cs" />
+    <Compile Include="State\IInternalStateService.cs" />
+    <Compile Include="State\SessionStateService.cs" />
+    <Compile Include="State\SessionStateServiceFactory.cs" />
+    <Compile Include="State\StateServiceProvider.cs" />
     <Compile Include="TraceMessages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -327,6 +335,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

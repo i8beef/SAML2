@@ -35,61 +35,61 @@ namespace SAML2.Protocol
 
         #region IHttpHandler related
 
-        /// <summary>
-        /// Handles a request.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        protected override void Handle(HttpContext context)
-        {
-            Logger.Debug(TraceMessages.LogoutHandlerCalled);
+	    /// <summary>
+	    /// Handles a request.
+	    /// </summary>
+	    /// <param name="context">The context.</param>
+	    protected override void Handle( HttpContext context )
+	    {
+		    Logger.Debug( TraceMessages.LogoutHandlerCalled );
 
-            // Some IDP's are known to fail to set an actual value in the SOAPAction header
-            // so we just check for the existence of the header field.
-            if (Array.Exists(context.Request.Headers.AllKeys, s => s == SoapConstants.SoapAction))
-            {
-                HandleSoap(context, context.Request.InputStream);
-                return;
-            }
+		    // Some IDP's are known to fail to set an actual value in the SOAPAction header
+		    // so we just check for the existence of the header field.
+		    if( Array.Exists( context.Request.Headers.AllKeys, s => s == SoapConstants.SoapAction ) )
+		    {
+			    HandleSoap( context, context.Request.InputStream );
+			    return;
+		    }
 
-            if (!string.IsNullOrEmpty(context.Request.Params["SAMLart"]))
-            {
-                HandleArtifact(context);
-                return;
-            }
+		    if( !string.IsNullOrEmpty( context.Request.Params["SAMLart"] ) )
+		    {
+			    HandleArtifact( context );
+			    return;
+		    }
 
-            if (!string.IsNullOrEmpty(context.Request.Params["SAMLResponse"]))
-            {
-                HandleResponse(context);
-            }
-            else if (!string.IsNullOrEmpty(context.Request.Params["SAMLRequest"]))
-            {
-                HandleRequest(context);
-            }
-            else
-            {
-                IdentityProviderElement idpEndpoint = null;
+		    if( !string.IsNullOrEmpty( context.Request.Params["SAMLResponse"] ) )
+		    {
+			    HandleResponse( context );
+		    }
+		    else if( !string.IsNullOrEmpty( context.Request.Params["SAMLRequest"] ) )
+		    {
+			    HandleRequest( context );
+		    }
+		    else
+		    {
+			    IdentityProviderElement idpEndpoint = null;
 
-                // context.Session[IDPLoginSessionKey] may be null if IIS has been restarted
-                if (context.Session[IdpSessionIdKey] != null)
-                {
-                    idpEndpoint = RetrieveIDPConfiguration((string)context.Session[IdpLoginSessionKey]);
-                }
+			    var idpId = StateService.Get<string>( context, IdpSessionIdKey );
+			    if( !string.IsNullOrEmpty( idpId ) )
+			    {
+					idpEndpoint = RetrieveIDPConfiguration(StateService.Get<string>(context, IdpLoginSessionKey));
+			    }
 
-                if (idpEndpoint == null)
-                {
-                    // TODO: Reconsider how to accomplish this.
-                    context.User = null;
-                    FormsAuthentication.SignOut();
+			    if( idpEndpoint == null )
+			    {
+				    // TODO: Reconsider how to accomplish this.
+				    context.User = null;
+				    FormsAuthentication.SignOut();
 
-                    Logger.ErrorFormat(ErrorMessages.UnknownIdentityProvider, string.Empty);
-                    throw new Saml20Exception(string.Format(ErrorMessages.UnknownIdentityProvider, string.Empty));
-                }
+				    Logger.ErrorFormat( ErrorMessages.UnknownIdentityProvider, string.Empty );
+				    throw new Saml20Exception( string.Format( ErrorMessages.UnknownIdentityProvider, string.Empty ) );
+			    }
 
-                TransferClient(idpEndpoint, context);
-            }
-        }
+			    TransferClient( idpEndpoint, context );
+		    }
+	    }
 
-        #endregion
+	    #endregion
 
         #region Private methods - Handlers
 
@@ -180,7 +180,7 @@ namespace SAML2.Protocol
                                            InResponseTo = req.Id
                                        };
 
-                    var endpoint = RetrieveIDPConfiguration((string)context.Session[IdpLoginSessionKey]);
+	                var endpoint = RetrieveIDPConfiguration( StateService.Get<string>( context, IdpLoginSessionKey ) );
                     var destination = DetermineEndpointConfiguration(BindingType.Redirect, endpoint.Endpoints.LogoutEndpoint, endpoint.Metadata.SLOEndpoints);
 
                     builder.RedirectFromLogout(destination, response);
@@ -235,7 +235,7 @@ namespace SAML2.Protocol
             Logger.DebugFormat(TraceMessages.LogoutRequestReceived);
 
             // Fetch the endpoint configuration
-            var idp = RetrieveIDPConfiguration((string)context.Session[IdpLoginSessionKey]);
+			var idp = RetrieveIDPConfiguration(StateService.Get<string>(context, IdpLoginSessionKey));
             var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.Endpoints.LogoutEndpoint, idp.Metadata.SLOEndpoints);
 
             // Fetch config object
@@ -445,7 +445,7 @@ namespace SAML2.Protocol
             var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.Endpoints.LogoutEndpoint, idp.Metadata.SLOEndpoints);
             request.Destination = destination.Url;
 
-            var nameIdFormat = (string)context.Session[IdpNameIdFormat];
+	        var nameIdFormat = StateService.Get<string>( context, IdpNameIdFormat );
             request.SubjectToLogOut.Format = nameIdFormat;
 
             // Handle POST binding
@@ -454,8 +454,8 @@ namespace SAML2.Protocol
                 var builder = new HttpPostBindingBuilder(destination);
                 request.Destination = destination.Url;
                 request.Reason = Saml20Constants.Reasons.User;
-                request.SubjectToLogOut.Value = (string)context.Session[IdpNameId];
-                request.SessionIndex = (string)context.Session[IdpSessionIdKey];
+				request.SubjectToLogOut.Value = StateService.Get<string>(context, IdpNameId);
+				request.SessionIndex = StateService.Get<string>(context, IdpSessionIdKey);
 
                 var requestDocument = request.GetXml();
                 XmlSignatureUtils.SignDocument(requestDocument, request.Id);
@@ -473,8 +473,8 @@ namespace SAML2.Protocol
             {
                 request.Destination = destination.Url;
                 request.Reason = Saml20Constants.Reasons.User;
-                request.SubjectToLogOut.Value = (string)context.Session[IdpNameId];
-                request.SessionIndex = (string)context.Session[IdpSessionIdKey];
+				request.SubjectToLogOut.Value = StateService.Get<string>(context, IdpNameId);
+				request.SessionIndex = StateService.Get<string>(context, IdpSessionIdKey);
 
 				var builder = new HttpRedirectBindingBuilder
 				{
@@ -494,8 +494,8 @@ namespace SAML2.Protocol
             {
                 request.Destination = destination.Url;
                 request.Reason = Saml20Constants.Reasons.User;
-                request.SubjectToLogOut.Value = (string)context.Session[IdpNameId];
-                request.SessionIndex = (string)context.Session[IdpSessionIdKey];
+				request.SubjectToLogOut.Value = StateService.Get<string>(context, IdpNameId);
+				request.SessionIndex = StateService.Get<string>(context, IdpSessionIdKey);
 
                 Logger.DebugFormat(TraceMessages.LogoutRequestSent, idp.Id, "ARTIFACT", request.GetXml().OuterXml);
 

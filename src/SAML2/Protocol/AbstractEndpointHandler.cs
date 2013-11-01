@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Web;
 using System.Web.SessionState;
 using SAML2.Logging;
+using SAML2.State;
 
 namespace SAML2.Protocol
 {
@@ -14,6 +15,11 @@ namespace SAML2.Protocol
         /// Logger instance.
         /// </summary>
         protected static readonly IInternalLogger Logger = LoggerProvider.LoggerFor(MethodBase.GetCurrentMethod().DeclaringType);
+
+		/// <summary>
+		/// State Service instance
+		/// </summary>
+	    protected static readonly IInternalStateService StateService = StateServiceProvider.StateServiceFor( MethodBase.GetCurrentMethod().DeclaringType );
 
         /// <summary>
         /// Gets or sets the redirect URL.
@@ -47,10 +53,10 @@ namespace SAML2.Protocol
         /// <param name="context">The context.</param>
         public void DoRedirect(HttpContext context)
         {
-            var redirectUrl = (string)context.Session["RedirectUrl"];
+	        var redirectUrl = StateService.Get<string>( context, "RedirectUrl" );
             if (!string.IsNullOrEmpty(redirectUrl))
             {
-                context.Session.Remove("RedirectUrl");
+				StateService.Remove(context, "RedirectUrl");
                 context.Response.Redirect(redirectUrl);
             }
             else if (string.IsNullOrEmpty(RedirectUrl))
