@@ -8,11 +8,11 @@ namespace SAML2
         /// <summary>
         /// Request action type.
         /// </summary>
-        SamlRequest,
+        SAMLRequest,
 
         /// <summary>
         /// Response action type.
         /// </summary>
-        SamlResponse
+        SAMLResponse
     }
 }
