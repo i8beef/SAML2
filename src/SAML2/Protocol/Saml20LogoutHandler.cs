@@ -476,11 +476,11 @@ namespace SAML2.Protocol
                 request.SubjectToLogOut.Value = (string)context.Session[IdpNameId];
                 request.SessionIndex = (string)context.Session[IdpSessionIdKey];
 
-				var builder = new HttpRedirectBindingBuilder
-				{
-					Request = request.GetXml().OuterXml,
-					SigningKey = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey
-				};
+                var builder = new HttpRedirectBindingBuilder
+                                  {
+                                      Request = request.GetXml().OuterXml,
+                                      SigningKey = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey
+                                  };
 
                 var redirectUrl = destination.Url + "?" + builder.ToQuery();
                 Logger.DebugFormat(TraceMessages.LogoutRequestSent, idp.Id, "REDIRECT", redirectUrl);
