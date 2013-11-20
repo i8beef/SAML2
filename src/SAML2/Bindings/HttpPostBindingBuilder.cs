@@ -33,7 +33,7 @@ namespace SAML2.Bindings
         public HttpPostBindingBuilder(IdentityProviderEndpointElement endpoint) 
         {
             _destinationEndpoint = endpoint;
-            Action = SamlActionType.SamlRequest;
+            Action = SamlActionType.SAMLRequest;
             RelayState = string.Empty;
         }
 
