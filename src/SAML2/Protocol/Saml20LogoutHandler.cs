@@ -338,7 +338,7 @@ namespace SAML2.Protocol
             {
                 var builder = new HttpPostBindingBuilder(destination)
                                   {
-                                      Action = SamlActionType.SamlResponse
+                                      Action = SamlActionType.SAMLResponse
                                   };
 
                 var responseDocument = response.GetXml();
