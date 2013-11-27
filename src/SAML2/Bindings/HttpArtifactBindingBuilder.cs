@@ -88,7 +88,7 @@ namespace SAML2.Bindings
             }
 
             var endpointIndex = ArtifactUtil.GetEndpointIndex(artifact);
-            var endpointUrl = idpEndPoint.Metadata.GetARSEndpoint(endpointIndex);
+            var endpointUrl = idpEndPoint.Metadata.GetIDPARSEndpoint(endpointIndex);
 
             Logger.DebugFormat(TraceMessages.ArtifactResolveForKnownIdentityProvider, artifact, idpEndPoint.Id, endpointUrl);
             var resolve = Saml20ArtifactResolve.GetDefault();
