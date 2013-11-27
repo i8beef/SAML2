@@ -60,7 +60,7 @@ namespace SAML2.Tests
                 var metadata = new Saml20MetadataDocument(doc);
 
                 // Assert
-                Assert.AreEqual(2, metadata.SLOEndpoints.Count);
+                Assert.AreEqual(2, metadata.IDPSLOEndpoints.Count);
                 Assert.AreEqual(2, metadata.SSOEndpoints.Count);
             }
         }

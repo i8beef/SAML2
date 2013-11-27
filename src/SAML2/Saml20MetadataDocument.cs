@@ -23,11 +23,6 @@ namespace SAML2
         #region Fields
 
         /// <summary>
-        /// ARSEndpoints backing field.
-        /// </summary>
-        private Dictionary<int, IndexedEndpoint> _arsEndpoints;
-
-        /// <summary>
         /// AssertionConsumerServiceEndpoints backing field.
         /// </summary>
         private List<IdentityProviderEndpointElement> _assertionConsumerServiceEndpoints;
@@ -38,14 +33,29 @@ namespace SAML2
         private List<Endpoint> _attributeQueryEndpoints;
 
         /// <summary>
+        /// ARSEndpoints backing field.
+        /// </summary>
+        private Dictionary<int, IndexedEndpoint> _idpArsEndpoints;
+
+        /// <summary>
+        /// SLOEndpoints backing field.
+        /// </summary>
+        private List<IdentityProviderEndpointElement> _idpSloEndpoints;
+
+        /// <summary>
         /// The keys.
         /// </summary>
         private List<KeyDescriptor> _keys;
 
         /// <summary>
+        /// ARSEndpoints backing field.
+        /// </summary>
+        private Dictionary<int, IndexedEndpoint> _spArsEndpoints;
+
+        /// <summary>
         /// SLOEndpoints backing field.
         /// </summary>
-        private List<IdentityProviderEndpointElement> _sloEndpoints;
+        private List<IdentityProviderEndpointElement> _spSloEndpoints;
 
         /// <summary>
         /// SSOEndpoints backing field.
@@ -145,6 +155,22 @@ namespace SAML2
         }
 
         /// <summary>
+        /// Gets the IDP SLO endpoints.
+        /// </summary>
+        public List<IdentityProviderEndpointElement> IDPSLOEndpoints
+        {
+            get
+            {
+                if (_idpSloEndpoints == null)
+                {
+                    ExtractEndpoints();
+                }
+
+                return _idpSloEndpoints;
+            }
+        }
+
+        /// <summary>
         /// Gets the keys contained in the metadata document.
         /// </summary>
         public List<KeyDescriptor> Keys
@@ -166,18 +192,18 @@ namespace SAML2
         public bool Sign { get; set; }
 
         /// <summary>
-        /// Gets the SLO endpoints.
+        /// Gets the SP SLO endpoints.
         /// </summary>
-        public List<IdentityProviderEndpointElement> SLOEndpoints
+        public List<IdentityProviderEndpointElement> SPSLOEndpoints
         {
             get
             {
-                if (_sloEndpoints == null)
+                if (_spSloEndpoints == null)
                 {
                     ExtractEndpoints();
                 }
 
-                return _sloEndpoints;
+                return _spSloEndpoints;
             }
         }
 
@@ -218,13 +244,13 @@ namespace SAML2
         }
 
         /// <summary>
-        /// Gets the ArtifactResolutionService endpoint.
+        /// Gets the IDP ArtifactResolutionService endpoint.
         /// </summary>
         /// <param name="index">The index.</param>
         /// <returns>The artifact resolution service endpoint.</returns>
-        public string GetARSEndpoint(ushort index)
+        public string GetIDPARSEndpoint(ushort index)
         {
-            var ep = _arsEndpoints[index];
+            var ep = _idpArsEndpoints[index];
             return ep != null ? ep.Location : string.Empty;
         }
 
@@ -265,26 +291,6 @@ namespace SAML2
         public List<KeyDescriptor> GetKeys(KeyTypes usage)
         {
             return Keys.FindAll(desc => desc.Use == usage);
-        }
-
-        /// <summary>
-        /// Get the first SLO endpoint that supports the given binding.
-        /// </summary>
-        /// <param name="binding">The binding.</param>
-        /// <returns>The endpoint or <c>null</c> if metadata does not have an SLO endpoint with the given binding.</returns>
-        public IdentityProviderEndpointElement SLOEndpoint(BindingType binding)
-        {
-            return SLOEndpoints.Find(endp => endp.Binding == binding);
-        }
-
-        /// <summary>
-        /// Get the first SSO endpoint that supports the given binding.
-        /// </summary>
-        /// <param name="binding">The binding.</param>
-        /// <returns>The endpoint or <c>null</c> if metadata does not have an SSO endpoint with the given binding.</returns>
-        public IdentityProviderEndpointElement SSOEndpoint(BindingType binding)
-        {
-            return SSOEndpoints.Find(endp => endp.Binding == binding);
         }
 
         /// <summary>
@@ -584,8 +590,10 @@ namespace SAML2
             if (Entity != null)
             {
                 _ssoEndpoints = new List<IdentityProviderEndpointElement>();
-                _sloEndpoints = new List<IdentityProviderEndpointElement>();
-                _arsEndpoints = new Dictionary<int, IndexedEndpoint>();
+                _idpSloEndpoints = new List<IdentityProviderEndpointElement>();
+                _idpArsEndpoints = new Dictionary<int, IndexedEndpoint>();
+                _spSloEndpoints = new List<IdentityProviderEndpointElement>();
+                _spArsEndpoints = new Dictionary<int, IndexedEndpoint>();
                 _assertionConsumerServiceEndpoints = new List<IdentityProviderEndpointElement>();
                 _attributeQueryEndpoints = new List<Endpoint>();
 
@@ -615,14 +623,8 @@ namespace SAML2
                                     throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
                             }
 
-                            _ssoEndpoints.Add(
-                                new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
+                            _ssoEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
                         }
-                    }
-
-                    if (item is SsoDescriptor)
-                    {
-                        var descriptor = (SsoDescriptor)item;
 
                         if (descriptor.SingleLogoutService != null)
                         {
@@ -647,8 +649,7 @@ namespace SAML2
                                         throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
                                 }
 
-                                _sloEndpoints.Add(
-                                    new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
+                                _idpSloEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
                             }
                         }
 
@@ -656,7 +657,7 @@ namespace SAML2
                         {
                             foreach (var ie in descriptor.ArtifactResolutionService)
                             {
-                                _arsEndpoints.Add(ie.Index, ie);
+                                _idpArsEndpoints.Add(ie.Index, ie);
                             }
                         }
                     }
@@ -686,6 +687,41 @@ namespace SAML2
                             }
 
                             _assertionConsumerServiceEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
+                        }
+
+                        if (descriptor.SingleLogoutService != null)
+                        {
+                            foreach (var endpoint in descriptor.SingleLogoutService)
+                            {
+                                BindingType binding;
+                                switch (endpoint.Binding)
+                                {
+                                    case Saml20Constants.ProtocolBindings.HttpPost:
+                                        binding = BindingType.Post;
+                                        break;
+                                    case Saml20Constants.ProtocolBindings.HttpRedirect:
+                                        binding = BindingType.Redirect;
+                                        break;
+                                    case Saml20Constants.ProtocolBindings.HttpArtifact:
+                                        binding = BindingType.Artifact;
+                                        break;
+                                    case Saml20Constants.ProtocolBindings.HttpSoap:
+                                        binding = BindingType.Artifact;
+                                        break;
+                                    default:
+                                        throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                                }
+
+                                _spSloEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
+                            }
+                        }
+
+                        if (descriptor.ArtifactResolutionService != null)
+                        {
+                            foreach (var ie in descriptor.ArtifactResolutionService)
+                            {
+                                _spArsEndpoints.Add(ie.Index, ie);
+                            }
                         }
                     }
 

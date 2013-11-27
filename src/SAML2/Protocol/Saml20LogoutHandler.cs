@@ -181,7 +181,7 @@ namespace SAML2.Protocol
                                        };
 
                     var endpoint = RetrieveIDPConfiguration((string)context.Session[IdpLoginSessionKey]);
-                    var destination = DetermineEndpointConfiguration(BindingType.Redirect, endpoint.Endpoints.LogoutEndpoint, endpoint.Metadata.SLOEndpoints);
+                    var destination = DetermineEndpointConfiguration(BindingType.Redirect, endpoint.Endpoints.LogoutEndpoint, endpoint.Metadata.IDPSLOEndpoints);
 
                     builder.RedirectFromLogout(destination, response);
                 }
@@ -236,7 +236,7 @@ namespace SAML2.Protocol
 
             // Fetch the endpoint configuration
             var idp = RetrieveIDPConfiguration((string)context.Session[IdpLoginSessionKey]);
-            var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.Endpoints.LogoutEndpoint, idp.Metadata.SLOEndpoints);
+            var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.Endpoints.LogoutEndpoint, idp.Metadata.IDPSLOEndpoints);
 
             // Fetch config object
             var config = Saml2Config.GetConfig();
@@ -442,7 +442,7 @@ namespace SAML2.Protocol
             var request = Saml20LogoutRequest.GetDefault();
 
             // Determine which endpoint to use from the configuration file or the endpoint metadata.
-            var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.Endpoints.LogoutEndpoint, idp.Metadata.SLOEndpoints);
+            var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.Endpoints.LogoutEndpoint, idp.Metadata.IDPSLOEndpoints);
             request.Destination = destination.Url;
 
             var nameIdFormat = (string)context.Session[IdpNameIdFormat];
