@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web;
 using SAML2.Config;
 
@@ -17,7 +16,7 @@ namespace SAML2.Protocol
         public override void ProcessRequest(HttpContext context)
         {
             Logger.DebugFormat("{0}.{1} called", GetType(), "ProcessRequest()");
-                
+
             var config = Saml2Config.GetConfig();
             if (config == null)
             {
@@ -30,10 +29,10 @@ namespace SAML2.Protocol
                 throw new Saml20Exception(ErrorMessages.ConfigServiceProviderMissingSignOnEndpoint);
             }
 
-            var redirectUrl = (string)context.Session["RedirectUrl"];
+            var redirectUrl = StateService.Get<string>("RedirectUrl");
             if (!string.IsNullOrEmpty(redirectUrl))
             {
-                context.Session.Remove("RedirectUrl");
+                StateService.Remove("RedirectUrl");
                 context.Response.Redirect(redirectUrl);
             }
             else if (string.IsNullOrEmpty(endp.RedirectUrl))
