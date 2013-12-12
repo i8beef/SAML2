@@ -2,12 +2,34 @@
 
 namespace SAML2.State
 {
-	public interface IInternalStateService
-	{
-		T Get<T>( HttpContext context, string key );
+    /// <summary>
+    /// Interface for internal state services.
+    /// </summary>
+    public interface IInternalStateService
+    {
+        #region Public Methods and Operators
 
-		void Set( HttpContext context, string key, object value );
+        /// <summary>
+        /// Gets the specified key from the state store.
+        /// </summary>
+        /// <typeparam name="T">The expected type of the returned value.</typeparam>
+        /// <param name="key">The key.</param>
+        /// <returns>The value.</returns>
+        T Get<T>(string key);
 
-		void Remove( HttpContext context, string key );
-	}
+        /// <summary>
+        /// Removes the specified key from the state store.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        void Remove(string key);
+
+        /// <summary>
+        /// Sets the specified key to the specified value in the state store.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        void Set(string key, object value);
+
+        #endregion
+    }
 }

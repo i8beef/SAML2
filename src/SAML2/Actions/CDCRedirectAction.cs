@@ -28,6 +28,11 @@ namespace SAML2.Actions
         public const string TargetResource = "TargetResource";
 
         /// <summary>
+        /// State service instance
+        /// </summary>
+        private readonly IInternalStateService _stateService = StateServiceProvider.StateServiceFor(MethodBase.GetCurrentMethod().DeclaringType);
+
+        /// <summary>
         /// Name backing field.
         /// </summary>
         private string _name = "CDCRedirectAction";
@@ -42,11 +47,6 @@ namespace SAML2.Actions
             set { _name = value; }
         }
 
-		/// <summary>
-		/// State service instance
-		/// </summary>
-		private readonly IInternalStateService _stateService = StateServiceProvider.StateServiceFor(MethodBase.GetCurrentMethod().DeclaringType);
-
         /// <summary>
         /// Action performed during SignOn.
         /// </summary>
@@ -55,7 +55,7 @@ namespace SAML2.Actions
         /// <param name="assertion">The SAML assertion of the currently logged in user.</param>
         public void SignOnAction(AbstractEndpointHandler handler, HttpContext context, Saml20Assertion assertion)
         {
-	        var idpKey = _stateService.Get<string>( context, Saml20SignonHandler.IdpLoginSessionKey );
+            var idpKey = _stateService.Get<string>(Saml20SignonHandler.IdpLoginSessionKey);
 
             var signOnHandler = handler as Saml20SignonHandler;
             if (signOnHandler == null)

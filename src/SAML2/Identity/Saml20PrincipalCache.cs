@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Security.Principal;
-using System.Web;
 using SAML2.State;
 
 namespace SAML2.Identity
@@ -10,10 +9,10 @@ namespace SAML2.Identity
     /// </summary>
     internal class Saml20PrincipalCache
     {
-		/// <summary>
-		/// State service instance
-		/// </summary>
-		private static readonly IInternalStateService StateService = StateServiceProvider.StateServiceFor(MethodBase.GetCurrentMethod().DeclaringType);
+        /// <summary>
+        /// State service instance
+        /// </summary>
+        private static readonly IInternalStateService StateService = StateServiceProvider.StateServiceFor(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Adds the principal.
@@ -21,7 +20,7 @@ namespace SAML2.Identity
         /// <param name="principal">The principal.</param>
         internal static void AddPrincipal(IPrincipal principal)
         {
-	        StateService.Set( HttpContext.Current, typeof(Saml20Identity).FullName, principal );
+            StateService.Set(typeof(Saml20Identity).FullName, principal);
         }
 
         /// <summary>
@@ -29,7 +28,7 @@ namespace SAML2.Identity
         /// </summary>
         internal static void Clear()
         {
-	        StateService.Remove( HttpContext.Current, typeof(Saml20Identity).FullName );
+            StateService.Remove(typeof(Saml20Identity).FullName);
         }
 
         /// <summary>
@@ -38,7 +37,7 @@ namespace SAML2.Identity
         /// <returns>The <see cref="IPrincipal"/>.</returns>
         internal static IPrincipal GetPrincipal()
         {
-	        return StateService.Get<GenericPrincipal>( HttpContext.Current, typeof(Saml20Identity).FullName );
+            return StateService.Get<GenericPrincipal>(typeof(Saml20Identity).FullName);
         }
     }
 }

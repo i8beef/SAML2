@@ -68,6 +68,7 @@
     <Compile Include="Bindings\HttpSoapBindingParser.cs" />
     <Compile Include="Bindings\SoapConstants.cs" />
     <Compile Include="Config\ActionCollection.cs" />
+    <Compile Include="Config\StateSettingElement.cs" />
     <Compile Include="Config\ActionElement.cs" />
     <Compile Include="Config\AllowedAudienceUriCollection.cs" />
     <Compile Include="Config\AssertionProfileElement.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Config\ContactCollection.cs" />
     <Compile Include="Config\BindingType.cs" />
     <Compile Include="Config\ContactType.cs" />
+    <Compile Include="Config\StateSettingCollection.cs" />
     <Compile Include="Config\StateElement.cs" />
     <Compile Include="Config\HttpAuthCredentialsElement.cs" />
     <Compile Include="Config\EndpointType.cs" />
