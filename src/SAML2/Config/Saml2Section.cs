@@ -102,6 +102,17 @@ namespace SAML2.Config
             set { base["serviceProvider"] = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the state service configuration.
+        /// </summary>
+        /// <value>The state service configuration.</value>
+        [ConfigurationProperty("state")]
+        public StateElement State
+        {
+            get { return (StateElement)base["state"]; }
+            set { base["state"] = value; }
+        }
+
         #endregion
 
         /// <summary>
