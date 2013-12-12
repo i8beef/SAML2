@@ -28,10 +28,10 @@ namespace SAML2
         /// </summary>
         protected static readonly IInternalLogger Logger = LoggerProvider.LoggerFor(MethodBase.GetCurrentMethod().DeclaringType);
 
-		/// <summary>
-		/// State service instance
-		/// </summary>
-		protected static readonly IInternalStateService StateService = StateServiceProvider.StateServiceFor(MethodBase.GetCurrentMethod().DeclaringType);
+        /// <summary>
+        /// State service instance
+        /// </summary>
+        protected static readonly IInternalStateService StateService = StateServiceProvider.StateServiceFor(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// List of attributes.
@@ -128,8 +128,7 @@ namespace SAML2
         {
             var config = Saml2Config.GetConfig();
 
-	        var endpointId = StateService.Get<string>( context, Saml20AbstractEndpointHandler.IdpLoginSessionKey );
-
+            var endpointId = StateService.Get<string>(Saml20AbstractEndpointHandler.IdpLoginSessionKey);
             if (string.IsNullOrEmpty(endpointId))
             {
                 Logger.Error(ErrorMessages.AttrQueryNoLogin);
@@ -152,8 +151,7 @@ namespace SAML2
         /// <param name="endPoint">The IdP to perform the query against.</param>
         public void PerformQuery(HttpContext context, IdentityProviderElement endPoint)
         {
-	        var nameIdFormat = StateService.Get<string>( context, Saml20AbstractEndpointHandler.IdpNameIdFormat );
-
+            var nameIdFormat = StateService.Get<string>(Saml20AbstractEndpointHandler.IdpNameIdFormat);
             if (string.IsNullOrEmpty(nameIdFormat))
             {
                 nameIdFormat = Saml20Constants.NameIdentifierFormats.Persistent;

@@ -16,10 +16,10 @@ namespace SAML2.Protocol
         /// </summary>
         protected static readonly IInternalLogger Logger = LoggerProvider.LoggerFor(MethodBase.GetCurrentMethod().DeclaringType);
 
-		/// <summary>
-		/// State Service instance
-		/// </summary>
-	    protected static readonly IInternalStateService StateService = StateServiceProvider.StateServiceFor( MethodBase.GetCurrentMethod().DeclaringType );
+        /// <summary>
+        /// State Service instance
+        /// </summary>
+        protected static readonly IInternalStateService StateService = StateServiceProvider.StateServiceFor(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Gets or sets the redirect URL.
@@ -53,10 +53,10 @@ namespace SAML2.Protocol
         /// <param name="context">The context.</param>
         public void DoRedirect(HttpContext context)
         {
-	        var redirectUrl = StateService.Get<string>( context, "RedirectUrl" );
+            var redirectUrl = StateService.Get<string>("RedirectUrl");
             if (!string.IsNullOrEmpty(redirectUrl))
             {
-				StateService.Remove(context, "RedirectUrl");
+                StateService.Remove("RedirectUrl");
                 context.Response.Redirect(redirectUrl);
             }
             else if (string.IsNullOrEmpty(RedirectUrl))

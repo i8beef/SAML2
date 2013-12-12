@@ -128,7 +128,7 @@ namespace SAML2.Protocol
             isEncrypted = false;
             return null;
         }
-        
+
         #endregion
 
         #region Protected methods
@@ -232,8 +232,7 @@ namespace SAML2.Protocol
                 throw new Saml20Exception(ErrorMessages.ExpectedInResponseToEmpty);
             }
 
-	        var expectedInResponseTo = StateService.Get<string>( context, ExpectedInResponseToSessionKey );
-
+            var expectedInResponseTo = StateService.Get<string>(ExpectedInResponseToSessionKey);
             if (string.IsNullOrEmpty(expectedInResponseTo))
             {
                 throw new Saml20Exception(ErrorMessages.ExpectedInResponseToMissing);
@@ -328,10 +327,10 @@ namespace SAML2.Protocol
         private void DoSignOn(HttpContext context, Saml20Assertion assertion)
         {
             // User is now logged in at IDP specified in tmp
-	        StateService.Set( context, IdpLoginSessionKey, StateService.Get<string>( context, IdpTempSessionKey ) );
-	        StateService.Set( context, IdpSessionIdKey, assertion.SessionIndex );
-	        StateService.Set( context, IdpNameIdFormat, assertion.Subject.Format );
-	        StateService.Set( context, IdpNameId, assertion.Subject.Value );
+            StateService.Set(IdpLoginSessionKey, StateService.Get<string>(IdpTempSessionKey));
+            StateService.Set(IdpSessionIdKey, assertion.SessionIndex);
+            StateService.Set(IdpNameIdFormat, assertion.Subject.Format);
+            StateService.Set(IdpNameId, assertion.Subject.Value);
 
             Logger.DebugFormat(TraceMessages.SignOnProcessed, assertion.SessionIndex, assertion.Subject.Value, assertion.Subject.Format);
 
@@ -354,7 +353,7 @@ namespace SAML2.Protocol
         {
             var builder = new HttpArtifactBindingBuilder(context);
             var inputStream = builder.ResolveArtifact();
-            
+
             HandleSoap(context, inputStream);
         }
 
@@ -568,35 +567,35 @@ namespace SAML2.Protocol
             }
         }
 
-	    /// <summary>
-	    /// Send an authentication request to the IDP.
-	    /// </summary>
-	    /// <param name="context">The context.</param>
-	    private void SendRequest( HttpContext context )
-	    {
-		    // See if the "ReturnUrl" - parameter is set.
-		    var returnUrl = context.Request.QueryString["ReturnUrl"];
-		    if( !string.IsNullOrEmpty( returnUrl ) )
-		    {
-			    StateService.Set( context, "RedirectUrl", returnUrl );
-		    }
+        /// <summary>
+        /// Send an authentication request to the IDP.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        private void SendRequest(HttpContext context)
+        {
+            // See if the "ReturnUrl" - parameter is set.
+            var returnUrl = context.Request.QueryString["ReturnUrl"];
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                StateService.Set("RedirectUrl", returnUrl);
+            }
 
-		    var idp = RetrieveIDP( context );
-		    if( idp == null )
-		    {
-			    // Display a page to the user where she can pick the IDP
-			    Logger.DebugFormat( TraceMessages.IdentityProviderRedirect );
+            var idp = RetrieveIDP(context);
+            if (idp == null)
+            {
+                // Display a page to the user where she can pick the IDP
+                Logger.DebugFormat(TraceMessages.IdentityProviderRedirect);
 
-			    var page = new SelectSaml20IDP();
-			    page.ProcessRequest( context );
-			    return;
-		    }
+                var page = new SelectSaml20IDP();
+                page.ProcessRequest(context);
+                return;
+            }
 
-		    var authnRequest = Saml20AuthnRequest.GetDefault();
-		    TransferClient( idp, authnRequest, context );
-	    }
+            var authnRequest = Saml20AuthnRequest.GetDefault();
+            TransferClient(idp, authnRequest, context);
+        }
 
-	    /// <summary>
+        /// <summary>
         /// Transfers the client.
         /// </summary>
         /// <param name="identityProvider">The identity provider.</param>
@@ -605,7 +604,7 @@ namespace SAML2.Protocol
         private void TransferClient(IdentityProviderElement identityProvider, Saml20AuthnRequest request, HttpContext context)
         {
             // Set the last IDP we attempted to login at.
-		    StateService.Set( context, IdpTempSessionKey, identityProvider.Id );
+            StateService.Set(IdpTempSessionKey, identityProvider.Id);
 
             // Determine which endpoint to use from the configuration file or the endpoint metadata.
             var destination = DetermineEndpointConfiguration(BindingType.Redirect, identityProvider.Endpoints.SignOnEndpoint, identityProvider.Metadata.SSOEndpoints);
@@ -617,13 +616,13 @@ namespace SAML2.Protocol
             }
 
             // Check isPassive status
-		    var isPassiveFlag = StateService.Get<bool?>( context, IdpIsPassive );
+            var isPassiveFlag = StateService.Get<bool?>(IdpIsPassive);
 
             if (isPassiveFlag != null && (bool)isPassiveFlag)
             {
                 request.IsPassive = true;
-				StateService.Set(context, IdpIsPassive, null);
-			}
+                StateService.Set(IdpIsPassive, null);
+            }
 
             if (identityProvider.IsPassive)
             {
@@ -631,12 +630,12 @@ namespace SAML2.Protocol
             }
 
             // Check if request should forceAuthn
-			var forceAuthnFlag = StateService.Get<bool?>(context, IdpForceAuthn);
-			if (forceAuthnFlag != null && (bool)forceAuthnFlag)
+            var forceAuthnFlag = StateService.Get<bool?>(IdpForceAuthn);
+            if (forceAuthnFlag != null && (bool)forceAuthnFlag)
             {
                 request.ForceAuthn = true;
-				StateService.Set(context, IdpForceAuthn, null);
-			}
+                StateService.Set(IdpForceAuthn, null);
+            }
 
             // Check if protocol binding should be forced
             if (identityProvider.Endpoints.SignOnEndpoint != null)
@@ -648,7 +647,7 @@ namespace SAML2.Protocol
             }
 
             // Save request message id to session
-			StateService.Set(context, ExpectedInResponseToSessionKey, request.Id);
+            StateService.Set(ExpectedInResponseToSessionKey, request.Id);
 
             switch (destination.Binding)
             {
