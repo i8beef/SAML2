@@ -7,28 +7,6 @@ namespace SAML2.State
     /// </summary>
     public class SessionStateService : IInternalStateService
     {
-        #region Fields
-
-        /// <summary>
-        /// The HTTP context.
-        /// </summary>
-        private readonly HttpContext _context;
-
-        #endregion
-
-        #region Constructors and Destructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SessionStateService" /> class.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        public SessionStateService(HttpContext context)
-        {
-            _context = context;
-        }
-
-        #endregion
-
         #region Public Methods and Operators
 
         /// <summary>
@@ -39,7 +17,7 @@ namespace SAML2.State
         /// <returns>The value.</returns>
         public T Get<T>(string key)
         {
-            var value = _context.Session[key];
+            var value = HttpContext.Current.Session[key];
 
             return value == null ? default(T) : (T)value;
         }
@@ -50,7 +28,7 @@ namespace SAML2.State
         /// <param name="key">The key.</param>
         public void Remove(string key)
         {
-            _context.Session.Remove(key);
+            HttpContext.Current.Session.Remove(key);
         }
 
         /// <summary>
@@ -60,7 +38,7 @@ namespace SAML2.State
         /// <param name="value">The value.</param>
         public void Set(string key, object value)
         {
-            _context.Session[key] = value;
+            HttpContext.Current.Session[key] = value;
         }
 
         #endregion

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 
 namespace SAML2.State
 {
@@ -13,7 +12,7 @@ namespace SAML2.State
         /// <summary>
         /// Session state service instance.
         /// </summary>
-        private static readonly IInternalStateService SessionStateService = new SessionStateService(HttpContext.Current);
+        private static readonly IInternalStateService SessionStateService = new SessionStateService();
 
         #endregion
 
