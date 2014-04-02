@@ -32,7 +32,7 @@ namespace SAML2.Actions
         {
             var config = Saml2Config.GetConfig();
 
-            return config.Actions == null
+            return config.Actions == null || config.Actions.Count == 0
                        ? GetDefaultActions()
                        : config.Actions.Select(ac => (IAction)Activator.CreateInstance(Type.GetType(ac.Type))).ToList();
         }

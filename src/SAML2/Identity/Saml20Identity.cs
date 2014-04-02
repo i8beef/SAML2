@@ -146,7 +146,12 @@ namespace SAML2.Identity
             var subjectIdentifier = assertion.Subject.Value;
             if (isPersistentPseudonym && point.PersistentPseudonym != null)
             {
-                subjectIdentifier = point.PersistentPseudonym.GetMapper().MapIdentity(assertion.Subject);
+                var persistentPseudonymMapper = point.PersistentPseudonym.GetMapper();
+
+                if (persistentPseudonymMapper != null)
+                {
+                    subjectIdentifier = persistentPseudonymMapper.MapIdentity(assertion.Subject);
+                }
             }
 
             // Create identity
