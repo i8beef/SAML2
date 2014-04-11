@@ -2,6 +2,8 @@
 
 namespace SAML2.Config
 {
+    using System;
+
     /// <summary>
     /// Metadata configuration element.
     /// </summary>
@@ -55,6 +57,17 @@ namespace SAML2.Config
         {
             get { return (RequestedAttributesCollection)base["requestedAttributes"]; }
             set { base["requestedAttributes"] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the lifetime of the metata. The expiration time is equal to the current time + lifetime.
+        /// </summary>
+        /// <value>The URL.</value>
+        [ConfigurationProperty("lifetime", DefaultValue = "7.00:00:00")]
+        public TimeSpan Lifetime
+        {
+            get { return (TimeSpan)base["lifetime"]; }
+            set { base["lifetime"] = value; }
         }
 
         #endregion
