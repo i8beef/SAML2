@@ -345,7 +345,7 @@ namespace SAML2
                         }
                         else
                         {
-                            _assertionValidator = (ISaml20AssertionValidator)Activator.CreateInstance(Type.GetType(_profile), config.AllowedAudienceUris, _quirksMode);
+                            _assertionValidator = (ISaml20AssertionValidator)Activator.CreateInstance(Type.GetType(_profile), config.AllowedAudienceUris.Select(x => x.Uri).ToList(), _quirksMode);
                         }
                     }
                 }
