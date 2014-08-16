@@ -702,7 +702,6 @@ namespace SAML2.Protocol
                 default:
                     Logger.Error(ErrorMessages.EndpointBindingInvalid);
                     throw new Saml20Exception(ErrorMessages.EndpointBindingInvalid);
-                    break;
             }
         }
 

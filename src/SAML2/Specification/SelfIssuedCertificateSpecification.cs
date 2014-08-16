@@ -33,7 +33,7 @@ namespace SAML2.Specification
             }
             catch (Exception e)
             {
-                Logging.LoggerProvider.LoggerFor(GetType()).Warn(string.Format(Tracing.CertificateIsNotRFC3280Valid, certificate.SubjectName.Name, certificate.Thumbprint, e.Message), e);
+                Logging.LoggerProvider.LoggerFor(GetType()).Warn(string.Format(ErrorMessages.CertificateIsNotRFC3280Valid, certificate.SubjectName.Name, certificate.Thumbprint, e.Message), e);
             }
 
             return false;
