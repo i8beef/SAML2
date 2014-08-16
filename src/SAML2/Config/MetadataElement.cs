@@ -59,7 +59,7 @@ namespace SAML2.Config
         }
 
         /// <summary>
-        /// Gets or sets the lifetime of the metata. The expiration time is equal to the current time + lifetime.
+        /// Gets or sets the lifetime of the metadata. The expiration time is equal to the current time + lifetime.
         /// </summary>
         /// <value>The URL.</value>
         [ConfigurationProperty("lifetime", DefaultValue = "7.00:00:00")]
