@@ -378,7 +378,7 @@ namespace SAML2.Protocol
             }
 
             var quirksMode = endp.QuirksMode;
-            var assertion = new Saml20Assertion(elem, null, quirksMode);
+            var assertion = new Saml20Assertion(elem, null, Saml2Config.GetConfig().AssertionProfile.AssertionValidator, quirksMode);
 
             // Check signatures
             if (!endp.OmitAssertionSignatureCheck)

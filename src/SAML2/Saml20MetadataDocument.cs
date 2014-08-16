@@ -419,7 +419,7 @@ namespace SAML2
         {
             var entity = CreateDefaultEntity();
             entity.EntityID = config.ServiceProvider.Id;
-            entity.ValidUntil = DateTime.Now.AddDays(7);
+            entity.ValidUntil = DateTime.Now + config.Metadata.Lifetime;
 
             var serviceProviderDescriptor = new SpSsoDescriptor
                                    {
