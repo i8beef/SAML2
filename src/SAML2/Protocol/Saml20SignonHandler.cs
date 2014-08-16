@@ -434,8 +434,6 @@ namespace SAML2.Protocol
             var doc = GetDecodedSamlResponse(context, defaultEncoding);
             Logger.DebugFormat(TraceMessages.SamlResponseReceived, doc.OuterXml);
 
-            CheckReplayAttack(context, doc.DocumentElement);
-
             var status = GetStatusElement(doc.DocumentElement);
             if (status.StatusCode.Value != Saml20Constants.StatusCodes.Success)
             {
@@ -457,9 +455,16 @@ namespace SAML2.Protocol
                 assertion = GetDecryptedAssertion(assertion).Assertion.DocumentElement;
             }
 
-            // Check if an encoding-override exists for the IdP endpoint in question
             var issuer = GetIssuer(assertion);
             var endpoint = RetrieveIDPConfiguration(issuer);
+
+            // Replay attack check
+            if (!endpoint.AllowUnsolicitedResponses)
+            {
+                CheckReplayAttack(context, doc.DocumentElement);
+            }
+
+            // Check if an encoding-override exists for the IdP endpoint in question
             if (!string.IsNullOrEmpty(endpoint.ResponseEncoding))
             {
                 Encoding encodingOverride;
@@ -528,7 +533,10 @@ namespace SAML2.Protocol
 
                 if (parser.ArtifactResponse.Any.LocalName == Response.ElementName)
                 {
-                    CheckReplayAttack(context, parser.ArtifactResponse.Any);
+                    if (!idp.AllowUnsolicitedResponses)
+                    {
+                        CheckReplayAttack(context, parser.ArtifactResponse.Any);
+                    }
 
                     var responseStatus = GetStatusElement(parser.ArtifactResponse.Any);
                     if (responseStatus.StatusCode.Value != Saml20Constants.StatusCodes.Success)

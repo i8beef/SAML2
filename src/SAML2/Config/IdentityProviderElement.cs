@@ -15,6 +15,20 @@ namespace SAML2.Config
 
         #region Attributes
 
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to allow this IDP to send unsolicited responses.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if allow unsolicited responses; otherwise, <c>false</c>.
+        /// </value>
+        [ConfigurationProperty("allowUnsolicitedResponses")]
+        public bool AllowUnsolicitedResponses
+        {
+            get { return (bool)base["allowUnsolicitedResponses"]; }
+            set { base["allowUnsolicitedResponses"] = value; }
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="IdentityProviderElement"/> is default.
         /// </summary>
