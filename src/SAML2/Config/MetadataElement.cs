@@ -21,6 +21,17 @@ namespace SAML2.Config
             set { base["excludeArtifactEndpoints"] = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the lifetime of the metadata. The expiration time is equal to the current time + lifetime.
+        /// </summary>
+        /// <value>The URL.</value>
+        [ConfigurationProperty("lifetime", DefaultValue = "7.00:00:00")]
+        public TimeSpan Lifetime
+        {
+            get { return (TimeSpan)base["lifetime"]; }
+            set { base["lifetime"] = value; }
+        }
+
         #endregion
 
         #region Elements
@@ -56,17 +67,6 @@ namespace SAML2.Config
         {
             get { return (RequestedAttributesCollection)base["requestedAttributes"]; }
             set { base["requestedAttributes"] = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the lifetime of the metadata. The expiration time is equal to the current time + lifetime.
-        /// </summary>
-        /// <value>The URL.</value>
-        [ConfigurationProperty("lifetime", DefaultValue = "7.00:00:00")]
-        public TimeSpan Lifetime
-        {
-            get { return (TimeSpan)base["lifetime"]; }
-            set { base["lifetime"] = value; }
         }
 
         #endregion
