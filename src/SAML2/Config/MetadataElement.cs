@@ -1,9 +1,8 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 
 namespace SAML2.Config
 {
-    using System;
-
     /// <summary>
     /// Metadata configuration element.
     /// </summary>
