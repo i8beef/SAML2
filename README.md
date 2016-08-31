@@ -1,6 +1,6 @@
 # SAML2
 
-[![Build status](https://ci.appveyor.com/api/projects/status/prw1j26kc1kvbl4c/branch/master?svg=true)](https://ci.appveyor.com/project/i8beef/saml2/branch/release)
+[![Build status](https://ci.appveyor.com/api/projects/status/prw1j26kc1kvbl4c/branch/release?svg=true)](https://ci.appveyor.com/project/i8beef/saml2/branch/release)
 [![Build status](https://ci.appveyor.com/api/projects/status/prw1j26kc1kvbl4c/branch/master?svg=true)](https://ci.appveyor.com/project/i8beef/saml2/branch/master)
 
 SAML2 is a .NET implementation of the OASIS SAML 2.0 specification. It is a fork of the OIOSAML.NET project by the Danish government.
