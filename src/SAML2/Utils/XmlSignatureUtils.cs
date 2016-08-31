@@ -75,7 +75,41 @@ namespace SAML2.Utils
             // CheckDocument(element);
             var signedXml = RetrieveSignature(el);
 
-            return signedXml.CheckSignature(alg);
+            var signed = signedXml.CheckSignature(alg);
+
+            // CheckSignature may have failed due to a .NET bug when validating nodes with nested signatures
+            // if the reference URI is canonicalized.  See: https://support.microsoft.com/en-us/kb/952697
+            if (!signed)
+            {
+                try
+                {
+                    // Search all of the signing nodes in the document for the one whose parent is
+                    // the element we are interested in
+                    XmlDocument doc = el.OwnerDocument;
+
+                    XmlNodeList nodeList = doc.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig);
+                    foreach (XmlElement element in nodeList)
+                    {
+                        if (element.ParentNode == el)
+                        {
+                            // Provide SignedXml.LoadXml with a Signature node who’s OwnerDocument is the Signature's parent node. 
+                            XmlDocument tempDoc = new XmlDocument() { PreserveWhitespace = true, XmlResolver = null };
+                            tempDoc.LoadXml(element.ParentNode.OuterXml);
+
+                            SignedXml sxml = new SignedXml(doc);
+                            XmlNodeList newNodeList = tempDoc.GetElementsByTagName(Schema.XmlDSig.Signature.ElementName, Saml20Constants.Xmldsig);
+                            sxml.LoadXml((XmlElement)newNodeList[0]);
+                            signed = sxml.CheckSignature(alg);
+                        }
+                    }
+                }
+                catch
+                {
+                    signed = false;
+                }
+            }
+
+            return signed;
         }
 
         /// <summary>
