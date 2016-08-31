@@ -92,7 +92,7 @@ namespace SAML2.Utils
                     {
                         if (element.ParentNode == el)
                         {
-                            // Provide SignedXml.LoadXml with a Signature node who’s OwnerDocument is the Signature's parent node. 
+                            // Provide SignedXml.LoadXml with a Signature node whoï¿½s OwnerDocument is the Signature's parent node. 
                             XmlDocument tempDoc = new XmlDocument() { PreserveWhitespace = true, XmlResolver = null };
                             tempDoc.LoadXml(element.ParentNode.OuterXml);
 
@@ -421,7 +421,7 @@ namespace SAML2.Utils
         {
             if (el.OwnerDocument.DocumentElement == null)
             {
-                var doc = new XmlDocument() { PreserveWhitespace = true };
+                var doc = new XmlDocument() { PreserveWhitespace = true, XmlResolver = null };
                 doc.LoadXml(el.OuterXml);
                 el = doc.DocumentElement;
             }

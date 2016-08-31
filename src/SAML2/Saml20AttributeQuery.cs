@@ -180,7 +180,7 @@ namespace SAML2
             _attrQuery.Subject.Items = new object[] { name };
             _attrQuery.SamlAttribute = _attributes.ToArray();
 
-            var query = new XmlDocument();
+            var query = new XmlDocument { XmlResolver = null };
             query.LoadXml(Serialization.SerializeToXmlString(_attrQuery));
 
             XmlSignatureUtils.SignDocument(query, Id);

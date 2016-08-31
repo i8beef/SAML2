@@ -80,7 +80,7 @@ namespace SAML2.Tests.Validation
                                                   Method = Saml20Constants.SubjectConfirmationMethods.HolderOfKey,
                                                   SubjectConfirmationData = new SubjectConfirmationData()
                                               };
-                var doc = new XmlDocument();
+                var doc = new XmlDocument { XmlResolver = null };
                 var elem = doc.CreateElement("ds", "KeyInfo", Saml20Constants.Xmldsig);
                 elem.AppendChild(doc.CreateElement("lalala"));
 

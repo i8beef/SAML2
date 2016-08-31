@@ -96,7 +96,7 @@ namespace SAML2.Schema.XmlDSig
         public static explicit operator System.Security.Cryptography.Xml.KeyInfo(KeyInfo ki)
         {
             var result = new System.Security.Cryptography.Xml.KeyInfo();
-            var doc = new XmlDocument();
+            var doc = new XmlDocument { XmlResolver = null };
             doc.LoadXml(Serialization.SerializeToXmlString(ki));
             if (doc.DocumentElement != null)
             {

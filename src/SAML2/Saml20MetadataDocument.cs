@@ -312,7 +312,7 @@ namespace SAML2
         /// <returns>The XML.</returns>
         public string ToXml(Encoding encoding)
         {
-            var doc = new XmlDocument { PreserveWhitespace = true };
+            var doc = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
             doc.LoadXml(Serialization.SerializeToXmlString(Entity));
 
             // Add the correct encoding to the head element.

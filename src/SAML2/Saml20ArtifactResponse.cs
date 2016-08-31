@@ -100,7 +100,7 @@ namespace SAML2
         /// <returns>The XML document.</returns>
         public XmlDocument GetXml()
         {
-            var doc = new XmlDocument { PreserveWhitespace = true };
+            var doc = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
             doc.LoadXml(Serialization.SerializeToXmlString(_artifactResponse));
 
             return doc;

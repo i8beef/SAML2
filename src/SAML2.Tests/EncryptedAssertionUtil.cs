@@ -21,8 +21,8 @@ namespace SAML2.Tests
         /// <param name="file">The file.</param>
         public static void DecryptAssertion(string file)
         {
-            var doc = new XmlDocument();
-            doc.Load(file);            
+            var doc = new XmlDocument { XmlResolver = null };
+            doc.Load(file);
             var encryptedDataElement = GetElement(Schema.XEnc.EncryptedData.ElementName, Saml20Constants.Xenc, doc);                        
 
             var encryptedData = new EncryptedData();
@@ -66,7 +66,7 @@ namespace SAML2.Tests
             var encryptedXml = new EncryptedXml();
             var plaintext = encryptedXml.DecryptData(encryptedData, symmetricKey);
 
-            var assertion = new XmlDocument();
+            var assertion = new XmlDocument { XmlResolver = null };
             assertion.Load(new StringReader(System.Text.Encoding.UTF8.GetString(plaintext)));
 
             // A very simple test to ensure that there is indeed an assertion in the plaintext.

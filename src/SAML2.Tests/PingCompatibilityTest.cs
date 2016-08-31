@@ -23,12 +23,12 @@ namespace SAML2.Tests
         public void DecryptPingAssertion()
         {
             // Load the assertion
-            var doc = new XmlDocument();
+            var doc = new XmlDocument { XmlResolver = null };
             doc.Load(File.OpenRead(@"c:\tmp\pingassertion.txt"));
 
             var xe = GetElement(EncryptedAssertion.ElementName, Saml20Constants.Assertion, doc);
 
-            var doc2 = new XmlDocument();
+            var doc2 = new XmlDocument { XmlResolver = null };
             doc2.AppendChild(doc2.ImportNode(xe, true));
 
             var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);

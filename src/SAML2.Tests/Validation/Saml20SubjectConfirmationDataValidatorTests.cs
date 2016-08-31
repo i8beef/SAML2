@@ -44,7 +44,7 @@ namespace SAML2.Tests.Validation
                 // Arrange
                 var subjectConfirmationData = new KeyInfoConfirmationData();
                 subjectConfirmationData.Recipient = "urn:wellformed.uri:ok";
-                var doc = new XmlDocument();
+                var doc = new XmlDocument { XmlResolver = null };
                 subjectConfirmationData.AnyElements = new[] { doc.CreateElement("ds", "KeyInfo", "http://wrongNameSpace.uri") };
 
                 var validator = new Saml20SubjectConfirmationDataValidator();
@@ -62,7 +62,7 @@ namespace SAML2.Tests.Validation
             {
                 // Arrange
                 var subjectConfirmationData = new KeyInfoConfirmationData { Recipient = "urn:wellformed.uri:ok" };
-                var doc = new XmlDocument();
+                var doc = new XmlDocument { XmlResolver = null };
                 var elem = doc.CreateElement("ds", "KeyInfo", "http://wrongNameSpace.uri");
                 elem.AppendChild(doc.CreateElement("ds", "KeyName", Saml20Constants.Xmldsig));
 
@@ -83,7 +83,7 @@ namespace SAML2.Tests.Validation
             {
                 // Arrange
                 var subjectConfirmationData = new KeyInfoConfirmationData { Recipient = "urn:wellformed.uri:ok" };
-                var doc = new XmlDocument();
+                var doc = new XmlDocument { XmlResolver = null };
                 subjectConfirmationData.AnyElements = new[] { doc.CreateElement("ds", "KeyInfo", Saml20Constants.Xmldsig) };
 
                 var validator = new Saml20SubjectConfirmationDataValidator();
@@ -148,7 +148,7 @@ namespace SAML2.Tests.Validation
             {
                 // Arrange
                 var subjectConfirmationData = new KeyInfoConfirmationData { Recipient = "urn:wellformed.uri:ok" };
-                var doc = new XmlDocument();
+                var doc = new XmlDocument { XmlResolver = null };
                 var elem = doc.CreateElement("ds", "KeyInfo", Saml20Constants.Xmldsig);
                 elem.AppendChild(doc.CreateElement("lalala"));
 

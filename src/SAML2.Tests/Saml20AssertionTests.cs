@@ -44,7 +44,7 @@ namespace SAML2.Tests
                 // Verify that the modified assertion can survive complete serialization and deserialization.
                 var assertionString = assertion.GetXml().OuterXml;
 
-                var deserializedAssertionDoc = new XmlDocument { PreserveWhitespace = true };
+                var deserializedAssertionDoc = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
                 deserializedAssertionDoc.Load(new StringReader(assertionString));
 
                 var deserializedAssertion = new Saml20Assertion(deserializedAssertionDoc.DocumentElement, null, false);
@@ -124,7 +124,7 @@ namespace SAML2.Tests
                 var attributeStatments = (AttributeStatement)statements.Find(x => x is AttributeStatement);
                 var attribute = (SamlAttribute)attributeStatments.Items[0];
 
-                var doc = new XmlDocument();
+                var doc = new XmlDocument { XmlResolver = null };
                 attribute.AnyAttr = new[] { doc.CreateAttribute(string.Empty, "Nonqualified", string.Empty) };
 
                 saml20Assertion.Items = statements.ToArray();
@@ -145,7 +145,7 @@ namespace SAML2.Tests
                 var attributeStatments = (AttributeStatement)statements.Find(x => x is AttributeStatement);
                 var attribute = (SamlAttribute)attributeStatments.Items[0];
 
-                var doc = new XmlDocument();
+                var doc = new XmlDocument { XmlResolver = null };
                 saml20Assertion.Items = statements.ToArray();
 
                 foreach (var samlns in Saml20Constants.SamlNamespaces)

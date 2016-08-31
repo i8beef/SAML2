@@ -76,7 +76,7 @@ namespace SAML2.Utils
             Serialize(item, stream);
 
             // create the XmlDocument to return
-            var doc = new XmlDocument();
+            var doc = new XmlDocument { XmlResolver = null };
             stream.Seek(0, SeekOrigin.Begin);
             doc.Load(stream);
 

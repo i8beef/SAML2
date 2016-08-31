@@ -144,7 +144,7 @@ namespace SAML2.Bindings
             var reader = new StreamReader(InputStream);
             SoapEnvelope = reader.ReadToEnd();
 
-            var doc = new XmlDocument { PreserveWhitespace = true };
+            var doc = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
             doc.LoadXml(SoapEnvelope);
 
             var soapBody = (XmlElement)doc.GetElementsByTagName(SoapConstants.SoapBody, SoapConstants.SoapNamespace)[0];
@@ -159,7 +159,7 @@ namespace SAML2.Bindings
         /// <returns>True if the signature is valid, else false.</returns>
         private bool CheckSignature(AsymmetricAlgorithm key)
         {
-            var doc = new XmlDocument { PreserveWhitespace = true };
+            var doc = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
             doc.LoadXml(SamlMessage.OuterXml);
 
             return XmlSignatureUtils.CheckSignature(doc, key);

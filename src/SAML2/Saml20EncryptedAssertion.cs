@@ -158,7 +158,7 @@ namespace SAML2
             var encryptedXml = new EncryptedXml();
             var plaintext = encryptedXml.DecryptData(encryptedData, sessionKey);
 
-            Assertion = new XmlDocument { PreserveWhitespace = true };
+            Assertion = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
             try
             {
                 Assertion.Load(new StringReader(Encoding.UTF8.GetString(plaintext)));
@@ -210,7 +210,7 @@ namespace SAML2
             // Create an empty EncryptedAssertion to hook into.
             var encryptedAssertion = new EncryptedAssertion { EncryptedData = new Schema.XEnc.EncryptedData() };
 
-            var result = new XmlDocument();
+            var result = new XmlDocument { XmlResolver = null };
             result.LoadXml(Serialization.SerializeToXmlString(encryptedAssertion));
 
             var encryptedDataElement = GetElement(Schema.XEnc.EncryptedData.ElementName, Saml20Constants.Xenc, result.DocumentElement);
@@ -236,7 +236,7 @@ namespace SAML2
         {
             CheckEncryptedAssertionElement(element);
 
-            _encryptedAssertion = new XmlDocument();
+            _encryptedAssertion = new XmlDocument { XmlResolver = null };
             _encryptedAssertion.AppendChild(_encryptedAssertion.ImportNode(element, true));
         }
 

@@ -121,7 +121,7 @@ namespace SAML2.Bindings
             Console.WriteLine(response);
             reqChannel.Close();
 
-            var doc = new XmlDocument { PreserveWhitespace = true };
+            var doc = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
             doc.Load(response.GetReaderAtBodyContents());
             var outerXml = doc.DocumentElement.OuterXml;
             var memStream = new MemoryStream(Encoding.UTF8.GetBytes(outerXml));

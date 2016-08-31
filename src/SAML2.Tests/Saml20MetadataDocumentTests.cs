@@ -26,7 +26,7 @@ namespace SAML2.Tests
             public void CanExtractCertificates()
             {
                 // Arrange
-                var doc = new XmlDocument { PreserveWhitespace = true };
+                var doc = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
                 doc.Load(@"Protocol\MetadataDocs\metadata-ADLER.xml");
 
                 // Act
@@ -53,7 +53,7 @@ namespace SAML2.Tests
             public void CanExtractEndpoints()
             {
                 // Arrange
-                var doc = new XmlDocument { PreserveWhitespace = true };
+                var doc = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
                 doc.Load(@"Protocol\MetadataDocs\metadata-ADLER.xml");
 
                 // Act
@@ -88,7 +88,7 @@ namespace SAML2.Tests
 
                 // Act
                 var metadata = doc.ToXml();
-                var document = new XmlDocument { PreserveWhitespace = true };
+                var document = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
                 document.LoadXml(metadata);
                 var result = XmlSignatureUtils.CheckSignature(document);
 

@@ -35,7 +35,7 @@ namespace SAML2.Tests
                 throw new ArgumentNullException("assertion");
             }
 
-            var res = new XmlDocument { PreserveWhitespace = true };
+            var res = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
             res.Load(new StringReader(Serialization.SerializeToXmlString(assertion)));
 
             return res;
@@ -213,7 +213,7 @@ namespace SAML2.Tests
         /// <returns>The XML document.</returns>
         public static XmlDocument GetTestAssertion()
         {
-            var res = new XmlDocument { PreserveWhitespace = true };
+            var res = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
             res.Load(new StringReader(Serialization.SerializeToXmlString(GetBasicAssertion())));
 
             return res;
@@ -271,7 +271,7 @@ namespace SAML2.Tests
         {
             using (var fs = File.OpenRead(assertionFile))
             {
-                var document = new XmlDocument { PreserveWhitespace = true };
+                var document = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
                 document.Load(fs);
                 fs.Close();
 
@@ -289,7 +289,7 @@ namespace SAML2.Tests
             var assertionBase64 = File.ReadAllText(@"Assertions\fobs-assertion2");
             var assertionBytes = Convert.FromBase64String(assertionBase64);
 
-            var document = new XmlDocument { PreserveWhitespace = true };
+            var document = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
             document.Load(new MemoryStream(assertionBytes));
 
             return document;

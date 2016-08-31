@@ -439,7 +439,7 @@ namespace SAML2
                 signatureParentNode.RemoveChild(sigNode);
             }
 
-            var assertionDocument = new XmlDocument();
+            var assertionDocument = new XmlDocument { XmlResolver = null };
             assertionDocument.Load(new StringReader(Serialization.SerializeToXmlString(XmlAssertion)));
 
             AddSignature(assertionDocument, cert);

@@ -43,7 +43,7 @@ namespace SAML2.Bindings
 
             Message = Encoding.UTF8.GetString(Convert.FromBase64String(base64));
 
-            Document = new XmlDocument { PreserveWhitespace = true };
+            Document = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
             Document.LoadXml(Message);
         }
 

@@ -259,7 +259,7 @@ namespace SAML2.Protocol
 
             var base64 = context.Request.Params["SAMLResponse"];
 
-            var doc = new XmlDocument { PreserveWhitespace = true };
+            var doc = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
             var samlResponse = encoding.GetString(Convert.FromBase64String(base64));
             doc.LoadXml(samlResponse);
 

@@ -201,7 +201,7 @@ namespace SAML2.Config
                 throw new ArgumentException("DocumentElement cannot be null", "doc");
             }
 
-            var other = new XmlDocument { PreserveWhitespace = true };
+            var other = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
             other.LoadXml(doc.OuterXml);
 
             foreach (var node in other.DocumentElement.ChildNodes.Cast<XmlNode>().Where(node => node.Name != IdpSsoDescriptor.ElementName).ToList())
@@ -265,7 +265,7 @@ namespace SAML2.Config
         /// <returns>The XML document.</returns>
         private XmlDocument LoadFileAsXmlDocument(string filename)
         {
-            var doc = new XmlDocument { PreserveWhitespace = true };
+            var doc = new XmlDocument { PreserveWhitespace = true, XmlResolver = null };
 
             try
             {
