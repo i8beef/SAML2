@@ -28,7 +28,7 @@ namespace SAML2.Schema.XmlDSig
         /// Gets or sets the algorithm.
         /// </summary>
         /// <value>The algorithm.</value>
-        [XmlAttribute("v", DataType = "anyURI")]
+        [XmlAttribute("Algorithm", DataType = "anyURI")]
         public string Algorithm { get; set; }
         
         #endregion
