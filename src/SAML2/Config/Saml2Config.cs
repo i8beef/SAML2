@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.IO;
 
 namespace SAML2.Config
 {
@@ -20,7 +21,15 @@ namespace SAML2.Config
         {
             if (_config == null)
             {
-                _config = ConfigurationManager.GetSection(Saml2Section.Name) as Saml2Section;
+                ExeConfigurationFileMap fileMap = new ExeConfigurationFileMap();
+                string physicalWebAppPath = System.Web.Hosting.HostingEnvironment.MapPath("~/SAML2.config");
+
+                if (System.IO.File.Exists(physicalWebAppPath))
+                {
+                    fileMap.ExeConfigFilename = physicalWebAppPath;
+                    Configuration configFile = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
+                    _config = configFile.GetSection(Saml2Section.Name) as Saml2Section;
+                }
 
                 if (_config == null)
                 {
@@ -39,8 +48,16 @@ namespace SAML2.Config
         public static void Refresh()
         {
             _config = null;
-            ConfigurationManager.RefreshSection(Saml2Section.Name);
-            _config = ConfigurationManager.GetSection(Saml2Section.Name) as Saml2Section;
+            ExeConfigurationFileMap fileMap = new ExeConfigurationFileMap();
+            string physicalWebAppPath = System.Web.Hosting.HostingEnvironment.MapPath("~/SAML2.config");
+
+            if (System.IO.File.Exists(physicalWebAppPath))
+            {
+                fileMap.ExeConfigFilename = physicalWebAppPath;
+                Configuration configFile = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
+                ConfigurationManager.RefreshSection(Saml2Section.Name);
+                _config = configFile.GetSection(Saml2Section.Name) as Saml2Section;
+            }
 
             if (_config == null)
             {
