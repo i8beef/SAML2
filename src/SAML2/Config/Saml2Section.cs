@@ -7,11 +7,6 @@ namespace SAML2.Config
     /// </summary>
     public class Saml2Section : ConfigurationSection
     {
-        /// <summary>
-        /// Gets the section name.
-        /// </summary>
-        public static string Name { get { return "saml2"; } }
-
         #region Elements
 
         /// <summary>

@@ -37,9 +37,9 @@ namespace SAML2.Config
         /// </summary>
         /// <value>The name of the store.</value>
         [ConfigurationProperty("storeName", IsRequired = true)]
-        public string StoreName
+        public StoreName StoreName
         {
-            get { return (string)base["storeName"]; }
+            get { return (StoreName)base["storeName"]; }
             set { base["storeName"] = value; }
         }
 
