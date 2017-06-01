@@ -7,14 +7,17 @@ namespace SAML2.Actions
     /// An implementation of the IAction interface can be called during login and logoff of the 
     /// SAML Connector framework in order to perform a specific action.
     /// </summary>
-    public interface IAction
+    public interface IAction : ISignOnAction, ILogoutAction
     {
         /// <summary>
         /// Gets or sets the name of the action.
         /// </summary>
         /// <value>The name.</value>
         string Name { get; set; }
+    }
 
+    public interface ISignOnAction
+    {
         /// <summary>
         /// Action performed during SignOn.
         /// </summary>
@@ -23,6 +26,10 @@ namespace SAML2.Actions
         /// <param name="assertion">The SAML assertion of the currently logged in user.</param>
         void SignOnAction(AbstractEndpointHandler handler, HttpContext context, Saml20Assertion assertion);
 
+    }
+
+    public interface ILogoutAction
+    {
         /// <summary>
         /// Action performed during logout.
         /// </summary>

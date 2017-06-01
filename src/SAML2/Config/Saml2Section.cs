@@ -7,17 +7,33 @@ namespace SAML2.Config
     /// </summary>
     public class Saml2Section : ConfigurationSection
     {
+        /// <summary>
+        /// Gets the section name.
+        /// </summary>
+        public static string Name { get { return "saml2"; } }
+
         #region Elements
 
         /// <summary>
         /// Gets or sets the actions to perform on successful processing.
         /// </summary>
         /// <value>The actions.</value>
-        [ConfigurationProperty("actions")]
-        public ActionCollection Actions
+        [ConfigurationProperty("signOnActions")]
+        public ActionCollection SignOnActions
         {
-            get { return (ActionCollection)base["actions"]; }
-            set { base["actions"] = value; }
+            get { return (ActionCollection)base["signOnActions"]; }
+            set { base["signOnActions"] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the actions to perform on successful processing.
+        /// </summary>
+        /// <value>The actions.</value>
+        [ConfigurationProperty("logoutActions")]
+        public ActionCollection LogoutActions
+        {
+            get { return (ActionCollection)base["logoutActions"]; }
+            set { base["logoutActions"] = value; }
         }
 
         /// <summary>

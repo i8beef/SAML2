@@ -8,13 +8,41 @@ namespace SAML2.Actions
     /// <summary>
     /// Actions helper class.
     /// </summary>
-    public class Actions
+    internal class Actions
     {
+
         /// <summary>
-        /// Gets the default actions. 
+        /// Gets the actions.
         /// </summary>
-        /// <returns>The system default actions.</returns>
-        public static List<IAction> GetDefaultActions()
+        /// <returns>The currently configured Action list.</returns>
+        internal IList<ISignOnAction> SignOnActions
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the actions.
+        /// </summary>
+        /// <returns>The currently configured Action list.</returns>
+        internal IList<ILogoutAction> LogoutActions
+        {
+            get;
+            private set;
+        }
+
+        internal Actions(ActionCollection signOnActions, ActionCollection logoutActions)
+        {
+            var @default = GetDefaultActions();
+            SignOnActions = signOnActions != null && signOnActions.Any()
+                           ? signOnActions.Select(ac => (ISignOnAction)Activator.CreateInstance(Type.GetType(ac.Type))).ToList()
+                           : @default as IList<ISignOnAction>;
+            LogoutActions = logoutActions != null && logoutActions.Any()
+                           ? signOnActions.Select(ac => (ILogoutAction)Activator.CreateInstance(Type.GetType(ac.Type))).ToList()
+                           : @default as IList<ILogoutAction>;
+        }
+
+        private static List<IAction> GetDefaultActions()
         {
             return new List<IAction>
                        {
@@ -22,19 +50,6 @@ namespace SAML2.Actions
                            new FormsAuthenticationAction(),
                            new RedirectAction()
                        };
-        }
-
-        /// <summary>
-        /// Gets the actions.
-        /// </summary>
-        /// <returns>The currently configured Action list.</returns>
-        public static List<IAction> GetActions()
-        {
-            var config = Saml2Config.GetConfig();
-
-            return config.Actions == null || config.Actions.Count == 0
-                       ? GetDefaultActions()
-                       : config.Actions.Select(ac => (IAction)Activator.CreateInstance(Type.GetType(ac.Type))).ToList();
         }
     }
 }

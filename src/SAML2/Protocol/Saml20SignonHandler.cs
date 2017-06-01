@@ -9,6 +9,7 @@ using System.Text;
 using System.Web;
 using System.Web.Caching;
 using System.Xml;
+using SAML2.Actions;
 using SAML2.Bindings;
 using SAML2.Config;
 using SAML2.Protocol.Pages;
@@ -34,18 +35,21 @@ namespace SAML2.Protocol
         /// The certificate for the endpoint.
         /// </summary>
         private readonly X509Certificate2 _certificate;
+        private readonly Actions.Actions _actions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20SignonHandler"/> class.
         /// </summary>
         public Saml20SignonHandler()
         {
-            _certificate = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate();
+            var config = Saml2Config.GetConfig();
+            _certificate = config.ServiceProvider.SigningCertificate.GetCertificate();
+            _actions = new Actions.Actions(config.SignOnActions, config.LogoutActions);
 
             // Read the proper redirect url from config
             try
             {
-                RedirectUrl = Saml2Config.GetConfig().ServiceProvider.Endpoints.SignOnEndpoint.RedirectUrl;
+                RedirectUrl = config.ServiceProvider.Endpoints.SignOnEndpoint.RedirectUrl;
             }
             catch (Exception e)
             {
@@ -335,7 +339,7 @@ namespace SAML2.Protocol
             Logger.DebugFormat(TraceMessages.SignOnProcessed, assertion.SessionIndex, assertion.Subject.Value, assertion.Subject.Format);
 
             Logger.Debug(TraceMessages.SignOnActionsExecuting);
-            foreach (var action in Actions.Actions.GetActions())
+            foreach (var action in _actions.SignOnActions)
             {
                 Logger.DebugFormat("{0}.{1} called", action.GetType(), "LoginAction()");
 

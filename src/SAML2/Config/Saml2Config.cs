@@ -9,12 +9,23 @@ namespace SAML2.Config
     /// <summary>
     /// Provides helper methods for getting the configuration.
     /// </summary>
-    public class Saml2Config
+    public static class Saml2Config
     {
         /// <summary>
         /// The configuration
         /// </summary>
         private static Saml2Section _config;
+
+        private static SAML2AbstractConfigProvider ConfigProvider
+        {
+            get;
+            set;
+        }
+
+        public static void Init(SAML2AbstractConfigProvider configProvider)
+        {
+            ConfigProvider = configProvider;
+        }
 
         /// <summary>
         /// Gets the config.
@@ -24,7 +35,16 @@ namespace SAML2.Config
         {
             if (_config == null)
             {
-                if (!TryLoadConfig(out _config))
+                if (ConfigProvider == null)
+                {
+                    _config = ConfigurationManager.GetSection(Saml2Section.Name) as Saml2Section;
+                }
+                else
+                {
+                    _config = ConfigProvider.SAML2Config;
+                }
+
+                if (_config == null)
                 {
                     throw new ConfigurationErrorsException(string.Format("Configuration section \"{0}\" not found", typeof(Saml2Section).Name));
                 }
@@ -33,40 +53,6 @@ namespace SAML2.Config
             }
 
             return _config;
-        }
-
-        /// <summary>
-        /// Refreshes the configuration section, so that next time it is read it is retrieved from the configuration file.
-        /// </summary>
-        public static void Refresh()
-        {
-            if (!TryLoadConfig(out _config))
-            {
-                throw new ConfigurationErrorsException(string.Format("Configuration section \"{0}\" not found", typeof(Saml2Section).Name));
-            }
-
-            _config.IdentityProviders.Refresh();
-        }
-
-        private static bool TryLoadConfig(out Saml2Section config)
-        {
-            config = null;
-            
-            var iconfigProviderType = typeof(ISaml2ConfigProvider);
-            Assembly entryAssembly = Assembly.GetEntryAssembly();
-            Type configProviderType = entryAssembly == null ? Type.GetType("Firefly.DirectoryProvider.SAML.SAMLAction, Firefly") 
-                : entryAssembly
-                .GetTypes()
-                .Where(t => iconfigProviderType.IsAssignableFrom(t))
-                .SingleOrDefault();
-
-            if (configProviderType != null)
-            {
-                var provider = (ISaml2ConfigProvider)Activator.CreateInstance(configProviderType);
-                config = provider.Saml2Section;
-                return true;
-            }
-            return false;
         }
     }
 }

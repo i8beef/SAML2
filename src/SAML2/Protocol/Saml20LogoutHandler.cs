@@ -17,6 +17,8 @@ namespace SAML2.Protocol
     /// </summary>
     public class Saml20LogoutHandler : Saml20AbstractEndpointHandler
     {
+        Actions.Actions _actions;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20LogoutHandler"/> class.
         /// </summary>
@@ -25,7 +27,9 @@ namespace SAML2.Protocol
             // Read the proper redirect url from config
             try
             {
-                RedirectUrl = Saml2Config.GetConfig().ServiceProvider.Endpoints.LogoutEndpoint.RedirectUrl;
+                var config = Saml2Config.GetConfig();
+                RedirectUrl = config.ServiceProvider.Endpoints.LogoutEndpoint.RedirectUrl;
+                _actions = new Actions.Actions(config.SignOnActions, config.LogoutActions);
             }
             catch (Exception e)
             {
@@ -105,7 +109,7 @@ namespace SAML2.Protocol
         private void DoLogout(HttpContext context, bool idpInitiated = false)
         {
             Logger.Debug(TraceMessages.LogoutActionsExecuting);
-            foreach (var action in Actions.Actions.GetActions())
+            foreach (var action in _actions.LogoutActions)
             {
                 Logger.DebugFormat("{0}.{1} called", action.GetType(), "LogoutAction()");
 
