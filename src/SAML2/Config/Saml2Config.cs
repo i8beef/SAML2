@@ -16,15 +16,10 @@ namespace SAML2.Config
         /// </summary>
         private static Saml2Section _config;
 
-        private static SAML2AbstractConfigProvider ConfigProvider
+        public static void Init(ISaml2ConfigProvider configProvider)
         {
-            get;
-            set;
-        }
-
-        public static void Init(SAML2AbstractConfigProvider configProvider)
-        {
-            ConfigProvider = configProvider;
+            _config = configProvider.SAML2Config;
+            _config.IdentityProviders.Refresh();
         }
 
         /// <summary>
@@ -35,14 +30,7 @@ namespace SAML2.Config
         {
             if (_config == null)
             {
-                if (ConfigProvider == null)
-                {
-                    _config = ConfigurationManager.GetSection(Saml2Section.Name) as Saml2Section;
-                }
-                else
-                {
-                    _config = ConfigProvider.SAML2Config;
-                }
+                _config = ConfigurationManager.GetSection(Saml2Section.Name) as Saml2Section;
 
                 if (_config == null)
                 {

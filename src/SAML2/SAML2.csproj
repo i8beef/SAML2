@@ -68,7 +68,7 @@
     <Compile Include="Bindings\HttpSoapBindingParser.cs" />
     <Compile Include="Bindings\SoapConstants.cs" />
     <Compile Include="Config\ActionCollection.cs" />
-    <Compile Include="Config\SAML2AbstractConfigProvider.cs" />
+    <Compile Include="Config\ISaml2ConfigProvider.cs" />
     <Compile Include="Config\StateSettingElement.cs" />
     <Compile Include="Config\ActionElement.cs" />
     <Compile Include="Config\AllowedAudienceUriCollection.cs" />

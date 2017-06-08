@@ -78,10 +78,6 @@ namespace SAML2.Protocol
                 {
                     idpEndpoint = RetrieveIDPConfiguration(StateService.Get<string>(IdpLoginSessionKey));
                 }
-                else
-                {
-                    idpEndpoint = RetrieveIDP(context);
-                }
 
                 if (idpEndpoint == null)
                 {
