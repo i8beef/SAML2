@@ -58,9 +58,9 @@ namespace SAML2.Protocol
                 }
             }
 
-            //context.Response.ContentType = Saml20Constants.MetadataMimetype;
-            context.Response.ContentType = "text/xml";
-            context.Response.AddHeader("Content-Disposition", "filename=\"metadata.xml\"");
+
+            context.Response.ContentType = Saml20Constants.MetadataMimetype;
+            context.Response.AddHeader("Content-Disposition", "attachment; filename=\"metadata.xml\"");
 
             CreateMetadataDocument(context, sign);
             
