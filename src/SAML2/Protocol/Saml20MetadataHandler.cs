@@ -57,7 +57,8 @@ namespace SAML2.Protocol
                     throw new ArgumentException(ErrorMessages.MetadataSignQueryParameterInvalid);
                 }
             }
-                        
+
+
             context.Response.ContentType = Saml20Constants.MetadataMimetype;
             context.Response.AddHeader("Content-Disposition", "attachment; filename=\"metadata.xml\"");
 

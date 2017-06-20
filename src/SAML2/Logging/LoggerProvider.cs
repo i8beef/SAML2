@@ -38,16 +38,6 @@ namespace SAML2.Logging
         }
 
         /// <summary>
-        /// Gets a logger for the specified key.
-        /// </summary>
-        /// <param name="keyName">Name of the key.</param>
-        /// <returns>An instance of <see cref="IInternalLogger"/>.</returns>
-        public static IInternalLogger LoggerFor(string keyName)
-        {
-            return _instance._loggerFactory.LoggerFor(keyName);
-        }
-
-        /// <summary>
         /// Gets a logger for the specified type.
         /// </summary>
         /// <param name="type">The type.</param>
