@@ -8,38 +8,23 @@ namespace SAML2.Actions
     /// <summary>
     /// Actions helper class.
     /// </summary>
-    internal class Actions
+    internal static class ActionsHelper
     {
-
-        /// <summary>
-        /// Gets the actions.
-        /// </summary>
-        /// <returns>The currently configured Action list.</returns>
-        internal IList<ISignOnAction> SignOnActions
+        internal static IList<ISignOnAction> GetSignOnActions(ActionCollection actionCollection)
         {
-            get;
-            private set;
+            return GetActions(actionCollection) as IList<ISignOnAction>;
         }
 
-        /// <summary>
-        /// Gets the actions.
-        /// </summary>
-        /// <returns>The currently configured Action list.</returns>
-        internal IList<ILogoutAction> LogoutActions
+        internal static IList<ILogoutAction> GetLogoutActions(ActionCollection actionCollection)
         {
-            get;
-            private set;
+            return GetActions(actionCollection) as IList<ILogoutAction>;
         }
 
-        internal Actions(ActionCollection signOnActions, ActionCollection logoutActions)
+        private static IList<IAction> GetActions(ActionCollection actionCollection)
         {
-            var @default = GetDefaultActions();
-            SignOnActions = signOnActions != null && signOnActions.Any()
-                           ? signOnActions.Select(ac => (ISignOnAction)Activator.CreateInstance(Type.GetType(ac.Type))).ToList()
-                           : @default as IList<ISignOnAction>;
-            LogoutActions = logoutActions != null && logoutActions.Any()
-                           ? signOnActions.Select(ac => (ILogoutAction)Activator.CreateInstance(Type.GetType(ac.Type))).ToList()
-                           : @default as IList<ILogoutAction>;
+            return actionCollection != null && actionCollection.Any()
+                           ? actionCollection.Select(ac => (IAction)Activator.CreateInstance(Type.GetType(ac.Type))).ToList()
+                           : GetDefaultActions();
         }
 
         private static List<IAction> GetDefaultActions()

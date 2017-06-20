@@ -35,7 +35,7 @@ namespace SAML2.Protocol
         /// The certificate for the endpoint.
         /// </summary>
         private readonly X509Certificate2 _certificate;
-        private readonly Actions.Actions _actions;
+        private readonly IList<ISignOnAction> _signOnActions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20SignonHandler"/> class.
@@ -44,7 +44,7 @@ namespace SAML2.Protocol
         {
             var config = Saml2Config.GetConfig();
             _certificate = config.ServiceProvider.SigningCertificate.GetCertificate();
-            _actions = new Actions.Actions(config.SignOnActions, config.LogoutActions);
+            _signOnActions = ActionsHelper.GetSignOnActions(config.SignOnActions);
 
             // Read the proper redirect url from config
             try
@@ -339,7 +339,7 @@ namespace SAML2.Protocol
             Logger.DebugFormat(TraceMessages.SignOnProcessed, assertion.SessionIndex, assertion.Subject.Value, assertion.Subject.Format);
 
             Logger.Debug(TraceMessages.SignOnActionsExecuting);
-            foreach (var action in _actions.SignOnActions)
+            foreach (var action in _signOnActions)
             {
                 Logger.DebugFormat("{0}.{1} called", action.GetType(), "LoginAction()");
 
