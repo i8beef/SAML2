@@ -12,19 +12,19 @@ namespace SAML2.Actions
     {
         internal static IList<ISignOnAction> GetSignOnActions(ActionCollection actionCollection)
         {
-            return GetActions(actionCollection) as IList<ISignOnAction>;
+            return GetActions<ISignOnAction>(actionCollection);
         }
 
         internal static IList<ILogoutAction> GetLogoutActions(ActionCollection actionCollection)
         {
-            return GetActions(actionCollection) as IList<ILogoutAction>;
+            return GetActions<ILogoutAction>(actionCollection);
         }
 
-        private static IList<IAction> GetActions(ActionCollection actionCollection)
+        private static IList<T> GetActions<T>(ActionCollection actionCollection)
         {
             return actionCollection != null && actionCollection.Any()
-                           ? actionCollection.Select(ac => (IAction)Activator.CreateInstance(Type.GetType(ac.Type))).ToList()
-                           : GetDefaultActions();
+                           ? actionCollection.Select(ac => (T)Activator.CreateInstance(Type.GetType(ac.Type))).ToList()
+                           : GetDefaultActions() as IList<T>;
         }
 
         private static List<IAction> GetDefaultActions()
