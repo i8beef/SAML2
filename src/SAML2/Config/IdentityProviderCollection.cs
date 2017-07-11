@@ -163,7 +163,7 @@ namespace SAML2.Config
 
                 if (metadataDoc != null)
                 {
-                    var endp = this.FirstOrDefault(x => x.Id == metadataDoc.EntityId);
+                    var endp = this.FirstOrDefault(x => metadataDoc.EntityId.StartsWith(x.Id));
                     if (endp == null)
                     {
                         // If the endpoint does not exist, create it.

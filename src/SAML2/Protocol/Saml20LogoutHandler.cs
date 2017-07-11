@@ -238,7 +238,7 @@ namespace SAML2.Protocol
         /// <param name="context">The context.</param>
         private void HandleRequest(HttpContext context)
         {
-            Logger.DebugFormat(TraceMessages.LogoutRequestReceived);
+            //Logger.DebugFormat(TraceMessages.LogoutRequestReceived);
 
             // Fetch the endpoint configuration
             var idp = RetrieveIDPConfiguration(StateService.Get<string>(IdpLoginSessionKey));
