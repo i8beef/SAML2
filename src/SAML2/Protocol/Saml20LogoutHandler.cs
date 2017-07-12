@@ -270,10 +270,13 @@ namespace SAML2.Protocol
                 }
 
                 var metadata = endpoint.Metadata;
-                if (!parser.VerifySignature(metadata.GetKeys(KeyTypes.Signing)))
+                if (parser.IsSigned)
                 {
-                    Logger.Error(ErrorMessages.RequestSignatureInvalid);
-                    throw new Saml20Exception(ErrorMessages.RequestSignatureInvalid);
+                    if (!parser.VerifySignature(metadata.GetKeys(KeyTypes.Signing)))
+                    {
+                        Logger.Error(ErrorMessages.RequestSignatureInvalid);
+                        throw new Saml20Exception(ErrorMessages.RequestSignatureInvalid);
+                    }
                 }
 
                 message = parser.Message;
@@ -382,10 +385,13 @@ namespace SAML2.Protocol
                     throw new Saml20Exception(string.Format(ErrorMessages.UnknownIdentityProvider, idp.Id));
                 }
 
-                if (!parser.VerifySignature(idp.Metadata.Keys))
+                if (parser.IsSigned)
                 {
-                    Logger.Error(ErrorMessages.ResponseSignatureInvalid);
-                    throw new Saml20Exception(ErrorMessages.ResponseSignatureInvalid);
+                    if (!parser.VerifySignature(idp.Metadata.Keys))
+                    {
+                        Logger.Error(ErrorMessages.ResponseSignatureInvalid);
+                        throw new Saml20Exception(ErrorMessages.ResponseSignatureInvalid);
+                    }
                 }
 
                 message = parser.Message;
