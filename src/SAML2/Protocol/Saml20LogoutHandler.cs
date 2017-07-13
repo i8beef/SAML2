@@ -20,6 +20,7 @@ namespace SAML2.Protocol
     public class Saml20LogoutHandler : Saml20AbstractEndpointHandler
     {
         IList<ILogoutAction> _logoutActions;
+        private bool SignLogoutRequests { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Saml20LogoutHandler"/> class.
@@ -31,6 +32,7 @@ namespace SAML2.Protocol
             {
                 var config = Saml2Config.GetConfig();
                 RedirectUrl = config.ServiceProvider.Endpoints.LogoutEndpoint.RedirectUrl;
+                SignLogoutRequests = config.ServiceProvider.Endpoints.LogoutEndpoint.SignLogoutResponses;
                 _logoutActions = ActionsHelper.GetLogoutActions(config.LogoutActions);
             }
             catch (Exception e)
@@ -270,7 +272,8 @@ namespace SAML2.Protocol
                 }
 
                 var metadata = endpoint.Metadata;
-                if (parser.IsSigned)
+
+                if (SignLogoutRequests)
                 {
                     if (!parser.VerifySignature(metadata.GetKeys(KeyTypes.Signing)))
                     {
@@ -302,11 +305,14 @@ namespace SAML2.Protocol
 
                 var metadata = endpoint.Metadata;
 
-                // Check signature
-                if (!parser.CheckSignature(metadata.GetKeys(KeyTypes.Signing)))
+                if (SignLogoutRequests)
                 {
-                    Logger.Error(ErrorMessages.RequestSignatureInvalid);
-                    throw new Saml20Exception(ErrorMessages.RequestSignatureInvalid);
+                    // Check signature
+                    if (!parser.CheckSignature(metadata.GetKeys(KeyTypes.Signing)))
+                    {
+                        Logger.Error(ErrorMessages.RequestSignatureInvalid);
+                        throw new Saml20Exception(ErrorMessages.RequestSignatureInvalid);
+                    }
                 }
 
                 message = parser.Message;
@@ -385,7 +391,7 @@ namespace SAML2.Protocol
                     throw new Saml20Exception(string.Format(ErrorMessages.UnknownIdentityProvider, idp.Id));
                 }
 
-                if (parser.IsSigned)
+                if (SignLogoutRequests)
                 {
                     if (!parser.VerifySignature(idp.Metadata.Keys))
                     {
@@ -410,17 +416,20 @@ namespace SAML2.Protocol
                     throw new Saml20Exception(string.Format(ErrorMessages.UnknownIdentityProvider, idp.Id));
                 }
 
-                if (!parser.IsSigned)
+                if (SignLogoutRequests)
                 {
-                    Logger.Error(ErrorMessages.ResponseSignatureMissing);
-                    throw new Saml20Exception(ErrorMessages.ResponseSignatureMissing);
-                }
+                    if (!parser.IsSigned)
+                    {
+                        Logger.Error(ErrorMessages.ResponseSignatureMissing);
+                        throw new Saml20Exception(ErrorMessages.ResponseSignatureMissing);
+                    }
 
-                // signature on final message in logout
-                if (!parser.CheckSignature(idp.Metadata.Keys))
-                {
-                    Logger.Error(ErrorMessages.ResponseSignatureInvalid);
-                    throw new Saml20Exception(ErrorMessages.ResponseSignatureInvalid);
+                    // signature on final message in logout
+                    if (!parser.CheckSignature(idp.Metadata.Keys))
+                    {
+                        Logger.Error(ErrorMessages.ResponseSignatureInvalid);
+                        throw new Saml20Exception(ErrorMessages.ResponseSignatureInvalid);
+                    }
                 }
 
                 message = parser.Message;

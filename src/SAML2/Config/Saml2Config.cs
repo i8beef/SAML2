@@ -19,6 +19,10 @@ namespace SAML2.Config
         public static void Init(ISaml2ConfigProvider configProvider)
         {
             _config = configProvider.SAML2Config;
+        }
+        public static void ReloadIdentityProvider(ISaml2ConfigProvider configProvider)
+        {
+            _config = configProvider.SAML2Config;
             _config.IdentityProviders.Refresh();
         }
 

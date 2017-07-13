@@ -64,6 +64,17 @@ namespace SAML2.Config
             set { base["type"] = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the option for signing logoutresponses.
+        /// </summary>
+        /// <value>The option value.</value>
+        [ConfigurationProperty("signLogoutResponses")]
+        public bool SignLogoutResponses
+        {
+            get { return (bool)base["signLogoutResponses"]; }
+            set { base["signLogoutResponses"] = value; }
+        }
+
         #endregion
 
         #region Implementation of IConfigurationElementCollectionElement
