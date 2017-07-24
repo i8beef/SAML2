@@ -150,7 +150,7 @@ namespace SAML2.Config
             }
 
             // Detect added classes
-            var files = Directory.GetFiles(MetadataLocation);
+            var files = Directory.GetFiles(MetadataLocation).Where(f => f.ToLower().EndsWith(".xml"));
             foreach (var file in files)
             {
                 Saml20MetadataDocument metadataDoc;
