@@ -53,7 +53,7 @@ namespace SAML2.Config
 
             _fileSystemWatcher = new FileSystemWatcher
                                      {
-                                         Filter = "*.*",
+                                         Filter = "*.xml",
                                          NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName,
                                          Path = MetadataLocation,
                                          EnableRaisingEvents = true
