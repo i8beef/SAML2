@@ -153,33 +153,35 @@ namespace SAML2.Config
             var files = Directory.GetFiles(MetadataLocation);
             foreach (var file in files)
             {
-                Saml20MetadataDocument metadataDoc;
                 if (_fileInfo.ContainsKey(file) && _fileInfo[file] == File.GetLastWriteTime(file))
                 {
                     continue;
                 }
 
-                metadataDoc = ParseFile(file);
+                var metadataDocs = ParseFile(file);
 
-                if (metadataDoc != null)
+                if (metadataDocs != null)
                 {
-                    var endp = this.FirstOrDefault(x => x.Id == metadataDoc.EntityId);
-                    if (endp == null)
+                    foreach (var metadataDoc in metadataDocs)
                     {
-                        // If the endpoint does not exist, create it.
-                        endp = new IdentityProviderElement();
-                        BaseAdd(endp);
+                        var endp = this.FirstOrDefault(x => x.Id == metadataDoc.EntityId);
+                        if (endp == null)
+                        {
+                            // If the endpoint does not exist, create it.
+                            endp = new IdentityProviderElement();
+                            BaseAdd(endp);
+                        }
+
+                        endp.Id = endp.Name = metadataDoc.EntityId;
+                        endp.Metadata = metadataDoc;
+
+                        if (_fileToEntity.ContainsKey(file))
+                        {
+                            _fileToEntity.Remove(file);
+                        }
+
+                        _fileToEntity.Add(file, metadataDoc.EntityId);
                     }
-
-                    endp.Id = endp.Name = metadataDoc.EntityId;
-                    endp.Metadata = metadataDoc;
-
-                    if (_fileToEntity.ContainsKey(file))
-                    {
-                        _fileToEntity.Remove(file);
-                    }
-
-                    _fileToEntity.Add(file, metadataDoc.EntityId);
                 }
             }
         }
@@ -328,7 +330,7 @@ namespace SAML2.Config
         /// </summary>
         /// <param name="file">The file.</param>
         /// <returns>The parsed <see cref="Saml20MetadataDocument"/>.</returns>
-        private Saml20MetadataDocument ParseFile(string file)
+        private IList<Saml20MetadataDocument> ParseFile(string file)
         {
             var doc = LoadFileAsXmlDocument(file);
 
@@ -338,13 +340,21 @@ namespace SAML2.Config
                 {
                     if (child.LocalName == EntityDescriptor.ElementName)
                     {
-                        return new Saml20MetadataDocument(doc);
+                        return new List<Saml20MetadataDocument> { new Saml20MetadataDocument(doc) };
                     }
 
                     // TODO Decide how to handle several entities in one metadata file.
                     if (child.LocalName == EntitiesDescriptor.ElementName)
                     {
-                        throw new NotImplementedException();
+                        var idpMetadata = new List<Saml20MetadataDocument>();
+                        foreach (var entityDescriptor in child.ChildNodes.Cast<XmlNode>().Where(x => x.NamespaceURI == Saml20Constants.Metadata))
+                        {
+                            var childDoc = new XmlDocument();
+                            childDoc.AppendChild(entityDescriptor);
+                            idpMetadata.Add(new Saml20MetadataDocument(childDoc));
+                        }
+
+                        return idpMetadata;
                     }
                 }
 
