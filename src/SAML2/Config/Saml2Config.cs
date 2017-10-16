@@ -20,17 +20,25 @@ namespace SAML2.Config
         {
             if (_config == null)
             {
-                _config = ConfigurationManager.GetSection(Saml2Section.Name) as Saml2Section;
-
-                if (_config == null)
-                {
-                    throw new ConfigurationErrorsException(string.Format("Configuration section \"{0}\" not found", typeof(Saml2Section).Name));
-                }
-
-                _config.IdentityProviders.Refresh();
+                Refresh();
             }
 
             return _config;
+        }
+
+        /// <summary>
+        /// Gets the base config element without additional metadata parsing, etc.
+        /// </summary>
+        /// <returns></returns>
+        public static Saml2Section GetConfigElement()
+        {
+            var config = ConfigurationManager.GetSection(Saml2Section.Name) as Saml2Section;
+            if (config == null)
+            {
+                throw new ConfigurationErrorsException(string.Format("Configuration section \"{0}\" not found", typeof(Saml2Section).Name));
+            }
+
+            return config;
         }
 
         /// <summary>
@@ -40,12 +48,7 @@ namespace SAML2.Config
         {
             _config = null;
             ConfigurationManager.RefreshSection(Saml2Section.Name);
-            _config = ConfigurationManager.GetSection(Saml2Section.Name) as Saml2Section;
-
-            if (_config == null)
-            {
-                throw new ConfigurationErrorsException(string.Format("Configuration section \"{0}\" not found", typeof(Saml2Section).Name));
-            }
+            _config = GetConfigElement();
 
             _config.IdentityProviders.Refresh();
         }
