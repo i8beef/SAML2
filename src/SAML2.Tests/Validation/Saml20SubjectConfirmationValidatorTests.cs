@@ -22,7 +22,6 @@ namespace SAML2.Tests.Validation
             /// Tests the validation of the SubjectConfirmation element
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "SubjectConfirmationData element MUST have at least one " + KeyInfo.ElementName + " subelement")]
             public void ThrowsExceptionWhenSubjectConfirmationDataDoesNotContainKeyInfo()
             {
                 // Arrange
@@ -35,14 +34,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20SubjectConfirmationValidator();
 
                 // Act
-                validator.ValidateSubjectConfirmation(subjectConfirmation);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateSubjectConfirmation(subjectConfirmation),
+                    "SubjectConfirmationData element MUST have at least one " + KeyInfo.ElementName + " subelement");
             }
 
             /// <summary>
             /// Tests the validation of the SubjectConfirmation element's method attribute.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Method attribute of SubjectConfirmation MUST contain at least one non-whitespace character")]
             public void ThrowsExceptionWhenSubjectConfirmationHasEmptyMethod()
             {
                 // Arrange
@@ -50,14 +49,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20SubjectConfirmationValidator();
 
                 // Act
-                validator.ValidateSubjectConfirmation(subjectConfirmation);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateSubjectConfirmation(subjectConfirmation),
+                    "Method attribute of SubjectConfirmation MUST contain at least one non-whitespace character");
             }
 
             /// <summary>
             /// Tests the validation of the SubjectConfirmation element's method attribute.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "SubjectConfirmation element has Method attribute which is not a wellformed absolute uri.")]
             public void ThrowsExceptionWhenSubjectConfirmationHasWrongMethod()
             {
                 // Arrange
@@ -65,7 +64,8 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20SubjectConfirmationValidator();
 
                 // Act
-                validator.ValidateSubjectConfirmation(subjectConfirmation);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateSubjectConfirmation(subjectConfirmation),
+                    "SubjectConfirmation element has Method attribute which is not a wellformed absolute uri.");
             }
 
             /// <summary>

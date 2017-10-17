@@ -37,7 +37,7 @@ namespace SAML2.Tests
                                              Assertion = AssertionUtil.GetTestAssertion()
                                          };
 
-            var cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
+            var cert = new X509Certificate2(TestContext.CurrentContext.TestDirectory + @"\Certificates\sts_dev_certificate.pfx", "test1234");
             encryptedAssertion.TransportKey = (RSA)cert.PublicKey.Key;
 
             // Act
@@ -79,8 +79,8 @@ namespace SAML2.Tests
         public void HasNoAssertionBeforeDecrypt()
         {
             // Arrange
-            var doc = AssertionUtil.LoadXmlDocument(@"Assertions\EncryptedAssertion_01");
-            var cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
+            var doc = AssertionUtil.LoadXmlDocument(TestContext.CurrentContext.TestDirectory + @"\Assertions\EncryptedAssertion_01");
+            var cert = new X509Certificate2(TestContext.CurrentContext.TestDirectory + @"\Certificates\sts_dev_certificate.pfx", "test1234");
 
             // Act
             var encryptedAssertion = new Saml20EncryptedAssertion((RSA)cert.PrivateKey, doc);
@@ -102,8 +102,8 @@ namespace SAML2.Tests
             public void CanDecryptAssertion()
             {
                 // Arrange
-                var doc = AssertionUtil.LoadXmlDocument(@"Assertions\EncryptedAssertion_01");
-                var cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
+                var doc = AssertionUtil.LoadXmlDocument(TestContext.CurrentContext.TestDirectory + @"\Assertions\EncryptedAssertion_01");
+                var cert = new X509Certificate2(TestContext.CurrentContext.TestDirectory + @"\Certificates\sts_dev_certificate.pfx", "test1234");
                 var encryptedAssertion = new Saml20EncryptedAssertion((RSA)cert.PrivateKey, doc);
 
                 // Act
@@ -122,8 +122,8 @@ namespace SAML2.Tests
             public void CanDecryptAssertionWithPeerIncludedKeys()
             {
                 // Arrange
-                var doc = AssertionUtil.LoadXmlDocument(@"Assertions\EncryptedAssertion_02");
-                var cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
+                var doc = AssertionUtil.LoadXmlDocument(TestContext.CurrentContext.TestDirectory + @"\Assertions\EncryptedAssertion_02");
+                var cert = new X509Certificate2(TestContext.CurrentContext.TestDirectory + @"\Certificates\sts_dev_certificate.pfx", "test1234");
                 var encryptedAssertion = new Saml20EncryptedAssertion((RSA)cert.PrivateKey, doc);
 
                 // Act
@@ -141,8 +141,8 @@ namespace SAML2.Tests
             public void CanDecryptAssertionWithPeerIncluded3DesKeys()
             {
                 // Arrange
-                var doc = AssertionUtil.LoadXmlDocument(@"Assertions\EncryptedAssertion_04");
-                var cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
+                var doc = AssertionUtil.LoadXmlDocument(TestContext.CurrentContext.TestDirectory + @"\Assertions\EncryptedAssertion_04");
+                var cert = new X509Certificate2(TestContext.CurrentContext.TestDirectory + @"\Certificates\sts_dev_certificate.pfx", "test1234");
                 var encryptedAssertion = new Saml20EncryptedAssertion((RSA)cert.PrivateKey, doc);
 
                 // Act
@@ -161,8 +161,8 @@ namespace SAML2.Tests
             public void CanDecryptAssertionWithPeerIncludedAesKeys()
             {
                 // Arrange
-                var doc = AssertionUtil.LoadXmlDocument(@"Assertions\EncryptedAssertion_05");
-                var cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
+                var doc = AssertionUtil.LoadXmlDocument(TestContext.CurrentContext.TestDirectory + @"\Assertions\EncryptedAssertion_05");
+                var cert = new X509Certificate2(TestContext.CurrentContext.TestDirectory + @"\Certificates\sts_dev_certificate.pfx", "test1234");
                 var encryptedAssertion = new Saml20EncryptedAssertion((RSA)cert.PrivateKey, doc);
 
                 // Act
@@ -182,8 +182,8 @@ namespace SAML2.Tests
             public void CanDecryptAssertionWithPeerIncludedKeysWithoutSpecifiedEncryptionMethod()
             {
                 // Arrange
-                var doc = AssertionUtil.LoadXmlDocument(@"Assertions\EncryptedAssertion_03");
-                var cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
+                var doc = AssertionUtil.LoadXmlDocument(TestContext.CurrentContext.TestDirectory + @"\Assertions\EncryptedAssertion_03");
+                var cert = new X509Certificate2(TestContext.CurrentContext.TestDirectory + @"\Certificates\sts_dev_certificate.pfx", "test1234");
                 var encryptedAssertion = new Saml20EncryptedAssertion((RSA)cert.PrivateKey, doc);
 
                 // Act
@@ -200,20 +200,19 @@ namespace SAML2.Tests
             /// The entire message is Base 64 encoded in this case.
             /// </remarks>
             [Test]
-            [ExpectedException(typeof(Saml20Exception), ExpectedMessage = "Assertion is no longer valid.")]
             public void CanDecryptFOBSAssertion()
             {
                 // Arrange
-                var doc = AssertionUtil.LoadBase64EncodedXmlDocument(@"Assertions\fobs-assertion2");
+                var doc = AssertionUtil.LoadBase64EncodedXmlDocument(TestContext.CurrentContext.TestDirectory + @"\Assertions\fobs-assertion2");
                 var encryptedList = doc.GetElementsByTagName(EncryptedAssertion.ElementName, Saml20Constants.Assertion);
 
                 // Do some mock configuration.
                 var config = Saml2Config.GetConfig();
                 config.AllowedAudienceUris.Add(new AudienceUriElement { Uri = "https://saml.safewhere.net" });
-                config.IdentityProviders.MetadataLocation = @"Protocol\MetadataDocs\FOBS"; // Set it manually.     
-                Assert.That(Directory.Exists(config.IdentityProviders.MetadataLocation));
+                config.IdentityProviders.MetadataLocation = TestContext.CurrentContext.TestDirectory + @"\Protocol\MetadataDocs\FOBS"; // Set it manually.
+                config.IdentityProviders.Refresh();
 
-                var cert = new X509Certificate2(@"Certificates\SafewhereTest_SFS.pfx", "test1234");
+                var cert = new X509Certificate2(TestContext.CurrentContext.TestDirectory + @"\Certificates\SafewhereTest_SFS.pfx", "test1234");
                 var encryptedAssertion = new Saml20EncryptedAssertion((RSA)cert.PrivateKey);
 
                 encryptedAssertion.LoadXml((XmlElement)encryptedList[0]);
@@ -230,18 +229,11 @@ namespace SAML2.Tests
                 Assert.IsNotNull(endp, "Endpoint not found");
                 Assert.IsNotNull(endp.Metadata, "Metadata not found");
 
-                try
-                {
-                    assertion.CheckValid(AssertionUtil.GetTrustedSigners(assertion.Issuer));
-                    Assert.Fail("Verification should fail. Token does not include its signing key.");
-                }
-                catch (InvalidOperationException)
-                {
-                }
+                Assert.Throws<Saml20Exception>(() => assertion.CheckValid(AssertionUtil.GetTrustedSigners(assertion.Issuer)), "Assertion is no longer valid.");
 
-                Assert.IsNull(assertion.SigningKey, "Signing key is already present on assertion. Modify test.");
-                Assert.That(assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endp.Metadata.GetKeys(KeyTypes.Signing), endp)));
-                Assert.IsNotNull(assertion.SigningKey, "Signing key was not set on assertion instance.");
+                //Assert.IsNull(assertion.SigningKey, "Signing key is already present on assertion. Modify test.");
+                //Assert.That(assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endp.Metadata.GetKeys(KeyTypes.Signing), endp)));
+                //Assert.IsNotNull(assertion.SigningKey, "Signing key was not set on assertion instance.");
             }
         }
 
@@ -259,7 +251,7 @@ namespace SAML2.Tests
             {
                 // Arrange
                 var encryptedAssertion = new Saml20EncryptedAssertion { Assertion = AssertionUtil.GetTestAssertion() };
-                var cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
+                var cert = new X509Certificate2(TestContext.CurrentContext.TestDirectory + @"\Certificates\sts_dev_certificate.pfx", "test1234");
                 encryptedAssertion.TransportKey = (RSA)cert.PublicKey.Key;
 
                 // Act
@@ -283,14 +275,10 @@ namespace SAML2.Tests
             /// Verify that exception is thrown on incorrect algorithm URI being passed in.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(ArgumentException))]
             public void ThrowsArgumentExceptionOnIncorrectAlgorithmUri()
             {
                 // Act
-                var encryptedAssertion = new Saml20EncryptedAssertion { SessionKeyAlgorithm = "RSA" };
-
-                // Assert
-                Assert.Fail("\"Saml20EncryptedAssertion\" class does not respond to incorrect algorithm identifying URI.");
+                Assert.Throws<ArgumentException>(() => new Saml20EncryptedAssertion { SessionKeyAlgorithm = "RSA" }, "\"Saml20EncryptedAssertion\" class does not respond to incorrect algorithm identifying URI.");
             }
         }
     }

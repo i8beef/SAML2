@@ -27,7 +27,7 @@ namespace SAML2.Tests
             {
                 // Arrange
                 var doc = new XmlDocument { PreserveWhitespace = true };
-                doc.Load(@"Protocol\MetadataDocs\metadata-ADLER.xml");
+                doc.Load(TestContext.CurrentContext.TestDirectory + @"\Protocol\MetadataDocs\metadata-ADLER.xml");
 
                 // Act
                 var metadata = new Saml20MetadataDocument(doc);
@@ -54,7 +54,7 @@ namespace SAML2.Tests
             {
                 // Arrange
                 var doc = new XmlDocument { PreserveWhitespace = true };
-                doc.Load(@"Protocol\MetadataDocs\metadata-ADLER.xml");
+                doc.Load(TestContext.CurrentContext.TestDirectory + @"\Protocol\MetadataDocs\metadata-ADLER.xml");
 
                 // Act
                 var metadata = new Saml20MetadataDocument(doc);

@@ -75,7 +75,6 @@ namespace SAML2.Tests.Validation
             /// Verify exception is thrown on Email Value containing only whitespace characters.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Email Format attribute MUST contain a Value that contains more than whitespace characters")]
             public void ThrowsExceptionWhenEmailValueContainsOnlyWhitespace()
             {
                 // Arrange
@@ -87,7 +86,7 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Email Format attribute MUST contain a Value that contains more than whitespace characters");
             }
 
             /// <summary>
@@ -116,7 +115,6 @@ namespace SAML2.Tests.Validation
             /// Verify exception is thrown on X509SubjectName Value containing only whitespace characters.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with X509SubjectName Format attribute MUST contain a Value that contains more than whitespace characters")]
             public void ThrowsExceptionWhenX509SubjecNameValueContainsOnlyWhirespace()
             {
                 // Arrange
@@ -128,14 +126,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with X509SubjectName Format attribute MUST contain a Value that contains more than whitespace characters");
             }
 
             /// <summary>
             /// Verify exception is thrown on X509SubjectName Value being empty.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with X509SubjectName Format attribute MUST contain a Value that contains more than whitespace characters")]
             public void ThrowsExceptionWhenX509SubjecNameValueEmpty()
             {
                 // Arrange
@@ -147,7 +144,7 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with X509SubjectName Format attribute MUST contain a Value that contains more than whitespace characters");
             }
 
             #endregion
@@ -158,7 +155,6 @@ namespace SAML2.Tests.Validation
             /// Verify exception is thrown on WindowsDomainQualifiedName Value containing only whitespace characters.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Windows Format attribute MUST contain a Value that contains more than whitespace characters")]
             public void ThrowsExceptionWhenWindowsDomainQualifiedNameValueContainsOnlyWhitespace()
             {
                 // Arrange
@@ -170,7 +166,7 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Windows Format attribute MUST contain a Value that contains more than whitespace characters");
             }
 
             /// <summary>
@@ -202,7 +198,6 @@ namespace SAML2.Tests.Validation
             /// Verify exception is thrown on Kerberos Value containing only whitespace characters.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Kerberos Format attribute MUST contain a Value that contains more than whitespace characters")]
             public void ThrowsExceptionWhenKerberosValueContainsOnlyWhitespace()
             {
                 // Arrange
@@ -214,14 +209,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Kerberos Format attribute MUST contain a Value that contains more than whitespace characters");
             }
 
             /// <summary>
             /// Verify exception is thrown on Kerberos Value being empty.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Kerberos Format attribute MUST contain a Value that contains more than whitespace characters")]
             public void ThrowsExceptionWhenKerberosValueEmpty()
             {
                 // Arrange
@@ -233,14 +227,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Kerberos Format attribute MUST contain a Value that contains more than whitespace characters");
             }
 
             /// <summary>
             /// Verify exception is thrown on kerberos invalid format.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Kerberos Format attribute MUST contain a Value that contains a '@'")]
             public void ThrowsExceptionWhenKerberosInvalidFormat()
             {
                 // Arrange
@@ -252,14 +245,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Kerberos Format attribute MUST contain a Value that contains a '@'");
             }
 
             /// <summary>
             /// Verify exception is thrown on Kerberos Value with length less than three characters.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Kerberos Format attribute MUST contain a Value with at least 3 characters")]
             public void ThrowsExceptionWhenKerberosLessThanThreecharacters()
             {
                 // Arrange
@@ -271,7 +263,7 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Kerberos Format attribute MUST contain a Value with at least 3 characters");
             }
 
             /// <summary>
@@ -300,7 +292,6 @@ namespace SAML2.Tests.Validation
             /// Verify exception is thrown on Entity Value containing only whitespace characters.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Entity Format attribute MUST contain a Value that contains more than whitespace characters")]
             public void ThrowsExceptionWhenEntityValueContainsOnlyWhitespace()
             {
                 // Arrange
@@ -312,14 +303,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Entity Format attribute MUST contain a Value that contains more than whitespace characters");
             }
 
             /// <summary>
             /// Verify exception is thrown on Entity Value being empty.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Entity Format attribute MUST contain a Value that contains more than whitespace characters")]
             public void ThrowsExceptionWhenEntityValueEmpty()
             {
                 // Arrange
@@ -331,14 +321,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Entity Format attribute MUST contain a Value that contains more than whitespace characters");
             }
 
             /// <summary>
             /// Verify exception is thrown on Entity Value length being too long.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Entity Format attribute MUST have a Value that contains no more than 1024 characters")]
             public void ThrowsExceptionWhenEntityLengthTooLong()
             {
                 // Arrange
@@ -350,14 +339,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Entity Format attribute MUST have a Value that contains no more than 1024 characters");
             }
 
             /// <summary>
             /// Verify exception is thrown on Entity with NameQualifier set.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Entity Format attribute MUST NOT set the NameQualifier attribute")]
             public void ThrowsExceptionWhenEntityNameQualifierSet()
             {
                 // Arrange
@@ -370,14 +358,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Entity Format attribute MUST NOT set the NameQualifier attribute");
             }
 
             /// <summary>
             /// Verify exception is thrown on Entity SPNameQualifier set.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Entity Format attribute MUST NOT set the SPNameQualifier attribute")]
             public void ThrowsExceptionWhenEntitySPNameQualifierSet()
             {
                 // Arrange
@@ -390,14 +377,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Entity Format attribute MUST NOT set the SPNameQualifier attribute");
             }
 
             /// <summary>
             /// Verify exception is thrown on Entity SPProvidedID set.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Entity Format attribute MUST NOT set the SPProvidedID attribute")]
             public void ThrowsExceptionWhenEntitySPProvidedId()
             {
                 // Arrange
@@ -410,7 +396,7 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Entity Format attribute MUST NOT set the SPProvidedID attribute");
             }
 
             /// <summary>
@@ -439,7 +425,6 @@ namespace SAML2.Tests.Validation
             /// Verify exception is thrown on Persistent Value containing only whitespace characters.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Persistent Format attribute MUST contain a Value that contains more than whitespace characters")]
             public void ThrowsExceptionWhenPersistentContainsOnlyWhitespace()
             {
                 // Arrange
@@ -451,14 +436,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Persistent Format attribute MUST contain a Value that contains more than whitespace characters");
             }
 
             /// <summary>
             /// Verify exception is thrown on Persistent Value being empty.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Persistent Format attribute MUST contain a Value that contains more than whitespace characters")]
             public void ThrowsExceptionWhenPersistentValueEmpty()
             {
                 // Arrange
@@ -470,14 +454,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Persistent Format attribute MUST contain a Value that contains more than whitespace characters");
             }
 
             /// <summary>
             /// Verify exception is thrown on Persistent Value length being too long.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Persistent Format attribute MUST have a Value that contains no more than 256 characters")]
             public void ThrowsExceptionWhenPersistentLengthTooLong()
             {
                 // Arrange
@@ -489,7 +472,7 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Persistent Format attribute MUST have a Value that contains no more than 256 characters");
             }
 
             /// <summary>
@@ -515,7 +498,6 @@ namespace SAML2.Tests.Validation
             /// Verify exception is thrown on Transient Value length being too long.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Transient Format attribute MUST have a Value that contains no more than 256 characters")]
             public void ThrowsExceptionWhenTransientValueTooLong()
             {
                 // Arrange
@@ -527,14 +509,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Transient Format attribute MUST have a Value that contains no more than 256 characters");
             }
 
             /// <summary>
             /// Verify exception is thrown on Transient Value being too short.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID with Transient Format attribute MUST have a Value with at least 16 characters (the equivalent of 128 bits)")]
             public void ThrowsExceptionWhenTransientValueTooShort()
             {
                 // Arrange
@@ -546,9 +527,9 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20NameIdValidator();
 
                 // Act
-                validator.ValidateNameId(nameId);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateNameId(nameId), "NameID with Transient Format attribute MUST have a Value with at least 16 characters (the equivalent of 128 bits)");
             }
-            
+
             /// <summary>
             /// Verify validates transient.
             /// </summary>
