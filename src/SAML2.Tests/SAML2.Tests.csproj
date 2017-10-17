@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IdentityProviderCollectionTests.cs" />
     <Compile Include="Saml20EncryptedAssertionTests.cs" />
     <Compile Include="Utils\ArtifactUtilTests.cs" />
     <Compile Include="AssertionUtil.cs" />
@@ -136,6 +137,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Protocol\MetadataDocs\metadata-HAIKU.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Protocol\MetadataDocs\metadata-multiple-idps.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
