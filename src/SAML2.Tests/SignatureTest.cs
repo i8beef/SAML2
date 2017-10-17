@@ -21,9 +21,9 @@ namespace SAML2.Tests
         [Test]
         public void VerifyValidSignaturesAreValid()
         {
-            Assert.That(VerifySignature(@"Assertions\Saml2Assertion_01"));
-            Assert.That(VerifySignature(@"Assertions\Saml2Assertion_02"));
-            Assert.That(VerifySignature(@"Assertions\Saml2Assertion_03"));            
+            Assert.That(VerifySignature(TestContext.CurrentContext.TestDirectory + @"\Assertions\Saml2Assertion_01"));
+            Assert.That(VerifySignature(TestContext.CurrentContext.TestDirectory + @"\Assertions\Saml2Assertion_02"));
+            Assert.That(VerifySignature(TestContext.CurrentContext.TestDirectory + @"\Assertions\Saml2Assertion_03"));            
         }
 
         /// <summary>
@@ -32,53 +32,47 @@ namespace SAML2.Tests
         [Test]
         public void VerifyManipulatedSignatureAreInvalid()
         {
-            Assert.IsFalse(VerifySignature(@"Assertions\EvilSaml2Assertion_01"));
-            Assert.IsFalse(VerifySignature(@"Assertions\EvilSaml2Assertion_02"));
-            Assert.IsFalse(VerifySignature(@"Assertions\EvilSaml2Assertion_03"));
+            Assert.IsFalse(VerifySignature(TestContext.CurrentContext.TestDirectory + @"\Assertions\EvilSaml2Assertion_01"));
+            Assert.IsFalse(VerifySignature(TestContext.CurrentContext.TestDirectory + @"\Assertions\EvilSaml2Assertion_02"));
+            Assert.IsFalse(VerifySignature(TestContext.CurrentContext.TestDirectory + @"\Assertions\EvilSaml2Assertion_03"));
         }
 
         /// <summary>
         /// Deserializes the test tokens using the Safewhere DK-SAML class.
         /// </summary>
-        /// <remarks>
-        /// TODO: test data needs fixing
-        /// </remarks>
-        [Ignore]
+        [Ignore("Test data needs fixing")]
         public void TestSaml20TokenVerification01()
         {
-            AssertionUtil.DeserializeToken(@"Assertions\Saml2Assertion_01");
-            AssertionUtil.DeserializeToken(@"Assertions\Saml2Assertion_02");
-            AssertionUtil.DeserializeToken(@"Assertions\Saml2Assertion_03");
+            AssertionUtil.DeserializeToken(TestContext.CurrentContext.TestDirectory + @"\Assertions\Saml2Assertion_01");
+            AssertionUtil.DeserializeToken(TestContext.CurrentContext.TestDirectory + @"\Assertions\Saml2Assertion_02");
+            AssertionUtil.DeserializeToken(TestContext.CurrentContext.TestDirectory + @"\Assertions\Saml2Assertion_03");
         }
 
         /// <summary>
         /// Attempts to deserialize an invalid SAML-token. Tests that the Assertion class immediately "explodes".
         /// </summary>
         [Test]
-        [ExpectedException(typeof(Saml20Exception), ExpectedMessage = "Signature could not be verified.")]
         public void TestSaml20TokenVerification02()
         {
-            AssertionUtil.DeserializeToken(@"Assertions\EvilSaml2Assertion_01");
+            Assert.Throws<Saml20Exception>(() => AssertionUtil.DeserializeToken(TestContext.CurrentContext.TestDirectory + @"\Assertions\EvilSaml2Assertion_01"), "Signature could not be verified.");
         }
 
         /// <summary>
         /// Attempts to deserialize an invalid SAML-token. Tests that the Assertion class immediately "explodes".
         /// </summary>
         [Test]
-        [ExpectedException(typeof(Saml20Exception), ExpectedMessage = "Signature could not be verified.")]
         public void TestSaml20TokenVerification03()
         {
-            AssertionUtil.DeserializeToken(@"Assertions\EvilSaml2Assertion_02");
+            Assert.Throws<Saml20Exception>(() => AssertionUtil.DeserializeToken(TestContext.CurrentContext.TestDirectory + @"\Assertions\EvilSaml2Assertion_02"), "Signature could not be verified.");
         }
 
         /// <summary>
         /// Attempts to deserialize an invalid SAML-token. Tests that the Assertion class immediately "explodes".
         /// </summary>
         [Test]
-        [ExpectedException(typeof(Saml20Exception), ExpectedMessage = "Signature could not be verified.")]
         public void TestSaml20TokenVerification04()
         {
-            AssertionUtil.DeserializeToken(@"Assertions\EvilSaml2Assertion_03");
+            Assert.Throws<Saml20Exception>(() => AssertionUtil.DeserializeToken(TestContext.CurrentContext.TestDirectory + @"\Assertions\EvilSaml2Assertion_03"), "Signature could not be verified.");
         }
 
         #endregion
@@ -129,10 +123,7 @@ namespace SAML2.Tests
         /// Tests the signing code of the Assertion class, by first creating an unsigned assertion and then signing and 
         /// verifying it.
         /// </summary>
-        /// <remarks>
-        /// TODO: test data needs fixing
-        /// </remarks>
-        [Ignore]
+        [Ignore("Test data needs fixing")]
         public void TestSigning03()
         {
             // Load an unsigned assertion. 
@@ -150,7 +141,7 @@ namespace SAML2.Tests
                 Assert.That(true);
             }
 
-            var cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
+            var cert = new X509Certificate2(TestContext.CurrentContext.TestDirectory + @"\Certificates\sts_dev_certificate.pfx", "test1234");
             Assert.That(cert.HasPrivateKey, "Certificate no longer contains a private key. Modify test.");
             assertion.Sign(cert);
 
@@ -201,7 +192,7 @@ namespace SAML2.Tests
             //    signedXml.KeyInfo.AddClause(new RSAKeyValue(rsaKey));
 
             // Use X509 Certificate for signing.
-            var cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
+            var cert = new X509Certificate2(TestContext.CurrentContext.TestDirectory + @"\Certificates\sts_dev_certificate.pfx", "test1234");
             Assert.That(cert.HasPrivateKey);
             signedXml.SigningKey = cert.PrivateKey;
             signedXml.KeyInfo.AddClause(new KeyInfoX509Data(cert, X509IncludeOption.EndCertOnly));

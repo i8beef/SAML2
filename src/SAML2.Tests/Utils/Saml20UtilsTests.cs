@@ -37,17 +37,13 @@ namespace SAML2.Tests.Utils
             /// Verify <see cref="Saml20FormatException"/> is thrown on failure.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException))]
             public void ThrowsSaml20FormatExceptionOnFailure()
             {
                 // Arrange
                 var localtime = DateTime.UtcNow.ToString();
 
                 // Act
-                Saml20Utils.FromUtcString(localtime);
-
-                // Assert
-                Assert.Fail("Conversion from non-UTC string must not succeed");
+                Assert.Throws<Saml20FormatException>(() => Saml20Utils.FromUtcString(localtime));
             }
         }
 

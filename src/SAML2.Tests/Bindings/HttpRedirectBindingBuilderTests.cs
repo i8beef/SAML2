@@ -20,7 +20,6 @@ namespace SAML2.Tests.Bindings
             /// Ensure that it is not possible to add a request, when a response has already been added.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(ArgumentException))]
             public void DoesNotAllowResponseAndRequestToBothBeSet()
             {
                 // Arrange
@@ -30,10 +29,7 @@ namespace SAML2.Tests.Bindings
                                   };
 
                 // Act
-                binding.Request = "Request";
-
-                // Assert
-                Assert.Fail("HttpRedirectBinding did not throw an exception when both Request and Response were set.");
+                Assert.Throws<ArgumentException>(() => binding.Request = "Request");
             }
         }
 
@@ -47,7 +43,6 @@ namespace SAML2.Tests.Bindings
             /// Ensure that it is not possible to add a response, when a request has already been added.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(ArgumentException))]
             public void DoesNotAllowRequestAndResponseToBothBeSet()
             {
                 // Arrange
@@ -57,10 +52,7 @@ namespace SAML2.Tests.Bindings
                                   };
 
                 // Act
-                binding.Response = "Response";
-
-                // Assert
-                Assert.Fail("HttpRedirectBinding did not throw an exception when both Request and Response were set.");
+                Assert.Throws<ArgumentException>(() => binding.Response = "Response");
             }
         }
 

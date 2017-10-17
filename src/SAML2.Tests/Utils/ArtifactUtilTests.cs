@@ -67,7 +67,6 @@ namespace SAML2.Tests.Utils
             /// Verify exception is thrown on message handle length mismatch.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(ArgumentException))]
             public void ThrowsExceptionWhenMessageHandleLengthMismatch()
             {
                 // Arrange
@@ -77,14 +76,13 @@ namespace SAML2.Tests.Utils
                 var messageHandle = new byte[19];
 
                 // Act
-                ArtifactUtil.CreateArtifact(typeCode, endpointIndex, sourceIdHash, messageHandle);
+                Assert.Throws<ArgumentException>(() => ArtifactUtil.CreateArtifact(typeCode, endpointIndex, sourceIdHash, messageHandle));
             }
 
             /// <summary>
             /// Verify exception is thrown on source id hash length mismatch.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(ArgumentException))]
             public void ThrowsExceptionWhenSourceIdHashLengthMismatch()
             {
                 // Arrange
@@ -94,7 +92,7 @@ namespace SAML2.Tests.Utils
                 var messageHandle = new byte[20];
 
                 // Act
-                ArtifactUtil.CreateArtifact(typeCode, endpointIndex, sourceIdHash, messageHandle);
+                Assert.Throws<ArgumentException>(() => ArtifactUtil.CreateArtifact(typeCode, endpointIndex, sourceIdHash, messageHandle));
             }
         }
 
@@ -108,7 +106,6 @@ namespace SAML2.Tests.Utils
             /// Verify exception is thrown on source id hash length mismatch.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(ArgumentException))]
             public void ThrowsExceptionWhenSourceIdHashLengthMismatch()
             {
                 // Arrange
@@ -119,14 +116,13 @@ namespace SAML2.Tests.Utils
                 var artifact = string.Empty;
 
                 // Act
-                ArtifactUtil.ParseArtifact(artifact, ref parsedTypeCode, ref parsedEndpointIndex, ref parsedSourceIdHash, ref parsedMessageHandle);
+                Assert.Throws<ArgumentException>(() => ArtifactUtil.ParseArtifact(artifact, ref parsedTypeCode, ref parsedEndpointIndex, ref parsedSourceIdHash, ref parsedMessageHandle));
             }
 
             /// <summary>
             /// Verify exception is thrown on message handle length mismatch.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(ArgumentException))]
             public void ThrowsExceptionWhenMessageHandleLengthMismatch()
             {
                 // Arrange
@@ -137,14 +133,13 @@ namespace SAML2.Tests.Utils
                 var artifact = string.Empty;
 
                 // Act
-                ArtifactUtil.ParseArtifact(artifact, ref parsedTypeCode, ref parsedEndpointIndex, ref parsedSourceIdHash, ref parsedMessageHandle);
+                Assert.Throws<ArgumentException>(() => ArtifactUtil.ParseArtifact(artifact, ref parsedTypeCode, ref parsedEndpointIndex, ref parsedSourceIdHash, ref parsedMessageHandle));
             }
 
             /// <summary>
             /// Verify exception is thrown on artifact length mismatch.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(ArgumentException))]
             public void ThrowsExceptionWhenArtifactLengthMismatch()
             {
                 // Arrange
@@ -155,7 +150,7 @@ namespace SAML2.Tests.Utils
                 var artifact = string.Empty;
 
                 // Act
-                ArtifactUtil.ParseArtifact(artifact, ref parsedTypeCode, ref parsedEndpointIndex, ref parsedSourceIdHash, ref parsedMessageHandle);
+                Assert.Throws<ArgumentException>(() => ArtifactUtil.ParseArtifact(artifact, ref parsedTypeCode, ref parsedEndpointIndex, ref parsedSourceIdHash, ref parsedMessageHandle));
             }
         }
 

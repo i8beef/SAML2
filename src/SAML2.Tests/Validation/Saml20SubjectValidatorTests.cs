@@ -21,7 +21,6 @@ namespace SAML2.Tests.Validation
             /// Tests the validation that ensures that a subject MUST have at least one sub element
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Subject MUST contain either an identifier or a subject confirmation")]
             public void ThrowsExceptionWhenSubjectConfirmationDoesNotContainSubject()
             {
                 // Arrange
@@ -31,14 +30,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20SubjectValidator();
 
                 // Act
-                validator.ValidateSubject(saml20Assertion.Subject);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateSubject(saml20Assertion.Subject),
+                    "Subject MUST contain either an identifier or a subject confirmation");
             }
 
             /// <summary>
             /// Tests the validation that ensures that a subject MUST have at least one sub element of correct type
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Subject must have either NameID, EncryptedID or SubjectConfirmation subelement.")]
             public void ThrowsExceptionWhenSubjectConfirmationContainsElementsOfWrongIdentifier()
             {
                 // Arrange
@@ -48,7 +47,8 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20SubjectValidator();
 
                 // Act
-                validator.ValidateSubject(saml20Assertion.Subject);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateSubject(saml20Assertion.Subject),
+                    "Subject must have either NameID, EncryptedID or SubjectConfirmation subelement.");
             }
         }
     }

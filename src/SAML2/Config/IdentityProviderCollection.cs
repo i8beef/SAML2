@@ -84,7 +84,9 @@ namespace SAML2.Config
             set
             {
                 base["metadata"] = value;
-                _fileSystemWatcher.Path = MetadataLocation;
+                if (_fileSystemWatcher != null)
+                    _fileSystemWatcher.Path = MetadataLocation;
+
                 Refresh();
             }
         }
@@ -195,6 +197,18 @@ namespace SAML2.Config
 
                     _fileToEntity.Add(file, metadataDoc.EntityId);
                 }
+
+                if (_fileInfo.ContainsKey(file))
+                    _fileInfo[file] = File.GetLastWriteTime(file);
+                else
+                    _fileInfo.Add(file, File.GetLastWriteTime(file));
+            }
+
+            // Remove any IDPs with no metadata
+            var itemsToRemove = this.Where(x => x.Metadata == null).ToList();
+            foreach (var idp in itemsToRemove)
+            {
+                BaseRemove(idp.Id);
             }
         }
 
