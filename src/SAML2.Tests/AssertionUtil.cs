@@ -200,7 +200,7 @@ namespace SAML2.Tests
         {
             if (_cert == null)
             {
-                _cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
+                _cert = new X509Certificate2(TestContext.CurrentContext.TestDirectory + @"\Certificates\sts_dev_certificate.pfx", "test1234");
                 Assert.That(_cert.HasPrivateKey, "Certificate no longer contains a private key. Modify test.");
             }
 
@@ -286,7 +286,7 @@ namespace SAML2.Tests
         /// <returns>The XML document.</returns>
         public static XmlDocument LoadBase64EncodedXmlDocument(string assertionFile)
         {
-            var assertionBase64 = File.ReadAllText(@"Assertions\fobs-assertion2");
+            var assertionBase64 = File.ReadAllText(TestContext.CurrentContext.TestDirectory + @"\Assertions\fobs-assertion2");
             var assertionBytes = Convert.FromBase64String(assertionBase64);
 
             var document = new XmlDocument { PreserveWhitespace = true };

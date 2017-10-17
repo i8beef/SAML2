@@ -20,7 +20,7 @@ namespace SAML2.Config
         /// <summary>
         /// The file system watcher.
         /// </summary>
-        private readonly FileSystemWatcher _fileSystemWatcher;
+        private FileSystemWatcher _fileSystemWatcher;
 
         /// <summary>
         /// Contains Encoding instances of the the encodings that should by tried when a metadata file does not have its
@@ -50,19 +50,6 @@ namespace SAML2.Config
         {
             _fileInfo = new Dictionary<string, DateTime>();
             _fileToEntity = new Dictionary<string, string>();
-
-            _fileSystemWatcher = new FileSystemWatcher
-                                     {
-                                         Filter = "*.*",
-                                         NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName,
-                                         Path = MetadataLocation,
-                                         EnableRaisingEvents = true
-                                     };
-
-            _fileSystemWatcher.Changed += FileSystemWatcher_Changed;
-            _fileSystemWatcher.Created += FileSystemWatcher_Changed;
-            _fileSystemWatcher.Deleted += FileSystemWatcher_Changed;
-            _fileSystemWatcher.Renamed += FileSystemWatcher_Renamed;
         }
 
         #region Attributes
@@ -97,7 +84,9 @@ namespace SAML2.Config
             set
             {
                 base["metadata"] = value;
-                _fileSystemWatcher.Path = MetadataLocation;
+                if (_fileSystemWatcher != null)
+                    _fileSystemWatcher.Path = MetadataLocation;
+
                 Refresh();
             }
         }
@@ -112,6 +101,33 @@ namespace SAML2.Config
         }
 
         #endregion
+
+        /// <summary>
+        /// Start watching files.
+        /// </summary>
+        public void EnableFileWatcher()
+        {
+            _fileSystemWatcher = new FileSystemWatcher
+            {
+                Filter = "*.*",
+                NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName,
+                Path = MetadataLocation,
+                EnableRaisingEvents = true
+            };
+
+            _fileSystemWatcher.Changed += FileSystemWatcher_Changed;
+            _fileSystemWatcher.Created += FileSystemWatcher_Changed;
+            _fileSystemWatcher.Deleted += FileSystemWatcher_Changed;
+            _fileSystemWatcher.Renamed += FileSystemWatcher_Renamed;
+        }
+
+        /// <summary>
+        /// Stops watching files.
+        /// </summary>
+        public void DisableFileWatcher()
+        {
+            _fileSystemWatcher.Dispose();
+        }
 
         /// <summary>
         /// Refreshes this instance from metadata location.
@@ -183,6 +199,18 @@ namespace SAML2.Config
                         _fileToEntity.Add(file, metadataDoc.EntityId);
                     }
                 }
+
+                if (_fileInfo.ContainsKey(file))
+                    _fileInfo[file] = File.GetLastWriteTime(file);
+                else
+                    _fileInfo.Add(file, File.GetLastWriteTime(file));
+            }
+
+            // Remove any IDPs with no metadata
+            var itemsToRemove = this.Where(x => x.Metadata == null).ToList();
+            foreach (var idp in itemsToRemove)
+            {
+                BaseRemove(idp.Id);
             }
         }
 

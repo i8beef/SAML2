@@ -42,7 +42,7 @@ namespace SAML2.Tests.Utils
             public void CanCheckValidSignatures()
             {
                 // Arrange
-                var doc = LoadDocument(@"Assertions\Saml2Assertion_01");
+                var doc = LoadDocument(TestContext.CurrentContext.TestDirectory + @"\Assertions\Saml2Assertion_01");
 
                 // Act
                 var result = XmlSignatureUtils.CheckSignature(doc);
@@ -65,7 +65,7 @@ namespace SAML2.Tests.Utils
             public void CanExtractKeyInfo()
             {
                 // Arrange
-                var doc = LoadDocument(@"Assertions\Saml2Assertion_01");
+                var doc = LoadDocument(TestContext.CurrentContext.TestDirectory + @"\Assertions\Saml2Assertion_01");
 
                 // Act
                 var keyInfo = XmlSignatureUtils.ExtractSignatureKeys(doc);
@@ -88,8 +88,8 @@ namespace SAML2.Tests.Utils
             public void CanDetectIfDocumentIsSigned()
             {
                 // Arrange
-                var badDocument = LoadDocument(@"Assertions\EncryptedAssertion_01");
-                var goodDocument = LoadDocument(@"Assertions\Saml2Assertion_01");
+                var badDocument = LoadDocument(TestContext.CurrentContext.TestDirectory + @"\Assertions\EncryptedAssertion_01");
+                var goodDocument = LoadDocument(TestContext.CurrentContext.TestDirectory + @"\Assertions\Saml2Assertion_01");
 
                 // Act
                 var badResult = XmlSignatureUtils.IsSigned(badDocument);
@@ -104,18 +104,14 @@ namespace SAML2.Tests.Utils
             /// Verify documents without preserve whitespace set will fail.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(InvalidOperationException))]
             public void FailsOnDocumentWithoutPreserveWhitespace()
             {
                 // Arrange
-                var doc = LoadDocument(@"Assertions\EncryptedAssertion_01");
+                var doc = LoadDocument(TestContext.CurrentContext.TestDirectory + @"\Assertions\EncryptedAssertion_01");
                 doc.PreserveWhitespace = false;
 
                 // Act
-                XmlSignatureUtils.IsSigned(doc);
-
-                // Assert
-                Assert.Fail("Signed documents that do not have PreserveWhitespace set should fail to be processed.");
+                Assert.Throws<InvalidOperationException>(() => XmlSignatureUtils.IsSigned(doc));
             }
         }
     }

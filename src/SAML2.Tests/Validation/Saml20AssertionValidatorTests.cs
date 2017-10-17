@@ -22,7 +22,6 @@ namespace SAML2.Tests.Validation
             /// Tests validation of missing ID attribute
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Assertion element must have the ID attribute set.")]
             public void ThrowsExceptionWhenIdNull()
             {
                 // Arrange
@@ -32,14 +31,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20AssertionValidator(AssertionUtil.GetAudiences(), false);
 
                 // Act
-                validator.ValidateAssertion(assertion);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateAssertion(assertion), "Assertion element must have the ID attribute set.");
             }
 
             /// <summary>
             /// Tests validation of Issuer Element format
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NameID element has Format attribute which is not a wellformed absolute uri.")]
             public void ThrowsExceptionWhenIssuerFormatInvalid()
             {
                 // Arrange
@@ -49,14 +47,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20AssertionValidator(AssertionUtil.GetAudiences(), false);
 
                 // Act
-                validator.ValidateAssertion(assertion);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateAssertion(assertion), "NameID element has Format attribute which is not a wellformed absolute uri.");
             }
 
             /// <summary>
             /// Tests validation of required IssueInstant Element 
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Assertion element must have the IssueInstant attribute set.")]
             public void ThrowsExceptionWhenIssueInstantNull()
             {
                 // Arrange
@@ -66,14 +63,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20AssertionValidator(AssertionUtil.GetAudiences(), false);
 
                 // Act
-                validator.ValidateAssertion(assertion);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateAssertion(assertion), "Assertion element must have the IssueInstant attribute set.");
             }
 
             /// <summary>
             /// Tests validation of Issuer Element presence
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Assertion element must have an issuer element.")]
             public void ThrowsExceptionWhenIssuerNull()
             {
                 // Arrange
@@ -83,14 +79,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20AssertionValidator(AssertionUtil.GetAudiences(), false);
 
                 // Act
-                validator.ValidateAssertion(assertion);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateAssertion(assertion), "Assertion element must have an issuer element.");
             }
 
             /// <summary>
             /// Tests validation of wrong version attribute
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Wrong value of version attribute on Assertion element")]
             public void ThrowsExceptionWhenWrongVersion()
             {
                 // Arrange
@@ -100,7 +95,7 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20AssertionValidator(AssertionUtil.GetAudiences(), false);
 
                 // Act
-                validator.ValidateAssertion(assertion);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateAssertion(assertion), "Wrong value of version attribute on Assertion element");
             }
 
             /// <summary>
@@ -128,7 +123,6 @@ namespace SAML2.Tests.Validation
             /// Test that audience-restricted assertions are not valid if ANY of the audience restrictions is not met 
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "The service is not configured to meet the given audience restrictions")]
             public void ThrowsExceptionWhenAudienceRestrictionAnyAudienceRestrictionIsNotMet()
             {
                 // Arrange
@@ -145,14 +139,13 @@ namespace SAML2.Tests.Validation
                 assertion.Conditions.Items = audienceConditions;
 
                 // Act
-                validator.ValidateAssertion(assertion);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateAssertion(assertion), "The service is not configured to meet the given audience restrictions");
             }
 
             /// <summary>
             /// Test that audience-restricted assertions are not valid if the restriction values are incorrectly formatted
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Audience element has value which is not a wellformed absolute uri")]
             public void ThrowsExceptionWhenAudienceRestrictionAudienceFormatIsInvalid()
             {
                 // Arrange
@@ -167,7 +160,7 @@ namespace SAML2.Tests.Validation
                 assertion.Conditions.Items = new List<ConditionAbstract>(new ConditionAbstract[] { audienceRestriction });
 
                 // Act
-                validator.ValidateAssertion(assertion);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateAssertion(assertion), "Audience element has value which is not a wellformed absolute uri");
             }
 
             /// <summary>
@@ -175,7 +168,6 @@ namespace SAML2.Tests.Validation
             /// consider audience-restricted assertions valid
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "The service is not configured to meet the given audience restrictions")]
             public void ThrowsExceptionWhenAudienceRestrictionDoesNotMatch()
             {
                 // Arrange
@@ -187,7 +179,7 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20AssertionValidator(allowedAudienceUris, false);
 
                 // Act
-                validator.ValidateAssertion(assertion);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateAssertion(assertion), "The service is not configured to meet the given audience restrictions");
             }
 
             /// <summary>
@@ -195,7 +187,6 @@ namespace SAML2.Tests.Validation
             /// consider audience-restricted assertions valid
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "The service is not configured to meet any audience restrictions")]
             public void ThrowsExceptionWhenAudienceRestrictionIsNotConfigured()
             {
                 // Arrange
@@ -203,14 +194,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20AssertionValidator(null, false);
 
                 // Act
-                validator.ValidateAssertion(assertion);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateAssertion(assertion), "The service is not configured to meet any audience restrictions");
             }
 
             /// <summary>
             /// Tests the validation that ensures the Count property to be a non-negative integer
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Count attribute of ProxyRestriction MUST BE a non-negative integer")]
             public void ThrowsExceptionWhenProxyRestrictionCountIsNegative()
             {
                 // Arrange
@@ -225,14 +215,13 @@ namespace SAML2.Tests.Validation
                 assertion.Conditions.Items = conditions;
 
                 // Act
-                validator.ValidateAssertion(assertion);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateAssertion(assertion), "Count attribute of ProxyRestriction MUST BE a non-negative integer");
             }
 
             /// <summary>
             /// Tests the validation that ensures the Count property to be a non-negative integer
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "ProxyRestriction Audience MUST BE a wellformed uri")]
             public void ThrowsExceptionWhenProxyRestrictionAudienceIsInvalid()
             {
                 // Arrange
@@ -250,14 +239,13 @@ namespace SAML2.Tests.Validation
                 assertion.Conditions.Items = conditions;
 
                 // Act
-                validator.ValidateAssertion(assertion);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateAssertion(assertion), "ProxyRestriction Audience MUST BE a wellformed uri");
             }
 
             /// <summary>
             /// Tests the validation that ensures at most 1 OneTimeUse condition
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Assertion contained more than one condition of type OneTimeUse")]
             public void ThrowsExceptionWhenThereAreMultipleOneTimeUse()
             {
                 // Arrange
@@ -273,14 +261,13 @@ namespace SAML2.Tests.Validation
                 assertion.Conditions.Items = conditions;
 
                 // Act
-                validator.ValidateAssertion(assertion);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateAssertion(assertion), "Assertion contained more than one condition of type OneTimeUse");
             }
 
             /// <summary>
             /// Tests the validation that ensures at most 1 ProxyRestriction condition
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Assertion contained more than one condition of type ProxyRestriction")]
             public void ThrowsExceptionWhenThereAreMultipleProxyRestriction()
             {
                 // Arrange
@@ -296,7 +283,7 @@ namespace SAML2.Tests.Validation
                 assertion.Conditions.Items = conditions;
 
                 // Act
-                validator.ValidateAssertion(assertion);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateAssertion(assertion), "Assertion contained more than one condition of type ProxyRestriction");
             }
             
             /// <summary>
@@ -405,12 +392,8 @@ namespace SAML2.Tests.Validation
             /// <summary>
             /// Tests that <c>AuthnStatement</c> objects must have a SessionNotOnOrAfter attribute set in the future.
             /// </summary>
-            /// <remarks>
-            /// TODO: test data needs fixing
-            /// </remarks>
             [Test]
-            [Ignore]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnStatement attribute SessionNotOnOrAfter MUST be in the future")]
+            [Ignore("Test data needs fixing")]
             public void ThrowsExceptionWhenAuthnStatementSessionNotOnOrAfterInPast()
             {
                 // Arrange
@@ -427,14 +410,13 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20AssertionValidator(AssertionUtil.GetAudiences(), false);
 
                 // Act
-                validator.ValidateTimeRestrictions(assertion, new TimeSpan());
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateTimeRestrictions(assertion, new TimeSpan()), "AuthnStatement attribute SessionNotOnOrAfter MUST be in the future");
             }
 
             /// <summary>
             /// Test validity of assertion when condition has an invalid NotOnOrAfter time restriction
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Conditions.NotOnOrAfter must not be in the past")]
             public void ThrowsExceptionWhenTimeRestrictionNotOnOrAfterNow()
             {
                 // Arrange
@@ -446,7 +428,7 @@ namespace SAML2.Tests.Validation
                 assertion.Conditions.NotOnOrAfter = DateTime.UtcNow;
 
                 // Act
-                validator.ValidateTimeRestrictions(assertion, new TimeSpan());
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateTimeRestrictions(assertion, new TimeSpan()), "Conditions.NotOnOrAfter must not be in the past");
             }
         }
 
@@ -460,7 +442,6 @@ namespace SAML2.Tests.Validation
             /// Test validity of assertion when condition has an invalid NotBefore time restriction
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Conditions.NotBefore must not be in the future")]
             public void ThrowsExceptionWhenTimeRestrictionNotBeforeIsInvalid()
             {
                 // Arrange
@@ -472,14 +453,13 @@ namespace SAML2.Tests.Validation
                 assertion.Conditions.NotOnOrAfter = null;
 
                 // Act
-                validator.ValidateTimeRestrictions(assertion, new TimeSpan());
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateTimeRestrictions(assertion, new TimeSpan()), "Conditions.NotBefore must not be in the future");
             }
 
             /// <summary>
             /// Test validity of assertion when condition has an invalid NotOnOrAfter time restriction
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Conditions.NotOnOrAfter must not be in the past")]
             public void ThrowsExceptionWhenTimeRestrictionNotOnOrAfterYesterday()
             {
                 // Arrange
@@ -491,7 +471,7 @@ namespace SAML2.Tests.Validation
                 assertion.Conditions.NotOnOrAfter = DateTime.UtcNow.AddDays(-1);
 
                 // Act
-                validator.ValidateTimeRestrictions(assertion, new TimeSpan());
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateTimeRestrictions(assertion, new TimeSpan()), "Conditions.NotOnOrAfter must not be in the past");
             }
 
             /// <summary>

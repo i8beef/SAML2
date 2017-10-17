@@ -22,7 +22,6 @@ namespace SAML2.Tests.Validation
             /// Verify exception is thrown on AttributeStatement Attribute list being null.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AttributeStatement MUST contain at least one Attribute or EncryptedAttribute")]
             public void ThrowsExceptionWhenNullAttributeList()
             {
                 // Arrange
@@ -32,14 +31,14 @@ namespace SAML2.Tests.Validation
                 statement.Items = null;
 
                 // Act
-                validator.ValidateStatement(statement);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateStatement(statement),
+                    "AttributeStatement MUST contain at least one Attribute or EncryptedAttribute");
             }
 
             /// <summary>
             /// Verify exception is thrown on AttributeStatement containing no Attributes or EncryptedAttributes.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AttributeStatement MUST contain at least one Attribute or EncryptedAttribute")]
             public void ThrowsExceptionWhenEmptyAttributeList()
             {
                 // Arrange
@@ -49,14 +48,14 @@ namespace SAML2.Tests.Validation
                 statement.Items = new object[0];
 
                 // Act
-                validator.ValidateStatement(statement);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateStatement(statement),
+                    "AttributeStatement MUST contain at least one Attribute or EncryptedAttribute");
             }
 
             /// <summary>
             /// Verify that Attribute objects must have a non-empty Name
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Name attribute of Attribute element MUST contain at least one non-whitespace character")]
             public void ThrowsExceptionWhenAttributeElementEmptyName()
             {
                 // Arrange
@@ -66,7 +65,8 @@ namespace SAML2.Tests.Validation
                 statement.Items = new object[] { new SamlAttribute() };
 
                 // Act
-                validator.ValidateStatement(statement);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateStatement(statement),
+                    "Name attribute of Attribute element MUST contain at least one non-whitespace character");
             }
         }
 
@@ -80,7 +80,6 @@ namespace SAML2.Tests.Validation
             /// Tests that <c>AuthnStatement</c> objects must have an valid uri content for <c>AuthenticatingAuthority</c> entries
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthenticatingAuthority array contains a value which is not a wellformed absolute uri")]
             public void ThrowsExceptionWhenAuthnContextAuthenticatingAuthorityUriInvalid()
             {
                 // Arrange
@@ -90,66 +89,66 @@ namespace SAML2.Tests.Validation
                                         SessionNotOnOrAfter = DateTime.UtcNow.AddHours(1)
                                     };
                 statement.AuthnContext = new AuthnContext
-                                             {
-                                                 AuthenticatingAuthority = new[]
-                                                                               {
-                                                                                   "urn:aksdlfj",
-                                                                                   "urn/invalid"
-                                                                               },
-                                                 Items = new object[]
-                                                             {
-                                                                 "urn:a:valid.uri:string",
-                                                                 "http://another/valid/uri.string"
-                                                             },
-                                                 ItemsElementName = new[]
-                                                                        {
-                                                                            AuthnContextType.AuthnContextClassRef,
-                                                                            AuthnContextType.AuthnContextDeclRef
-                                                                        }
-                                             };
+                {
+                    AuthenticatingAuthority = new[]
+                    {
+                        "urn:aksdlfj",
+                        "urn/invalid"
+                    },
+                    Items = new object[]
+                    {
+                        "urn:a:valid.uri:string",
+                        "http://another/valid/uri.string"
+                    },
+                    ItemsElementName = new[]
+                    {
+                        AuthnContextType.AuthnContextClassRef,
+                        AuthnContextType.AuthnContextDeclRef
+                    }
+                };
                 var validator = new Saml20StatementValidator();
 
                 // Act
-                validator.ValidateStatement(statement);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateStatement(statement),
+                    "AuthenticatingAuthority array contains a value which is not a wellformed absolute uri");
             }
 
             /// <summary>
             /// Tests that <c>AuthnStatement</c> objects must have a valid uri content for <c>AuthnContextClassRef</c> types
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContextClassRef has a value which is not a wellformed absolute uri")]
             public void ThrowsExceptionWhenAuthnContextAuthnContextClassRefUriInvalid()
             {
                 // Arrange
                 var statement = new AuthnStatement
-                                    {
-                                        AuthnInstant = DateTime.UtcNow,
-                                        SessionNotOnOrAfter = DateTime.UtcNow.AddHours(1)
-                                    };
+                {
+                    AuthnInstant = DateTime.UtcNow,
+                    SessionNotOnOrAfter = DateTime.UtcNow.AddHours(1)
+                };
                 statement.AuthnContext = new AuthnContext
-                                             {
-                                                 Items = new object[]
-                                                             {
-                                                                 string.Empty,
-                                                                 "urn:a.valid.uri:string"
-                                                             },
-                                                 ItemsElementName = new[]
-                                                                        {
-                                                                            AuthnContextType.AuthnContextClassRef,
-                                                                            AuthnContextType.AuthnContextDeclRef
-                                                                        }
-                                             };
+                {
+                    Items = new object[]
+                    {
+                        string.Empty,
+                        "urn:a.valid.uri:string"
+                    },
+                    ItemsElementName = new[]
+                    {
+                        AuthnContextType.AuthnContextClassRef,
+                        AuthnContextType.AuthnContextDeclRef
+                    }
+                };
                 var validator = new Saml20StatementValidator();
 
                 // Act
-                validator.ValidateStatement(statement);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateStatement(statement),
+                    "AuthnContextClassRef has a value which is not a wellformed absolute uri");
             }
 
             /// <summary>
             /// Tests that <c>AuthnStatement</c> objects MUST NOT have content of type <c>AuthnContextDecl</c>
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContextDecl elements are not allowed in this implementation")]
             public void ThrowsExceptionWhenAuthnContextAuthnContextDeclInvalid()
             {
                 // Arrange
@@ -172,14 +171,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20StatementValidator();
 
                 // Act
-                validator.ValidateStatement(statement);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateStatement(statement),
+                    "AuthnContextDecl elements are not allowed in this implementation");
             }
 
             /// <summary>
             /// Tests that <c>AuthnStatement</c> objects must have a valid uri content for <c>AuthnContextDeclRef</c> types
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContextDeclRef has a value which is not a wellformed absolute uri")]
             public void ThrowsExceptionWhenAuthnContextAuthnContextDeclRefUriInvalid()
             {
                 // Arrange
@@ -204,14 +203,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20StatementValidator();
 
                 // Act
-                validator.ValidateStatement(statement);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateStatement(statement),
+                    "AuthnContextDeclRef has a value which is not a wellformed absolute uri");
             }
 
             /// <summary>
             /// Tests that <c>AuthnStatement</c> objects must have a <c>AuthnContextClassRef</c> type as the first element if it is present
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContextClassRef must be in the first element")]
             public void ThrowsExceptionWhenAuthnContextFirstItemNotAuthnContextClassRef()
             {
                 // Arrange
@@ -236,14 +235,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20StatementValidator();
 
                 // Act
-                validator.ValidateStatement(statement);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateStatement(statement),
+                    "AuthnContextClassRef must be in the first element");
             }
 
             /// <summary>
             /// Tests that <c>AuthnStatement</c> objects must have no more than 2 {<c>AuthnContextClassRef</c>, <c>AuthnContextDeclRef</c>} elements
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContext MUST NOT contain more than two elements.")]
             public void ThrowsExceptionWhenAuthnContextHasMoreThanTwoItems()
             {
                 // Arrange
@@ -270,14 +269,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20StatementValidator();
 
                 // Act
-                validator.ValidateStatement(statement);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateStatement(statement),
+                    "AuthnContext MUST NOT contain more than two elements.");
             }
 
             /// <summary>
             /// Tests that <c>AuthnStatement</c> objects must have non-null contents
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContext element MUST contain at least one AuthnContextClassRef, AuthnContextDecl or AuthnContextDeclRef element")]
             public void ThrowsExceptionWhenAuthnContextItemsEmpty()
             {
                 // Arrange
@@ -294,14 +293,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20StatementValidator();
 
                 // Act
-                validator.ValidateStatement(statement);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateStatement(statement),
+                    "AuthnContext element MUST contain at least one AuthnContextClassRef, AuthnContextDecl or AuthnContextDeclRef element");
             }
 
             /// <summary>
             /// Tests that <c>AuthnStatement</c> objects must have non-empty contents
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContext element MUST contain at least one AuthnContextClassRef, AuthnContextDecl or AuthnContextDeclRef element")]
             public void ThrowsExceptionWhenAuthnContextItemsNull()
             {
                 // Arrange
@@ -314,14 +313,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20StatementValidator();
 
                 // Act
-                validator.ValidateStatement(statement);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateStatement(statement),
+                    "AuthnContext element MUST contain at least one AuthnContextClassRef, AuthnContextDecl or AuthnContextDeclRef element");
             }
 
             /// <summary>
             /// Tests that <c>AuthnStatement</c> objects must have an <c>AuthnContext</c> element
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnStatement MUST have an AuthnContext element")]
             public void ThrowsExceptionWhenAuthnContextNull()
             {
                 // Arrange
@@ -333,14 +332,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20StatementValidator();
 
                 // Act
-                validator.ValidateStatement(statement);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateStatement(statement),
+                    "AuthnStatement MUST have an AuthnContext element");
             }
 
             /// <summary>
             /// Tests that <c>AuthnStatement</c> objects must have an <c>AuthnInstant</c> attribute.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnStatement MUST have an AuthnInstant attribute")]
             public void ThrowsExceptionWhenAuthnInstantNull()
             {
                 // Arrange
@@ -350,7 +349,8 @@ namespace SAML2.Tests.Validation
                 statement.AuthnInstant = null;
 
                 // Act
-                validator.ValidateStatement(statement);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateStatement(statement),
+                    "AuthnStatement MUST have an AuthnInstant attribute");
             }
         }
 
@@ -364,7 +364,6 @@ namespace SAML2.Tests.Validation
             /// Verify exception is thrown on malformed resource URI.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Resource attribute of AuthzDecisionStatement has a value which is not a wellformed absolute uri")]
             public void ThrowsExceptionWhenMalformedResource()
             {
                 // Arrange
@@ -374,14 +373,14 @@ namespace SAML2.Tests.Validation
                 statement.Resource = "a malformed uri";
 
                 // Act
-                validator.ValidateStatement(statement);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateStatement(statement),
+                    "Resource attribute of AuthzDecisionStatement has a value which is not a wellformed absolute uri");
             }
 
             /// <summary>
             /// Verify exception is thrown on missing <c>AuthzDecisionStatement</c>.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Resource attribute of AuthzDecisionStatement is REQUIRED")]
             public void ThrowsExceptionWhenMissingResourceEmpty()
             {
                 // Arrange
@@ -391,7 +390,8 @@ namespace SAML2.Tests.Validation
                 statement.Resource = null;
 
                 // Act
-                validator.ValidateStatement(statement);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateStatement(statement),
+                    "Resource attribute of AuthzDecisionStatement is REQUIRED");
             }
 
             /// <summary>

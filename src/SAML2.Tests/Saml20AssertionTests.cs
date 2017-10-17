@@ -28,11 +28,11 @@ namespace SAML2.Tests
             /// Adds an attribute to the assertion, signs it and verifies that the new attribute is part of the signed assertion.
             /// </summary>
             [Test]
-            [Ignore]    // TODO: test data needs fixing
+            [Ignore("test data needs fixing")]
             public void AddAttribute()
             {
                 // Arrange
-                var assertion = new Saml20Assertion(AssertionUtil.LoadXmlDocument(@"Assertions\Saml2Assertion_01").DocumentElement, null, false);
+                var assertion = new Saml20Assertion(AssertionUtil.LoadXmlDocument(TestContext.CurrentContext.TestDirectory + @"\Assertions\Saml2Assertion_01").DocumentElement, null, false);
                 var attributes = assertion.Attributes;
                 attributes.Add(new SamlAttribute());
 
@@ -59,7 +59,7 @@ namespace SAML2.Tests
             public void CanReadAttributes()
             {
                 // Act
-                var assertion = new Saml20Assertion(AssertionUtil.LoadXmlDocument(@"Assertions\Saml2Assertion_01").DocumentElement, null, false);
+                var assertion = new Saml20Assertion(AssertionUtil.LoadXmlDocument(TestContext.CurrentContext.TestDirectory + @"\Assertions\Saml2Assertion_01").DocumentElement, null, false);
 
                 // Assert
                 CollectionAssert.IsNotEmpty(assertion.Attributes);
@@ -78,15 +78,15 @@ namespace SAML2.Tests
             /// Test that the Assertion class verifies the signature of an assertion by default.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Document does not contain a signature to verify.")]
             public void VerifySignatureByDefault()
             {
                 // Arrange
                 // Any key-containing algorithm will do - the basic assertion is NOT signed anyway
-                var cert = new X509Certificate2(@"Certificates\sts_dev_certificate.pfx", "test1234");
+                var cert = new X509Certificate2(TestContext.CurrentContext.TestDirectory + @"\Certificates\sts_dev_certificate.pfx", "test1234");
 
                 // Act
-                var assertion = new Saml20Assertion(AssertionUtil.GetTestAssertion().DocumentElement, new[] { cert.PublicKey.Key }, false);
+                Assert.Throws<InvalidOperationException>(() => new Saml20Assertion(AssertionUtil.GetTestAssertion().DocumentElement, new[] { cert.PublicKey.Key }, false),
+                    "Document does not contain a signature to verify.");
             }
 
             #endregion
@@ -97,7 +97,6 @@ namespace SAML2.Tests
             /// Throws exception when no items are present.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AttributeStatement MUST contain at least one Attribute or EncryptedAttribute")]
             public void ThrowsExceptionWhenNoItemsArePresent()
             {
                 // Arrange
@@ -108,14 +107,14 @@ namespace SAML2.Tests
                 attributeStatement.Items = new object[0];
 
                 // Act
-                var assertion = new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+                Assert.Throws<Saml20FormatException>(() => new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false),
+                    "AttributeStatement MUST contain at least one Attribute or EncryptedAttribute");
             }
 
             /// <summary>
             /// Test that xml attribute extensions on Attribute objects must be namespace qualified
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Attribute extension xml attributes MUST BE namespace qualified")]
             public void ThrowsExceptionWhenXmlAttributeStatementAttributeAnyAttrUnqualified()
             {
                 // Arrange
@@ -130,7 +129,8 @@ namespace SAML2.Tests
                 saml20Assertion.Items = statements.ToArray();
 
                 // Act
-                new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+                Assert.Throws<Saml20FormatException>(() => new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false),
+                    "Attribute extension xml attributes MUST BE namespace qualified");
             }
 
             /// <summary>
@@ -152,16 +152,9 @@ namespace SAML2.Tests
                 {
                     attribute.AnyAttr = new[] { doc.CreateAttribute("someprefix", "SamlQualified", samlns) };
 
-                    try
-                    {
-                        // Act
-                        var assertion = new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
-                        Assert.Fail("A SAML-qualified xml attribute extension on Attribute must not be valid");
-                    }
-                    catch (Saml20FormatException sfe)
-                    {
-                        Assert.AreEqual(sfe.Message, "Attribute extension xml attributes MUST NOT use a namespace reserved by SAML");
-                    }
+                    // Act
+                    Assert.Throws<Saml20FormatException>(() => new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false),
+                        "Attribute extension xml attributes MUST NOT use a namespace reserved by SAML");
                 }
             }
 
@@ -169,7 +162,6 @@ namespace SAML2.Tests
             /// Test that EncryptedAttribute objects must have an EncryptedData child element
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "An EncryptedAttribute MUST contain an xenc:EncryptedData element")]
             public void ThrowsExceptionWhenXmlAttributeStatementEncryptedAttributeWithNoData()
             {
                 // Arrange
@@ -184,14 +176,14 @@ namespace SAML2.Tests
                 saml20Assertion.Items = statements.ToArray();
 
                 // Act
-                var assertion = new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+                Assert.Throws<Saml20FormatException>(() => new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false),
+                    "An EncryptedAttribute MUST contain an xenc:EncryptedData element");
             }
 
             /// <summary>
             /// Test that EncryptedData element must have the correct Type value
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Type attribute of EncryptedData MUST have value " + Saml20Constants.Xenc + "Element" + " if it is present")]
             public void ThrowsExceptionWhenXmlAttributeStatementEncryptedAttributeWrongType()
             {
                 // Arrange
@@ -212,7 +204,8 @@ namespace SAML2.Tests
                 saml20Assertion.Items = statements.ToArray();
 
                 // Act
-                var assertion = new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+                Assert.Throws<Saml20FormatException>(() => new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false),
+                    "Type attribute of EncryptedData MUST have value " + Saml20Constants.Xenc + "Element" + " if it is present");
             }
 
             #endregion
@@ -223,7 +216,6 @@ namespace SAML2.Tests
             /// Throws exception when <c>AuthnContextClassRef</c> is not well formed URI.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnContextClassRef has a value which is not a wellformed absolute uri")]
             public void ThrowsWhenAuthnContextClassRefIsNotWellFormedUri()
             {
                 // Arrange
@@ -234,7 +226,8 @@ namespace SAML2.Tests
                 authnStatement.AuthnContext.Items[index] = "Hallelujagobble!!";
 
                 // Act
-                var assertion = new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+                Assert.Throws<Saml20FormatException>(() => new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false),
+                    "AuthnContextClassRef has a value which is not a wellformed absolute uri");
             }
 
             #endregion
@@ -245,7 +238,6 @@ namespace SAML2.Tests
             /// Throws exception when subject element is not present.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "AuthnStatement, AuthzDecisionStatement and AttributeStatement require a subject.")]
             public void ThrowsWhenSubjectElementIsNotPresent()
             {
                 // Arrange
@@ -256,14 +248,14 @@ namespace SAML2.Tests
                 saml20Assertion.Subject = null;
 
                 // Act
-                var assertion = new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+                Assert.Throws<Saml20FormatException>(() => new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false), 
+                    "AuthnStatement, AuthzDecisionStatement and AttributeStatement require a subject.");
             }
 
             /// <summary>
             /// Throws exception when subject method is not well formed URI.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "SubjectConfirmation element has Method attribute which is not a wellformed absolute uri.")]
             public void ThrowsWhenSubjectMethodIsNotWellFormedUri()
             {
                 // Arrange
@@ -272,7 +264,8 @@ namespace SAML2.Tests
                 subjectConfirmation.Method = "IllegalMethod";
 
                 // Act
-                var assertion = new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false);
+                Assert.Throws<Saml20FormatException>(() => new Saml20Assertion(AssertionUtil.ConvertAssertionToXml(saml20Assertion).DocumentElement, null, false), 
+                    "SubjectConfirmation element has Method attribute which is not a wellformed absolute uri.");
             }
 
             #endregion

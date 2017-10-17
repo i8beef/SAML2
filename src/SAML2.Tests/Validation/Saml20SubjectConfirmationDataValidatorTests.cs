@@ -23,7 +23,6 @@ namespace SAML2.Tests.Validation
             /// Verify exception is thrown when key info confirmation data has no any elements.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "SubjectConfirmationData element MUST have at least one " + KeyInfo.ElementName + " subelement")]
             public void ThrowsExceptionWhenKeyInfoConfirmationDataHasNoElements()
             {
                 // Arrange
@@ -31,14 +30,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20SubjectConfirmationDataValidator();
 
                 // Act
-                validator.ValidateSubjectConfirmationData(subjectConfirmationData);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateSubjectConfirmationData(subjectConfirmationData),
+                    "SubjectConfirmationData element MUST have at least one " + KeyInfo.ElementName + " subelement");
             }
 
             /// <summary>
             /// Verify exception is thrown when key info confirmation data has no elements with correct namespace.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "SubjectConfirmationData element MUST contain at least one " + KeyInfo.ElementName + " in namespace " + Saml20Constants.Xmldsig)]
             public void ThrowsExceptionWhenKeyInfoConfirmationDataHasNoElementsWithCorrectNamespace()
             {
                 // Arrange
@@ -50,14 +49,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20SubjectConfirmationDataValidator();
 
                 // Act
-                validator.ValidateSubjectConfirmationData(subjectConfirmationData);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateSubjectConfirmationData(subjectConfirmationData),
+                    "SubjectConfirmationData element MUST contain at least one " + KeyInfo.ElementName + " in namespace " + Saml20Constants.Xmldsig);
             }
 
             /// <summary>
             /// Verify exception is thrown when key info confirmation data has no elements with valid key.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "SubjectConfirmationData element MUST contain at least one " + KeyInfo.ElementName + " in namespace " + Saml20Constants.Xmldsig)]
             public void ThrowsExceptionWhenKeyInfoConfirmationDataHasNoElementsWithValidKeyName()
             {
                 // Arrange
@@ -71,14 +70,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20SubjectConfirmationDataValidator();
 
                 // Act
-                validator.ValidateSubjectConfirmationData(subjectConfirmationData);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateSubjectConfirmationData(subjectConfirmationData),
+                    "SubjectConfirmationData element MUST contain at least one " + KeyInfo.ElementName + " in namespace " + Saml20Constants.Xmldsig);
             }
 
             /// <summary>
             /// Verify exception is thrown when key info confirmation data sub element has no children.
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "KeyInfo subelement of SubjectConfirmationData MUST NOT be empty")]
             public void ThrowsExceptionWhenKeyInfoConfirmationDataSubElementHasNoChildren()
             {
                 // Arrange
@@ -89,14 +88,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20SubjectConfirmationDataValidator();
 
                 // Act
-                validator.ValidateSubjectConfirmationData(subjectConfirmationData);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateSubjectConfirmationData(subjectConfirmationData),
+                    "KeyInfo subelement of SubjectConfirmationData MUST NOT be empty");
             }
 
             /// <summary>
             /// Tests the validation of the SubjectConfirmationData recipient element
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Recipient of SubjectConfirmationData must be a wellformed absolute URI.")]
             public void ThrowsExceptionWhenSubjectConfirmationDataRecipientIsEmpty()
             {
                 // Arrange
@@ -104,14 +103,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20SubjectConfirmationDataValidator();
 
                 // Act
-                validator.ValidateSubjectConfirmationData(subjectConfirmationData);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateSubjectConfirmationData(subjectConfirmationData),
+                    "Recipient of SubjectConfirmationData must be a wellformed absolute URI.");
             }
 
             /// <summary>
             /// Tests the validation of the SubjectConfirmationData recipient element
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "Recipient of SubjectConfirmationData must be a wellformed absolute URI.")]
             public void ThrowsExceptionWhenSubjectConfirmationDataRecipientIsInvalid()
             {
                 // Arrange
@@ -119,14 +118,14 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20SubjectConfirmationDataValidator();
 
                 // Act
-                validator.ValidateSubjectConfirmationData(subjectConfirmationData);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateSubjectConfirmationData(subjectConfirmationData),
+                    "Recipient of SubjectConfirmationData must be a wellformed absolute URI.");
             }
 
             /// <summary>
             /// Tests the validation of the SubjectConfirmationData {NotBefore, NotOnOrAfter} attributes
             /// </summary>
             [Test]
-            [ExpectedException(typeof(Saml20FormatException), ExpectedMessage = "NotBefore 2008-01-30T17:13:00.5Z MUST BE less than NotOnOrAfter 2008-01-30T16:13:00.5Z on SubjectConfirmationData")]
             public void ThrowsExceptionWhenSubjectConfirmationDataTimeIntervalIsInvalid()
             {
                 // Arrange
@@ -137,7 +136,8 @@ namespace SAML2.Tests.Validation
                 var validator = new Saml20SubjectConfirmationDataValidator();
 
                 // Act
-                validator.ValidateSubjectConfirmationData(subjectConfirmationData);
+                Assert.Throws<Saml20FormatException>(() => validator.ValidateSubjectConfirmationData(subjectConfirmationData),
+                    "NotBefore 2008-01-30T17:13:00.5Z MUST BE less than NotOnOrAfter 2008-01-30T16:13:00.5Z on SubjectConfirmationData");
             }
 
             /// <summary>
