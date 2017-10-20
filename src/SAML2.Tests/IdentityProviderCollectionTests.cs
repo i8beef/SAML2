@@ -31,7 +31,9 @@ namespace SAML2.Tests
                     {
                         var childDoc = new XmlDocument { PreserveWhitespace = true };
                         childDoc.AppendChild(childDoc.ImportNode(entityDescriptor, true));
-                        idpMetadata.Add(new Saml20MetadataDocument(childDoc));
+                        var metadata = new Saml20MetadataDocument(childDoc);
+                        var endpoints = metadata.SSOEndpoints;
+                        idpMetadata.Add(metadata);
                     }
                 }
             }

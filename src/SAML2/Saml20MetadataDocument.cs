@@ -620,10 +620,12 @@ namespace SAML2
                                     binding = BindingType.Artifact;
                                     break;
                                 default:
-                                    throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                                    binding = BindingType.NotSet;
+                                    break;
                             }
 
-                            _ssoEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
+                            if (binding != BindingType.NotSet)
+                                _ssoEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
                         }
 
                         if (descriptor.SingleLogoutService != null)
@@ -646,10 +648,12 @@ namespace SAML2
                                         binding = BindingType.Artifact;
                                         break;
                                     default:
-                                        throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                                        binding = BindingType.NotSet;
+                                        break;
                                 }
 
-                                _idpSloEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
+                                if (binding != BindingType.NotSet)
+                                    _idpSloEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
                             }
                         }
 
@@ -683,10 +687,12 @@ namespace SAML2
                                     binding = BindingType.Artifact;
                                     break;
                                 default:
-                                    throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                                    binding = BindingType.NotSet;
+                                    break;
                             }
 
-                            _assertionConsumerServiceEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
+                            if (binding != BindingType.NotSet)
+                                _assertionConsumerServiceEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
                         }
 
                         if (descriptor.SingleLogoutService != null)
@@ -709,10 +715,12 @@ namespace SAML2
                                         binding = BindingType.Artifact;
                                         break;
                                     default:
-                                        throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                                        binding = BindingType.NotSet;
+                                        break;
                                 }
 
-                                _spSloEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
+                                if (binding != BindingType.NotSet)
+                                    _spSloEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
                             }
                         }
 
