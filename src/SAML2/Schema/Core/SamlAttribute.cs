@@ -80,7 +80,7 @@ namespace SAML2.Schema.Core
         /// </summary>
         /// <value>The attribute value.</value>
         [XmlElement("AttributeValue", IsNullable = true, Order = 1)]
-        public string[] AttributeValue { get; set; }
+        public SamlAttributeValue[] AttributeValue { get; set; }
 
         #endregion
     }

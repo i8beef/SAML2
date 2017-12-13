@@ -182,6 +182,7 @@
     <Compile Include="Schema\Core\NameId.cs" />
     <Compile Include="Schema\Core\OneTimeUse.cs" />
     <Compile Include="Schema\Core\ProxyRestriction.cs" />
+    <Compile Include="Schema\Core\SamlAttributeValue.cs" />
     <Compile Include="Schema\Core\SamlAttribute.cs" />
     <Compile Include="Schema\Core\StatementAbstract.cs" />
     <Compile Include="Schema\Core\Subject.cs" />

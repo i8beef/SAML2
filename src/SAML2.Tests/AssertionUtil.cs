@@ -149,7 +149,7 @@ namespace SAML2.Tests
                         FriendlyName = "SurName",
                         Name = "urn:oid:2.5.4.4",
                         NameFormat = SamlAttribute.NameformatUri,
-                        AttributeValue = new[] { "Fry" }
+                        AttributeValue = new[] { new SamlAttributeValue { Value = "Fry" } }
                     };
 
                 var commonName = new SamlAttribute
@@ -157,14 +157,14 @@ namespace SAML2.Tests
                         FriendlyName = "CommonName",
                         Name = "urn:oid:2.5.4.3",
                         NameFormat = SamlAttribute.NameformatUri,
-                        AttributeValue = new[] { "Philip J. Fry" }
+                        AttributeValue = new[] { new SamlAttributeValue { Value = "Philip J. Fry" } }
                     };
 
                 var userName = new SamlAttribute
                     {
                         Name = "urn:oid:0.9.2342.19200300.100.1.1",
                         NameFormat = SamlAttribute.NameformatUri,
-                        AttributeValue = new[] { "fry" }
+                        AttributeValue = new[] { new SamlAttributeValue { Value = "fry" } }
                     };
 
                 var email = new SamlAttribute
@@ -172,7 +172,7 @@ namespace SAML2.Tests
                         FriendlyName = "Email",
                         Name = "urn:oid:0.9.2342.19200300.100.1.3",
                         NameFormat = SamlAttribute.NameformatUri,
-                        AttributeValue = new[] { "fry@planetexpress.com.earth" }
+                        AttributeValue = new[] { new SamlAttributeValue { Value = "fry@planetexpress.com.earth" } }
                     };
 
                 attributeStatement.Items = new object[] { surName, commonName, userName, email };
