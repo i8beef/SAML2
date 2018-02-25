@@ -82,7 +82,6 @@
     <Compile Include="Config\ConfigurationManager\AttributeElement.cs" />
     <Compile Include="Config\ConfigurationManager\AudienceUriElement.cs" />
     <Compile Include="Config\ConfigurationManager\AuthenticationContextCollection.cs" />
-    <Compile Include="Config\ConfigurationManager\AuthenticationContextComparison.cs" />
     <Compile Include="Config\ConfigurationManager\AuthenticationContextElement.cs" />
     <Compile Include="Config\ConfigurationManager\CertificateValidationCollection.cs" />
     <Compile Include="Config\ConfigurationManager\CertificateValidationElement.cs" />
@@ -109,7 +108,6 @@
     <Compile Include="Config\ConfigurationManager\OrganizationElement.cs" />
     <Compile Include="Config\ConfigurationManager\PersistentPseudonymElement.cs" />
     <Compile Include="Config\ConfigurationManager\RequestedAttributesCollection.cs" />
-    <Compile Include="Config\ConfigurationManager\Saml2Config.cs" />
     <Compile Include="Config\ConfigurationManager\Saml2Section.cs" />
     <Compile Include="Config\ConfigurationManager\ServiceProviderElement.cs" />
     <Compile Include="Config\ConfigurationManager\ServiceProviderEndpointCollection.cs" />
@@ -120,6 +118,7 @@
     <Compile Include="Config\HttpAuth.cs" />
     <Compile Include="Config\HttpAuthCredentials.cs" />
     <Compile Include="Config\IdentityProvider.cs" />
+    <Compile Include="Config\IdentityProviderCollection.cs" />
     <Compile Include="Config\IdentityProviderEndpoint.cs" />
     <Compile Include="Config\LoggingConfig.cs" />
     <Compile Include="Config\MetadataConfig.cs" />

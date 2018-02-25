@@ -47,7 +47,7 @@ namespace SAML2.Bindings
                 throw new ConfigurationErrorsException(ErrorMessages.ConfigMissingIdentityProvidersElement);
             }
 
-            if (config.IdentityProviderMetadataLocation == null)
+            if (config.IdentityProviders.MetadataLocation == null)
             {
                 throw new ConfigurationErrorsException(ErrorMessages.ConfigMissingMetadataLocation);
             }

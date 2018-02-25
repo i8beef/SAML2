@@ -4,13 +4,17 @@ using System.Collections.Generic;
 namespace SAML2.Config
 {
     /// <summary>
-    /// Metadata configuration element.
+    /// Metadata config item.
     /// </summary>
     public class MetadataConfig
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MetadataConfig"/> class.
+        /// </summary>
         public MetadataConfig()
         {
             Contacts = new List<Contact>();
+            Lifetime = new TimeSpan(7, 0, 0, 0);
             RequestedAttributes = new List<Attribute>();
         }
 

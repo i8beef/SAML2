@@ -3,7 +3,7 @@
 namespace SAML2.Config
 {
     /// <summary>
-    /// SAML2 Configuration Section.
+    /// SAML2 Configuration.
     /// </summary>
     public class Saml2Config
     {
@@ -12,12 +12,15 @@ namespace SAML2.Config
         /// </summary>
         private static Saml2Config _config;
 
-        private Saml2Config()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Saml2Config"/> class.
+        /// </summary>
+        public Saml2Config()
         {
             Actions = new List<Action>();
             AllowedAudienceUris = new List<string>();
             CommonDomainCookie = new CommonDomainCookie();
-            IdentityProviders = new List<IdentityProvider>();
+            IdentityProviders = new IdentityProviderCollection();
         }
 
         /// <summary>
@@ -29,7 +32,14 @@ namespace SAML2.Config
             get
             {
                 if (_config == null)
-                    _config = new Saml2Config();
+                {
+                    InitFromConfigFile();
+                }
+
+                if (_config == null)
+                {
+                    throw new Saml20Exception(ErrorMessages.ConfigNotInitialized);
+                }
 
                 return _config;
             }
@@ -63,17 +73,12 @@ namespace SAML2.Config
         /// Gets or sets the identity providers.
         /// </summary>
         /// <value>The identity providers.</value>
-        public IList<IdentityProvider> IdentityProviders { get; set; }
+        public IdentityProviderCollection IdentityProviders { get; set; }
 
         /// <summary>
-        /// Gets the selection URL to use for choosing identity providers if multiple are available and none are set as default.
+        /// Gets or sets the selection URL to use for choosing identity providers if multiple are available and none are set as default.
         /// </summary>
         public string IdentityProviderSelectionUrl { get; set; }
-
-        /// <summary>
-        /// Gets or sets the metadata location.
-        /// </summary>
-        public string IdentityProviderMetadataLocation { get; set; }
 
         /// <summary>
         /// Gets or sets the logging configuration.
@@ -98,5 +103,24 @@ namespace SAML2.Config
         /// </summary>
         /// <value>The state service configuration.</value>
         public StateConfig State { get; set; }
+
+        /// <summary>
+        /// Reads configuration from app.config or web.config.
+        /// </summary>
+        public static void InitFromConfigFile()
+        {
+            _config = Saml2Section.GetConfig();
+            _config.IdentityProviders.Refresh();
+        }
+
+        /// <summary>
+        /// Configures the library instance with the specified configuration.
+        /// </summary>
+        /// <param name="config">Configuration definition.</param>
+        public static void Init(Saml2Config config)
+        {
+            _config = config;
+            _config.IdentityProviders.Refresh();
+        }
     }
 }

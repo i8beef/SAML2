@@ -66,34 +66,5 @@ namespace SAML2.Config.ConfigurationManager
         }
 
         #endregion
-
-        /// <summary>
-        /// Opens the certificate from its store.
-        /// </summary>
-        /// <returns>The <see cref="X509Certificate2"/>.</returns>
-        public X509Certificate2 GetCertificate()
-        {
-            var store = new X509Store(StoreName, StoreLocation);
-            try
-            {
-                store.Open(OpenFlags.ReadOnly);
-                var found = store.Certificates.Find(X509FindType, FindValue, ValidOnly);
-                if (found.Count == 0)
-                {
-                    throw new ConfigurationErrorsException(string.Format(ErrorMessages.CertificateNotFound, FindValue));
-                }
-
-                if (found.Count > 1)
-                {
-                    throw new ConfigurationErrorsException(string.Format(ErrorMessages.CertificateNotUnique, FindValue));
-                }
-
-                return found[0];
-            }
-            finally
-            {
-                store.Close();
-            }
-        }
     }
 }

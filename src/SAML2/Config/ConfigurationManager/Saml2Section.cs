@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
+using SAML2.Config.ConfigurationManager;
 
-namespace SAML2.Config.ConfigurationManager
+namespace SAML2.Config
 {
     /// <summary>
     /// SAML2 Configuration Section.
@@ -63,9 +64,9 @@ namespace SAML2.Config.ConfigurationManager
         /// </summary>
         /// <value>The identity providers.</value>
         [ConfigurationProperty("identityProviders")]
-        public IdentityProviderCollection IdentityProviders
+        public ConfigurationManager.IdentityProviderCollection IdentityProviders
         {
-            get { return (IdentityProviderCollection)base["identityProviders"]; }
+            get { return (ConfigurationManager.IdentityProviderCollection)base["identityProviders"]; }
             set { base["identityProviders"] = value; }
         }
 
@@ -116,12 +117,284 @@ namespace SAML2.Config.ConfigurationManager
         #endregion
 
         /// <summary>
+        /// Get configuration from config file.
+        /// </summary>
+        /// <returns>A configured <see cref="Saml2Config"/> instance.</returns>
+        public static Saml2Config GetConfig()
+        {
+            var section = GetConfigElement();
+
+            var config = new Saml2Config();
+
+            // Actions
+            if (section.Actions.ElementInformation.IsPresent)
+            {
+                foreach (var action in section.Actions)
+                {
+                    config.Actions.Add(new Action { Name = action.Name, Type = action.Type });
+                }
+            }
+
+            // Allowed Audience URIs
+            if (section.AllowedAudienceUris.ElementInformation.IsPresent)
+            {
+                foreach (var allowedAudienceUri in section.AllowedAudienceUris)
+                {
+                    config.AllowedAudienceUris.Add(allowedAudienceUri.Uri);
+                }
+            }
+
+            // Assertion profile
+            if (section.AssertionProfile.ElementInformation.IsPresent)
+            {
+                config.AssertionProfile = new AssertionProfile { AssertionValidator = section.AssertionProfile.AssertionValidator };
+            }
+
+            // Common domain cookie
+            if (section.CommonDomainCookie.ElementInformation.IsPresent)
+            {
+                config.CommonDomainCookie = new CommonDomainCookie
+                {
+                    Enabled = section.CommonDomainCookie.Enabled,
+                    LocalReaderEndpoint = section.CommonDomainCookie.LocalReaderEndpoint
+                };
+            }
+
+            // Identity Providers
+            if (section.IdentityProviders.ElementInformation.IsPresent)
+            {
+                config.IdentityProviderSelectionUrl = section.IdentityProviders.SelectionUrl;
+                config.IdentityProviders.Encodings = section.IdentityProviders.Encodings;
+                config.IdentityProviders.MetadataLocation = section.IdentityProviders.MetadataLocation;
+
+                foreach (var identityProvider in section.IdentityProviders)
+                {
+                    var idp = new IdentityProvider
+                    {
+                        AllowUnsolicitedResponses = identityProvider.AllowUnsolicitedResponses,
+                        Default = identityProvider.Default,
+                        ForceAuth = identityProvider.ForceAuth,
+                        Id = identityProvider.Id,
+                        IsPassive = identityProvider.IsPassive,
+                        Name = identityProvider.Name,
+                        OmitAssertionSignatureCheck = identityProvider.OmitAssertionSignatureCheck,
+                        QuirksMode = identityProvider.QuirksMode,
+                        ResponseEncoding = identityProvider.ResponseEncoding
+                    };
+
+                    if (identityProvider.ArtifactResolution.ElementInformation.IsPresent)
+                    {
+                        var artifactResolution = new HttpAuth();
+                        if (identityProvider.ArtifactResolution.ClientCertificate.ElementInformation.IsPresent)
+                        {
+                            artifactResolution.ClientCertificate = new Certificate
+                            {
+                                FindValue = identityProvider.ArtifactResolution.ClientCertificate.FindValue,
+                                StoreLocation = identityProvider.ArtifactResolution.ClientCertificate.StoreLocation,
+                                StoreName = identityProvider.ArtifactResolution.ClientCertificate.StoreName,
+                                ValidOnly = identityProvider.ArtifactResolution.ClientCertificate.ValidOnly,
+                                X509FindType = identityProvider.ArtifactResolution.ClientCertificate.X509FindType
+                            };
+                        }
+
+                        if (identityProvider.ArtifactResolution.Credentials.ElementInformation.IsPresent)
+                        {
+                            artifactResolution.Credentials = new HttpAuthCredentials
+                            {
+                                Password = identityProvider.ArtifactResolution.Credentials.Password,
+                                Username = identityProvider.ArtifactResolution.Credentials.Username
+                            };
+                        }
+
+                        idp.ArtifactResolution = artifactResolution;
+                    }
+
+                    if (identityProvider.ArtifactResolution.ElementInformation.IsPresent)
+                    {
+                        var attributeQuery = new HttpAuth();
+                        if (identityProvider.AttributeQuery.ClientCertificate.ElementInformation.IsPresent)
+                        {
+                            attributeQuery.ClientCertificate = new Certificate
+                            {
+                                FindValue = identityProvider.AttributeQuery.ClientCertificate.FindValue,
+                                StoreLocation = identityProvider.AttributeQuery.ClientCertificate.StoreLocation,
+                                StoreName = identityProvider.AttributeQuery.ClientCertificate.StoreName,
+                                ValidOnly = identityProvider.AttributeQuery.ClientCertificate.ValidOnly,
+                                X509FindType = identityProvider.AttributeQuery.ClientCertificate.X509FindType
+                            };
+                        }
+
+                        if (identityProvider.AttributeQuery.Credentials.ElementInformation.IsPresent)
+                        {
+                            attributeQuery.Credentials = new HttpAuthCredentials
+                            {
+                                Password = identityProvider.AttributeQuery.Credentials.Password,
+                                Username = identityProvider.AttributeQuery.Credentials.Username
+                            };
+                        }
+
+                        idp.AttributeQuery = attributeQuery;
+                    }
+
+                    foreach (var certificateValidation in identityProvider.CertificateValidations)
+                    {
+                        idp.CertificateValidations.Add(certificateValidation.Type);
+                    }
+
+                    foreach (var key in identityProvider.CommonDomainCookie.AllKeys)
+                    {
+                        idp.CommonDomainCookie.Add(identityProvider.CommonDomainCookie[key].Key, identityProvider.CommonDomainCookie[key].Value);
+                    }
+
+                    foreach (var endpoint in identityProvider.Endpoints)
+                    {
+                        idp.Endpoints.Add(new IdentityProviderEndpoint
+                        {
+                            Binding = endpoint.Binding,
+                            ForceProtocolBinding = endpoint.ForceProtocolBinding,
+                            TokenAccessor = endpoint.TokenAccessor,
+                            Type = endpoint.Type,
+                            Url = endpoint.Url
+                        });
+                    }
+
+                    config.IdentityProviders.Add(idp);
+                }
+            }
+
+            // Logging config
+            if (section.Logging.ElementInformation.IsPresent)
+            {
+                config.Logging = new LoggingConfig { LoggingFactory = section.Logging.LoggingFactory };
+            }
+
+            // Metadata config
+            if (section.Metadata.ElementInformation.IsPresent)
+            {
+                var metadata = new MetadataConfig
+                {
+                    ExcludeArtifactEndpoints = section.Metadata.ExcludeArtifactEndpoints,
+                    Lifetime = section.Metadata.Lifetime,
+                    Organization = new Organization
+                    {
+                        Name = section.Metadata.Organization.Name,
+                        DisplayName = section.Metadata.Organization.DisplayName,
+                        Url = section.Metadata.Organization.Url
+                    }
+                };
+
+                foreach (var contact in section.Metadata.Contacts)
+                {
+                    metadata.Contacts.Add(new Contact
+                    {
+                        Company = contact.Company,
+                        Email = contact.Email,
+                        GivenName = contact.GivenName,
+                        Phone = contact.Phone,
+                        SurName = contact.SurName,
+                        Type = contact.Type
+                    });
+                }
+
+                foreach (var attribute in section.Metadata.RequestedAttributes)
+                {
+                    metadata.RequestedAttributes.Add(new Attribute { IsRequired = attribute.IsRequired, Name = attribute.Name });
+                }
+
+                config.Metadata = metadata;
+            }
+
+            // Service provider
+            if (section.ServiceProvider.ElementInformation.IsPresent)
+            {
+                var serviceProvider = new ServiceProviderConfig
+                {
+                    AuthenticationContextComparison = section.ServiceProvider.AuthenticationContexts.Comparison,
+                    Id = section.ServiceProvider.Id,
+                    NameIdFormatAllowCreate = section.ServiceProvider.NameIdFormats.AllowCreate,
+                    Server = section.ServiceProvider.Server
+                };
+
+                if (section.ServiceProvider.SigningCertificate.ElementInformation.IsPresent)
+                {
+                    serviceProvider.SigningCertificate = new Certificate
+                    {
+                        FindValue = section.ServiceProvider.SigningCertificate.FindValue,
+                        StoreLocation = section.ServiceProvider.SigningCertificate.StoreLocation,
+                        StoreName = section.ServiceProvider.SigningCertificate.StoreName,
+                        ValidOnly = section.ServiceProvider.SigningCertificate.ValidOnly,
+                        X509FindType = section.ServiceProvider.SigningCertificate.X509FindType
+                    };
+                }
+
+                foreach (var authContext in section.ServiceProvider.AuthenticationContexts)
+                {
+                    serviceProvider.AuthenticationContexts.Add(new AuthenticationContext { Context = authContext.Context, ReferenceType = authContext.ReferenceType });
+                }
+
+                foreach (var endpoint in section.ServiceProvider.Endpoints)
+                {
+                    serviceProvider.Endpoints.Add(new ServiceProviderEndpoint
+                    {
+                        Binding = endpoint.Binding,
+                        Index = endpoint.Index,
+                        LocalPath = endpoint.LocalPath,
+                        RedirectUrl = endpoint.RedirectUrl,
+                        Type = endpoint.Type
+                    });
+                }
+
+                foreach (var nameIdFormat in section.ServiceProvider.NameIdFormats)
+                {
+                    serviceProvider.NameIdFormats.Add(nameIdFormat.Format);
+                }
+
+                config.ServiceProvider = serviceProvider;
+            }
+
+            // State config
+            if (section.State.ElementInformation.IsPresent)
+            {
+                var state = new StateConfig { StateServiceFactory = section.State.StateServiceFactory };
+                foreach (var setting in section.State.Settings)
+                {
+                    state.Settings.Add(setting.Name, setting.Value);
+                }
+
+                config.State = state;
+            }
+
+            return config;
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only.
         /// </summary>
         /// <returns>true if the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only; otherwise, false.</returns>
         public override bool IsReadOnly()
         {
             return false;
+        }
+
+        /// <summary>
+        /// Gets the base config element without additional metadata parsing, etc.
+        /// </summary>
+        /// <param name="refresh">Force refresh of config cache.</param>
+        /// <returns>A <see cref="Saml2Section"/>.</returns>
+        private static Saml2Section GetConfigElement(bool refresh = false)
+        {
+            if (refresh)
+            {
+                System.Configuration.ConfigurationManager.RefreshSection(Saml2Section.Name);
+            }
+
+            var config = System.Configuration.ConfigurationManager.GetSection(Saml2Section.Name) as Saml2Section;
+            if (config == null)
+            {
+                throw new ConfigurationErrorsException(string.Format("Configuration section \"{0}\" not found", typeof(Saml2Section).Name));
+            }
+
+            return config;
         }
     }
 }

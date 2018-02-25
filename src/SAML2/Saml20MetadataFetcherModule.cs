@@ -66,7 +66,7 @@ namespace SAML2
 
             var config = Saml2Config.Current;
 
-            var metadataLocation = config.IdentityProviderMetadataLocation;
+            var metadataLocation = config.IdentityProviders.MetadataLocation;
             var identityProviders = config.IdentityProviders;
 
             if (!Directory.Exists(metadataLocation))
