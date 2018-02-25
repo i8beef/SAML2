@@ -128,7 +128,7 @@ namespace SAML2.Schema.Protocol
         /// An XML Signature that authenticates the responder and provides message integrity
         /// </summary>
         /// <value>The signature.</value>
-        [XmlElement("Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#", Order = 2)]
+        [XmlElement("Signature", Namespace = Saml20Constants.Xmldsig, Order = 2)]
         public Signature Signature { get; set; }
 
         /// <summary>
