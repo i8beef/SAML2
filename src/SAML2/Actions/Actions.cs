@@ -30,7 +30,7 @@ namespace SAML2.Actions
         /// <returns>The currently configured Action list.</returns>
         public static List<IAction> GetActions()
         {
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
 
             return config.Actions == null || config.Actions.Count == 0
                        ? GetDefaultActions()

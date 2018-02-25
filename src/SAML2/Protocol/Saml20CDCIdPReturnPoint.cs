@@ -17,7 +17,7 @@ namespace SAML2.Protocol
         {
             Logger.DebugFormat("{0}.{1} called", GetType(), "ProcessRequest()");
 
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
             if (config == null)
             {
                 throw new Saml20Exception(ErrorMessages.ConfigMissingSaml2Element);

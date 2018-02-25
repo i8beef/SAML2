@@ -14,7 +14,7 @@ namespace SAML2.Bindings
         /// <returns>True if validation passes, false otherwise</returns>
         public static bool ValidateConfiguration()
         {
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
             if (config == null)
             {
                 throw new ConfigurationErrorsException(ErrorMessages.ConfigMissingSaml2Element);
@@ -47,7 +47,7 @@ namespace SAML2.Bindings
                 throw new ConfigurationErrorsException(ErrorMessages.ConfigMissingIdentityProvidersElement);
             }
 
-            if (config.IdentityProviders.MetadataLocation == null)
+            if (config.IdentityProviderMetadataLocation == null)
             {
                 throw new ConfigurationErrorsException(ErrorMessages.ConfigMissingMetadataLocation);
             }

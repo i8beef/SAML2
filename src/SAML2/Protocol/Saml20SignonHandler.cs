@@ -40,12 +40,12 @@ namespace SAML2.Protocol
         /// </summary>
         public Saml20SignonHandler()
         {
-            _certificate = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate();
+            _certificate = Saml2Config.Current.ServiceProvider.SigningCertificate.GetCertificate();
 
             // Read the proper redirect url from config
             try
             {
-                RedirectUrl = Saml2Config.GetConfig().ServiceProvider.Endpoints.SignOnEndpoint.RedirectUrl;
+                RedirectUrl = Saml2Config.Current.ServiceProvider.SignOnEndpoint.RedirectUrl;
             }
             catch (Exception e)
             {
@@ -61,7 +61,7 @@ namespace SAML2.Protocol
         /// <param name="keys">The keys.</param>
         /// <param name="identityProvider">The identity provider.</param>
         /// <returns>List of trusted certificate signers.</returns>
-        public static IEnumerable<AsymmetricAlgorithm> GetTrustedSigners(ICollection<KeyDescriptor> keys, IdentityProviderElement identityProvider)
+        public static IEnumerable<AsymmetricAlgorithm> GetTrustedSigners(ICollection<KeyDescriptor> keys, IdentityProvider identityProvider)
         {
             if (keys == null)
             {
@@ -160,11 +160,11 @@ namespace SAML2.Protocol
             }
             else
             {
-                if (Saml2Config.GetConfig().CommonDomainCookie.Enabled && context.Request.QueryString["r"] == null
+                if (Saml2Config.Current.CommonDomainCookie.Enabled && context.Request.QueryString["r"] == null
                     && context.Request.Params["cidp"] == null)
                 {
                     Logger.Debug(TraceMessages.CommonDomainCookieRedirectForDiscovery);
-                    context.Response.Redirect(Saml2Config.GetConfig().CommonDomainCookie.LocalReaderEndpoint);
+                    context.Response.Redirect(Saml2Config.Current.CommonDomainCookie.LocalReaderEndpoint);
                 }
                 else
                 {
@@ -180,13 +180,13 @@ namespace SAML2.Protocol
         /// <param name="context">The HttpContext.</param>
         /// <param name="elem">The assertion element.</param>
         /// <param name="endpoint">The endpoint.</param>
-        protected virtual void PreHandleAssertion(HttpContext context, XmlElement elem, IdentityProviderElement endpoint)
+        protected virtual void PreHandleAssertion(HttpContext context, XmlElement elem, IdentityProvider endpoint)
         {
             Logger.DebugFormat(TraceMessages.AssertionPrehandlerCalled);
 
-            if (endpoint != null && endpoint.Endpoints.LogoutEndpoint != null && !string.IsNullOrEmpty(endpoint.Endpoints.LogoutEndpoint.TokenAccessor))
+            if (endpoint != null && endpoint.LogoutEndpoint != null && !string.IsNullOrEmpty(endpoint.LogoutEndpoint.TokenAccessor))
             {
-                var idpTokenAccessor = Activator.CreateInstance(Type.GetType(endpoint.Endpoints.LogoutEndpoint.TokenAccessor, false)) as ISaml20IdpTokenAccessor;
+                var idpTokenAccessor = Activator.CreateInstance(Type.GetType(endpoint.LogoutEndpoint.TokenAccessor, false)) as ISaml20IdpTokenAccessor;
                 if (idpTokenAccessor != null)
                 {
                     Logger.DebugFormat("{0}.{1} called", idpTokenAccessor.GetType(), "ReadToken");
@@ -206,7 +206,7 @@ namespace SAML2.Protocol
         /// <param name="idp">The identity provider.</param>
         /// <param name="cert">The cert.</param>
         /// <returns><c>true</c> if certificate is satisfied by all specifications; otherwise, <c>false</c>.</returns>
-        private static bool CertificateSatisfiesSpecifications(IdentityProviderElement idp, X509Certificate2 cert)
+        private static bool CertificateSatisfiesSpecifications(IdentityProvider idp, X509Certificate2 cert)
         {
             return SpecificationFactory.GetCertificateSpecifications(idp).All(spec => spec.IsSatisfiedBy(cert));
         }
@@ -277,7 +277,7 @@ namespace SAML2.Protocol
         {
             Logger.Debug(TraceMessages.EncryptedAssertionDecrypting);
 
-            var decryptedAssertion = new Saml20EncryptedAssertion((RSA)Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey);
+            var decryptedAssertion = new Saml20EncryptedAssertion((RSA)Saml2Config.Current.ServiceProvider.SigningCertificate.GetCertificate().PrivateKey);
             decryptedAssertion.LoadXml(elem);
             decryptedAssertion.Decrypt();
 
@@ -378,7 +378,7 @@ namespace SAML2.Protocol
             }
 
             var quirksMode = endp.QuirksMode;
-            var assertion = new Saml20Assertion(elem, null, Saml2Config.GetConfig().AssertionProfile.AssertionValidator, quirksMode);
+            var assertion = new Saml20Assertion(elem, null, Saml2Config.Current.AssertionProfile.AssertionValidator, quirksMode);
 
             // Check signatures
             if (!endp.OmitAssertionSignatureCheck)
@@ -609,13 +609,13 @@ namespace SAML2.Protocol
         /// <param name="identityProvider">The identity provider.</param>
         /// <param name="request">The request.</param>
         /// <param name="context">The context.</param>
-        private void TransferClient(IdentityProviderElement identityProvider, Saml20AuthnRequest request, HttpContext context)
+        private void TransferClient(IdentityProvider identityProvider, Saml20AuthnRequest request, HttpContext context)
         {
             // Set the last IDP we attempted to login at.
             StateService.Set(IdpTempSessionKey, identityProvider.Id);
 
             // Determine which endpoint to use from the configuration file or the endpoint metadata.
-            var destination = DetermineEndpointConfiguration(BindingType.Redirect, identityProvider.Endpoints.SignOnEndpoint, identityProvider.Metadata.SSOEndpoints);
+            var destination = DetermineEndpointConfiguration(BindingType.Redirect, identityProvider.SignOnEndpoint, identityProvider.Metadata.SSOEndpoints);
             request.Destination = destination.Url;
 
             if (identityProvider.ForceAuth)
@@ -646,11 +646,11 @@ namespace SAML2.Protocol
             }
 
             // Check if protocol binding should be forced
-            if (identityProvider.Endpoints.SignOnEndpoint != null)
+            if (identityProvider.SignOnEndpoint != null)
             {
-                if (!string.IsNullOrEmpty(identityProvider.Endpoints.SignOnEndpoint.ForceProtocolBinding))
+                if (!string.IsNullOrEmpty(identityProvider.SignOnEndpoint.ForceProtocolBinding))
                 {
-                    request.ProtocolBinding = identityProvider.Endpoints.SignOnEndpoint.ForceProtocolBinding;
+                    request.ProtocolBinding = identityProvider.SignOnEndpoint.ForceProtocolBinding;
                 }
             }
 

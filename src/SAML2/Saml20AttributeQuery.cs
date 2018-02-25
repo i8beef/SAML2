@@ -84,7 +84,7 @@ namespace SAML2
         /// <returns>The default <see cref="Saml20AttributeQuery"/>.</returns>
         public static Saml20AttributeQuery GetDefault()
         {
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
             var result = new Saml20AttributeQuery { Issuer = config.ServiceProvider.Id };
 
             return result;
@@ -126,7 +126,7 @@ namespace SAML2
         /// <param name="context">The http context.</param>
         public void PerformQuery(HttpContext context)
         {
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
 
             var endpointId = StateService.Get<string>(Saml20AbstractEndpointHandler.IdpLoginSessionKey);
             if (string.IsNullOrEmpty(endpointId))
@@ -149,7 +149,7 @@ namespace SAML2
         /// </summary>
         /// <param name="context">The http context.</param>
         /// <param name="endPoint">The IdP to perform the query against.</param>
-        public void PerformQuery(HttpContext context, IdentityProviderElement endPoint)
+        public void PerformQuery(HttpContext context, IdentityProvider endPoint)
         {
             var nameIdFormat = StateService.Get<string>(Saml20AbstractEndpointHandler.IdpNameIdFormat);
             if (string.IsNullOrEmpty(nameIdFormat))
@@ -166,7 +166,7 @@ namespace SAML2
         /// <param name="context">The http context.</param>
         /// <param name="endPoint">The IdP to perform the query against.</param>
         /// <param name="nameIdFormat">The name id format.</param>
-        public void PerformQuery(HttpContext context, IdentityProviderElement endPoint, string nameIdFormat)
+        public void PerformQuery(HttpContext context, IdentityProvider endPoint, string nameIdFormat)
         {
             Logger.DebugFormat("{0}.{1} called", GetType(), "PerformQuery()");
 
@@ -214,13 +214,13 @@ namespace SAML2
             var xmlAssertion = Saml20SignonHandler.GetAssertion(parser.SamlMessage, out isEncrypted);
             if (isEncrypted)
             {
-                var ass = new Saml20EncryptedAssertion((RSA)Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey);
+                var ass = new Saml20EncryptedAssertion((RSA)Saml2Config.Current.ServiceProvider.SigningCertificate.GetCertificate().PrivateKey);
                 ass.LoadXml(xmlAssertion);
                 ass.Decrypt();
                 xmlAssertion = ass.Assertion.DocumentElement;
             }
 
-            var assertion = new Saml20Assertion(xmlAssertion, null, Saml2Config.GetConfig().AssertionProfile.AssertionValidator, endPoint.QuirksMode);
+            var assertion = new Saml20Assertion(xmlAssertion, null, Saml2Config.Current.AssertionProfile.AssertionValidator, endPoint.QuirksMode);
             Logger.DebugFormat(TraceMessages.AttrQueryAssertionReceived, xmlAssertion == null ? string.Empty : xmlAssertion.OuterXml);
 
             if (!assertion.CheckSignature(Saml20SignonHandler.GetTrustedSigners(endPoint.Metadata.Keys, endPoint)))

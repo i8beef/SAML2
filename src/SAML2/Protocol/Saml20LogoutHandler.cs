@@ -25,7 +25,7 @@ namespace SAML2.Protocol
             // Read the proper redirect url from config
             try
             {
-                RedirectUrl = Saml2Config.GetConfig().ServiceProvider.Endpoints.LogoutEndpoint.RedirectUrl;
+                RedirectUrl = Saml2Config.Current.ServiceProvider.LogoutEndpoint.RedirectUrl;
             }
             catch (Exception e)
             {
@@ -67,7 +67,7 @@ namespace SAML2.Protocol
             }
             else
             {
-                IdentityProviderElement idpEndpoint = null;
+                IdentityProvider idpEndpoint = null;
 
                 var idpId = StateService.Get<string>(IdpSessionIdKey);
                 if (!string.IsNullOrEmpty(idpId))
@@ -134,7 +134,7 @@ namespace SAML2.Protocol
             Logger.DebugFormat(TraceMessages.SOAPMessageParse, parser.SamlMessage.OuterXml);
 
             var builder = new HttpArtifactBindingBuilder(context);
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
             var idp = RetrieveIDPConfiguration(parser.Issuer);
 
             if (parser.IsArtifactResolve)
@@ -181,7 +181,7 @@ namespace SAML2.Protocol
                                        };
 
                     var endpoint = RetrieveIDPConfiguration(StateService.Get<string>(IdpLoginSessionKey));
-                    var destination = DetermineEndpointConfiguration(BindingType.Redirect, endpoint.Endpoints.LogoutEndpoint, endpoint.Metadata.IDPSLOEndpoints);
+                    var destination = DetermineEndpointConfiguration(BindingType.Redirect, endpoint.LogoutEndpoint, endpoint.Metadata.IDPSLOEndpoints);
 
                     builder.RedirectFromLogout(destination, response);
                 }
@@ -236,10 +236,10 @@ namespace SAML2.Protocol
 
             // Fetch the endpoint configuration
             var idp = RetrieveIDPConfiguration(StateService.Get<string>(IdpLoginSessionKey));
-            var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.Endpoints.LogoutEndpoint, idp.Metadata.IDPSLOEndpoints);
+            var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.LogoutEndpoint, idp.Metadata.IDPSLOEndpoints);
 
             // Fetch config object
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
 
             // Build the response object
             var response = new Saml20LogoutResponse
@@ -324,7 +324,7 @@ namespace SAML2.Protocol
                                   {
                                       RelayState = context.Request.Params["RelayState"],
                                       Response = response.GetXml().OuterXml,
-                                      SigningKey = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey
+                                      SigningKey = Saml2Config.Current.ServiceProvider.SigningCertificate.GetCertificate().PrivateKey
                                   };
 
                 Logger.DebugFormat(TraceMessages.LogoutResponseSent, builder.Response);
@@ -437,12 +437,12 @@ namespace SAML2.Protocol
         /// </summary>
         /// <param name="idp">The identity provider.</param>
         /// <param name="context">The context.</param>
-        private void TransferClient(IdentityProviderElement idp, HttpContext context)
+        private void TransferClient(IdentityProvider idp, HttpContext context)
         {
             var request = Saml20LogoutRequest.GetDefault();
 
             // Determine which endpoint to use from the configuration file or the endpoint metadata.
-            var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.Endpoints.LogoutEndpoint, idp.Metadata.IDPSLOEndpoints);
+            var destination = DetermineEndpointConfiguration(BindingType.Redirect, idp.LogoutEndpoint, idp.Metadata.IDPSLOEndpoints);
             request.Destination = destination.Url;
 
             var nameIdFormat = StateService.Get<string>(IdpNameIdFormat);
@@ -479,7 +479,7 @@ namespace SAML2.Protocol
                 var builder = new HttpRedirectBindingBuilder
                                   {
                                       Request = request.GetXml().OuterXml,
-                                      SigningKey = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate().PrivateKey
+                                      SigningKey = Saml2Config.Current.ServiceProvider.SigningCertificate.GetCertificate().PrivateKey
                                   };
 
                 var redirectUrl = destination.Url + "?" + builder.ToQuery();

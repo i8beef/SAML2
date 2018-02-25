@@ -88,7 +88,7 @@ namespace SAML2
         public static Saml20ArtifactResponse GetDefault()
         {
             var result = new Saml20ArtifactResponse();
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
             result.Issuer = config.ServiceProvider.Id;
 
             return result;

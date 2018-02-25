@@ -78,7 +78,7 @@ namespace SAML2
         /// <returns>The default <see cref="Saml20ArtifactResolve"/>.</returns>
         public static Saml20ArtifactResolve GetDefault()
         {
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
             var result = new Saml20ArtifactResolve { Issuer = config.ServiceProvider.Id };
 
             return result;

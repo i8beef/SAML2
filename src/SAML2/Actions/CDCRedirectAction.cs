@@ -66,7 +66,7 @@ namespace SAML2.Actions
             var identityProvider = signOnHandler.RetrieveIDPConfiguration(idpKey);
             if (identityProvider.CommonDomainCookie != null)
             {
-                var values = identityProvider.CommonDomainCookie.AllKeys;
+                var values = identityProvider.CommonDomainCookie.Keys;
 
                 var idpEndpoint = values.FirstOrDefault(x => x == IDPCookieWriterEndPoint);
                 if (idpEndpoint == null)

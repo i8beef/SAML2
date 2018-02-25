@@ -64,9 +64,9 @@ namespace SAML2
             var logger = Logging.LoggerProvider.LoggerFor(GetType());
             logger.Debug("Attempting to fetch SAML metadata files");
 
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
 
-            var metadataLocation = config.IdentityProviders.MetadataLocation;
+            var metadataLocation = config.IdentityProviderMetadataLocation;
             var identityProviders = config.IdentityProviders;
 
             if (!Directory.Exists(metadataLocation))

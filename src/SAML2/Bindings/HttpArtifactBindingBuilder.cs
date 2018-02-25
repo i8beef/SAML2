@@ -25,10 +25,10 @@ namespace SAML2.Bindings
         /// </summary>
         /// <param name="destination">The destination of the request.</param>
         /// <param name="request">The authentication request.</param>
-        public void RedirectFromLogin(IdentityProviderEndpointElement destination, Saml20AuthnRequest request)
+        public void RedirectFromLogin(IdentityProviderEndpoint destination, Saml20AuthnRequest request)
         {
-            var config = Saml2Config.GetConfig();
-            var index = (short)config.ServiceProvider.Endpoints.SignOnEndpoint.Index;
+            var config = Saml2Config.Current;
+            var index = (short)config.ServiceProvider.SignOnEndpoint.Index;
             var doc = request.GetXml();
             XmlSignatureUtils.SignDocument(doc, request.Request.Id);
             ArtifactRedirect(destination, index, doc, Context.Request.Params["relayState"]);
@@ -39,7 +39,7 @@ namespace SAML2.Bindings
         /// </summary>
         /// <param name="destination">The destination of the request.</param>
         /// <param name="request">The logout request.</param>
-        public void RedirectFromLogout(IdentityProviderEndpointElement destination, Saml20LogoutRequest request)
+        public void RedirectFromLogout(IdentityProviderEndpoint destination, Saml20LogoutRequest request)
         {
             RedirectFromLogout(destination, request, Context.Request.Params["relayState"]);
         }
@@ -50,10 +50,10 @@ namespace SAML2.Bindings
         /// <param name="destination">The destination of the request.</param>
         /// <param name="request">The logout request.</param>
         /// <param name="relayState">The query string relay state value to add to the communication</param>
-        public void RedirectFromLogout(IdentityProviderEndpointElement destination, Saml20LogoutRequest request, string relayState)
+        public void RedirectFromLogout(IdentityProviderEndpoint destination, Saml20LogoutRequest request, string relayState)
         {
-            var config = Saml2Config.GetConfig();
-            var index = (short)config.ServiceProvider.Endpoints.LogoutEndpoint.Index;
+            var config = Saml2Config.Current;
+            var index = (short)config.ServiceProvider.LogoutEndpoint.Index;
             var doc = request.GetXml();
             XmlSignatureUtils.SignDocument(doc, request.Request.Id);
             ArtifactRedirect(destination, index, doc, relayState);
@@ -64,10 +64,10 @@ namespace SAML2.Bindings
         /// </summary>
         /// <param name="destination">The destination of the response.</param>
         /// <param name="response">The logout response.</param>
-        public void RedirectFromLogout(IdentityProviderEndpointElement destination, Saml20LogoutResponse response)
+        public void RedirectFromLogout(IdentityProviderEndpoint destination, Saml20LogoutResponse response)
         {
-            var config = Saml2Config.GetConfig();
-            var index = (short)config.ServiceProvider.Endpoints.LogoutEndpoint.Index;
+            var config = Saml2Config.Current;
+            var index = (short)config.ServiceProvider.LogoutEndpoint.Index;
             var doc = response.GetXml();
             XmlSignatureUtils.SignDocument(doc, response.Response.ID);
 
@@ -161,11 +161,11 @@ namespace SAML2.Bindings
         /// <param name="localEndpointIndex">Index of the local endpoint.</param>
         /// <param name="signedSamlMessage">The signed SAML message.</param>
         /// <param name="relayState">The query string relay state value to add to the communication</param>
-        private void ArtifactRedirect(IdentityProviderEndpointElement destination, short localEndpointIndex, XmlDocument signedSamlMessage, string relayState)
+        private void ArtifactRedirect(IdentityProviderEndpoint destination, short localEndpointIndex, XmlDocument signedSamlMessage, string relayState)
         {
             Logger.DebugFormat(TraceMessages.ArtifactRedirectReceived, signedSamlMessage.OuterXml);
 
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
             var sourceId = config.ServiceProvider.Id;
             var sourceIdHash = ArtifactUtil.GenerateSourceIdHash(sourceId);
             var messageHandle = ArtifactUtil.GenerateMessageHandle();
@@ -189,10 +189,10 @@ namespace SAML2.Bindings
         /// </summary>
         /// <param name="artifact">The artifact.</param>
         /// <returns>An IdP configuration element</returns>
-        private IdentityProviderElement DetermineIdp(string artifact)
+        private IdentityProvider DetermineIdp(string artifact)
         {
-            var config = Saml2Config.GetConfig();
-            
+            var config = Saml2Config.Current;
+
             short typeCodeValue = -1;
             short endPointIndex = -1;
             var sourceIdHash = new byte[20];
@@ -200,7 +200,7 @@ namespace SAML2.Bindings
 
             if (ArtifactUtil.TryParseArtifact(artifact, ref typeCodeValue, ref endPointIndex, ref sourceIdHash, ref messageHandle))
             {
-                foreach (IdentityProviderElement ep in config.IdentityProviders)
+                foreach (IdentityProvider ep in config.IdentityProviders)
                 {
                     var hash = ArtifactUtil.GenerateSourceIdHash(ep.Id);
                     if (ByteArraysAreEqual(sourceIdHash, hash))

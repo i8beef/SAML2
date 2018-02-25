@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Web;
 using SAML2.Config;
 
@@ -15,7 +14,7 @@ namespace SAML2.State
         /// <summary>
         /// Cache state service instance.
         /// </summary>
-        private static readonly IInternalStateService CacheStateService = new CacheStateService(HttpContext.Current, Saml2Config.GetConfig().State.Settings.FirstOrDefault(x => x.Name == "cacheExpiration").Value);
+        private static readonly IInternalStateService CacheStateService = new CacheStateService(HttpContext.Current, Saml2Config.Current.State.Settings["cacheExpiration"]);
 
         #endregion
 

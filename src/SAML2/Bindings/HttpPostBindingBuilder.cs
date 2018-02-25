@@ -14,7 +14,7 @@ namespace SAML2.Bindings
         /// <summary>
         /// The endpoint to send the message to.
         /// </summary>
-        private readonly IdentityProviderEndpointElement _destinationEndpoint;
+        private readonly IdentityProviderEndpoint _destinationEndpoint;
 
         /// <summary>
         /// Request backing field.
@@ -30,7 +30,7 @@ namespace SAML2.Bindings
         /// Initializes a new instance of the <see cref="HttpPostBindingBuilder"/> class.
         /// </summary>
         /// <param name="endpoint">The IdP endpoint that messages will be sent to.</param>
-        public HttpPostBindingBuilder(IdentityProviderEndpointElement endpoint) 
+        public HttpPostBindingBuilder(IdentityProviderEndpoint endpoint) 
         {
             _destinationEndpoint = endpoint;
             Action = SamlActionType.SAMLRequest;

@@ -77,10 +77,10 @@ namespace SAML2.Protocol
         {
             Logger.Debug(TraceMessages.MetadataDocumentBeingCreated);
 
-            var configuration = Saml2Config.GetConfig();
+            var configuration = Saml2Config.Current;
 
             var keyinfo = new KeyInfo();
-            var keyClause = new KeyInfoX509Data(Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate(), X509IncludeOption.EndCertOnly);
+            var keyClause = new KeyInfoX509Data(configuration.ServiceProvider.SigningCertificate.GetCertificate(), X509IncludeOption.EndCertOnly);
             keyinfo.AddClause(keyClause);
 
             var doc = new Saml20MetadataDocument(configuration, keyinfo, sign);

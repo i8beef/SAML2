@@ -23,7 +23,7 @@ namespace SAML2.Protocol.Pages
             BodyPanel.Controls.Add(new LiteralControl(Resources.PageIdentityProviderSelectDescription));
             BodyPanel.Controls.Add(new LiteralControl("<br/><br/>"));
 
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
 
             foreach (var endPoint in config.IdentityProviders)
             {

@@ -207,10 +207,10 @@ namespace SAML2.Tests
                 var encryptedList = doc.GetElementsByTagName(EncryptedAssertion.ElementName, Saml20Constants.Assertion);
 
                 // Do some mock configuration.
-                var config = Saml2Config.GetConfig();
-                config.AllowedAudienceUris.Add(new AudienceUriElement { Uri = "https://saml.safewhere.net" });
-                config.IdentityProviders.MetadataLocation = TestContext.CurrentContext.TestDirectory + @"\Protocol\MetadataDocs\FOBS"; // Set it manually.
-                config.IdentityProviders.Refresh();
+                var config = Saml2Config.Current;
+                config.AllowedAudienceUris.Add("https://saml.safewhere.net");
+                config.IdentityProviderMetadataLocation = TestContext.CurrentContext.TestDirectory + @"\Protocol\MetadataDocs\FOBS"; // Set it manually.
+                //config.IdentityProviders.Refresh();
 
                 var cert = new X509Certificate2(TestContext.CurrentContext.TestDirectory + @"\Certificates\SafewhereTest_SFS.pfx", "test1234");
                 var encryptedAssertion = new Saml20EncryptedAssertion((RSA)cert.PrivateKey);

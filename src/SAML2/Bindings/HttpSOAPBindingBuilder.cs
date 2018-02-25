@@ -72,7 +72,7 @@ namespace SAML2.Bindings
         /// <param name="message">The message.</param>
         /// <param name="auth">Basic authentication settings.</param>
         /// <returns>The Stream.</returns>
-        public Stream GetResponse(string endpoint, string message, HttpAuthElement auth)
+        public Stream GetResponse(string endpoint, string message, HttpAuth auth)
         {
             if (auth != null && auth.ClientCertificate != null && auth.Credentials != null)
             {

@@ -231,7 +231,7 @@ namespace SAML2.Tests
                 throw new ArgumentNullException("issuer");
             }
 
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
 
             var idpEndpoint = config.IdentityProviders.FirstOrDefault(x => x.Id == issuer);
             if (idpEndpoint == null)

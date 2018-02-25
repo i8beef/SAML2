@@ -25,7 +25,7 @@ namespace SAML2
         /// <summary>
         /// AssertionConsumerServiceEndpoints backing field.
         /// </summary>
-        private List<IdentityProviderEndpointElement> _assertionConsumerServiceEndpoints;
+        private List<IdentityProviderEndpoint> _assertionConsumerServiceEndpoints;
 
         /// <summary>
         /// Attribute query endpoints.
@@ -40,7 +40,7 @@ namespace SAML2
         /// <summary>
         /// SLOEndpoints backing field.
         /// </summary>
-        private List<IdentityProviderEndpointElement> _idpSloEndpoints;
+        private List<IdentityProviderEndpoint> _idpSloEndpoints;
 
         /// <summary>
         /// The keys.
@@ -55,12 +55,12 @@ namespace SAML2
         /// <summary>
         /// SLOEndpoints backing field.
         /// </summary>
-        private List<IdentityProviderEndpointElement> _spSloEndpoints;
+        private List<IdentityProviderEndpoint> _spSloEndpoints;
 
         /// <summary>
         /// SSOEndpoints backing field.
         /// </summary>
-        private List<IdentityProviderEndpointElement> _ssoEndpoints;
+        private List<IdentityProviderEndpoint> _ssoEndpoints;
 
         #endregion
 
@@ -106,7 +106,7 @@ namespace SAML2
         /// <param name="config">The config.</param>
         /// <param name="keyinfo">key information for the service provider certificate.</param>
         /// <param name="sign">if set to <c>true</c> the metadata document will be signed.</param>
-        public Saml20MetadataDocument(Saml2Section config, KeyInfo keyinfo, bool sign)
+        public Saml20MetadataDocument(Saml2Config config, KeyInfo keyinfo, bool sign)
             : this(sign)
         {
             ConvertToMetadata(config, keyinfo);
@@ -119,7 +119,7 @@ namespace SAML2
         /// Gets the endpoints specified in the <c>&lt;AssertionConsumerService&gt;</c> element in the <c>SpSsoDescriptor</c>.
         /// These endpoints are only applicable if we are reading metadata issued by a service provider.
         /// </summary>
-        public List<IdentityProviderEndpointElement> AssertionConsumerServiceEndpoints
+        public List<IdentityProviderEndpoint> AssertionConsumerServiceEndpoints
         {
             get
             {
@@ -157,7 +157,7 @@ namespace SAML2
         /// <summary>
         /// Gets the IDP SLO endpoints.
         /// </summary>
-        public List<IdentityProviderEndpointElement> IDPSLOEndpoints
+        public List<IdentityProviderEndpoint> IDPSLOEndpoints
         {
             get
             {
@@ -194,7 +194,7 @@ namespace SAML2
         /// <summary>
         /// Gets the SP SLO endpoints.
         /// </summary>
-        public List<IdentityProviderEndpointElement> SPSLOEndpoints
+        public List<IdentityProviderEndpoint> SPSLOEndpoints
         {
             get
             {
@@ -210,7 +210,7 @@ namespace SAML2
         /// <summary>
         /// Gets the SSO endpoints.
         /// </summary>
-        public List<IdentityProviderEndpointElement> SSOEndpoints
+        public List<IdentityProviderEndpoint> SSOEndpoints
         {
             get
             {
@@ -382,7 +382,7 @@ namespace SAML2
         /// <param name="doc">The doc.</param>
         private static void SignDocument(XmlDocument doc)
         {
-            var cert = Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate();
+            var cert = Saml2Config.Current.ServiceProvider.SigningCertificate.GetCertificate();
             if (!cert.HasPrivateKey)
             {
                 throw new InvalidOperationException("Private key access to the signing certificate is required.");
@@ -415,7 +415,7 @@ namespace SAML2
         /// </summary>
         /// <param name="config">The config.</param>
         /// <param name="keyInfo">The keyInfo.</param>
-        private void ConvertToMetadata(Saml2Section config, KeyInfo keyInfo)
+        private void ConvertToMetadata(Saml2Config config, KeyInfo keyInfo)
         {
             var entity = CreateDefaultEntity();
             entity.EntityID = config.ServiceProvider.Id;
@@ -432,9 +432,9 @@ namespace SAML2
             {
                 serviceProviderDescriptor.NameIdFormat = new string[config.ServiceProvider.NameIdFormats.Count];
                 var count = 0;
-                foreach (var elem in config.ServiceProvider.NameIdFormats)
+                foreach (var nameIdFormat in config.ServiceProvider.NameIdFormats)
                 {
-                    serviceProviderDescriptor.NameIdFormat[count++] = elem.Format;
+                    serviceProviderDescriptor.NameIdFormat[count++] = nameIdFormat;
                 }
             }
             
@@ -556,9 +556,9 @@ namespace SAML2
             keyEncryption.KeyInfo = keySigning.KeyInfo;
 
             // apply the <Organization> element
-            if (config.Metadata.Organization.ElementInformation.IsPresent)
+            if (config.Metadata.Organization != null)
             {
-                entity.Organization = new Organization
+                entity.Organization = new Schema.Metadata.Organization
                                           {
                                               OrganizationName = new[] { new LocalizedName { Value = config.Metadata.Organization.Name } },
                                               OrganizationDisplayName = new[] { new LocalizedName { Value = config.Metadata.Organization.DisplayName } },
@@ -568,7 +568,7 @@ namespace SAML2
 
             if (config.Metadata.Contacts != null && config.Metadata.Contacts.Count > 0)
             {
-                entity.ContactPerson = config.Metadata.Contacts.Select(x => new Contact
+                entity.ContactPerson = config.Metadata.Contacts.Select(x => new Schema.Metadata.Contact
                                                                                 {
                                                                                     ContactType =
                                                                                         (Schema.Metadata.ContactType)
@@ -589,12 +589,12 @@ namespace SAML2
         {
             if (Entity != null)
             {
-                _ssoEndpoints = new List<IdentityProviderEndpointElement>();
-                _idpSloEndpoints = new List<IdentityProviderEndpointElement>();
+                _ssoEndpoints = new List<IdentityProviderEndpoint>();
+                _idpSloEndpoints = new List<IdentityProviderEndpoint>();
                 _idpArsEndpoints = new Dictionary<int, IndexedEndpoint>();
-                _spSloEndpoints = new List<IdentityProviderEndpointElement>();
+                _spSloEndpoints = new List<IdentityProviderEndpoint>();
                 _spArsEndpoints = new Dictionary<int, IndexedEndpoint>();
-                _assertionConsumerServiceEndpoints = new List<IdentityProviderEndpointElement>();
+                _assertionConsumerServiceEndpoints = new List<IdentityProviderEndpoint>();
                 _attributeQueryEndpoints = new List<Endpoint>();
 
                 foreach (var item in Entity.Items)
@@ -623,7 +623,7 @@ namespace SAML2
                                     throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
                             }
 
-                            _ssoEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
+                            _ssoEndpoints.Add(new IdentityProviderEndpoint { Url = endpoint.Location, Binding = binding });
                         }
 
                         if (descriptor.SingleLogoutService != null)
@@ -649,7 +649,7 @@ namespace SAML2
                                         throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
                                 }
 
-                                _idpSloEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
+                                _idpSloEndpoints.Add(new IdentityProviderEndpoint { Url = endpoint.Location, Binding = binding });
                             }
                         }
 
@@ -686,7 +686,7 @@ namespace SAML2
                                     throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
                             }
 
-                            _assertionConsumerServiceEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
+                            _assertionConsumerServiceEndpoints.Add(new IdentityProviderEndpoint { Url = endpoint.Location, Binding = binding });
                         }
 
                         if (descriptor.SingleLogoutService != null)
@@ -712,7 +712,7 @@ namespace SAML2
                                         throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
                                 }
 
-                                _spSloEndpoints.Add(new IdentityProviderEndpointElement { Url = endpoint.Location, Binding = binding });
+                                _spSloEndpoints.Add(new IdentityProviderEndpoint { Url = endpoint.Location, Binding = binding });
                             }
                         }
 

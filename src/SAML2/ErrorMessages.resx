@@ -186,6 +186,9 @@
   <data name="ConfigMissingSigningCertificateElement" xml:space="preserve">
     <value>Configuration for &lt;serviceProvider&gt; does not contain a &lt;signingCertificate&gt; element</value>
   </data>
+  <data name="ConfigNotInitialized" xml:space="preserve">
+    <value>Configuration has not been initialized.</value>
+  </data>
   <data name="ConfigServiceProviderMissingSignOnEndpoint" xml:space="preserve">
     <value>Configuration for &lt;serviceProvider&gt; does not contain a SignOn endpoint</value>
   </data>

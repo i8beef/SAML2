@@ -88,9 +88,9 @@ namespace SAML2.Protocol
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>The <see cref="IdentityProviderElement"/>.</returns>
-        public IdentityProviderElement RetrieveIDP(HttpContext context)
+        public IdentityProvider RetrieveIDP(HttpContext context)
         {
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
 
             // If idpChoice is set, use it value
             if (!string.IsNullOrEmpty(context.Request.Params[IdpChoiceParameterName]))
@@ -137,10 +137,10 @@ namespace SAML2.Protocol
             }
 
             // In case an IDP selection url has been configured, redirect to that one.
-            if (!string.IsNullOrEmpty(config.IdentityProviders.SelectionUrl))
+            if (!string.IsNullOrEmpty(config.IdentityProviderSelectionUrl))
             {
-                Logger.DebugFormat(TraceMessages.IdentityProviderRetreivedFromSelection, config.IdentityProviders.SelectionUrl);
-                context.Response.Redirect(config.IdentityProviders.SelectionUrl);
+                Logger.DebugFormat(TraceMessages.IdentityProviderRetreivedFromSelection, config.IdentityProviderSelectionUrl);
+                context.Response.Redirect(config.IdentityProviderSelectionUrl);
             }
 
             // If an IDPSelectionEvent handler is present, request the handler for an IDP endpoint to use.
@@ -152,9 +152,9 @@ namespace SAML2.Protocol
         /// </summary>
         /// <param name="idpId">The identity provider id.</param>
         /// <returns>The <see cref="IdentityProviderElement"/>.</returns>
-        public IdentityProviderElement RetrieveIDPConfiguration(string idpId)
+        public IdentityProvider RetrieveIDPConfiguration(string idpId)
         {
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
 
             return config.IdentityProviders.FirstOrDefault(x => x.Id == idpId);
         }
@@ -166,9 +166,9 @@ namespace SAML2.Protocol
         /// <param name="config">The endpoint as described in the configuration. May be null.</param>
         /// <param name="metadata">A list of endpoints of the given type (e.g. SSO or SLO) that the metadata contains.</param>
         /// <returns>The <see cref="IdentityProviderElement"/>.</returns>
-        internal static IdentityProviderEndpointElement DetermineEndpointConfiguration(BindingType defaultBinding, IdentityProviderEndpointElement config, List<IdentityProviderEndpointElement> metadata)
+        internal static IdentityProviderEndpoint DetermineEndpointConfiguration(BindingType defaultBinding, IdentityProviderEndpoint config, List<IdentityProviderEndpoint> metadata)
         {
-            var result = new IdentityProviderEndpointElement { Binding = defaultBinding };
+            var result = new IdentityProviderEndpoint { Binding = defaultBinding };
 
             // Determine which binding to use.
             if (config != null)

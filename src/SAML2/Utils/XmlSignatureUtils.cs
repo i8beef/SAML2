@@ -287,7 +287,7 @@ namespace SAML2.Utils
         /// <param name="id">The id of the topmost element in the XmlDocument</param>
         public static void SignDocument(XmlDocument doc, string id)
         {
-            SignDocument(doc, id, Saml2Config.GetConfig().ServiceProvider.SigningCertificate.GetCertificate());
+            SignDocument(doc, id, Saml2Config.Current.ServiceProvider.SigningCertificate.GetCertificate());
         }
 
         /// <summary>

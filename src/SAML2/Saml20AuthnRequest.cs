@@ -148,16 +148,16 @@ namespace SAML2
         /// <returns>The default <see cref="Saml20AuthnRequest"/>.</returns>
         public static Saml20AuthnRequest GetDefault()
         {
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
             var result = new Saml20AuthnRequest { Issuer = config.ServiceProvider.Id };
-            if (config.ServiceProvider.Endpoints.SignOnEndpoint.Binding != BindingType.NotSet)
+            if (config.ServiceProvider.SignOnEndpoint.Binding != BindingType.NotSet)
             {
                 var baseUrl = new Uri(config.ServiceProvider.Server);
-                result.AssertionConsumerServiceUrl = new Uri(baseUrl, config.ServiceProvider.Endpoints.SignOnEndpoint.LocalPath).ToString();
+                result.AssertionConsumerServiceUrl = new Uri(baseUrl, config.ServiceProvider.SignOnEndpoint.LocalPath).ToString();
             }
 
             // Binding
-            switch (config.ServiceProvider.Endpoints.SignOnEndpoint.Binding)
+            switch (config.ServiceProvider.SignOnEndpoint.Binding)
             {
                 case BindingType.Artifact:
                     result.Request.ProtocolBinding = Saml20Constants.ProtocolBindings.HttpArtifact;
@@ -178,8 +178,8 @@ namespace SAML2
             {
                 result.NameIdPolicy = new NameIdPolicy
                                           {
-                                              AllowCreate = config.ServiceProvider.NameIdFormats.AllowCreate,
-                                              Format = config.ServiceProvider.NameIdFormats[0].Format
+                                              AllowCreate = config.ServiceProvider.NameIdFormatAllowCreate,
+                                              Format = config.ServiceProvider.NameIdFormats[0]
                                           };
 
                 if (result.NameIdPolicy.Format != Saml20Constants.NameIdentifierFormats.Entity)
@@ -192,7 +192,7 @@ namespace SAML2
             if (config.ServiceProvider.AuthenticationContexts.Count > 0)
             {
                 result.RequestedAuthnContext = new RequestedAuthnContext();
-                switch (config.ServiceProvider.AuthenticationContexts.Comparison)
+                switch (config.ServiceProvider.AuthenticationContextComparison)
                 {
                     case AuthenticationContextComparison.Better:
                         result.RequestedAuthnContext.Comparison = AuthnContextComparisonType.Better;

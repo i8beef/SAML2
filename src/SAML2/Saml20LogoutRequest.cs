@@ -111,7 +111,7 @@ namespace SAML2
         /// <returns>The <see cref="Saml20LogoutRequest"/>.</returns>
         public static Saml20LogoutRequest GetDefault()
         {
-            var config = Saml2Config.GetConfig();
+            var config = Saml2Config.Current;
             var result = new Saml20LogoutRequest
                              {
                                  SubjectToLogOut = new NameId(),

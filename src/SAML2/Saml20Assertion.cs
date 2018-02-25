@@ -325,7 +325,7 @@ namespace SAML2
             {
                 if (_assertionValidator == null)
                 {
-                    var config = Saml2Config.GetConfig();
+                    var config = Saml2Config.Current;
                     if (config == null || config.AllowedAudienceUris == null)
                     {
                         if (string.IsNullOrEmpty(_profile))
@@ -341,11 +341,11 @@ namespace SAML2
                     {
                         if (string.IsNullOrEmpty(_profile))
                         {
-                            _assertionValidator = new Saml20AssertionValidator(config.AllowedAudienceUris.Select(x => x.Uri).ToList(), _quirksMode);
+                            _assertionValidator = new Saml20AssertionValidator(config.AllowedAudienceUris.ToList(), _quirksMode);
                         }
                         else
                         {
-                            _assertionValidator = (ISaml20AssertionValidator)Activator.CreateInstance(Type.GetType(_profile), config.AllowedAudienceUris.Select(x => x.Uri).ToList(), _quirksMode);
+                            _assertionValidator = (ISaml20AssertionValidator)Activator.CreateInstance(Type.GetType(_profile), config.AllowedAudienceUris.ToList(), _quirksMode);
                         }
                     }
                 }
