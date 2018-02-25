@@ -1,7 +1,7 @@
 ﻿namespace SAML2.Config
 {
     /// <summary>
-    /// Http Basic Authentication configuration element.
+    /// Http Basic Authentication config item.
     /// </summary>
     public class HttpAuth
     {

@@ -4,10 +4,13 @@ using System.Linq;
 namespace SAML2.Config
 {
     /// <summary>
-    /// Identity Provider configuration element.
+    /// Identity Provider config item.
     /// </summary>
     public class IdentityProvider
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IdentityProvider"/> class.
+        /// </summary>
         public IdentityProvider()
         {
             CertificateValidations = new List<string>();
@@ -25,7 +28,7 @@ namespace SAML2.Config
         /// Gets or sets a value indicating whether to allow this IDP to send unsolicited responses.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if allow unsolicited responses; otherwise, <c>false</c>.
+        /// <c>true</c> if allow unsolicited responses; otherwise, <c>false</c>.
         /// </value>
         public bool AllowUnsolicitedResponses { get; set; }
 

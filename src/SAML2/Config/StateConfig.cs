@@ -3,10 +3,13 @@
 namespace SAML2.Config
 {
     /// <summary>
-    /// State configuration element.
+    /// State config item.
     /// </summary>
     public class StateConfig
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StateConfig"/> class.
+        /// </summary>
         public StateConfig()
         {
             Settings = new Dictionary<string, string>();

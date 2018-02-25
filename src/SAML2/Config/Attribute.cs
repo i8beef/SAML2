@@ -1,7 +1,7 @@
 ﻿namespace SAML2.Config
 {
     /// <summary>
-    /// Attribute configuration element.
+    /// Attribute config item.
     /// </summary>
     public class Attribute
     {

@@ -1,7 +1,7 @@
 ﻿namespace SAML2.Config
 {
     /// <summary>
-    /// Service Provider Endpoint configuration element.
+    /// Service Provider Endpoint config item.
     /// </summary>
     public class ServiceProviderEndpoint
     {

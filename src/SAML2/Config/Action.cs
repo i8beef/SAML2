@@ -1,7 +1,7 @@
 ﻿namespace SAML2.Config
 {
     /// <summary>
-    /// Action configuration element.
+    /// Action config item.
     /// </summary>
     public class Action
     {

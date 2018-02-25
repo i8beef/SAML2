@@ -25,8 +25,7 @@ namespace SAML2.Tests
                 }
                 
                 if (child.LocalName == EntitiesDescriptor.ElementName)
-                {
-                    
+                {                    
                     foreach (var entityDescriptor in child.ChildNodes.Cast<XmlNode>().Where(x => x.NamespaceURI == Saml20Constants.Metadata))
                     {
                         var childDoc = new XmlDocument { PreserveWhitespace = true };

@@ -1,7 +1,7 @@
 ﻿namespace SAML2.Config
 {
     /// <summary>
-    /// Contact configuration element.
+    /// Contact config item.
     /// </summary>
     public class Contact
     {

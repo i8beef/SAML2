@@ -4,7 +4,7 @@ using SAML2.Identity;
 namespace SAML2.Config
 {
     /// <summary>
-    /// Persistent Pseudonym configuration element.
+    /// Persistent Pseudonym config item.
     /// </summary>
     public class PersistentPseudonym
     {

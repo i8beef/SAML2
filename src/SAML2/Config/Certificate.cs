@@ -3,7 +3,7 @@
 namespace SAML2.Config
 {
     /// <summary>
-    /// Signing Certificate configuration element.
+    /// Certificate config.
     /// </summary>
     public class Certificate
     {

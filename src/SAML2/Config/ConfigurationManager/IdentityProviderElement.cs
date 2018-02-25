@@ -15,12 +15,11 @@ namespace SAML2.Config.ConfigurationManager
 
         #region Attributes
 
-
         /// <summary>
         /// Gets or sets a value indicating whether to allow this IDP to send unsolicited responses.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if allow unsolicited responses; otherwise, <c>false</c>.
+        /// <c>true</c> if allow unsolicited responses; otherwise, <c>false</c>.
         /// </value>
         [ConfigurationProperty("allowUnsolicitedResponses")]
         public bool AllowUnsolicitedResponses

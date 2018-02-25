@@ -1,7 +1,7 @@
 ﻿namespace SAML2.Config
 {
     /// <summary>
-    /// Identity Provider Endpoint configuration element.
+    /// Identity Provider Endpoint config item.
     /// </summary>
     public class IdentityProviderEndpoint
     {

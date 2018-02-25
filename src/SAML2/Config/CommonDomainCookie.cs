@@ -1,7 +1,7 @@
 ﻿namespace SAML2.Config
 {
     /// <summary>
-    /// Common Domain Cookie configuration element.
+    /// Common Domain Cookie config item.
     /// </summary>
     public class CommonDomainCookie
     {

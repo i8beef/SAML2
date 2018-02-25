@@ -1,7 +1,7 @@
 ﻿namespace SAML2.Config
 {
     /// <summary>
-    /// Authentication Context configuration element.
+    /// Authentication Context config item.
     /// </summary>
     public class AuthenticationContext
     {

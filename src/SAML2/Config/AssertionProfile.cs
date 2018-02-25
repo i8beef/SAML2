@@ -1,7 +1,7 @@
 ﻿namespace SAML2.Config
 {
     /// <summary>
-    /// Assertion Profile configuration element.
+    /// Assertion Profile config item.
     /// </summary>
     public class AssertionProfile
     {

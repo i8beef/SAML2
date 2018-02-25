@@ -1,7 +1,7 @@
 ﻿namespace SAML2.Config
 {
     /// <summary>
-    /// Logging configuration element.
+    /// Logging config item.
     /// </summary>
     public class LoggingConfig
     {

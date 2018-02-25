@@ -4,10 +4,13 @@ using System.Linq;
 namespace SAML2.Config
 {
     /// <summary>
-    /// ServiceProvider configuration element.
+    /// ServiceProvider config item.
     /// </summary>
     public class ServiceProviderConfig
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceProviderConfig"/> class.
+        /// </summary>
         public ServiceProviderConfig()
         {
             AuthenticationContextComparison = AuthenticationContextComparison.Exact;
@@ -29,7 +32,7 @@ namespace SAML2.Config
         public string Server { get; set; }
 
         /// <summary>
-        /// Gets the comparison.
+        /// Gets or sets the comparison.
         /// </summary>
         public AuthenticationContextComparison AuthenticationContextComparison { get; set; }
 
@@ -62,7 +65,7 @@ namespace SAML2.Config
         }
 
         /// <summary>
-        /// Gets a value indicating whether to allow creation of new NameIdFormats.
+        /// Gets or sets a value indicating whether to allow creation of new NameIdFormats.
         /// </summary>
         public bool NameIdFormatAllowCreate { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿namespace SAML2.Config
 {
     /// <summary>
-    /// Organization configuration element.
+    /// Organization config item.
     /// </summary>
     public class Organization
     {
