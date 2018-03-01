@@ -6,9 +6,15 @@ using SAML2.Schema.Metadata;
 
 namespace SAML2.Tests
 {
+    /// <summary>
+    /// <see cref="IdentityProviderCollection"/> tests.
+    /// </summary>
     [TestFixture]
     public class IdentityProviderCollectionTests
     {
+        /// <summary>
+        /// Can load metadata file with multiple IDP descriptors.
+        /// </summary>
         [Test]
         public void CanLoadMetadataFileWithMultipleIdpDescriptors()
         {

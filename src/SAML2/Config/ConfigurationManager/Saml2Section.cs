@@ -147,17 +147,14 @@ namespace SAML2.Config
             // Assertion profile
             if (section.AssertionProfile.ElementInformation.IsPresent)
             {
-                config.AssertionProfile = new AssertionProfile { AssertionValidator = section.AssertionProfile.AssertionValidator };
+                config.AssertionProfile.AssertionValidator = section.AssertionProfile.AssertionValidator;
             }
 
             // Common domain cookie
             if (section.CommonDomainCookie.ElementInformation.IsPresent)
             {
-                config.CommonDomainCookie = new CommonDomainCookie
-                {
-                    Enabled = section.CommonDomainCookie.Enabled,
-                    LocalReaderEndpoint = section.CommonDomainCookie.LocalReaderEndpoint
-                };
+                config.CommonDomainCookie.Enabled = section.CommonDomainCookie.Enabled;
+                config.CommonDomainCookie.LocalReaderEndpoint = section.CommonDomainCookie.LocalReaderEndpoint;
             }
 
             // Identity Providers
@@ -209,7 +206,7 @@ namespace SAML2.Config
                         idp.ArtifactResolution = artifactResolution;
                     }
 
-                    if (identityProvider.ArtifactResolution.ElementInformation.IsPresent)
+                    if (identityProvider.AttributeQuery.ElementInformation.IsPresent)
                     {
                         var attributeQuery = new HttpAuth();
                         if (identityProvider.AttributeQuery.ClientCertificate.ElementInformation.IsPresent)
@@ -265,27 +262,28 @@ namespace SAML2.Config
             // Logging config
             if (section.Logging.ElementInformation.IsPresent)
             {
-                config.Logging = new LoggingConfig { LoggingFactory = section.Logging.LoggingFactory };
+                config.Logging.LoggingFactory = section.Logging.LoggingFactory;
             }
 
             // Metadata config
             if (section.Metadata.ElementInformation.IsPresent)
             {
-                var metadata = new MetadataConfig
+                config.Metadata.ExcludeArtifactEndpoints = section.Metadata.ExcludeArtifactEndpoints;
+                config.Metadata.Lifetime = section.Metadata.Lifetime;
+
+                if (section.Metadata.Organization.ElementInformation.IsPresent)
                 {
-                    ExcludeArtifactEndpoints = section.Metadata.ExcludeArtifactEndpoints,
-                    Lifetime = section.Metadata.Lifetime,
-                    Organization = new Organization
+                    config.Metadata.Organization = new Organization
                     {
                         Name = section.Metadata.Organization.Name,
                         DisplayName = section.Metadata.Organization.DisplayName,
                         Url = section.Metadata.Organization.Url
-                    }
-                };
+                    };
+                }
 
                 foreach (var contact in section.Metadata.Contacts)
                 {
-                    metadata.Contacts.Add(new Contact
+                    config.Metadata.Contacts.Add(new Contact
                     {
                         Company = contact.Company,
                         Email = contact.Email,
@@ -298,26 +296,21 @@ namespace SAML2.Config
 
                 foreach (var attribute in section.Metadata.RequestedAttributes)
                 {
-                    metadata.RequestedAttributes.Add(new Attribute { IsRequired = attribute.IsRequired, Name = attribute.Name });
+                    config.Metadata.RequestedAttributes.Add(new Attribute { IsRequired = attribute.IsRequired, Name = attribute.Name });
                 }
-
-                config.Metadata = metadata;
             }
 
             // Service provider
             if (section.ServiceProvider.ElementInformation.IsPresent)
             {
-                var serviceProvider = new ServiceProviderConfig
-                {
-                    AuthenticationContextComparison = section.ServiceProvider.AuthenticationContexts.Comparison,
-                    Id = section.ServiceProvider.Id,
-                    NameIdFormatAllowCreate = section.ServiceProvider.NameIdFormats.AllowCreate,
-                    Server = section.ServiceProvider.Server
-                };
+                config.ServiceProvider.AuthenticationContextComparison = section.ServiceProvider.AuthenticationContexts.Comparison;
+                config.ServiceProvider.Id = section.ServiceProvider.Id;
+                config.ServiceProvider.NameIdFormatAllowCreate = section.ServiceProvider.NameIdFormats.AllowCreate;
+                config.ServiceProvider.Server = section.ServiceProvider.Server;
 
                 if (section.ServiceProvider.SigningCertificate.ElementInformation.IsPresent)
                 {
-                    serviceProvider.SigningCertificate = new Certificate
+                    config.ServiceProvider.SigningCertificate = new Certificate
                     {
                         FindValue = section.ServiceProvider.SigningCertificate.FindValue,
                         StoreLocation = section.ServiceProvider.SigningCertificate.StoreLocation,
@@ -329,12 +322,12 @@ namespace SAML2.Config
 
                 foreach (var authContext in section.ServiceProvider.AuthenticationContexts)
                 {
-                    serviceProvider.AuthenticationContexts.Add(new AuthenticationContext { Context = authContext.Context, ReferenceType = authContext.ReferenceType });
+                    config.ServiceProvider.AuthenticationContexts.Add(new AuthenticationContext { Context = authContext.Context, ReferenceType = authContext.ReferenceType });
                 }
 
                 foreach (var endpoint in section.ServiceProvider.Endpoints)
                 {
-                    serviceProvider.Endpoints.Add(new ServiceProviderEndpoint
+                    config.ServiceProvider.Endpoints.Add(new ServiceProviderEndpoint
                     {
                         Binding = endpoint.Binding,
                         Index = endpoint.Index,
@@ -346,22 +339,18 @@ namespace SAML2.Config
 
                 foreach (var nameIdFormat in section.ServiceProvider.NameIdFormats)
                 {
-                    serviceProvider.NameIdFormats.Add(nameIdFormat.Format);
+                    config.ServiceProvider.NameIdFormats.Add(nameIdFormat.Format);
                 }
-
-                config.ServiceProvider = serviceProvider;
             }
 
             // State config
             if (section.State.ElementInformation.IsPresent)
             {
-                var state = new StateConfig { StateServiceFactory = section.State.StateServiceFactory };
+                config.State.StateServiceFactory = section.State.StateServiceFactory;
                 foreach (var setting in section.State.Settings)
                 {
-                    state.Settings.Add(setting.Name, setting.Value);
+                    config.State.Settings.Add(setting.Name, setting.Value);
                 }
-
-                config.State = state;
             }
 
             return config;

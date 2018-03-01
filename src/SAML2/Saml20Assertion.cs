@@ -326,27 +326,14 @@ namespace SAML2
                 if (_assertionValidator == null)
                 {
                     var config = Saml2Config.Current;
-                    if (config == null || config.AllowedAudienceUris == null)
+
+                    if (string.IsNullOrEmpty(_profile))
                     {
-                        if (string.IsNullOrEmpty(_profile))
-                        {
-                            _assertionValidator = new Saml20AssertionValidator(null, _quirksMode);
-                        }
-                        else
-                        {
-                            _assertionValidator = (ISaml20AssertionValidator)Activator.CreateInstance(Type.GetType(_profile), null, _quirksMode);
-                        }
+                        _assertionValidator = new Saml20AssertionValidator(config.AllowedAudienceUris.ToList(), _quirksMode);
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(_profile))
-                        {
-                            _assertionValidator = new Saml20AssertionValidator(config.AllowedAudienceUris.ToList(), _quirksMode);
-                        }
-                        else
-                        {
-                            _assertionValidator = (ISaml20AssertionValidator)Activator.CreateInstance(Type.GetType(_profile), config.AllowedAudienceUris.ToList(), _quirksMode);
-                        }
+                        _assertionValidator = (ISaml20AssertionValidator)Activator.CreateInstance(Type.GetType(_profile), config.AllowedAudienceUris.ToList(), _quirksMode);
                     }
                 }
 

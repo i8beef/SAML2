@@ -663,10 +663,10 @@ namespace SAML2.Protocol
                     Logger.DebugFormat(TraceMessages.AuthnRequestPrepared, identityProvider.Id, Saml20Constants.ProtocolBindings.HttpRedirect);
 
                     var redirectBuilder = new HttpRedirectBindingBuilder
-                                      {
-                                          SigningKey = _certificate.PrivateKey,
-                                          Request = request.GetXml().OuterXml
-                                      };
+                    {
+                        SigningKey = _certificate.PrivateKey,
+                        Request = request.GetXml().OuterXml
+                    };
 
                     Logger.DebugFormat(TraceMessages.AuthnRequestSent, redirectBuilder.Request);
 

@@ -177,10 +177,10 @@ namespace SAML2
             if (config.ServiceProvider.NameIdFormats.Count > 0)
             {
                 result.NameIdPolicy = new NameIdPolicy
-                                          {
-                                              AllowCreate = config.ServiceProvider.NameIdFormatAllowCreate,
-                                              Format = config.ServiceProvider.NameIdFormats[0]
-                                          };
+                {
+                    AllowCreate = config.ServiceProvider.NameIdFormatAllowCreate,
+                    Format = config.ServiceProvider.NameIdFormats[0]
+                };
 
                 if (result.NameIdPolicy.Format != Saml20Constants.NameIdentifierFormats.Entity)
                 {

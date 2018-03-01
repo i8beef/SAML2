@@ -441,7 +441,6 @@ namespace SAML2
             var baseUrl = new Uri(config.ServiceProvider.Server);
             var logoutServiceEndpoints = new List<Endpoint>();
             var signonServiceEndpoints = new List<IndexedEndpoint>();
-
             var artifactResolutionEndpoints = new List<IndexedEndpoint>(2);
 
             // Include endpoints.
@@ -450,53 +449,53 @@ namespace SAML2
                 if (endpoint.Type == EndpointType.SignOn)
                 {
                     var loginEndpoint = new IndexedEndpoint
-                                            {
-                                                Index = endpoint.Index,
-                                                IsDefault = true,
-                                                Location = new Uri(baseUrl, endpoint.LocalPath).ToString(),
-                                                Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HttpPost)
-                                            };
+                    {
+                        Index = endpoint.Index,
+                        IsDefault = true,
+                        Location = new Uri(baseUrl, endpoint.LocalPath).ToString(),
+                        Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HttpPost)
+                    };
+
                     signonServiceEndpoints.Add(loginEndpoint);
 
                     var artifactSignonEndpoint = new IndexedEndpoint
-                                                     {
-                                                         Binding = Saml20Constants.ProtocolBindings.HttpSoap,
-                                                         Index = loginEndpoint.Index,
-                                                         Location = loginEndpoint.Location
-                                                     };
+                    {
+                        Binding = Saml20Constants.ProtocolBindings.HttpSoap,
+                        Index = loginEndpoint.Index,
+                        Location = loginEndpoint.Location
+                    };
+
                     artifactResolutionEndpoints.Add(artifactSignonEndpoint);
-
-                    continue;
                 }
-
-                if (endpoint.Type == EndpointType.Logout)
+                else if (endpoint.Type == EndpointType.Logout)
                 {
                     var logoutEndpoint = new Endpoint
-                                             {
-                                                 Location = new Uri(baseUrl, endpoint.LocalPath).ToString()
-                                             };
+                    {
+                        Location = new Uri(baseUrl, endpoint.LocalPath).ToString()
+                    };
+
                     logoutEndpoint.ResponseLocation = logoutEndpoint.Location;
                     logoutEndpoint.Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HttpPost);
                     logoutServiceEndpoints.Add(logoutEndpoint);
 
                     // TODO: Look at this...
                     logoutEndpoint = new Endpoint
-                                         {
-                                             Location = new Uri(baseUrl, endpoint.LocalPath).ToString()
-                                         };
+                    {
+                        Location = new Uri(baseUrl, endpoint.LocalPath).ToString()
+                    };
+
                     logoutEndpoint.ResponseLocation = logoutEndpoint.Location;
                     logoutEndpoint.Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HttpRedirect);
                     logoutServiceEndpoints.Add(logoutEndpoint);
 
                     var artifactLogoutEndpoint = new IndexedEndpoint
-                                                     {
-                                                         Binding = Saml20Constants.ProtocolBindings.HttpSoap,
-                                                         Index = endpoint.Index,
-                                                         Location = logoutEndpoint.Location
-                                                     };
+                    {
+                        Binding = Saml20Constants.ProtocolBindings.HttpSoap,
+                        Index = endpoint.Index,
+                        Location = logoutEndpoint.Location
+                    };
+
                     artifactResolutionEndpoints.Add(artifactLogoutEndpoint);
-                    
-                    continue;
                 }
             }           
 
@@ -517,15 +516,11 @@ namespace SAML2
                 for (var i = 0; i < config.Metadata.RequestedAttributes.Count; i++)
                 {
                     attConsumingService.RequestedAttribute[i] = new RequestedAttribute
-                                                                    {
-                                                                        Name = config.Metadata.RequestedAttributes[i].Name
-                                                                    };
-                    if (config.Metadata.RequestedAttributes[i].IsRequired)
                     {
-                        attConsumingService.RequestedAttribute[i].IsRequired = true;
-                    }
-
-                    attConsumingService.RequestedAttribute[i].NameFormat = SamlAttribute.NameformatBasic;
+                        Name = config.Metadata.RequestedAttributes[i].Name,
+                        NameFormat = SamlAttribute.NameformatBasic,
+                        IsRequired = config.Metadata.RequestedAttributes[i].IsRequired
+                    };
                 }
             }
             else
@@ -533,7 +528,7 @@ namespace SAML2
                 serviceProviderDescriptor.AttributeConsumingService = new AttributeConsumingService[0];
             }
 
-            if (config.Metadata == null || !config.Metadata.ExcludeArtifactEndpoints)
+            if (!config.Metadata.ExcludeArtifactEndpoints)
             {
                 serviceProviderDescriptor.ArtifactResolutionService = artifactResolutionEndpoints.ToArray();
             }
@@ -559,26 +554,26 @@ namespace SAML2
             if (config.Metadata.Organization != null)
             {
                 entity.Organization = new Schema.Metadata.Organization
-                                          {
-                                              OrganizationName = new[] { new LocalizedName { Value = config.Metadata.Organization.Name } },
-                                              OrganizationDisplayName = new[] { new LocalizedName { Value = config.Metadata.Organization.DisplayName } },
-                                              OrganizationURL = new[] { new LocalizedURI { Value = config.Metadata.Organization.Url } }
-                                          };
+                {
+                    OrganizationName = new[] { new LocalizedName { Value = config.Metadata.Organization.Name } },
+                    OrganizationDisplayName = new[] { new LocalizedName { Value = config.Metadata.Organization.DisplayName } },
+                    OrganizationURL = new[] { new LocalizedURI { Value = config.Metadata.Organization.Url } }
+                };
             }
 
-            if (config.Metadata.Contacts != null && config.Metadata.Contacts.Count > 0)
+            if (config.Metadata.Contacts.Count > 0)
             {
                 entity.ContactPerson = config.Metadata.Contacts.Select(x => new Schema.Metadata.Contact
-                                                                                {
-                                                                                    ContactType =
-                                                                                        (Schema.Metadata.ContactType)
-                                                                                        ((int)x.Type),
-                                                                                    Company = x.Company,
-                                                                                    GivenName = x.GivenName,
-                                                                                    SurName = x.SurName,
-                                                                                    EmailAddress = new[] { x.Email },
-                                                                                    TelephoneNumber = new[] { x.Phone }
-                                                                                }).ToArray();
+                {
+                    ContactType =
+                        (Schema.Metadata.ContactType)
+                        ((int)x.Type),
+                    Company = x.Company,
+                    GivenName = x.GivenName,
+                    SurName = x.SurName,
+                    EmailAddress = new[] { x.Email },
+                    TelephoneNumber = new[] { x.Phone }
+                }).ToArray();
             }
         }
 

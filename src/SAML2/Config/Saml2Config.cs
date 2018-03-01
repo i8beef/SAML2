@@ -19,8 +19,13 @@ namespace SAML2.Config
         {
             Actions = new List<Action>();
             AllowedAudienceUris = new List<string>();
+            AssertionProfile = new AssertionProfile();
             CommonDomainCookie = new CommonDomainCookie();
+            Logging = new LoggingConfig();
+            Metadata = new MetadataConfig();
             IdentityProviders = new IdentityProviderCollection();
+            ServiceProvider = new ServiceProviderConfig();
+            State = new StateConfig();
         }
 
         /// <summary>
