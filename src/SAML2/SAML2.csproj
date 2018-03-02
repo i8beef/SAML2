@@ -72,6 +72,9 @@
     <Compile Include="Config\Attribute.cs" />
     <Compile Include="Config\AuthenticationContextComparison.cs" />
     <Compile Include="Config\AuthenticationContext.cs" />
+    <Compile Include="Config\Builder\HttpAuthBuilder.cs" />
+    <Compile Include="Config\Builder\MetadataConfigBuilder.cs" />
+    <Compile Include="Config\Builder\IdentityProviderBuilder.cs" />
     <Compile Include="Config\Certificate.cs" />
     <Compile Include="Config\CommonDomainCookie.cs" />
     <Compile Include="Config\ConfigurationManager\ActionCollection.cs" />
@@ -125,7 +128,9 @@
     <Compile Include="Config\Organization.cs" />
     <Compile Include="Config\PersistentPseudonym.cs" />
     <Compile Include="Config\Saml2Config.cs" />
+    <Compile Include="Config\Builder\Saml2ConfigBuilder.cs" />
     <Compile Include="Config\ServiceProviderConfig.cs" />
+    <Compile Include="Config\Builder\ServiceProviderConfigBuilder.cs" />
     <Compile Include="Config\ServiceProviderEndpoint.cs" />
     <Compile Include="Config\StateConfig.cs" />
     <Compile Include="ErrorMessages.Designer.cs">

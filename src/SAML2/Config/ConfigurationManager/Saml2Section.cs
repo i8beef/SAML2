@@ -233,6 +233,11 @@ namespace SAML2.Config
                         idp.AttributeQuery = attributeQuery;
                     }
 
+                    if (identityProvider.PersistentPseudonym.ElementInformation.IsPresent)
+                    {
+                        idp.PersistentPseudonym = new PersistentPseudonym { Mapper = identityProvider.PersistentPseudonym.Mapper };
+                    }
+
                     foreach (var certificateValidation in identityProvider.CertificateValidations)
                     {
                         idp.CertificateValidations.Add(certificateValidation.Type);

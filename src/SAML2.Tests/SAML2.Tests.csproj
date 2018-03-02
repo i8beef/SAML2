@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\Saml2Config\InitTests.cs" />
     <Compile Include="IdentityProviderCollectionTests.cs" />
     <Compile Include="Saml20EncryptedAssertionTests.cs" />
     <Compile Include="Utils\ArtifactUtilTests.cs" />

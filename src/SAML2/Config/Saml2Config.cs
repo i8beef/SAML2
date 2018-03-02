@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using SAML2.Config.Builder;
 
 namespace SAML2.Config
 {
@@ -125,6 +127,18 @@ namespace SAML2.Config
         public static void Init(Saml2Config config)
         {
             _config = config;
+            _config.IdentityProviders.Refresh();
+        }
+
+        /// <summary>
+        /// Configures the library instance with an exposed <see cref="Saml2ConfigBuilder"/>.
+        /// </summary>
+        /// <param name="predicate">The configuration.</param>
+        public static void Init(Action<Saml2ConfigBuilder> predicate)
+        {
+            var builder = new Saml2ConfigBuilder();
+            predicate(builder);
+            _config = builder.Build();
             _config.IdentityProviders.Refresh();
         }
     }
