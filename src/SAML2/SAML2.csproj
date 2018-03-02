@@ -326,6 +326,7 @@
     <Compile Include="Utils\Serialization.cs" />
     <Compile Include="Utils\TimeRestrictionValidation.cs" />
     <Compile Include="Utils\XmlSignatureUtils.cs" />
+    <Compile Include="Validation\IdentityProviderValidator.cs" />
     <Compile Include="Validation\ISaml20AssertionValidator.cs" />
     <Compile Include="Validation\ISaml20AttributeValidator.cs" />
     <Compile Include="Validation\ISaml20NameIdValidator.cs" />
@@ -343,6 +344,8 @@
     <Compile Include="Validation\Saml20SubjectConfirmationValidator.cs" />
     <Compile Include="Validation\Saml20SubjectValidator.cs" />
     <Compile Include="Validation\Saml20XmlAnyAttributeValidator.cs" />
+    <Compile Include="Validation\Saml2ConfigValidator.cs" />
+    <Compile Include="Validation\ServiceProviderConfigValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ErrorMessages.resx">

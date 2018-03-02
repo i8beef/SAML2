@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SAML2.Config.Builder;
 using SAML2.Exceptions;
+using SAML2.Validation;
 
 namespace SAML2.Config
 {
@@ -156,7 +157,8 @@ namespace SAML2.Config
         /// </summary>
         public void Validate()
         {
-            throw new Saml20ConfigurationException();
+            var validator = new Saml2ConfigValidator();
+            validator.ValidateConfig(this);
         }
     }
 }
