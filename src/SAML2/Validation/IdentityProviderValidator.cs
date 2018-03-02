@@ -50,6 +50,11 @@ namespace SAML2.Validation
                 {
                     throw new Saml20ConfigurationException("Configuration IdentityProvider ArtifactResolution must specify only one of ClientCertificate or Credentials when present");
                 }
+
+                if (identityProvider.ArtifactResolution.ClientCertificate != null && string.IsNullOrEmpty(identityProvider.ArtifactResolution.ClientCertificate.FindValue))
+                {
+                    throw new Saml20ConfigurationException("Configuration IdentityProvider ArtifactResolution Certificate FindValue cannot be null or empty");
+                }
             }
 
             if (identityProvider.AttributeQuery != null)
@@ -63,13 +68,18 @@ namespace SAML2.Validation
                 {
                     throw new Saml20ConfigurationException("Configuration IdentityProvider AttributeQuery must specify only one of ClientCertificate or Credentials when present");
                 }
+
+                if (identityProvider.AttributeQuery.ClientCertificate != null && string.IsNullOrEmpty(identityProvider.AttributeQuery.ClientCertificate.FindValue))
+                {
+                    throw new Saml20ConfigurationException("Configuration IdentityProvider AttributeQuery Certificate FindValue cannot be null or empty");
+                }
             }
 
             foreach (var endpoint in identityProvider.Endpoints)
             {
                 if (string.IsNullOrEmpty(endpoint.Url))
                 {
-                    throw new Saml20ConfigurationException("Configuration IdentityProvider Endpoint Url cannot be null");
+                    throw new Saml20ConfigurationException("Configuration IdentityProvider Endpoint Url cannot be null or empty");
                 }
             }
 
