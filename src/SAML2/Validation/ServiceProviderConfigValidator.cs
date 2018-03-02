@@ -30,11 +30,6 @@ namespace SAML2.Validation
                 {
                     throw new Saml20ConfigurationException("Configuration ServiceProvider Endpoint LocalPath cannot be null or empty");
                 }
-
-                if (string.IsNullOrEmpty(endpoint.RedirectUrl))
-                {
-                    throw new Saml20ConfigurationException("Configuration ServiceProvider Endpoint RedirectUrl cannot be null or empty");
-                }
             }
 
             if (string.IsNullOrEmpty(config.Id))
