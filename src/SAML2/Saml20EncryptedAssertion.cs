@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Xml;
+using SAML2.Exceptions;
 using SAML2.Schema.Protocol;
 using SAML2.Utils;
 

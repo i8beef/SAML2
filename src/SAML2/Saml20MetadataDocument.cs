@@ -7,6 +7,7 @@ using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Xml;
 using SAML2.Config;
+using SAML2.Exceptions;
 using SAML2.Schema.Core;
 using SAML2.Schema.Metadata;
 using SAML2.Utils;

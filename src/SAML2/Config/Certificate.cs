@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using SAML2.Exceptions;
 
 namespace SAML2.Config
 {

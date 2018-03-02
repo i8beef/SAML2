@@ -4,6 +4,7 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using NUnit.Framework;
+using SAML2.Exceptions;
 using SAML2.Schema.Core;
 using SAML2.Schema.Protocol;
 using SAML2.Schema.XEnc;

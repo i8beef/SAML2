@@ -1,6 +1,6 @@
 using System;
 
-namespace SAML2
+namespace SAML2.Exceptions
 {
     /// <summary>
     /// Thrown when a token does not comply with the SAML 2.0 specification.

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Web;
 using SAML2.Config;
+using SAML2.Exceptions;
 
 namespace SAML2.Protocol
 {

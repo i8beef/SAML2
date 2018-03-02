@@ -8,6 +8,7 @@ using System.Web;
 using System.Xml;
 using SAML2.Bindings;
 using SAML2.Config;
+using SAML2.Exceptions;
 using SAML2.Identity;
 using SAML2.Logging;
 using SAML2.Protocol;

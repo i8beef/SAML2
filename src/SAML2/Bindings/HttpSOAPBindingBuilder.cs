@@ -10,6 +10,7 @@ using System.Text;
 using System.Web;
 using System.Xml;
 using SAML2.Config;
+using SAML2.Exceptions;
 using SAML2.Logging;
 
 namespace SAML2.Bindings

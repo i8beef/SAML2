@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using SAML2.Exceptions;
 using SAML2.Utils;
 
 namespace SAML2.Tests.Utils

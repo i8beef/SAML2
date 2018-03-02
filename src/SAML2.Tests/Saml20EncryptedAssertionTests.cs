@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -7,9 +6,8 @@ using System.Security.Cryptography.Xml;
 using System.Xml;
 using NUnit.Framework;
 using SAML2.Config;
-using SAML2.Protocol;
+using SAML2.Exceptions;
 using SAML2.Schema.Core;
-using SAML2.Schema.Metadata;
 using SAML2.Schema.Protocol;
 
 namespace SAML2.Tests

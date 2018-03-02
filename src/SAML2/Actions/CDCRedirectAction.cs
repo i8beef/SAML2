@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using SAML2.Exceptions;
 using SAML2.Protocol;
 using SAML2.State;
 

@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using SAML2.Exceptions;
 using SAML2.Schema.Core;
 using SAML2.Validation;
 

@@ -3,6 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
 using NUnit.Framework;
+using SAML2.Exceptions;
 
 namespace SAML2.Tests
 {

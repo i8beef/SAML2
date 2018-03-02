@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Web;
+using SAML2.Exceptions;
 
 namespace SAML2.Protocol
 {

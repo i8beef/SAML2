@@ -138,6 +138,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ErrorMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="Exceptions\Saml20ConfigurationException.cs" />
     <Compile Include="Identity\IPersistentPseudonymMapper.cs" />
     <Compile Include="Identity\ISaml20Identity.cs" />
     <Compile Include="Identity\Saml20Identity.cs" />
@@ -178,8 +179,8 @@
     <Compile Include="Saml20AuthnRequest.cs" />
     <Compile Include="Saml20Constants.cs" />
     <Compile Include="Saml20EncryptedAssertion.cs" />
-    <Compile Include="Saml20Exception.cs" />
-    <Compile Include="Saml20FormatException.cs" />
+    <Compile Include="Exceptions\Saml20Exception.cs" />
+    <Compile Include="Exceptions\Saml20FormatException.cs" />
     <Compile Include="Saml20LogoutRequest.cs" />
     <Compile Include="Saml20LogoutResponse.cs" />
     <Compile Include="Saml20MetadataDocument.cs" />

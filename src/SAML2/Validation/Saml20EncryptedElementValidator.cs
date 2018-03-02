@@ -1,4 +1,5 @@
 using System;
+using SAML2.Exceptions;
 using SAML2.Schema.Protocol;
 
 namespace SAML2.Validation

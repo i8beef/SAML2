@@ -11,6 +11,7 @@ using System.Web.Caching;
 using System.Xml;
 using SAML2.Bindings;
 using SAML2.Config;
+using SAML2.Exceptions;
 using SAML2.Protocol.Pages;
 using SAML2.Schema.Core;
 using SAML2.Schema.Metadata;

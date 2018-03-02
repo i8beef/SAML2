@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SAML2.Config.Builder;
+using SAML2.Exceptions;
 
 namespace SAML2.Config
 {
@@ -116,7 +117,10 @@ namespace SAML2.Config
         /// </summary>
         public static void InitFromConfigFile()
         {
-            _config = Saml2Section.GetConfig();
+            var config = Saml2Section.GetConfig();
+            config.Validate();
+
+            _config = config;
             _config.IdentityProviders.Refresh();
         }
 
@@ -126,6 +130,8 @@ namespace SAML2.Config
         /// <param name="config">Configuration definition.</param>
         public static void Init(Saml2Config config)
         {
+            config.Validate();
+
             _config = config;
             _config.IdentityProviders.Refresh();
         }
@@ -138,8 +144,19 @@ namespace SAML2.Config
         {
             var builder = new Saml2ConfigBuilder();
             predicate(builder);
-            _config = builder.Build();
+            var config = builder.Build();
+            config.Validate();
+
+            _config = config;
             _config.IdentityProviders.Refresh();
+        }
+
+        /// <summary>
+        /// Validates this <see cref="Saml2Config"/> instance.
+        /// </summary>
+        public void Validate()
+        {
+            throw new Saml20ConfigurationException();
         }
     }
 }

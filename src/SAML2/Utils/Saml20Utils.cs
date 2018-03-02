@@ -1,5 +1,6 @@
 using System;
 using System.Xml;
+using SAML2.Exceptions;
 
 namespace SAML2.Utils
 {
