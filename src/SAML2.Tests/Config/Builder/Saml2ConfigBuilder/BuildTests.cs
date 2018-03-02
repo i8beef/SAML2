@@ -1,30 +1,29 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using SAML2.Config.Builder;
 
-namespace SAML2.Tests.Config.Saml2Config
+namespace SAML2.Tests.Config.Builder.Saml2ConfigBuilder
 {
     /// <summary>
-    /// Init method tests.
+    /// Build method tests.
     /// </summary>
     [TestFixture]
-    public class InitTests
+    public class BuildTests
     {
         /// <summary>
-        /// Tests that <see cref="Saml2ConfigBuilder"/> can build a complete configuration.
+        /// Tests that <see cref="SSAML2.Config.Builder.aml2ConfigBuilder"/> can build a complete configuration.
         /// </summary>
         [Test]
         public void InitWithBuilderWorks()
         {
             // Arrange
-            var builder = new Saml2ConfigBuilder();
+            var builder = new SAML2.Config.Builder.Saml2ConfigBuilder();
             builder.AddAction(new SAML2.Config.Action { Name = "ActionName", Type = "ActionType" });
             builder.AddAllowedAudienceUri("AllowedUri");
             builder.WithAssertionValidator("AssertionValidator");
 
-            // Act
+            // Act TODO: Change this out for a validator call
             var config = builder.Build();
-
+            
             // Assert
             Assert.IsNotNull(config.Actions.FirstOrDefault(x => x.Name == "ActionName" && x.Type == "ActionType"));
             Assert.That(config.AllowedAudienceUris.Contains("AllowedUri"));
