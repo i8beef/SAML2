@@ -33,7 +33,7 @@ Changes from OIOSAML.NET include:
 
 ### License
 
-This library is released under the [Mozilla Public License 2.0 (MPL-2.0)](https://github.com/i8beef/SAML2/blob/master/LICENSE).
+This library is released under the [Mozilla Public License 1.1 (MPL-1.1)](https://github.com/i8beef/SAML2/blob/master/LICENSE).
 
 ### Bug reports
 
