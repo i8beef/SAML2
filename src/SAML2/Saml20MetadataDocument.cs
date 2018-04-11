@@ -479,16 +479,6 @@ namespace SAML2
                     logoutEndpoint.Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HttpPost);
                     logoutServiceEndpoints.Add(logoutEndpoint);
 
-                    // TODO: Look at this...
-                    logoutEndpoint = new Endpoint
-                    {
-                        Location = new Uri(baseUrl, endpoint.LocalPath).ToString()
-                    };
-
-                    logoutEndpoint.ResponseLocation = logoutEndpoint.Location;
-                    logoutEndpoint.Binding = GetBinding(endpoint.Binding, Saml20Constants.ProtocolBindings.HttpRedirect);
-                    logoutServiceEndpoints.Add(logoutEndpoint);
-
                     var artifactLogoutEndpoint = new IndexedEndpoint
                     {
                         Binding = Saml20Constants.ProtocolBindings.HttpSoap,
