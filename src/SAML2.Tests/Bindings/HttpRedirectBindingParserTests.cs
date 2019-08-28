@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Web;
 using NUnit.Framework;
 using SAML2.Bindings;
 
@@ -211,24 +212,23 @@ namespace SAML2.Tests.Bindings
             [Test]
             public void ParserCanParsePingFederateSignedRequest256()
             {
-                var samlDataPayload =
-                    "SAMLRequest=7b0HYBxJliUmL23Ke39K9UrX4HShCIBgEyTYkEAQ7MGIzeaS7B1pRyMpqyqBymVWZV1mFkDM7Z28995777333nvvvfe6O51OJ%2fff%2fz9cZmQBbPbOStrJniGAqsgfP358Hz8iHv8e7xZlepnXTVEtP%2ftod7zz0e9x9Bsnj3%2fR7qPjdTtfvsp%2f0Tpv2vTs6WcfFbP7ew8fPnhw%2f97%2bZC%2fbvzebPty59%2bn92b37kwc755O9g92P0p80kPYIUnrWNOv8bNm02bKlj3Z2DrZ37m3v7L%2fZ3X90b%2ffRvU%2fHDz69v%2fPw3t5PfZQSHsvm0S%2fa%2feyjdb18VGVN0TxaZou8edROH70%2b%2fuL5IwL5aFVXbTWtyo8IyTR9zB3U8u7mF7OmyeuWUPvoCM2%2bnRVv14%2fvyvsC66Razgq0aN4THt6m94%2fXsyJfTvNXRK%2b6mOI7%2fcr70u%2fcfqYA7AddCI%2fvOtwwOXc7s3P0%2fwA%3d&SigAlg=http%3a%2f%2fwww.w3.org%2f2001%2f04%2fxmldsig-more%23rsa-sha256";
+                var samlDataPayload = "SAMLRequest=7b0HYBxJliUmL23Ke39K9UrX4HShCIBgEyTYkEAQ7MGIzeaS7B1pRyMpqyqBymVWZV1mFkDM7Z28995777333nvvvfe6O51OJ%2fff%2fz9cZmQBbPbOStrJniGAqsgfP358Hz8iHv8e7xZlepnXTVEtP%2ftod7zz0e9x9Bsnj3%2fR7qPjdTtfvsp%2f0Tpv2vTs6WcfFbP7ew8fPnhw%2f97%2bZC%2fbvzebPty59%2bn92b37kwc755O9g92P0p80kPYIUnrWNOv8bNm02bKlj3Z2DrZ37m3v7L%2fZ3X90b%2ffRvU%2fHDz69v%2fPw3t5PfZQSHsvm0S%2fa%2feyjdb18VGVN0TxaZou8edROH70%2b%2fuL5IwL5aFVXbTWtyo8IyTR9zB3U8u7mF7OmyeuWUPvoCM2%2bnRVv14%2fvyvsC66Razgq0aN4THt6m94%2fXsyJfTvNXRK%2b6mOI7%2fcr70u%2fcfqYA7AddCI%2fvOtwwOXc7s3P0%2fwA%3d&SigAlg=http%3a%2f%2fwww.w3.org%2f2001%2f04%2fxmldsig-more%23rsa-sha256";
                 var unsignedUrl = "https://adler.safewhere.local:9031/idp/SSO.saml2?" + samlDataPayload + "&Signature=";
-                var hashOfSamlPayload = "ILFGkPwmZVq3p0207asTtxLAUaYC9J9Kglf6yQY6530%3D";
-                var hash = new System.Security.Cryptography.SHA256Managed().ComputeHash(Encoding.UTF8.GetBytes(samlDataPayload));
-                var encodedHash = Convert.ToBase64String(hash);
 
-                var cert = new X509Certificate2(@"Certificates\bob.pfx", "test");
+                var cert = new X509Certificate2(@"Certificates\bob2-3.pfx", "test", X509KeyStorageFlags.Exportable);
+                RSACryptoServiceProvider key = new RSACryptoServiceProvider();
+                key.FromXmlString(cert.PrivateKey.ToXmlString(true));
 
-                var key = cert.PrivateKey;
-                var bob = ((RSACryptoServiceProvider)key).SignData(Encoding.UTF8.GetBytes(samlDataPayload), new SHA256CryptoServiceProvider());
+                var data = Encoding.UTF8.GetBytes(samlDataPayload);
+                byte[] sig = key.SignData(data, CryptoConfig.MapNameToOID("SHA256")); ;
 
+                key = (RSACryptoServiceProvider)cert.PublicKey.Key;
+                if (!key.VerifyData(data, CryptoConfig.MapNameToOID("SHA256"), sig))
+                   throw new CryptographicException();
 
-
-                var url = new Uri(unsignedUrl + hashOfSamlPayload);
-                var parser = new SAML2.Bindings.HttpRedirectBindingParser(url);
-
-               
+           
+                var url = new Uri(unsignedUrl + HttpUtility.UrlEncode(Convert.ToBase64String(sig, Base64FormattingOptions.InsertLineBreaks)));
+                var parser = new HttpRedirectBindingParser(url);
 
                 var result = parser.CheckSignature(cert.PublicKey.Key);
 

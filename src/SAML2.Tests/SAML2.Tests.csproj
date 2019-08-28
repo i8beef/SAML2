@@ -117,6 +117,15 @@
     <None Include="Certificates\bob.pfx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Certificates\bob2-2.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Certificates\bob2-3.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Certificates\bob2.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Certificates\pingcertificate.crt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
