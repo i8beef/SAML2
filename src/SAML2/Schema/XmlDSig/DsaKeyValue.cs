@@ -18,7 +18,7 @@ namespace SAML2.Schema.XmlDSig
     /// pgenCounter - a DSA prime generation counter 
     /// </para>
     /// <para>
-    /// Parameter J is available for inclusion solely for efficiency as it is calculatable from P and Q. 
+    /// Parameter J is available for inclusion solely for efficiency as it is calculable from P and Q. 
     /// Parameters seed and pgenCounter are used in the DSA prime number generation algorithm specified in 
     /// [DSS]. As such, they are optional but must either both be present or both be absent. This prime 
     /// generation algorithm is designed to provide assurance that a weak prime is not being used and it yields 

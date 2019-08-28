@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Xml.Serialization;
 
 namespace SAML2.Config
 {
@@ -7,12 +8,21 @@ namespace SAML2.Config
     /// </summary>
     public class Saml2Section : ConfigurationSection
     {
+        private string _metaDataShaHashingAlgorithm = ShaHashingAlgorithm.SHA256.ToString();
+
         /// <summary>
         /// Gets the section name.
         /// </summary>
         public static string Name { get { return "saml2"; } }
 
         #region Elements
+
+        [XmlElement(ElementName = "MetaDataShaHashingAlgorithm")]
+        public string MetaDataShaHashingAlgorithm
+        {
+            get { return _metaDataShaHashingAlgorithm; }
+            set { _metaDataShaHashingAlgorithm = value; }
+        }
 
         /// <summary>
         /// Gets or sets the actions to perform on successful processing.

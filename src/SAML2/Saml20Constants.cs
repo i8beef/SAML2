@@ -13,6 +13,11 @@ namespace SAML2
         /// <summary>
         /// The XML namespace of the SAML 2.0 assertion schema.
         /// </summary>
+        public const string ASSERTION = "urn:oasis:names:tc:SAML:2.0:assertion";
+
+        /// <summary>
+        /// The XML namespace of the SAML 2.0 assertion schema.
+        /// </summary>
         public const string Assertion = "urn:oasis:names:tc:SAML:2.0:assertion";
 
         /// <summary>

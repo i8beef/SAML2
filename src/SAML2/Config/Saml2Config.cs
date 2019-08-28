@@ -1,8 +1,5 @@
-﻿using System;
-using System.Configuration;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Configuration;
+
 
 namespace SAML2.Config
 {

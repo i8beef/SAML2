@@ -5,13 +5,15 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Web;
+using SAML2.Bindings.SignatureProviders;
+using SAML2.Config;
 using CONSTS = SAML2.Bindings.HttpRedirectBindingConstants;
 
 namespace SAML2.Bindings
 {
     /// <summary>
     /// Handles the creation of redirect locations when using the HTTP redirect binding, which is outlined in [SAMLBind] 
-    /// section 3.4. 
+    /// section 3.4. of https://docs.oasis-open.org/security/saml/v2.0/saml-bindings-2.0-os.pdf
     /// </summary>
     public class HttpRedirectBindingBuilder
     {
@@ -30,6 +32,8 @@ namespace SAML2.Bindings
         /// </summary>
         private AsymmetricAlgorithm _signingKey;
 
+        private bool _isISams;
+
         /// <summary>
         /// Gets or sets the request.
         /// </summary>
@@ -45,6 +49,7 @@ namespace SAML2.Bindings
                 }
 
                 _request = value;
+                _isISams = value.Contains(".isams.");
             }
         }
 
@@ -115,7 +120,7 @@ namespace SAML2.Bindings
         /// <returns>The compressed string.</returns>
         private static string DeflateEncode(string val)
         {
-            var memoryStream = new MemoryStream();
+            using (var memoryStream = new MemoryStream())
             using (var writer = new StreamWriter(new DeflateStream(memoryStream, CompressionMode.Compress, true), new UTF8Encoding(false)))
             {
                 writer.Write(val);
@@ -173,23 +178,31 @@ namespace SAML2.Bindings
                 return;
             }
             
-            result.Append(string.Format("&{0}=", HttpRedirectBindingConstants.SigAlg));
-
+            result.Append($"&{HttpRedirectBindingConstants.SigAlg}=");
+            byte[] signature = new byte[0];
             if (_signingKey is RSA)
             {
-                result.Append(UpperCaseUrlEncode(HttpUtility.UrlEncode(SignedXml.XmlDsigRSASHA1Url)));
+                var signingProvider = SignatureProviderFactory.CreateFromShaHashingAlgorithmName(ShaHashingAlgorithm);
+
+                result.Append(UpperCaseUrlEncode(HttpUtility.UrlEncode(signingProvider.SignatureUri)));
+
+                // Calculate the signature of the URL as described in [SAMLBind] section 3.4.4.1.            
+                signature = signingProvider.SignData(_signingKey, Encoding.UTF8.GetBytes(result.ToString()));
             }
             else
             {
                 result.Append(UpperCaseUrlEncode(HttpUtility.UrlEncode(SignedXml.XmlDsigDSAUrl)));
+                signature = SignData(Encoding.UTF8.GetBytes(result.ToString()));
             }
 
             // Calculate the signature of the URL as described in [SAMLBind] section 3.4.4.1.
-            var signature = SignData(Encoding.UTF8.GetBytes(result.ToString()));            
+                  
             
             result.AppendFormat("&{0}=", HttpRedirectBindingConstants.Signature);
             result.Append(HttpUtility.UrlEncode(Convert.ToBase64String(signature)));
         }
+
+        public ShaHashingAlgorithm ShaHashingAlgorithm { get; set; }
 
         /// <summary>
         /// Create the signature for the data.
@@ -201,6 +214,11 @@ namespace SAML2.Bindings
             if (_signingKey is RSACryptoServiceProvider)
             {
                 var rsa = (RSACryptoServiceProvider)_signingKey;
+                if (_isISams)
+                {
+                    return rsa.SignData(data, new SHA256CryptoServiceProvider());
+                }
+
                 return rsa.SignData(data, new SHA1CryptoServiceProvider());
             } 
             else

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SAML2</RootNamespace>
     <AssemblyName>SAML2</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -66,9 +68,16 @@
     <Compile Include="Bindings\HttpRedirectBindingParser.cs" />
     <Compile Include="Bindings\HttpSoapBindingBuilder.cs" />
     <Compile Include="Bindings\HttpSoapBindingParser.cs" />
+    <Compile Include="Bindings\SignatureProviders\ISignatureProvider.cs" />
+    <Compile Include="Bindings\SignatureProviders\RsaSha1SignatureProvider.cs" />
+    <Compile Include="Bindings\SignatureProviders\RsaSha256SignatureProvider.cs" />
+    <Compile Include="Bindings\SignatureProviders\RsaSha512SignatureProvider.cs" />
+    <Compile Include="Bindings\SignatureProviders\SignatureProvider.cs" />
+    <Compile Include="Bindings\SignatureProviders\SignatureProviderFactory.cs" />
     <Compile Include="Bindings\SoapConstants.cs" />
     <Compile Include="Config\ActionCollection.cs" />
     <Compile Include="Config\ISaml2ConfigProvider.cs" />
+    <Compile Include="Config\ShaHashingAlgorithm.cs" />
     <Compile Include="Config\StateSettingElement.cs" />
     <Compile Include="Config\ActionElement.cs" />
     <Compile Include="Config\AllowedAudienceUriCollection.cs" />
@@ -280,10 +289,10 @@
     <Compile Include="Schema\XmlDSig\X509Data.cs" />
     <Compile Include="Schema\XmlDSig\X509IssuerSerial.cs" />
     <Compile Include="Schema\XmlDSig\X509ItemType.cs" />
-    <Compile Include="Specification\DefaultCertificateSpecification.cs" />
-    <Compile Include="Specification\ICertificateSpecification.cs" />
-    <Compile Include="Specification\SelfIssuedCertificateSpecification.cs" />
-    <Compile Include="Specification\SpecificationFactory.cs" />
+    <Compile Include="Schema\Specification\DefaultCertificateSpecification.cs" />
+    <Compile Include="Schema\Specification\ICertificateSpecification.cs" />
+    <Compile Include="Schema\Specification\SelfIssuedCertificateSpecification.cs" />
+    <Compile Include="Schema\Specification\SpecificationFactory.cs" />
     <Compile Include="State\CacheStateServiceFactory.cs" />
     <Compile Include="State\CacheStateService.cs" />
     <Compile Include="State\IStateServiceFactory.cs" />

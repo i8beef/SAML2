@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Web;
+using SAML2.Bindings.SignatureProviders;
 using SAML2.Schema.Metadata;
 using SAML2.Utils;
 
@@ -127,16 +128,19 @@ namespace SAML2.Bindings
                 throw new InvalidOperationException("Query is not signed, so there is no signature to verify.");
             }
 
-            var hash = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(_signedquery));
+
             if (key is RSACryptoServiceProvider)
             {
-                var rsa = (RSACryptoServiceProvider)key;
-                return rsa.VerifyHash(hash, "SHA1", DecodeSignature());
+                var signatureProvider = SignatureProviderFactory.CreateFromHashingAlgorithmSignatureUri(SignatureAlgorithm);
+                var bytes = Encoding.UTF8.GetBytes(_signedquery);
+                var decodeSignature = DecodeSignature();
+                return signatureProvider.VerifySignature(key, bytes, decodeSignature);
             }
             else
             {
                 var dsa = (DSA)key;
-                return dsa.VerifySignature(hash, DecodeSignature());
+                var sha1Hash = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(_signedquery));
+                return dsa.VerifySignature(sha1Hash, DecodeSignature());
             }
         }
 

@@ -112,14 +112,6 @@ namespace SAML2.Utils
             return signed;
         }
 
-        /// <summary>
-        /// Verify the given document using a KeyInfo instance. The KeyInfo instance's KeyClauses will be traversed for
-        /// elements that can verify the signature, e.g. certificates or keys. If nothing is found, an exception is thrown.
-        /// </summary>
-        /// <param name="doc">The doc.</param>
-        /// <param name="keyinfo">The key info.</param>
-        /// <returns><code>true</code> if the element's signature can be verified. <code>false</code> if the signature could
-        /// not be verified.</returns>
         public static bool CheckSignature(XmlDocument doc, KeyInfo keyinfo)
         {
             CheckDocument(doc);
@@ -158,11 +150,6 @@ namespace SAML2.Utils
             return alg != null ? signedXml.CheckSignature(alg) : signedXml.CheckSignature(cert, true);
         }
 
-        /// <summary>
-        /// Attempts to retrieve an asymmetric key from the KeyInfoClause given as parameter.
-        /// </summary>
-        /// <param name="keyInfoClause">The key info clause.</param>
-        /// <returns>null if the key could not be found.</returns>
         public static AsymmetricAlgorithm ExtractKey(KeyInfoClause keyInfoClause)
         {
             if (keyInfoClause is RSAKeyValue)
@@ -186,12 +173,6 @@ namespace SAML2.Utils
             return null;
         }
 
-        /// <summary>
-        /// Returns the KeyInfo element that is included with the signature in the document.
-        /// </summary>
-        /// <param name="doc">The doc.</param>
-        /// <returns>The signature <see cref="KeyInfo"/>.</returns>
-        /// <exception cref="InvalidOperationException">if the document is not signed.</exception>
         public static KeyInfo ExtractSignatureKeys(XmlDocument doc)
         {
             CheckDocument(doc);
@@ -213,12 +194,6 @@ namespace SAML2.Utils
             return null;
         }
 
-        /// <summary>
-        /// Returns the KeyInfo element that is included with the signature in the element.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <returns>The signature <see cref="KeyInfo"/>.</returns>
-        /// <exception cref="InvalidOperationException">if the document is not signed.</exception>
         public static KeyInfo ExtractSignatureKeys(XmlElement element)
         {
             CheckDocument(element);
