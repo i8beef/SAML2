@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using System.Web.Caching;
 using System.Web.Security;
 
 namespace SAML2.State
@@ -106,7 +107,7 @@ namespace SAML2.State
         /// <param name="value">The value.</param>
         public virtual void Set(string key, object value)
         {
-            _context.Cache[GetCacheKey(_context, key)] = value;
+            _context.Cache.Insert(GetCacheKey(_context, key), value, null, Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(_cacheExpiration));
         }
 
         #endregion
@@ -173,14 +174,20 @@ namespace SAML2.State
                 prefix = Guid.NewGuid().ToString("N") + Guid.NewGuid().ToString("N") + Guid.NewGuid().ToString("N");
             }
 
-            var expiry = DateTime.UtcNow.AddMinutes(_cacheExpiration);
-            var cookieValue = GetEncryptedTicket(prefix, expiry);
+            var expiration = DateTime.UtcNow.AddMinutes(_cacheExpiration);
+            var cookieValue = GetEncryptedTicket(prefix, expiration);
 
+            // Poor mans sliding expiration cookie reissue
             cookie = new HttpCookie(CookieName)
-                         {
-                             Value = cookieValue,
-                             Expires = expiry
-                         };
+                {
+                    Value = cookieValue,
+                    Expires = expiration,
+                    HttpOnly = true,
+                    Secure = true
+                };
+            
+            // Hack to support SameSite as SAML POST flow fails this check
+            cookie.Path += "; SameSite=None";
 
             context.Response.SetCookie(cookie);
 
