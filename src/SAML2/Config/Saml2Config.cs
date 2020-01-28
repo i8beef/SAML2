@@ -119,10 +119,8 @@ namespace SAML2.Config
         public static void InitFromConfigFile()
         {
             var config = Saml2Section.GetConfig();
-            config.Validate();
 
-            _config = config;
-            _config.IdentityProviders.Refresh();
+            Init(config);
         }
 
         /// <summary>
@@ -146,10 +144,8 @@ namespace SAML2.Config
             var builder = new Saml2ConfigBuilder();
             predicate(builder);
             var config = builder.Build();
-            config.Validate();
 
-            _config = config;
-            _config.IdentityProviders.Refresh();
+            Init(config);
         }
 
         /// <summary>
