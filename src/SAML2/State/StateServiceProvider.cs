@@ -39,7 +39,7 @@ namespace SAML2.State
             }
             else
             {
-                SetStateServiceFactory(new SessionStateServiceFactory());
+                SetStateServiceFactory(new CacheStateServiceFactory());
             }
         }
 

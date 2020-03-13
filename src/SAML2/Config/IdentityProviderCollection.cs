@@ -380,7 +380,6 @@ namespace SAML2.Config
             catch (Exception e)
             {
                 // Probably not a metadata file.
-                Logging.LoggerProvider.LoggerFor(GetType()).Error("Problem parsing metadata file", e);
                 return null;
             }
         }
