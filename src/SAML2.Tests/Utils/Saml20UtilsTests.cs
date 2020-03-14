@@ -68,7 +68,7 @@ namespace SAML2.Tests.Utils
                 var result = Saml20Utils.ToUtcString(now);
 
                 // Correct for XML UTC dropping trailing 0
-                if (result.Length < 27)
+                if (result.Length != localtime.Length)
                 {
                     var zeroPad = new string('0', 27 - result.Length);
                     result = result.Substring(0, result.Length - 1) + zeroPad + "Z";
