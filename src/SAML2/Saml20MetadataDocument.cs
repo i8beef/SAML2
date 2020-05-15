@@ -614,7 +614,9 @@ namespace SAML2
                         }
 
                         if (descriptor.SingleSignOnService.Length > 0 && !_ssoEndpoints.Any())
+                        {
                             throw new InvalidOperationException("No supported SingleSignOnService bindings found");
+                        }
 
                         if (descriptor.SingleLogoutService != null)
                         {
@@ -644,7 +646,9 @@ namespace SAML2
                             }
 
                             if (descriptor.SingleLogoutService.Length > 0 && !_idpSloEndpoints.Any())
+                            {
                                 throw new InvalidOperationException("No supported SingleLogoutService bindings found");
+                            }
                         }
 
                         if (descriptor.ArtifactResolutionService != null)
@@ -685,7 +689,9 @@ namespace SAML2
                         }
 
                         if (descriptor.AssertionConsumerService.Length > 0 && !_assertionConsumerServiceEndpoints.Any())
+                        {
                             throw new InvalidOperationException("No supported AssertionConsumerService bindings found");
+                        }
 
 
                         if (descriptor.SingleLogoutService != null)
@@ -716,7 +722,9 @@ namespace SAML2
                             }
 
                             if (descriptor.SingleLogoutService.Length > 0 && !_spSloEndpoints.Any())
+                            {
                                 throw new InvalidOperationException("No supported SingleLogoutService bindings found");
+                            }
                         }
 
                         if (descriptor.ArtifactResolutionService != null)
