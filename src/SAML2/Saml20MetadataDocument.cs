@@ -606,10 +606,16 @@ namespace SAML2
                                     binding = BindingType.Artifact;
                                     break;
                                 default:
-                                    throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                                    // throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                                    continue;
                             }
 
                             _ssoEndpoints.Add(new IdentityProviderEndpoint { Url = endpoint.Location, Binding = binding });
+                        }
+
+                        if (descriptor.SingleSignOnService.Length > 0 && !_ssoEndpoints.Any())
+                        {
+                            throw new InvalidOperationException("No supported SingleSignOnService bindings found");
                         }
 
                         if (descriptor.SingleLogoutService != null)
@@ -632,10 +638,16 @@ namespace SAML2
                                         binding = BindingType.Artifact;
                                         break;
                                     default:
-                                        throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                                        // throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                                        continue;
                                 }
 
                                 _idpSloEndpoints.Add(new IdentityProviderEndpoint { Url = endpoint.Location, Binding = binding });
+                            }
+
+                            if (descriptor.SingleLogoutService.Length > 0 && !_idpSloEndpoints.Any())
+                            {
+                                throw new InvalidOperationException("No supported SingleLogoutService bindings found");
                             }
                         }
 
@@ -669,11 +681,18 @@ namespace SAML2
                                     binding = BindingType.Artifact;
                                     break;
                                 default:
-                                    throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                                    // throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                                    continue;
                             }
 
                             _assertionConsumerServiceEndpoints.Add(new IdentityProviderEndpoint { Url = endpoint.Location, Binding = binding });
                         }
+
+                        if (descriptor.AssertionConsumerService.Length > 0 && !_assertionConsumerServiceEndpoints.Any())
+                        {
+                            throw new InvalidOperationException("No supported AssertionConsumerService bindings found");
+                        }
+
 
                         if (descriptor.SingleLogoutService != null)
                         {
@@ -695,10 +714,16 @@ namespace SAML2
                                         binding = BindingType.Artifact;
                                         break;
                                     default:
-                                        throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                                        // throw new InvalidOperationException("Binding not supported: " + endpoint.Binding);
+                                        continue;
                                 }
 
                                 _spSloEndpoints.Add(new IdentityProviderEndpoint { Url = endpoint.Location, Binding = binding });
+                            }
+
+                            if (descriptor.SingleLogoutService.Length > 0 && !_spSloEndpoints.Any())
+                            {
+                                throw new InvalidOperationException("No supported SingleLogoutService bindings found");
                             }
                         }
 
