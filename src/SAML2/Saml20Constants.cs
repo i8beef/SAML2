@@ -38,7 +38,7 @@ namespace SAML2
         /// <summary>
         /// The default value of the Format property for a <c>NameID</c> element
         /// </summary>
-        public const string DefaultNameIdFormat = "urn:oasis:names:tc:SAML:1.0:nameid-format:unspecified";
+        public const string DefaultNameIdFormat = NameIdentifierFormats.Unspecified;
 
         /// <summary>
         /// The mime type that must be used when publishing a metadata document.

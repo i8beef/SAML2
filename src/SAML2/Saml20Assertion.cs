@@ -133,6 +133,12 @@ namespace SAML2
                     }
 
                     _assertion = Serialization.Deserialize<Assertion>(new XmlNodeReader(XmlAssertion));
+
+                    // Set default NameId format if not provided
+                    if (Subject.Format == null)
+                    {
+                        Subject.Format = Saml20Constants.DefaultNameIdFormat;
+                    }
                 }
 
                 return _assertion;

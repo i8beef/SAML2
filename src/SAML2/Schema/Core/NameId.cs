@@ -19,14 +19,6 @@ namespace SAML2.Schema.Core
         public const string ElementName = "NameID";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NameId"/> class.
-        /// </summary>
-        public NameId()
-        {
-            Format = Saml20Constants.DefaultNameIdFormat;
-        }
-
-        /// <summary>
         /// Gets or sets the value.
         /// </summary>
         /// <value>The value.</value>
