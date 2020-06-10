@@ -159,7 +159,6 @@ namespace SAML2.Config
                 }
 
                 var metadataDocs = ParseFile(file);
-
                 if (metadataDocs != null)
                 {
                     foreach (var metadataDoc in metadataDocs)

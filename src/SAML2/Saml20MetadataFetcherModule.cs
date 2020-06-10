@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web;
 using SAML2.Config;
 
@@ -85,7 +86,8 @@ namespace SAML2
                 }
 
                 var metadataEndpointUrl = metadataEndpoint.Url;
-                var metadataFile = Path.Combine(metadataLocation, identityProvider.Id + ".xml");
+                var safeFilename = Regex.Replace(identityProvider.Id, @"[^\w\-. ]", "");
+                var metadataFile = Path.Combine(metadataLocation, safeFilename + ".xml");
 
                 // Fetch new file
                 try
