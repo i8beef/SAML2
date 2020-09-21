@@ -364,7 +364,7 @@ namespace SAML2.Config
                         var idpMetadata = new List<Saml20MetadataDocument>();
                         foreach (var entityDescriptor in child.ChildNodes.Cast<XmlNode>().Where(x => x.NamespaceURI == Saml20Constants.Metadata))
                         {
-                            var childDoc = new XmlDocument();
+                            var childDoc = new XmlDocument { PreserveWhitespace = true };
                             childDoc.AppendChild(childDoc.ImportNode(entityDescriptor, true));
                             idpMetadata.Add(new Saml20MetadataDocument(childDoc));
                         }
