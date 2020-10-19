@@ -17,10 +17,9 @@ build:
   use_snupkg_format: true
   verbosity: minimal
 artifacts:
-- path: '**\.*(\.|\.s)nupkg'
-  name: SAML2-$(appveyor_build_version)
+- path: '**\*nupkg'
 - path: src\SAML2\bin\$(configuration)
-  name: SAML2-$(appveyor_build_version).zip
+  name: SAML2-$(appveyor_build_version)
 deploy:
 - provider: NuGet
   api_key: $(NUGET_API_KEY)
