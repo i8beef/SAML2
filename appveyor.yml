@@ -17,7 +17,6 @@ build:
   use_snupkg_format: true
   verbosity: minimal
 artifacts:
-- path: '**\SAML2.*nupkg'
 - path: src\SAML2\bin\$(configuration)
   name: SAML2-$(appveyor_build_version)
 deploy:
@@ -29,6 +28,6 @@ deploy:
     branch: release
 - provider: GitHub
   auth_token: $(GITHUB_API_KEY)
-  artifact: src\SAML2\bin\$(configuration)\SAML2-$(appveyor_build_version).zip
+  artifact: src\SAML2\bin\SAML2-$(appveyor_build_version).zip
   on:
     branch: release
