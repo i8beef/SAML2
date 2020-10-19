@@ -26,11 +26,6 @@ namespace SAML2.State
         /// </summary>
         private readonly int _cacheExpiration;
 
-        /// <summary>
-        /// The HTTP context.
-        /// </summary>
-        private readonly HttpContext _context;
-
         #endregion
 
         #region Constructors and Destructors
@@ -38,18 +33,8 @@ namespace SAML2.State
         /// <summary>
         /// Initializes a new instance of the <see cref="CacheStateService" /> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        public CacheStateService(HttpContext context)
-        {
-            _context = context;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CacheStateService" /> class.
-        /// </summary>
-        /// <param name="context">The context.</param>
         /// <param name="cacheExpiration">The cache expiration minutes.</param>
-        public CacheStateService(HttpContext context, string cacheExpiration) : this(context)
+        public CacheStateService(string cacheExpiration)
         {
             if (!string.IsNullOrEmpty(cacheExpiration))
             {
@@ -67,9 +52,8 @@ namespace SAML2.State
         /// <summary>
         /// Initializes a new instance of the <see cref="CacheStateService" /> class.
         /// </summary>
-        /// <param name="context">The context.</param>
         /// <param name="cacheExpiration">The cache expiration minutes.</param>
-        public CacheStateService(HttpContext context, int? cacheExpiration) : this(context)
+        public CacheStateService(int? cacheExpiration)
         {
             _cacheExpiration = cacheExpiration ?? 60;
         }
@@ -86,7 +70,8 @@ namespace SAML2.State
         /// <returns>The value.</returns>
         public virtual T Get<T>(string key)
         {
-            var value = _context.Cache[GetCacheKey(_context, key)];
+            var context = HttpContext.Current;
+            var value = context.Cache[GetCacheKey(context, key)];
 
             return value == null ? default(T) : (T)value;
         }
@@ -97,7 +82,8 @@ namespace SAML2.State
         /// <param name="key">The key.</param>
         public virtual void Remove(string key)
         {
-            _context.Cache.Remove(GetCacheKey(_context, key));
+            var context = HttpContext.Current;
+            context.Cache.Remove(GetCacheKey(context, key));
         }
 
         /// <summary>
@@ -107,7 +93,8 @@ namespace SAML2.State
         /// <param name="value">The value.</param>
         public virtual void Set(string key, object value)
         {
-            _context.Cache.Insert(GetCacheKey(_context, key), value, null, Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(_cacheExpiration));
+            var context = HttpContext.Current;
+            context.Cache.Insert(GetCacheKey(context, key), value, null, Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(_cacheExpiration));
         }
 
         #endregion
