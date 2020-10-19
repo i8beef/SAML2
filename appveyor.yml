@@ -1,5 +1,5 @@
-version: 3.1.0.{build}
-image: Visual Studio 2017
+version: 3.2.0.{build}
+image: Visual Studio 2019
 configuration: Release
 assembly_info:
   patch: true
@@ -14,9 +14,22 @@ before_build:
 build:
   publish_nuget: true
   publish_nuget_symbols: true
+  use_snupkg_format: true
   verbosity: minimal
+artifacts:
+- path: '**\.*(\.|\.s)nupkg'
+  name: SAML2-$(appveyor_build_version)
+- path: src\SAML2\bin\$(configuration)
+  name: SAML2-$(appveyor_build_version).zip
 deploy:
 - provider: NuGet
   api_key: $(NUGET_API_KEY)
+  artifact: /.*(\.|\.s)nupkg/
+  skip_symbols: false
+  on:
+    branch: release
+- provider: GitHub
+  auth_token: $(GITHUB_API_KEY)
+  artifact: src\SAML2\bin\$(configuration)\SAML2-$(appveyor_build_version).zip
   on:
     branch: release

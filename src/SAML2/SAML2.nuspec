@@ -6,7 +6,7 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>https://github.com/i8beef/SAML2/blob/master/LICENSE</licenseUrl>
+    <license>https://github.com/i8beef/SAML2/blob/master/LICENSE</license>
     <projectUrl>https://github.com/i8beef/SAML2/</projectUrl>
     <description>$description$</description>
     <releaseNotes></releaseNotes>
