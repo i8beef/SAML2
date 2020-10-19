@@ -17,7 +17,7 @@ build:
   use_snupkg_format: true
   verbosity: minimal
 artifacts:
-- path: '**\*nupkg'
+- path: '**\SAML2.*nupkg'
 - path: src\SAML2\bin\$(configuration)
   name: SAML2-$(appveyor_build_version)
 deploy:
