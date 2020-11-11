@@ -11,6 +11,8 @@ namespace SAML2.Config
     /// </summary>
     public class Saml2Config
     {
+        private static object configLock = new object();
+
         /// <summary>
         /// The configuration
         /// </summary>
@@ -42,7 +44,13 @@ namespace SAML2.Config
             {
                 if (_config == null)
                 {
-                    InitFromConfigFile();
+                    lock (configLock)
+                    {
+                        if (_config == null)
+                        {
+                            InitFromConfigFile();
+                        }
+                    }
                 }
 
                 if (_config == null)
