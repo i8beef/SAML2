@@ -447,8 +447,8 @@ namespace SAML2.Protocol
                     throw new Saml20Exception(ErrorMessages.ResponseStatusIsNoPassive);
                 }
 
-                Logger.ErrorFormat(ErrorMessages.ResponseStatusNotSuccessful, status);
-                throw new Saml20Exception(string.Format(ErrorMessages.ResponseStatusNotSuccessful, status));
+                Logger.ErrorFormat(ErrorMessages.ResponseStatusNotSuccessful, status.StatusCode.Value);
+                throw new Saml20Exception(string.Format(ErrorMessages.ResponseStatusNotSuccessful, status.StatusCode.Value));
             }
 
             // Determine whether the assertion should be decrypted before being validated.
