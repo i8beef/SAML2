@@ -412,7 +412,7 @@ namespace SAML2 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Response with status code &quot;{0}&quot; received when &quot;Success&quot;was expected.
+        ///   Looks up a localized string similar to Response with status code &quot;{0}&quot; received when &quot;Success&quot; was expected.
         /// </summary>
         internal static string ResponseStatusNotSuccessful {
             get {
