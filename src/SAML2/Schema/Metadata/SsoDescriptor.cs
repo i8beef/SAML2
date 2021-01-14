@@ -11,10 +11,10 @@ namespace SAML2.Schema.Metadata
     /// providers that support SSO
     /// </summary>
     [XmlInclude(typeof(SpSsoDescriptor))]
-    [XmlIncludeAttribute(typeof(IdpSsoDescriptor))]
+    [XmlInclude(typeof(IdpSsoDescriptor))]
     [Serializable]
     [DebuggerStepThrough]
-    [XmlTypeAttribute(Namespace = Saml20Constants.Metadata)]
+    [XmlType(Namespace = Saml20Constants.Metadata)]
     public abstract class SsoDescriptor : RoleDescriptor
     {
         #region Elements

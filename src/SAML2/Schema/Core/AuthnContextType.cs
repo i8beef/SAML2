@@ -7,7 +7,7 @@ namespace SAML2.Schema.Core
     /// Authentication context type enumeration.
     /// </summary>
     [Serializable]
-    [XmlTypeAttribute(Namespace = Saml20Constants.Assertion, IncludeInSchema = false)]
+    [XmlType(Namespace = Saml20Constants.Assertion, IncludeInSchema = false)]
     public enum AuthnContextType
     {
         /// <summary>
