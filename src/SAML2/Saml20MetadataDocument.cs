@@ -693,7 +693,6 @@ namespace SAML2
                             throw new InvalidOperationException("No supported AssertionConsumerService bindings found");
                         }
 
-
                         if (descriptor.SingleLogoutService != null)
                         {
                             foreach (var endpoint in descriptor.SingleLogoutService)

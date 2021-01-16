@@ -11,6 +11,9 @@ namespace SAML2.Config
     /// </summary>
     public class Saml2Config
     {
+        /// <summary>
+        /// Lock object for config initialization.
+        /// </summary>
         private static object configLock = new object();
 
         /// <summary>

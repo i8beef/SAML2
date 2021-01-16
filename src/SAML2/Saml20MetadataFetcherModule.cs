@@ -86,7 +86,7 @@ namespace SAML2
                 }
 
                 var metadataEndpointUrl = metadataEndpoint.Url;
-                var safeFilename = Regex.Replace(identityProvider.Id, @"[^\w\-. ]", "");
+                var safeFilename = Regex.Replace(identityProvider.Id, @"[^\w\-. ]", string.Empty);
                 var metadataFile = Path.Combine(metadataLocation, safeFilename + ".xml");
 
                 // Fetch new file

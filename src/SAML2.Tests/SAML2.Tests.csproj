@@ -143,6 +143,9 @@
     <Content Include="Protocol\MetadataDocs\metadata-HAIKU.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Protocol\MetadataDocs\metadata-WSFederation.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Protocol\MetadataDocs\multiple-idps\metadata-multiple-idps.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

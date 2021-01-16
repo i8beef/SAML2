@@ -236,6 +236,7 @@
     <Compile Include="Schema\Metadata\RoleDescriptor.cs" />
     <Compile Include="Schema\Metadata\SpSsoDescriptor.cs" />
     <Compile Include="Schema\Metadata\SsoDescriptor.cs" />
+    <Compile Include="Schema\Metadata\WsFedRoleDescriptor.cs" />
     <Compile Include="Schema\Protocol\ArtifactResolve.cs" />
     <Compile Include="Schema\Protocol\ArtifactResponse.cs" />
     <Compile Include="Schema\Protocol\AssertionIdRequest.cs" />

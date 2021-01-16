@@ -112,6 +112,11 @@ namespace SAML2.State
             return string.Format("{0}-{1}", GetCacheKeyPrefix(context), key);
         }
 
+        /// <summary>
+        /// Determines if the user agent disallows SameSite none.
+        /// </summary>
+        /// <param name="userAgent">User agent.</param>
+        /// <returns><c>true</c> if the user agent allows SameSite none, otherwise <c>false</c>.</returns>
         private static bool DisallowsSameSiteNone(string userAgent)
         {
             // Cover all iOS based browsers here. This includes:

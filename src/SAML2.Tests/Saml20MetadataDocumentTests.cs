@@ -20,6 +20,23 @@ namespace SAML2.Tests
         public class ConstructorMethod
         {
             /// <summary>
+            /// Verify that WSFed extensions don't break parsing.
+            /// </summary>
+            [Test]
+            public void CanParseWSFEDExtensions()
+            {
+                // Arrange
+                var doc = new XmlDocument { PreserveWhitespace = true };
+                doc.Load(TestContext.CurrentContext.TestDirectory + @"\Protocol\MetadataDocs\metadata-WSFederation.xml");
+
+                // Act
+                var metadata = new Saml20MetadataDocument(doc);
+
+                // Assert
+                Assert.That(metadata.Entity.Items.Length == 2);
+            }
+
+            /// <summary>
             /// Verify that certificates can be extracted.
             /// </summary>
             [Test]

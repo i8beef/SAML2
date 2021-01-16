@@ -15,7 +15,7 @@ namespace SAML2.Schema.Metadata
         /// <summary>
         /// The XML Element name of this class
         /// </summary>
-        public new const string ElementName = "Organization";
+        public new const string ElementName = "PDPDescriptor";
 
         #region Elements
 

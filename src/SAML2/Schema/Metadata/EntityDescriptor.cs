@@ -128,6 +128,7 @@ namespace SAML2.Schema.Metadata
         [XmlElement(AuthnAuthorityDescriptor.ElementName, typeof(AuthnAuthorityDescriptor), Order = 3)]
         [XmlElement(IdpSsoDescriptor.ElementName, typeof(IdpSsoDescriptor), Order = 3)]
         [XmlElement(PdpDescriptor.ElementName, typeof(PdpDescriptor), Order = 3)]
+        [XmlElement(RoleDescriptor.ElementName, typeof(RoleDescriptor), Order = 3)]
         [XmlElement(SpSsoDescriptor.ElementName, typeof(SpSsoDescriptor), Order = 3)]
         public object[] Items { get; set; }
 
