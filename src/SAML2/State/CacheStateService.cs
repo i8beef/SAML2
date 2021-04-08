@@ -94,7 +94,16 @@ namespace SAML2.State
         public virtual void Set(string key, object value)
         {
             var context = HttpContext.Current;
-            context.Cache.Insert(GetCacheKey(context, key), value, null, Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(_cacheExpiration));
+            var cacheKey = GetCacheKey(context, key);
+            if (value != null)
+            {
+                context.Cache.Insert(cacheKey, value, null, Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(_cacheExpiration));
+            }
+            else
+            {
+                // Gives parity to session based handling of null setting
+                context.Cache.Remove(cacheKey);
+            }
         }
 
         #endregion
