@@ -378,7 +378,7 @@ namespace SAML2.Utils
         private static List<X509Certificate2> GetCertificates(XmlDocument doc)
         {
             var certificates = new List<X509Certificate2>();
-            var nodeList = doc.GetElementsByTagName("ds:X509Certificate");
+            var nodeList = doc.GetElementsByTagName("X509Certificate", Saml20Constants.Xmldsig);
             if (nodeList.Count == 0)
             {
                 nodeList = doc.GetElementsByTagName("X509Certificate");
